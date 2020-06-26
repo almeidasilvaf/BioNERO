@@ -10,3 +10,22 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/almeidasilvaf/BioNERO
 BugReports: https://github.com/almeidasilvaf/BioNERO/issues
+Imports: 
+    WGCNA,
+    pals,
+    dynamicTreeCut,
+    matrixStats,
+    DESeq2,
+    sva,
+    RColorBrewer,
+    pheatmap,
+    ggplot2,
+    ggvis,
+    reshape2,
+    dplyr,
+    bc3net,
+    igraph,
+    ggnetwork,
+    intergraph,
+    magrittr
+RoxygenNote: 7.1.0
