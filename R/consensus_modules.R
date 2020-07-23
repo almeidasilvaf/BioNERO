@@ -225,40 +225,11 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata, cor_method =
     }
 
     # Calculation of consensus TOM
-    if (nSets == 2) {
-        consensusTOM <- pmin(TOM[1, , ], TOM[2, , ])
-    } else if(nSets == 3) {
-        consensusTOM <- pmin(TOM[1, , ], TOM[2, , ], TOM[3, , ])
-    } else if(nSets == 4) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ])
-    } else if(nSets == 5) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ])
-    } else if(nSets == 6) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ], TOM[6, , ])
-    } else if(nSets == 7) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ], TOM[6, , ], TOM[7, , ])
-    } else if(nSets == 8) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ], TOM[6, , ], TOM[7, , ], TOM[8, , ])
-    } else if(nSets == 9) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ], TOM[6, , ], TOM[7, , ], TOM[8, , ],
-                                         TOM[9, , ])
-    } else if(nSets == 10) {
-        consensusTOM <- WGCNA::pquantile(prob = 0.25,
-                                         TOM[1, , ], TOM[2, , ], TOM[3, , ], TOM[4, , ],
-                                         TOM[5, , ], TOM[6, , ], TOM[7, , ], TOM[8, , ],
-                                         TOM[9, , ], TOM[10, , ])
-
+    if (nSets <= 3) {
+        consensusTOM <- do.call(pmin, lapply(seq(dim(TOM)[1]), function(i) TOM[i,,]))
+    } else {
+        consensusTOM <- do.call(function(x) WGCNA::pquantile(x, prob=0.25),
+                                lapply(seq(dim(TOM)[1]), function(i) TOM[i,,]))
     }
 
     # Clustering and module identification
@@ -425,7 +396,7 @@ consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_metho
 
     # Initialize matrices to hold the consensus correlation and p-value
     consensusCor <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]));
-    consensusPvalue = matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]));
+    consensusPvalue <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]));
 
     if(nSets == 2) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0;

@@ -27,5 +27,7 @@ Imports:
     igraph,
     ggnetwork,
     intergraph,
-    magrittr
+    magrittr,
+    networkD3,
+    ggnewscale
 RoxygenNote: 7.1.0
