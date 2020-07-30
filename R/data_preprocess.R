@@ -292,5 +292,28 @@ cel2RMA <- function(cel_dir = "./", pattern = "cel") {
     rma.norm <- affy::rma(raw.data)
     rma.exp <- Biobase::exprs(rma.norm)
 
+    colnames(rma.exp) <- sub(".cel", "", colnames(rma.exp), ignore.case = TRUE)
+
     return(rma.exp)
+}
+
+#' Collapse probe-level expression matrix (or data frame) to gene-level
+#' @param probe_exp Expression matrix or data frame containing probe names as row names and chips as column names
+#' @param correspondence A 2-column data frame containing gene IDs in the first column and their corresponding probe names in the second column. Probe names must be unique, but gene IDs can be repeated, since different probes can match the same gene.
+#' @return A data frame containing gene IDs as row names and arrays in the column names.
+#' @details If there are 2 or more probes for the same gene, the one with the highest mean will be selected.
+#' @seealso
+#'  \code{\link[WGCNA]{collapseRows}}
+#' @rdname probe2gene
+#' @export
+#' @importFrom WGCNA collapseRows
+probe2gene <- function(probe_exp, correspondence) {
+    colnames(correspondence) <- c("rowGroup", "rowID")
+    correspondence <- correspondence[correspondence$rowID %in% rownames(probe_exp), ]
+
+    exp <- WGCNA::collapseRows(probe_exp, rowGroup = correspondence$rowGroup,
+                               rowID = correspondence$rowID)
+
+    final_exp <- as.data.frame(exp[[1]])
+    return(final_exp)
 }
