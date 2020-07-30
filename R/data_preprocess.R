@@ -272,3 +272,25 @@ PC_correction <- function(exp_df) {
     return(final.exp.corrected)
 }
 
+
+#' Create an RMA-normalized expression data frame from .cel files
+#'
+#' @param cel_dir Path to directory containing binary .cel files. Default is the current working directory.
+#' @param pattern Character indicating pattern to match binary .cel files. Default is "cel", indicating that all .cel files must have "cel" in their file names.
+#'
+#' @return An RMA-normalized expression data frame with probe IDs as row names and arrays in column names.
+#' @seealso
+#'  \code{\link[affy]{read.affybatch}},\code{\link[affy]{rma}}
+#'  \code{\link[Biobase]{eSet}},\code{\link[Biobase]{exprs}}
+#' @rdname cel2RMA
+#' @export
+#' @importFrom affy ReadAffy rma
+#' @importFrom Biobase exprs
+cel2RMA <- function(cel_dir = "./", pattern = "cel") {
+    cels <- list.files(cel_dir, pattern = pattern)
+    raw.data <- affy::ReadAffy(verbose = FALSE, filenames = cels)
+    rma.norm <- affy::rma(raw.data)
+    rma.exp <- Biobase::exprs(rma.norm)
+
+    return(rma.exp)
+}

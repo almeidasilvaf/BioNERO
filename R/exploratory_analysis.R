@@ -80,7 +80,6 @@ plot_heatmap <- function(exp, metadata = NULL, cor_method = 'spearman', type = "
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname plot_PCA
-#' @rdname plot_PCA
 #' @export
 #' @import ggplot2
 #' @importFrom ggvis ggvis layer_points input_slider add_tooltip

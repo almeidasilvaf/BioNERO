@@ -20,3 +20,6 @@ Detect communities in a network
 \seealso{
 \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{simplify}},\code{\link[igraph]{cluster_infomap}},\code{\link[igraph]{cluster_edge_betweenness}},\code{\link[igraph]{cluster_fast_greedy}},\code{\link[igraph]{cluster_walktrap}},\code{\link[igraph]{cluster_spinglass}},\code{\link[igraph]{cluster_leading_eigen}},\code{\link[igraph]{cluster_louvain}},\code{\link[igraph]{cluster_label_prop}}
 }
+\author{
+Fabricio Almeida-Silva
+}

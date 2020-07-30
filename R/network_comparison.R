@@ -10,7 +10,6 @@
 #' @rdname module_preservation
 #' @seealso
 #'  \code{\link[WGCNA]{modulePreservation}}
-#' @rdname module_preservation
 #' @export
 #' @importFrom WGCNA modulePreservation
 module_preservation <- function(exp_ref, exp_test, moduleColors,
