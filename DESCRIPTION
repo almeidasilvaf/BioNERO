@@ -29,5 +29,6 @@ Imports:
     intergraph,
     magrittr,
     networkD3,
-    ggnewscale
+    ggnewscale,
+    affy
 RoxygenNote: 7.1.0
