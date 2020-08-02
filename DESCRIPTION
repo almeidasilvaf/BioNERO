@@ -30,5 +30,6 @@ Imports:
     magrittr,
     networkD3,
     ggnewscale,
-    affy
+    affy,
+    ggpubr
 RoxygenNote: 7.1.0
