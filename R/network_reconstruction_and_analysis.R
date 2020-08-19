@@ -63,6 +63,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #'   \item Data frame of genes and their corresponding modules
 #'   \item Data frame of intramodular connectivity
 #'   \item Vector of module assignment
+#'   \item Correlation matrix
 #' }
 #' @author Fabricio Almeida-Silva
 #' @seealso
@@ -75,15 +76,18 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold = 0.2, SFTpower, cor_method = "spearman") {
     print("Calculating adjacency matrix...")
     if(cor_method == "pearson") {
-        adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type)
+      cor_matrix <- cor(t(norm.exp), method = "pearson")
+      adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type)
     } else if(cor_method == "spearman") {
-        adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
+      cor_matrix <- cor(t(norm.exp), method = "spearman")
+      adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
                                        corOptions = list(use = "p", method = "spearman"))
     } else if (cor_method == "biweight") {
-        adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
+      cor_matrix <- WGCNA::bicor(t(norm.exp), maxPOutliers = 0.1)
+      adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
                                        corFnc = bicor)
     } else {
-        print("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
+      print("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
     }
     print("Removing diagonals...")
     diag(adj_matrix)=0
@@ -174,7 +178,8 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
                         MEs = new.MEs,
                         genes_and_modules = genes_and_modules,
                         kIN = intramodular_k_allmodules,
-                        moduleColors = new.module_colors)
+                        moduleColors = new.module_colors,
+                        correlation_matrix = cor_matrix)
 
     return(result.list)
 }
@@ -461,6 +466,129 @@ get_neighbors <- function(genes, adjacency, cor_threshold = 0.7, net_type = c("s
     return(list)
 }
 
+#' Filter edge list to remove spurious correlations
+#'
+#' @param cor_matrix Correlation matrix, such as the one returned by \code{exp2net}. It is the last element of the resulting list from \code{exp2net}.
+#' @param method Method to filter spurious correlations. One of "Zscore", "optimalSFT", "pvalue" or "min_cor". See details for more information on the methods. Default: 'optimalSFT'
+#' @param r_optimal_test Numeric vector with the correlation thresholds to be tested for optimal scale-free topology fit. Only valid if \code{method} equals "optimalSFT". Default: seq(0.7, 0.9, by = 0.05)
+#' @param Zcutoff Minimum Z-score threshold. Only valid if \code{method} equals "Zscore". Default: 1.96
+#' @param pvalue_cutoff Maximum P-value threshold. Only valid if \code{method} equals "pvalue". Default: 0.05
+#' @param rcutoff Minimum correlation threshold. Only valid if \code{method} equals "min_cor". Default: 0.7
+#' @param nSamples Number of samples in the dataset from which the correlation matrix was calculated. Only required if \code{method} equals "pvalue".
+#' @param check_SFT Logical indicating whether to test if the resulting network is scale-free or not. Default: FALSE
+#' @return A filtered edge list.
+#' @details The default method ("optimalSFT") will create several different edge lists by filtering the original correlation matrix by the thresholds specified in \code{r_optimal_test}. Then, it will calculate a scale-free topology fit index for each of the possible networks and return the network that best fits the scale-free topology.
+#' The method "Zscore" will apply a Fisher Z-transformation for the correlation coefficients and remove the Z-scores below the threshold specified in \code{Zcutoff}.
+#' The method "pvalue" will calculate Student asymptotic p-value for the correlations and remove correlations whose p-values are above the threshold specified in \code{pvalue_cutoff}.
+#' The method "min_cor" will remove correlations below the minimum correlation threshold specified in \code{rcutoff}.
+#' @seealso
+#'  \code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
+#'  \code{\link[igraph]{fit_power_law}}
+#' @rdname filter_edges
+#' @export
+#' @importFrom WGCNA scaleFreeFitIndex corPvalueStudent
+#' @importFrom ggpubr ggline
+#' @importFrom ggplot2 theme element_text
+#' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
+filter_edges <- function(cor_matrix, method = "optimalSFT", r_optimal_test = seq(0.7, 0.9, by=0.05),
+                         Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
+                         nSamples = NULL, check_SFT = FALSE) {
+
+  # Create edge list from adjacency matrix
+  edges <- cor_matrix
+  edges[lower.tri(edges, diag = TRUE)] <- NA
+  edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE);
+  colnames(edges) <- c("Gene1", "Gene2", "Weight")
+
+
+  if(method == "Zscore") {
+    # Apply Fisher-Z transformation to correlation values
+    edgesZ <- edges
+    edgesZ$Weight <- 0.5 * log((1+edges$Weight) / (1-edges$Weight))
+
+    edgelist <- edgesZ[edgesZ$Weight >= Zcutoff, ]
+  } else if(method == "optimalSFT") {
+    cutoff <- r_optimal_test
+
+    # Create list of edge lists, each with a different correlation threshold
+    list_mat <- replicate(length(cutoff), cor_matrix, simplify = FALSE)
+    degree_list <- list()
+    for (i in 1:length(cutoff)) {
+      list_mat[[i]][list_mat[[i]] < cutoff[i]] <- NA
+      diag(list_mat[[i]]) <- 0
+      degree_list[[i]] <- apply(list_mat[[i]], 1, sum, na.rm=TRUE) # Calculate degree for each list
+      list_mat[[i]][lower.tri(list_mat[[i]], diag=TRUE)] <- NA
+      list_mat[[i]] <- na.omit(data.frame(as.table(list_mat[[i]]), stringsAsFactors = FALSE))
+    }
+
+    # Calculate scale-free topology
+    sft.rsquared <- unlist(lapply(degree_list, function(x) WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT))
+    max.index <- which.max(sft.rsquared)
+
+    # Plot scale-free topology fit for r values
+    plot.data <- data.frame(x=cutoff, y=sft.rsquared, stringsAsFactors = FALSE)
+    ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
+                   color="firebrick",
+                   xlab = "Correlation (r) values",
+                   ylab = expression(paste("Scale-free topology fit -", R^{2})),
+                   title = "Scale-free topology fit for given r values", font.title = c(17, "bold")) +
+      ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+
+    optimalr <- cutoff[max.index]
+    print(paste("The correlation threshold that best fits the scale-free topology is", optimalr))
+
+    edgelist <- list_mat[[max.index]]
+
+  } else if(method == "pvalue") {
+    if(is.null(nSamples)) { stop("Please, specify the number of samples used to calculate the correlation matrix")}
+
+    # Transform symmetrical matrix in a 3-column data frame with correlations
+    edges <- cor_matrix
+    edges[lower.tri(edges, diag=TRUE)] <- NA
+    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE))
+    colnames(edges) <- c("Gene1", "Gene2", "Weight")
+
+    # Calculate Student asymptotic p-value for given correlations
+    cor.pvalue <- WGCNA::corPvalueStudent(edges$Weight, nSamples)
+
+    # Create a data frame of correlations and p-values
+    corandp <- edges; corandp$pvalue <- cor.pvalue
+
+    # Create a final edge list containing only significant correlations
+    edgelist <- corandp[corandp$pvalue < pvalue_cutoff, c(1:3)]
+
+  } else if(method == "min_cor") {
+    edges <- cor_matrix
+    edges[lower.tri(edges, diag = TRUE)] <- NA
+    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
+    colnames(edges) <- c("Gene1", "Gene2", "Weight")
+
+    edgelist <- edges[edges$Weight >= rcutoff, ]
+
+  } else{
+    stop("Please, specify a valid filtering method.")
+  }
+
+  if(check_SFT == TRUE) {
+
+    # Calculate degree of the resulting graph
+    graph <- igraph::graph_from_data_frame(edgelist, directed=FALSE)
+    adj <- igraph::as_adjacency_matrix(graph, sparse = FALSE)
+    diag(adj) <- 0
+    degree <- apply(adj, 1, sum, na.rm=TRUE)
+
+    # Test for scale-free topology fit
+    test <- igraph::fit_power_law(degree)
+    if(test$KS.p < 0.05) {
+      print(paste("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p))
+    } else{
+      print(paste("Your graph fits the scale-free topology. P-value:", test$KS.p))
+    }
+  }
+
+  return(edgelist)
+}
+
 #' Get edge list from an adjacency matrix for a group of genes
 #'
 #' @param adjacency Adjacency matrix. First element of the output list from \code{exp2net}.
@@ -482,7 +610,7 @@ get_edge_list <- function(adjacency, genes_modules, genes = NULL, module = NULL,
                           net_type = NULL, power) {
     edges <- adjacency
     edges[lower.tri(edges, diag = TRUE)] <- NA
-    edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE);
+    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
     colnames(edges) <- c("Gene1", "Gene2", "Weight")
 
     edges_m1 <- merge(edges, genes_modules, by = 1)
@@ -494,7 +622,7 @@ get_edge_list <- function(adjacency, genes_modules, genes = NULL, module = NULL,
         print("Building edge list for weighted network...")
     } else {
         if(net_type == "signed") {
-            adj_threshold <- (0.5*(1 - cor_threshold))^power
+            adj_threshold <- (0.5*(1 + cor_threshold))^power
         } else if(net_type == "signed hybrid") {
             if(cor_threshold > 0) {
                 adj_threshold <- cor_threshold^power

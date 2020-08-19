@@ -30,6 +30,7 @@ List containing: \itemize{
   \item Data frame of genes and their corresponding modules
   \item Data frame of intramodular connectivity
   \item Vector of module assignment
+  \item Correlation matrix
 }
 }
 \description{
