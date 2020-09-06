@@ -36,5 +36,5 @@ A .pdf file in the current working directory representing the module stability a
 Perform module stability analysis
 }
 \seealso{
-\code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{Inline display of progress}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
+\code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
 }

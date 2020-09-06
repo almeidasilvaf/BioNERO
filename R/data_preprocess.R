@@ -2,21 +2,18 @@
 #'
 #' This function reads multiple expression tables (.tsv files) in a directory and combine them into one single gene expression dataframe.
 #'
-#' @param mypath Path to directory containing .tsv files. Files must have one column in common, e.g. "Gene_ID". Rows are gene IDs and columns are sample names.
+#' @param mypath Path to directory containing .tsv files. Files must have the first column in common, e.g. "Gene_ID". Rows are gene IDs and columns are sample names.
 #' @param pattern Pattern contained in each expression file. Default is '.tsv$', which means that all files ending in '.tsv' in the specified directory will be considered expression files.
-#' @return Data frame with gene IDs as rownames and their expression values in each sample (columns).
+#' @return Data frame with gene IDs as row names and their expression values in each sample (columns).
 #' @author Fabricio Almeida-Silva
-#' @export
 #' @rdname dfs2one
 #' @export
-
 dfs2one <- function(mypath, pattern = ".tsv$"){
-    filenames=list.files(path=mypath, full.names=TRUE, pattern = pattern)
-    datalist = lapply(filenames, function(x) {
-        read.csv(file=x, header=T, sep="\t", stringsAsFactors=F, check.names=F, row.names=1)
+    filenames <- list.files(path=mypath, full.names=TRUE, pattern = pattern)
+    datalist <- lapply(filenames, function(x) {
+        read.csv(file=x, header=T, sep="\t", stringsAsFactors=F, check.names=F)
     })
-    merged.list <- Reduce(function(x,y) {
-        merge(x,y, all.x=T)}, datalist)
+    merged.list <- Reduce(function(x,y) merge(x,y, all.x=T), datalist)
     rownames(merged.list) <- merged.list[,1]; merged.list[,1] <- NULL
     return(merged.list)
 }
@@ -175,7 +172,7 @@ ZKfiltering <- function(raw_exp, Zk = -2, cor_method = "spearman") {
 #' @export
 #' @import WGCNA
 #' @importFrom DESeq2 varianceStabilizingTransformation
-exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, ZK_filtering = TRUE, Zk = -2, cor_method = "spearman",
+exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, Zk_filtering = TRUE, Zk = -2, cor_method = "spearman",
                            remove_nonexpressed = TRUE, method = "median", min_exp = 1, min_percentage_samples = 0.25,
                            remove_confounders = TRUE, variance_filter = FALSE, n = NULL, percentile = NULL,
                            vstransform = FALSE) {
@@ -206,7 +203,7 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, ZK_filtering = TRUE
     }
 
     # Zk filtering
-    if(ZK_filtering == TRUE) {
+    if(Zk_filtering == TRUE) {
         exp4 <- ZKfiltering(exp3, Zk = Zk, cor_method = cor_method)
     } else {
         exp4 <- exp3

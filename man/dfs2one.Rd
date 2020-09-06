@@ -7,12 +7,12 @@
 dfs2one(mypath, pattern = ".tsv$")
 }
 \arguments{
-\item{mypath}{Path to directory containing .tsv files. Files must have one column in common, e.g. "Gene_ID". Rows are gene IDs and columns are sample names.}
+\item{mypath}{Path to directory containing .tsv files. Files must have the first column in common, e.g. "Gene_ID". Rows are gene IDs and columns are sample names.}
 
 \item{pattern}{Pattern contained in each expression file. Default is '.tsv$', which means that all files ending in '.tsv' in the specified directory will be considered expression files.}
 }
 \value{
-Data frame with gene IDs as rownames and their expression values in each sample (columns).
+Data frame with gene IDs as row names and their expression values in each sample (columns).
 }
 \description{
 This function reads multiple expression tables (.tsv files) in a directory and combine them into one single gene expression dataframe.

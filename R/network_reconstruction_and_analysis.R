@@ -195,7 +195,7 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
 #' @param nRuns Number of times to resample. Default is 30.
 #' @return A .pdf file in the current working directory representing the module stability across the resamplings.
 #' @seealso
-#'  \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{Inline display of progress}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
+#'  \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
 #' @rdname module_stability
 #' @export
 #' @importFrom WGCNA sampledBlockwiseModules initProgInd matchLabels updateProgInd plotDendroAndColors
@@ -742,8 +742,8 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @seealso
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
-#'  \code{\link[ggnetwork]{c("ggnetwork", "ggnetwork", "ggnetwork")}},\code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}},\code{\link[ggnetwork]{c("unit", "unit")}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{c("guide_bins", "guide_colourbar", "guide_coloursteps", "guide_legend", "guides", "guides")}}
+#'  \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},
 #' @rdname plot_ppi
 #' @author Fabricio Almeida-Silva
 #' @export
@@ -753,7 +753,7 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @importFrom ggplot2 ggplot aes guides
 plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method = "infomap", show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE) {
-    suppressPackageStartupMessages(library(intergraph))
+    requireNamespace(intergraph, quietly=TRUE)
     nod_at <- data.frame(Gene = unique(c(as.character(edgelist_int[,1]), as.character(edgelist_int[,2]))),
                          stringsAsFactors = FALSE)
 
@@ -864,8 +864,8 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method 
 #' @seealso
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}},\code{\link[ggplot2]{c("guide_bins", "guide_colourbar", "guide_coloursteps", "guide_legend", "guides", "guides")}}
-#'  \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{c("unit", "unit")}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
+#'  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
 #'  \code{\link[ggnewscale]{new_scale}}
 #' @rdname plot_grn
 #' @author Fabricio Almeida-Silva
@@ -877,7 +877,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method 
 #' @importFrom ggnewscale new_scale_color
 plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE,
                      layout = "kk", arrow.gap = 0.01) {
-    suppressPackageStartupMessages(library(intergraph))
+    requireNamespace(intergraph, quietly=TRUE)
 
     if(ncol(edgelist_grn) == 3) {
         colnames(edgelist_grn)[3] <- "Regulation"
@@ -1014,8 +1014,8 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, inte
 #' @seealso
 #'  \code{\link[igraph]{simplify}},\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
-#'  \code{\link[ggnetwork]{c("ggnetwork", "ggnetwork", "ggnetwork")}},\code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}},\code{\link[ggnetwork]{c("unit", "unit")}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{c("guide_bins", "guide_colourbar", "guide_coloursteps", "guide_legend", "guides", "guides")}}
+#'  \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}}
 #' @rdname plot_gcn
 #' @author Fabricio Almeida-Silva
 #' @export
@@ -1025,7 +1025,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, inte
 #' @importFrom ggplot2 ggplot aes guides
 plot_gcn <- function(edgelist_gcn, genes_modules = NULL, modulename = NULL, kIN = NULL, hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE) {
-    suppressPackageStartupMessages(library(intergraph))
+    requireNamespace(intergraph, quietly=TRUE)
     if(is.null(genes_modules) | is.null(modulename) | is.null(hubs) | is.null(kIN) | is.null(edgelist_gcn)) {
         stop("Arguments edgelist_gcn, genes_modules, modulename, hubs, and kIN are mandatory for this bionetwork.")
     }
@@ -1105,4 +1105,134 @@ plot_gcn <- function(edgelist_gcn, genes_modules = NULL, modulename = NULL, kIN 
     }
     return(p)
 }
+
+#' Calculate network statistics
+#'
+#' @param adj_matrix Adjacency matrix that represents the network.
+#' @param net_type One of "gcn" (gene coexpression network), "ppi" (protein-protein interaction), or "grn" (gene regulatory network).
+#' @param calculate_additional Logical indicating whether to calculate additional network statistics (betweenness and closeness). Default is FALSE, because it might be time-consuming.
+#'
+#' @return A list containing the following elements: \itemize{
+#'   \item Connectivity
+#'   \item ScaledConnectivity
+#'   \item ClusterCoef
+#'   \item MAR (for gcn only)
+#'   \item Density
+#'   \item Centralization
+#'   \item Heterogeneity (gcn only)
+#'   \item nCliques
+#'   \item diameter
+#'   \item betweenness
+#'   \item closeness
+#' }
+#'
+#' @seealso
+#'  \code{\link[igraph]{graph_from_adjacency_matrix}},\code{\link[igraph]{cliques}},\code{\link[igraph]{diameter}},\code{\link[igraph]{estimate_betweenness}},\code{\link[igraph]{V}},\code{\link[igraph]{closeness}},\code{\link[igraph]{degree}},\code{\link[igraph]{transitivity}},\code{\link[igraph]{edge_density}},\code{\link[igraph]{centr_degree}}
+#'  \code{\link[WGCNA]{fundamentalNetworkConcepts}}
+#' @rdname net_stats
+#' @export
+#' @importFrom igraph graph_from_adjacency_matrix cliques diameter betweenness V closeness degree transitivity edge_density centralization.degree
+#' @importFrom WGCNA fundamentalNetworkConcepts
+net_stats <- function(adj_matrix = NULL, net_type=c("gcn", "ppi", "grn"),
+                      calculate_additional = FALSE) {
+
+  # For gene coexpression networks
+  if(net_type == "gcn") {
+    # Create a graph object representing an undirected weighted network
+    graph <- igraph::graph_from_adjacency_matrix(adj_matrix, mode="undirected",
+                                                 diag=FALSE, weighted=TRUE)
+    # Calculate stats
+    stats <- WGCNA::fundamentalNetworkConcepts(adj_matrix)
+    stats$nCliques <- length(igraph::cliques(graph, min=3)) # number of cliques
+    stats$diameter <- igraph::diameter(graph, directed=FALSE) # net diameter
+
+    if(calculate_additional == TRUE) {
+      # Calculate vertex betweenness
+      betweenness <- igraph::betweenness(graph, directed = FALSE)
+      names(betweenness) <- igraph::V(graph)
+      stats$betweenness <- as.data.frame(betweenness)
+
+      # Calculate closeness
+      closeness <- igraph::closeness(graph, mode="all")
+      names(closeness) <- igraph::V(graph)
+      stats$closeness <- as.data.frame(closeness)
+    }
+    # For protein-protein interaction networks
+  } else if(net_type == "ppi") {
+    # Create a graph object representing an undirected unweighted network
+    graph <- igraph::graph_from_adjacency_matrix(adj_matrix, mode="undirected",
+                                                 diag=FALSE, weighted=FALSE)
+
+    # Calculate stats
+    stats <- WGCNA::fundamentalNetworkConcepts(adj_matrix)
+    stats$MAR <- NULL # Remove MAR, since it doesn't make sense here
+    stats$nCliques <- length(igraph::cliques(graph, min=3)) # number of cliques
+    stats$diameter <- igraph::diameter(graph, directed=FALSE) # net diameter
+
+    if(calculate_additional == TRUE) {
+      # Calculate vertex betweenness
+      betweenness <- igraph::betweenness(graph, directed = FALSE)
+      names(betweenness) <- igraph::V(graph)
+      stats$betweenness <- as.data.frame(betweenness)
+
+      # Calculate closeness
+      closeness <- igraph::closeness(graph, mode="all")
+      names(closeness) <- igraph::V(graph)
+      stats$closeness <- as.data.frame(closeness)
+    }
+    # For gene regulatory networks
+  } else if(net_type == "grn") {
+    graph <- igraph::graph_from_adjacency_matrix(adj_matrix, mode="directed",
+                                                 diag=FALSE, weighted=FALSE)
+    # Calculate stats
+    degree <- igraph::degree(graph, mode = "all")
+    clustercoef <- igraph::transitivity(graph, mode="global")
+    density <- igraph::edge_density(graph)
+    centralization <- igraph::centralization.degree(graph)$centralization
+    diameter <- igraph::diameter(graph, directed=TRUE)
+
+    if(calculate_additional == TRUE) {
+      # Calculate vertex betweenness
+      betweenness <- igraph::betweenness(graph, directed = TRUE)
+      names(betweenness) <- igraph::V(graph)
+      stats$betweenness <- as.data.frame(betweenness)
+
+      # Calculate closeness
+      closeness <- igraph::closeness(graph, mode="all")
+      names(closeness) <- igraph::V(graph)
+      stats$closeness <- as.data.frame(closeness)
+
+      stats <- list(
+        Connectivity = degree,
+        ScaledConnectiviy = degree / max(degree),
+        ClusterCoef = clustercoef,
+        Density = density,
+        Centralization = centralization,
+        Diameter = diameter,
+        Betweenness = betweenness,
+        Closeness = closeness)
+    } else{
+      stats <- list(
+        Connectivity = degree,
+        ScaledConnectiviy = degree / max(degree),
+        ClusterCoef = clustercoef,
+        Density = density,
+        Centralization = centralization,
+        Diameter = diameter)
+      }
+  } else{
+    stop("Please, specify a valid net_type. One of 'ppi', 'gcn' or 'grn'.")
+  }
+  return(stats)
+}
+
+
+
+
+
+
+
+
+
+
 

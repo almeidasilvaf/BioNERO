@@ -41,6 +41,8 @@ plot_heatmap(
 \item{scale}{Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default is 'none'.}
 
 \item{fontsize}{Base fontsize for the plot.}
+
+\item{show_colnames}{Logical indicating whether to show column names or not. Default is TRUE.}
 }
 \value{
 heatmap of hierarchically clustered samples with metadata information (optional)

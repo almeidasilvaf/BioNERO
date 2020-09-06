@@ -32,8 +32,8 @@ Plot protein-protein interaction network from edge list
 \seealso{
 \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggnetwork]{c("ggnetwork", "ggnetwork", "ggnetwork")}},\code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}},\code{\link[ggnetwork]{c("unit", "unit")}}
- \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{c("guide_bins", "guide_colourbar", "guide_coloursteps", "guide_legend", "guides", "guides")}}
+ \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+ \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},
 }
 \author{
 Fabricio Almeida-Silva

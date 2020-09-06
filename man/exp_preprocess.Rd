@@ -8,7 +8,7 @@ exp_preprocess(
   exp,
   NA_rm = TRUE,
   replaceby = 0,
-  ZK_filtering = TRUE,
+  Zk_filtering = TRUE,
   Zk = -2,
   cor_method = "spearman",
   remove_nonexpressed = TRUE,
@@ -28,6 +28,8 @@ exp_preprocess(
 \item{NA_rm}{Logical. It specifies whether to remove missing values from the expression data frame or not. Default = TRUE.}
 
 \item{replaceby}{If NA_rm is TRUE, what to use instead of NAs. One of 0 or 'mean'. Default is 0.}
+
+\item{Zk_filtering}{Logical. It specifies whether to filter outlying samples by Zk or not. Default = TRUE.}
 
 \item{Zk}{If Zk_filtering is TRUE, the standardized connectivity threshold. Samples below this threshold will be considered outliers. Default is -2.}
 
@@ -50,8 +52,6 @@ exp_preprocess(
 \item{percentile}{If variance_filter is TRUE, the percentage of the most variable genes to keep.}
 
 \item{vstransform}{Logical indicating if data should be variance stabilizing transformed. This parameter can only be set to TRUE if data is a matrix of raw read counts.}
-
-\item{Zk_filtering}{Logical. It specifies whether to filter outlying samples by Zk or not. Default = TRUE.}
 }
 \value{
 Processed gene expression data frame with gene IDs in row names and sample names in column names.

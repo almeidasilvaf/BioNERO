@@ -12,6 +12,7 @@
 #' @param show_rownames Logical indicating whether to show row names or not. Default is FALSE.
 #' @param scale Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default is 'none'.
 #' @param fontsize Base fontsize for the plot.
+#' @param show_colnames Logical indicating whether to show column names or not. Default is TRUE.
 #'
 #' @return heatmap of hierarchically clustered samples with metadata information (optional)
 #' @author Fabricio Almeida-Silva
@@ -95,39 +96,37 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
     var_explained <- as.data.frame(round(100 * pca$sdev^2 / sum(pca$sdev^2), 1))
     rownames(var_explained) <- colnames(pca$x)
     if(interactive == FALSE) {
-        suppressPackageStartupMessages(library(ggplot2))
         if(PCs == "1x2") {
-            p <- ggplot2::ggplot(pca_df, aes(PC1, PC2, color = Tissue)) +
-                geom_point(size = size) +
-                labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
-                theme_classic()
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Tissue)) +
+                ggplot2::geom_point(size = size) +
+                ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
+                ggplot2::theme_classic()
         } else if (PCs == "1x3") {
-            p <- ggplot2::ggplot(pca_df, aes(PC1, PC3, color = Tissue)) +
-                geom_point(size = size) +
-                labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                theme_classic()
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Tissue)) +
+                ggplot2::geom_point(size = size) +
+                ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
+                ggplot2::theme_classic()
         } else if (PCs == "2x3") {
-            p <- ggplot2::ggplot(pca_df, aes(PC2, PC3, color = Tissue)) +
-                geom_point(size = size) +
-                labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                theme_classic()
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC2, PC3, color = Tissue)) +
+                ggplot2::geom_point(size = size) +
+                ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
+                ggplot2::theme_classic()
         } else {
             stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
         }
     } else {
-        suppressPackageStartupMessages(library(ggvis))
         if(PCs == "1x2") {
             p <- ggvis::ggvis(pca_df, ~PC1, ~PC2, fill = ~Tissue, key := ~SampleID) %>%
                 ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
                 ggvis::add_tooltip(function(df) df$SampleID)
         } else if (PCs == "1x3") {
             p <- ggvis(pca_df, ~PC1, ~PC3, fill = ~Tissue, key := ~SampleID) %>%
-                layer_points(size := input_slider(10, 200, value = 50, label = "Point size")) %>%
-                add_tooltip(function(df) df$SampleID)
+                ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
+                ggvis::add_tooltip(function(df) df$SampleID)
         } else if (PCs == "2x3") {
             p <- ggvis(pca_df, ~PC2, ~PC3, fill = ~Tissue, key := ~SampleID) %>%
-                layer_points(size := input_slider(10, 200, value = 50, label = "Point size")) %>%
-                add_tooltip(function(df) df$SampleID)
+                ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
+                ggvis::add_tooltip(function(df) df$SampleID)
         } else {
             stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
         }
@@ -144,7 +143,6 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
 #' @author Fabricio Almeida-Silva
 #' @rdname get_HK
 #' @export
-
 get_HK <- function(exp) {
     exp=exp
     exp[exp < 1] <- 0 #expression values below 1 are considered as not expressed
@@ -179,7 +177,6 @@ get_HK <- function(exp) {
 #' @importFrom reshape2 melt
 #' @import ggplot2
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, genes_modules, modulename) {
-    suppressPackageStartupMessages(library(ggplot2))
     sample_names <- colnames(metadata)[1]
     sample_info <- colnames(metadata)[2]
 
@@ -208,38 +205,38 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, ge
     background <- mean(melt_exp[, "expression"])
 
     # Plot expression profiles
-    p <- ggplot(melt_exp, aes_(x = ~sample, y = ~expression)) +
-        geom_tile(data = metadata, alpha = 0.3, height = Inf,
-                  aes(x = get(sample_names), y = background,
+    p <- ggplot2::ggplot(melt_exp, ggplot2::aes_(x = ~sample, y = ~expression)) +
+        ggplot2::geom_tile(data = metadata, alpha = 0.3, height = Inf,
+                           ggplot2::aes(x = get(sample_names), y = background,
                       fill = as.factor(get(sample_info))))
 
-    p <- p + geom_line(aes_(group = ~id), alpha = 0.2,
+    p <- p + ggplot2::geom_line(ggplot2::aes_(group = ~id), alpha = 0.2,
                        color = "firebrick") +
-        stat_summary(aes(group = 1), size = 1, fun = "median", geom = "line")
+        ggplot2::stat_summary(ggplot2::aes(group = 1), size = 1, fun = "median", geom = "line")
 
-    p <- p + theme(plot.title=element_text(lineheight=0.8,
+    p <- p + ggplot2::theme(plot.title=ggplot2::element_text(lineheight=0.8,
                                            face='bold',
                                            colour='black',
                                            size=15),
-                   axis.title=element_text(face='bold',
+                   axis.title=ggplot2::element_text(face='bold',
                                            colour='black',
                                            size=15),
-                   axis.text.y=element_text(angle=0,
+                   axis.text.y=ggplot2::element_text(angle=0,
                                             vjust=0.5,
                                             size=8),
-                   axis.text.x=element_text(angle=90,
+                   axis.text.x=ggplot2::element_text(angle=90,
                                             vjust=0.5,
                                             size=6),
-                   panel.grid=element_blank(),
-                   legend.title=element_blank(),
-                   legend.text=element_text(size = 8),
-                   legend.background=element_rect(fill='gray90',
+                   panel.grid=ggplot2::element_blank(),
+                   legend.title=ggplot2::element_blank(),
+                   legend.text=ggplot2::element_text(size = 8),
+                   legend.background=ggplot2::element_rect(fill='gray90',
                                                   size=0.5,
                                                   linetype='dotted'),
                    legend.position='bottom'
     )
 
-    p <- p + ggtitle(modulename)
+    p <- p + ggplot2::ggtitle(modulename)
 
     return(p)
 }

@@ -31,5 +31,6 @@ Imports:
     networkD3,
     ggnewscale,
     affy,
-    ggpubr
+    ggpubr,
+    Biobase
 RoxygenNote: 7.1.0
