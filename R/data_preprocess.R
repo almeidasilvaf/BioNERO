@@ -96,11 +96,13 @@ remove_nonexp <- function(exp, method=c("mean", "median", "percentage", "allsamp
 filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
     gene_var <- data.frame(Genes = rownames(exp), Var = apply(exp, 1, var), stringsAsFactors = FALSE)
     gene_var_ordered <- gene_var[order(gene_var$Var, decreasing = TRUE), ]
-    if(n > 0) {
+    if(!is.null(n) & is.null(percentile)) {
         top_var <- gene_var_ordered$Genes[1:n]
-    } else {
+    } else if(is.null(n) & !is.null(percentile)) {
         p <- nrow(gene_var_ordered) * percentile
         top_var <- gene_var_ordered$Genes[1:p]
+    } else {
+        stop("Please, choose either 'n' or 'percentile'.")
     }
     top_variant_exp <- exp[rownames(exp) %in% top_var, ]
 }

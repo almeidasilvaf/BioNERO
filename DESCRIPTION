@@ -30,7 +30,7 @@ Imports:
     magrittr,
     networkD3,
     ggnewscale,
-    affy,
     ggpubr,
-    Biobase
+    Biobase,
+    affy
 RoxygenNote: 7.1.1
