@@ -4,7 +4,6 @@
 #' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.
 #' @param rsquared R squared cutoff. Default is 0.8.
 #' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.
-#' @param consensus Logical indicating if scale-free topology fit should be calculated for consensus modules or not. Default is FALSE, assuming the user wants to reconstruct a GCN for each data set individually.
 #'
 #' @return Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
 #'
@@ -753,7 +752,7 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @importFrom ggplot2 ggplot aes guides
 plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method = "infomap", show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE) {
-    requireNamespace(intergraph, quietly=TRUE)
+    requireNamespace("intergraph", quietly=TRUE)
     nod_at <- data.frame(Gene = unique(c(as.character(edgelist_int[,1]), as.character(edgelist_int[,2]))),
                          stringsAsFactors = FALSE)
 
@@ -877,7 +876,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method 
 #' @importFrom ggnewscale new_scale_color
 plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE,
                      layout = "kk", arrow.gap = 0.01) {
-    requireNamespace(intergraph, quietly=TRUE)
+    requireNamespace("intergraph", quietly=TRUE)
 
     if(ncol(edgelist_grn) == 3) {
         colnames(edgelist_grn)[3] <- "Regulation"
@@ -1025,7 +1024,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, inte
 #' @importFrom ggplot2 ggplot aes guides
 plot_gcn <- function(edgelist_gcn, genes_modules = NULL, modulename = NULL, kIN = NULL, hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE) {
-    requireNamespace(intergraph, quietly=TRUE)
+    requireNamespace("intergraph", quietly=TRUE)
     if(is.null(genes_modules) | is.null(modulename) | is.null(hubs) | is.null(kIN) | is.null(edgelist_gcn)) {
         stop("Arguments edgelist_gcn, genes_modules, modulename, hubs, and kIN are mandatory for this bionetwork.")
     }

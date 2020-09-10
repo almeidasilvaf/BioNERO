@@ -14,8 +14,6 @@ SFT_fit(exp, net_type = "signed", rsquared = 0.8, cor_method = "spearman")
 \item{rsquared}{R squared cutoff. Default is 0.8.}
 
 \item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.}
-
-\item{consensus}{Logical indicating if scale-free topology fit should be calculated for consensus modules or not. Default is FALSE, assuming the user wants to reconstruct a GCN for each data set individually.}
 }
 \value{
 Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
