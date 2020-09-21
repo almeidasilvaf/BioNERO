@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Fabricio Almeida-Silva
 Maintainer: Fabricio Almeida-Silva <fabricio_almeidasilva@hotmail.com>
 Description: This package is used to reconstruct biological networks (coexpression, protein-protein interaction and gene regulatory networks) and analyze them. For coexpression networks, several functions are available to automatically preprocess the expression data prior to network reconstruction.
-License: MIT
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/almeidasilvaf/BioNERO

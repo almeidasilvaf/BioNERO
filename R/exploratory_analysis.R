@@ -2,7 +2,8 @@
 #' Plot heatmap of hierarchically clustered sample correlations or gene expression
 #'
 #' @param exp Expression data frame with genes in rows and samples in columns.
-#' @param metadata 2-column dataframe containing sample names in the first column and sample description in the second column.
+#' @param col_metadata 2-column data frame containing sample names in the first column and sample description in the second column.
+#' @param row_metadata 2-column data frame containing gene names in the first column and functional annotation (e.g. KEGG pathway or GO) in the second column.
 #' @param cor_method Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.
 #' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default is 'samplecor'.
 #' @param palette RColorBrewer palette to use. Default is "Blues" for sample correlation heatmap and "YlOrRd" for gene expression heatmap.
@@ -10,9 +11,11 @@
 #' @param cluster_rows Logical indicating whether to cluster rows or not. Default is TRUE.
 #' @param cluster_cols Logical indicating whether to cluster columns or not. Default is TRUE.
 #' @param show_rownames Logical indicating whether to show row names or not. Default is FALSE.
+#' @param show_colnames Logical indicating whether to show column names or not. Default is TRUE.
 #' @param scale Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default is 'none'.
 #' @param fontsize Base fontsize for the plot.
-#' @param show_colnames Logical indicating whether to show column names or not. Default is TRUE.
+#' @param cutree_rows Number of clusters into which rows are divided. Default is 1, which is equivalent to no division.
+#' @param cutree_cols Number of clusters into which columns are divided. Default is 1, which is equivalent to no division.
 #'
 #' @return heatmap of hierarchically clustered samples with metadata information (optional)
 #' @author Fabricio Almeida-Silva
@@ -23,9 +26,13 @@
 #' @export
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom pheatmap pheatmap
-plot_heatmap <- function(exp, metadata = NULL, cor_method = 'spearman', type = "samplecor", palette = NULL, log_trans = FALSE,
-                         cluster_rows = TRUE, cluster_cols = TRUE, show_rownames = FALSE, scale = "none", fontsize = 10,
-                         show_colnames = TRUE) {
+plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
+                         cor_method = 'spearman', type = "samplecor",
+                         palette = NULL, log_trans = FALSE,
+                         cluster_rows = TRUE, cluster_cols = TRUE,
+                         show_rownames = FALSE, show_colnames = TRUE,
+                         scale = "none", fontsize = 10,
+                         cutree_rows = 1, cutree_cols = 1) {
     if(log_trans == TRUE) {
         exp <- log2(exp+1)
     } else {
@@ -34,9 +41,9 @@ plot_heatmap <- function(exp, metadata = NULL, cor_method = 'spearman', type = "
 
     if(is.null(palette)) {
         if(type == "samplecor") {
-            pal <- RColorBrewer::brewer.pal(9, "Blues")
+            pal <- colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(100)
         } else if(type == "expr") {
-            pal <- RColorBrewer::brewer.pal(9, "YlOrRd")
+            pal <- colorRampPalette(RColorBrewer::brewer.pal(9, "YlOrRd"))(100)
         } else {
             stop("Please, specify a valid type. One of 'samplecor' or 'expr'.")
         }
@@ -44,11 +51,20 @@ plot_heatmap <- function(exp, metadata = NULL, cor_method = 'spearman', type = "
         pal <- RColorBrewer::brewer.pal(9, palette)
     }
 
-    if(is.null(metadata)) {
-        annotation <- NULL
+    # How should we handle column annotation?
+    if(is.null(col_metadata)) {
+        annotation_col <- NULL
     } else {
-        annotation <- data.frame(Condition = metadata[,2])
-        rownames(annotation) <- metadata[,1]
+        annotation_col <- data.frame(Condition = col_metadata[,2], stringsAsFactors = FALSE)
+        rownames(annotation_col) <- col_metadata[,1]
+    }
+
+    # How should we handle row annotation?
+    if(is.null(row_metadata)) {
+        annotation_row <- NULL
+    } else {
+        annotation_row <- data.frame(Annotation = row_metadata[,2], stringsAsFactors = FALSE)
+        rownames(annotation_row) <- row_metadata[,1]
     }
 
 
@@ -60,10 +76,17 @@ plot_heatmap <- function(exp, metadata = NULL, cor_method = 'spearman', type = "
         stop("Please, specify a type. One of 'samplecor' or 'expr'.")
     }
 
-    pheatmap::pheatmap(x, color=pal, border_color = NA, height = 20, show_rownames = show_rownames,
-                       show_colnames = show_colnames,
-                       annotation = annotation, cluster_rows = cluster_rows, cluster_cols = cluster_cols,
-                       scale = scale, fontsize = fontsize)
+    title <- ifelse(type == "samplecor",
+                    "Pairwise correlations between samples",
+                    "Gene expression heatmap")
+
+    pheatmap::pheatmap(x, color=pal, border_color = NA, height = 20,
+                       show_rownames = show_rownames, show_colnames = show_colnames,
+                       annotation_row = annotation_row, annotation_col = annotation_col,
+                       cluster_rows = cluster_rows, cluster_cols = cluster_cols,
+                       scale = scale, fontsize = fontsize, main=title,
+                       cutree_rows = cutree_rows, cutree_cols = cutree_cols,
+                      )
 
 }
 

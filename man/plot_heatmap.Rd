@@ -6,7 +6,8 @@
 \usage{
 plot_heatmap(
   exp,
-  metadata = NULL,
+  col_metadata = NULL,
+  row_metadata = NULL,
   cor_method = "spearman",
   type = "samplecor",
   palette = NULL,
@@ -14,15 +15,19 @@ plot_heatmap(
   cluster_rows = TRUE,
   cluster_cols = TRUE,
   show_rownames = FALSE,
+  show_colnames = TRUE,
   scale = "none",
   fontsize = 10,
-  show_colnames = TRUE
+  cutree_rows = 1,
+  cutree_cols = 1
 )
 }
 \arguments{
 \item{exp}{Expression data frame with genes in rows and samples in columns.}
 
-\item{metadata}{2-column dataframe containing sample names in the first column and sample description in the second column.}
+\item{col_metadata}{2-column data frame containing sample names in the first column and sample description in the second column.}
+
+\item{row_metadata}{2-column data frame containing gene names in the first column and functional annotation (e.g. KEGG pathway or GO) in the second column.}
 
 \item{cor_method}{Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.}
 
@@ -38,11 +43,15 @@ plot_heatmap(
 
 \item{show_rownames}{Logical indicating whether to show row names or not. Default is FALSE.}
 
+\item{show_colnames}{Logical indicating whether to show column names or not. Default is TRUE.}
+
 \item{scale}{Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default is 'none'.}
 
 \item{fontsize}{Base fontsize for the plot.}
 
-\item{show_colnames}{Logical indicating whether to show column names or not. Default is TRUE.}
+\item{cutree_rows}{Number of clusters into which rows are divided. Default is 1, which is equivalent to no division.}
+
+\item{cutree_cols}{Number of clusters into which columns are divided. Default is 1, which is equivalent to no division.}
 }
 \value{
 heatmap of hierarchically clustered samples with metadata information (optional)
