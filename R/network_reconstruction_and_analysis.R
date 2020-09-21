@@ -66,31 +66,34 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' }
 #' @author Fabricio Almeida-Silva
 #' @seealso
-#'  \code{\link[WGCNA]{adjacency}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{standardColors}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{moduleEigengenes}},\code{\link[WGCNA]{plotEigengeneNetworks}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}},\code{\link[WGCNA]{intramodularConnectivity}}
+#'  \code{\link[WGCNA]{adjacency.fromSimilarity}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{standardColors}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{moduleEigengenes}},\code{\link[WGCNA]{plotEigengeneNetworks}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}},\code{\link[WGCNA]{intramodularConnectivity}}
 #'  \code{\link[dynamicTreeCut]{cutreeDynamicTree}}
 #' @rdname exp2net
 #' @export
-#' @importFrom WGCNA adjacency TOMsimilarity standardColors labels2colors moduleEigengenes plotEigengeneNetworks mergeCloseModules plotDendroAndColors intramodularConnectivity
+#' @importFrom WGCNA adjacency.fromSimilarity TOMsimilarity standardColors labels2colors moduleEigengenes plotEigengeneNetworks mergeCloseModules plotDendroAndColors intramodularConnectivity
 #' @importFrom dynamicTreeCut cutreeDynamicTree
-exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold = 0.2, SFTpower, cor_method = "spearman") {
+exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold = 0.2,
+                    SFTpower, cor_method = "spearman") {
+
+  if(is.null(SFTpower)) {
+    stop("Please, specify the SFT power")
+  }
+
     print("Calculating adjacency matrix...")
     if(cor_method == "pearson") {
       cor_matrix <- cor(t(norm.exp), method = "pearson")
-      #adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type)
       adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix, power = SFTpower, type=net_type)
     } else if(cor_method == "spearman") {
-      cor_matrix <- cor(t(norm.exp), method = "spearman")
-      adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
-                                       corOptions = list(use = "p", method = "spearman"))
+      cor_matrix <- cor(t(norm.exp), use="p", method = "spearman")
+      adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix, power=SFTpower, type=net_type)
     } else if (cor_method == "biweight") {
       cor_matrix <- WGCNA::bicor(t(norm.exp), maxPOutliers = 0.1)
-      adj_matrix <- WGCNA::adjacency(t(norm.exp), power=SFTpower, type=net_type,
-                                       corFnc = bicor)
+      adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix, power=SFTpower, type=net_type)
     } else {
-      print("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
+      stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
     }
     print("Removing diagonals...")
-    diag(adj_matrix)=0
+    diag(adj_matrix) <- 0
 
     #Convert to matrix
     gene_ids <- rownames(adj_matrix)
@@ -110,8 +113,8 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
 
 
     #Hierarchically cluster genes
-    dissTOM = 1-TOM #hclust takes a distance structure
-    geneTree = hclust(as.dist(dissTOM), method="average")
+    dissTOM <- 1-TOM #hclust takes a distance structure
+    geneTree <- hclust(as.dist(dissTOM), method="average")
 
     #Detecting coexpression modules
     print("Detecting coexpression modules...")
@@ -126,8 +129,6 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
     print("Calculating module eigengenes (MEs)...")
     old.MElist <- WGCNA::moduleEigengenes(t(norm.exp), colors = old.module_colors, softPower = SFTpower)
     old.MEs <- old.MElist$eigengenes
-    eigennetwork_beforemerging <- WGCNA::plotEigengeneNetworks(old.MEs, "",cex.lab=0.8, xLabelsAngle=90,
-                                                               marDendro=c(0,4,1,3), marHeatmap=c(3,6,1,2))
 
     #Calculate dissimilarity of module eigengenes
     MEDiss1 <- 1-cor(old.MEs)
@@ -136,7 +137,7 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
     old.METree <- hclust(as.dist(MEDiss1), method="average")
 
     #Then, choose a height cut.
-    MEDissThreshold = module_merging_threshold
+    MEDissThreshold <- module_merging_threshold
 
     #Merge the modules.
     print("Merging similar modules...")
@@ -299,7 +300,7 @@ module_stability <- function(norm.exp, moduleColors, net_type = "signed hybrid",
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[WGCNA]{corPvalueStudent}},\code{\link[WGCNA]{labeledHeatmap}},\code{\link[WGCNA]{blueWhiteRed}}
-#' @rdname module_sample_cor
+#' @rdname module_trait_cor
 #' @export
 #' @importFrom WGCNA corPvalueStudent labeledHeatmap blueWhiteRed
 module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
