@@ -361,6 +361,80 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
   }
 }
 
+#' Calculate gene significance for a given group of genes
+#'
+#' @param exp Data frame of gene expression with gene IDs in row names and sample names in column names.
+#' @param metadata Data frame containing sample names on the first column and sample information on the second column.
+#' @param alpha Significance level. Default is 0.05.
+#' @param min_cor Minimum correlation coefficient. Default is 0, which excludes negative correlations.
+#' @param use_abs Logical indicating whether to filter by correlation using absolute value or not. If TRUE, a \code{min_cor} of say 0.4 would keep all correlations above 0.4 and below -0.4. Default is TRUE.
+#' @param savetofile Logical indicating whether to save the table to correlations and p-values to a tab-delimited file or not.
+#' @param palette RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.
+#' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
+#'
+#' @return A heatmap of gene significance (GS) and a list containing filtered and raw GS.
+#' @seealso
+#'  \code{\link[reshape2]{melt}}
+#'  \code{\link[WGCNA]{corPvalueStudent}}
+#'  \code{\link[pheatmap]{pheatmap}}
+#'  \code{\link[RColorBrewer]{RColorBrewer}}
+#' @rdname gene_significance
+#' @export
+#' @importFrom reshape2 melt
+#' @importFrom WGCNA corPvalueStudent
+#' @importFrom pheatmap pheatmap
+#' @importFrom RColorBrewer brewer.pal
+gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
+                              use_abs = TRUE, savetofile = FALSE,
+                              palette="RdYlBu", show_rownames=FALSE) {
+
+  final_exp <- exp[, colnames(exp) %in% metadata[,1]]
+
+  if(continuous_trait == FALSE) {
+    tablesamples <- table(metadata)
+    write.table(tablesamples, file="matrix.to.correlate.to.genes.txt", quote=F,
+                sep="\t", row.names=TRUE)
+    trait <- read.csv("matrix.to.correlate.to.genes.txt", header=T, sep="\t", row.names=1, stringsAsFactors = FALSE)
+    unlink("matrix.to.correlate.to.genes.txt")
+  } else {
+    trait <- metadata
+    rownames(trait) <- metadata[,1]
+    trait[,1] <- NULL
+  }
+  GS <- cor(as.matrix(t(final_exp)), trait, use = "p")
+
+  # Filter by correlation coefficient and p-value
+  melt.cor <- reshape2::melt(GS)
+  nSamples <- ncol(final_exp)
+
+  GS.pvalue <- WGCNA::corPvalueStudent(GS, nSamples)
+  melt.pvalue <- reshape2::melt(GS.pvalue)
+
+  corandp <- merge(melt.cor, melt.pvalue, by = c("Var1", "Var2"))
+  corandp$Var1 <- as.character(corandp$Var1) # Convert gene names to character vectors
+  corandp$Var2 <- as.character(corandp$Var2) # Convert sample descriptions to character vectors
+
+  colnames(corandp) <- c("Gene", "Sample_info", "Cor", "pval")
+
+  if(use_abs == TRUE) {
+    corandp <- corandp[corandp$pval < alpha & abs(corandp$Cor) > min_cor, ]
+  } else {
+    corandp <- corandp[corandp$pval < alpha & corandp$Cor > min_cor, ]
+  }
+
+  if(savetofile == TRUE) {
+    write.table(corandp, file = "gene_correlation_to_trait_and_pvalue.txt",
+                sep = "\t", row.names = FALSE, quote = FALSE)
+  }
+
+  pheatmap::pheatmap(GS, color=colorRampPalette(RColorBrewer::brewer.pal(10, palette))(100),
+                     show_rownames=show_rownames, main="Gene-trait correlations")
+
+  resultlist <- list(filtered_corandp = corandp, raw_GS = GS)
+  return(resultlist)
+}
+
+
 #' Get hub genes in a given module or in all modules at once
 #'
 #' @param exp Gene expression data frame with gene IDs as row names and sample names as column names.
