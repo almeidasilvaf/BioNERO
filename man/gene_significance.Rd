@@ -12,7 +12,8 @@ gene_significance(
   use_abs = TRUE,
   savetofile = FALSE,
   palette = "RdYlBu",
-  show_rownames = FALSE
+  show_rownames = FALSE,
+  continuous_trait = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ gene_significance(
 \item{savetofile}{Logical indicating whether to save the table to correlations and p-values to a tab-delimited file or not.}
 
 \item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.}
+
+\item{show_rownames}{Logical indicating whether to show row names or not. Default is FALSE.}
 
 \item{continuous_trait}{Logical indicating if trait is a continuous variable. Default is FALSE.}
 }
