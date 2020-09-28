@@ -370,6 +370,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @param use_abs Logical indicating whether to filter by correlation using absolute value or not. If TRUE, a \code{min_cor} of say 0.4 would keep all correlations above 0.4 and below -0.4. Default is TRUE.
 #' @param savetofile Logical indicating whether to save the table to correlations and p-values to a tab-delimited file or not.
 #' @param palette RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.
+#' @param show_rownames Logical indicating whether to show row names or not. Default is FALSE.
 #' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
 #'
 #' @return A heatmap of gene significance (GS) and a list containing filtered and raw GS.
@@ -386,7 +387,8 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @importFrom RColorBrewer brewer.pal
 gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
                               use_abs = TRUE, savetofile = FALSE,
-                              palette="RdYlBu", show_rownames=FALSE) {
+                              palette="RdYlBu", show_rownames=FALSE,
+                              continuous_trait=FALSE) {
 
   final_exp <- exp[, colnames(exp) %in% metadata[,1]]
 

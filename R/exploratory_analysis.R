@@ -55,7 +55,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
     if(is.null(col_metadata)) {
         annotation_col <- NULL
     } else {
-        annotation_col <- data.frame(Condition = col_metadata[,2], stringsAsFactors = FALSE)
+        annotation_col <- data.frame(Trait = col_metadata[,2], stringsAsFactors = FALSE)
         rownames(annotation_col) <- col_metadata[,1]
     }
 
@@ -114,23 +114,23 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
         pca <- prcomp(t(log2(exp+1)))
     }
     pca_df <- as.data.frame(pca$x)
-    pca_df$Tissue <- metadata[metadata[,1] %in% rownames(pca_df), 2]
+    pca_df$Trait <- metadata[metadata[,1] %in% rownames(pca_df), 2]
     pca_df$SampleID <- rownames(pca_df)
     var_explained <- as.data.frame(round(100 * pca$sdev^2 / sum(pca$sdev^2), 1))
     rownames(var_explained) <- colnames(pca$x)
     if(interactive == FALSE) {
         if(PCs == "1x2") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Tissue)) +
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Trait)) +
                 ggplot2::geom_point(size = size) +
                 ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
                 ggplot2::theme_classic()
         } else if (PCs == "1x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Tissue)) +
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Trait)) +
                 ggplot2::geom_point(size = size) +
                 ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
                 ggplot2::theme_classic()
         } else if (PCs == "2x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC2, PC3, color = Tissue)) +
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC2, PC3, color = Trait)) +
                 ggplot2::geom_point(size = size) +
                 ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
                 ggplot2::theme_classic()
@@ -139,15 +139,15 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
         }
     } else {
         if(PCs == "1x2") {
-            p <- ggvis::ggvis(pca_df, ~PC1, ~PC2, fill = ~Tissue, key := ~SampleID) %>%
+            p <- ggvis::ggvis(pca_df, ~PC1, ~PC2, fill = ~Trait, key := ~SampleID) %>%
                 ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
                 ggvis::add_tooltip(function(df) df$SampleID)
         } else if (PCs == "1x3") {
-            p <- ggvis(pca_df, ~PC1, ~PC3, fill = ~Tissue, key := ~SampleID) %>%
+            p <- ggvis(pca_df, ~PC1, ~PC3, fill = ~Trait, key := ~SampleID) %>%
                 ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
                 ggvis::add_tooltip(function(df) df$SampleID)
         } else if (PCs == "2x3") {
-            p <- ggvis(pca_df, ~PC2, ~PC3, fill = ~Tissue, key := ~SampleID) %>%
+            p <- ggvis(pca_df, ~PC2, ~PC3, fill = ~Trait, key := ~SampleID) %>%
                 ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
                 ggvis::add_tooltip(function(df) df$SampleID)
         } else {
