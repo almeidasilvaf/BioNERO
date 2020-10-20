@@ -57,7 +57,7 @@ sum(is.na(exp)) # checking if NAs have been removed
 
 ```{r}
 exp_filt <- remove_nonexp(exp_filt, method="median", min_exp = 1)
-dim(exp)
+dim(exp_filt)
 ```
 
 After step 2, the number of genes reduced to `r nrow(exp)`.
@@ -142,7 +142,7 @@ plot_heatmap(finalexp, type="expr", col_metadata = metadata, cluster_rows=FALSE)
 ```{r}
 # Simple PCA plot
 library(BioNERO)
-plot_PCA(finalexp, metadata, size=4)
+plot_PCA(exp_filt, metadata, size=4)
 
 # Interactive PCA
 plot_PCA(finalexp, metadata, size=4, interactive=TRUE)

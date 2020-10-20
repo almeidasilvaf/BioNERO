@@ -2,8 +2,8 @@
 #' Plot heatmap of hierarchically clustered sample correlations or gene expression
 #'
 #' @param exp Expression data frame with genes in rows and samples in columns.
-#' @param col_metadata 2-column data frame containing sample names in the first column and sample description in the second column.
-#' @param row_metadata 2-column data frame containing gene names in the first column and functional annotation (e.g. KEGG pathway or GO) in the second column.
+#' @param col_metadata A data frame containing sample names in the first column and sample description in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple column annotations.
+#' @param row_metadata A data frame containing gene IDs in the first column and gene functional classification in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple gene annotation classifications.
 #' @param cor_method Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.
 #' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default is 'samplecor'.
 #' @param palette RColorBrewer palette to use. Default is "Blues" for sample correlation heatmap and "YlOrRd" for gene expression heatmap.
@@ -55,16 +55,18 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
     if(is.null(col_metadata)) {
         annotation_col <- NULL
     } else {
-        annotation_col <- data.frame(Trait = col_metadata[,2], stringsAsFactors = FALSE)
-        rownames(annotation_col) <- col_metadata[,1]
+        annotation_col <- col_metadata
+        rownames(annotation_col) <- annotation_col[,1]
+        annotation_col[,1] <- NULL
     }
 
     # How should we handle row annotation?
     if(is.null(row_metadata)) {
         annotation_row <- NULL
     } else {
-        annotation_row <- data.frame(Annotation = row_metadata[,2], stringsAsFactors = FALSE)
-        rownames(annotation_row) <- row_metadata[,1]
+        annotation_row <- row_metadata
+        rownames(annotation_row) <- annotation_row[,1]
+        annotation_row[,1] <- NULL
     }
 
 
@@ -93,7 +95,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
 #' Plot Principal Component Analysis (PCA) of samples
 #'
 #' @param exp Expression data frame with genes in rownames and samples in column names.
-#' @param metadata Data frame containing sample IDs in first column and sample description (e.g. tissue) in the second column.
+#' @param metadata Data frame containing sample IDs in first column and sample description (e.g. tissue or treatment) in the second column.
 #' @param log_trans Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).
 #' @param PCs Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
 #' @param interactive Logical indicating whether PCA should be plotted using Shiny's interactivity on RStudio. Default is FALSE.
@@ -113,6 +115,20 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
     } else {
         pca <- prcomp(t(log2(exp+1)))
     }
+
+    # Define colors
+    ccols <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
+                     "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
+                     "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
+                     "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
+                     "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
+    nlevels <- length(unique(as.character(metadata[,2])))
+    if(nlevels <= 20) {
+        custom_cols <- ccols
+    } else {
+        custom_cols <- colorRampPalette(ccols)(nlevels)
+    }
+
     pca_df <- as.data.frame(pca$x)
     pca_df$Trait <- metadata[metadata[,1] %in% rownames(pca_df), 2]
     pca_df$SampleID <- rownames(pca_df)
@@ -122,18 +138,27 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
         if(PCs == "1x2") {
             p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Trait)) +
                 ggplot2::geom_point(size = size) +
+                ggplot2::scale_color_manual(values=custom_cols) +
                 ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
-                ggplot2::theme_classic()
+                ggplot2::theme_classic() +
+                ggplot2::ggtitle("Principal component analysis of samples") +
+                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else if (PCs == "1x3") {
             p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Trait)) +
                 ggplot2::geom_point(size = size) +
+                ggplot2::scale_color_manual(values=custom_cols) +
                 ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                ggplot2::theme_classic()
+                ggplot2::theme_classic() +
+                ggplot2::ggtitle("Principal component analysis of samples") +
+                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else if (PCs == "2x3") {
             p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC2, PC3, color = Trait)) +
                 ggplot2::geom_point(size = size) +
+                ggplot2::scale_color_manual(values=custom_cols) +
                 ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                ggplot2::theme_classic()
+                ggplot2::theme_classic() +
+                ggplot2::ggtitle("Principal component analysis of samples") +
+                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else {
             stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
         }
