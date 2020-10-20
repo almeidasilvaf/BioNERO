@@ -3,7 +3,7 @@
 #' @param exp Normalized expression table, where rownames are gene IDs and colnames are sample names
 #' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.
 #' @param rsquared R squared cutoff. Default is 0.8.
-#' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.
+#' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".
 #'
 #' @return Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
 #'

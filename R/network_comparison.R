@@ -3,6 +3,8 @@
 #' @param exp_ref Data frame of reference gene expression data set, with gene IDs in row names and sample names in column names.
 #' @param exp_test Data frame of test gene expression data set, with gene IDs in row names and sample names in column names.
 #' @param moduleColors Vector of module assignment returned by \code{exp2net}.
+#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.
+#' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".
 #' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
 #' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
 #' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.
@@ -18,20 +20,42 @@
 #' @importFrom ggpubr ggscatter ggarrange ggexport
 #' @importFrom ggplot2 theme element_text geom_hline
 module_preservation <- function(exp_ref, exp_test, moduleColors,
-                                 savePreservation = TRUE, plot_all_stats = FALSE,
-                                 calculateClusterCoeff = FALSE) {
+                                net_type="signed", cor_method="spearman",
+                                savePreservation = TRUE, plot_all_stats = FALSE,
+                                calculateClusterCoeff = FALSE) {
 
     multiExpr <- list(ref = list(data = t(exp_ref)), test = list(data = t(exp_test)))
     multiColor <- list(ref = moduleColors)
 
     # Calculate module preservation
-    pres <- WGCNA::modulePreservation(multiExpr, multiColor,
-                                      referenceNetworks = 1,
-                                      nPermutations = 200,
-                                      randomSeed = 1,
-                                      quickCor = 0,
-                                      verbose = 3,
-                                      calculateClusterCoeff = calculateClusterCoeff)
+    if(cor_method == "pearson") {
+        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
+                                          referenceNetworks = 1,
+                                          nPermutations = 200,
+                                          randomSeed = 1,
+                                          quickCor = 0,
+                                          verbose = 3, networkType=net_type,
+                                          calculateClusterCoeff = calculateClusterCoeff)
+    } else if(cor_method == "spearman") {
+        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
+                                          referenceNetworks = 1,
+                                          nPermutations = 200,
+                                          randomSeed = 1,
+                                          quickCor = 0,
+                                          corOptions = list(use="p", method="spearman"),
+                                          verbose = 3, networkType=net_type,
+                                          calculateClusterCoeff = calculateClusterCoeff)
+    } else if(cor_method == "biweight") {
+        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
+                                          referenceNetworks = 1,
+                                          nPermutations = 200,
+                                          randomSeed = 1,
+                                          quickCor = 0, corFnc = "bicor",
+                                          verbose = 3, networkType=net_type,
+                                          calculateClusterCoeff = calculateClusterCoeff)
+    } else {
+        stop("Please, specify a valid correlation method.")
+    }
 
     if(savePreservation == TRUE) {
         save(pres, file = "modulePreservation.RData");

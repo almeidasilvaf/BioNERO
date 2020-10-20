@@ -16,7 +16,7 @@ plot_PCA(
 \arguments{
 \item{exp}{Expression data frame with genes in rownames and samples in column names.}
 
-\item{metadata}{Data frame containing sample IDs in first column and sample description (e.g. tissue) in the second column.}
+\item{metadata}{Data frame containing sample IDs in first column and sample description (e.g. tissue or treatment) in the second column.}
 
 \item{log_trans}{Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).}
 

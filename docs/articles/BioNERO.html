@@ -168,8 +168,8 @@
 <p><strong>Step 2:</strong> Removing non-expressed genes. Here, we will remove every gene whose median value is below 1. For other options, see <code><a href="../reference/remove_nonexp.html">?remove_nonexp</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_nonexp.html">remove_nonexp</a></span>(<span class="kw">exp_filt</span>, method=<span class="st">"median"</span>, min_exp = <span class="fl">1</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">exp</span>)
-<span class="co">## [1] 56044    28</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">exp_filt</span>)
+<span class="co">## [1] 27155    28</span>
 </pre></div>
 <p>After step 2, the number of genes reduced to 56044.</p>
 <p><strong>Step 3 (optional):</strong> Filtering genes by variance. It is reasonable to remove genes whose expression values do not vary much across samples, since we often want to find genes that are more or less expressed in particular conditions. Here, we will keep only the top 4000 most variable genes for simplicity. Users can also filter by percentile (e.g. the top 10% most variable genes).</p>
@@ -500,7 +500,68 @@ ggvis.getPlot("plot_id235543037").parseSpec(plot_id235543037_spec);
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">net</span>)
 <span class="co">## [1] "adjacency_matrix"   "MEs"                "genes_and_modules" </span>
 <span class="co">## [4] "kIN"                "moduleColors"       "correlation_matrix"</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="kw">net</span>)
+<span class="co">## List of 6</span>
+<span class="co">##  $ adjacency_matrix  : num [1:4000, 1:4000] 1.00 4.01e-06 1.09e-02 1.74e-05 7.22e-05 ...</span>
+<span class="co">##   ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">##   .. ..$ : chr [1:4000] "Glyma.01G003000" "Glyma.01G005500" "Glyma.01G005800" "Glyma.01G007800" ...</span>
+<span class="co">##   .. ..$ : chr [1:4000] "Glyma.01G003000" "Glyma.01G005500" "Glyma.01G005800" "Glyma.01G007800" ...</span>
+<span class="co">##  $ MEs               :'data.frame':  27 obs. of  17 variables:</span>
+<span class="co">##   ..$ MEblack        : num [1:27] 0.1828 0.1152 0.0547 0.1228 -0.0334 ...</span>
+<span class="co">##   ..$ MEmagenta      : num [1:27] 0.1377 0.0666 0.0814 0.2115 -0.0248 ...</span>
+<span class="co">##   ..$ MEviolet       : num [1:27] 0.1448 0.0665 -0.0193 0.1352 -0.226 ...</span>
+<span class="co">##   ..$ MEwhite        : num [1:27] 0.13218 0.07539 -0.00526 0.13624 -0.18118 ...</span>
+<span class="co">##   ..$ MEsienna3      : num [1:27] -0.1079 -0.1243 0.1268 -0.0595 0.2956 ...</span>
+<span class="co">##   ..$ MEdarkturquoise: num [1:27] -0.2851 0.0376 0.1503 -0.1561 0.3326 ...</span>
+<span class="co">##   ..$ MEsalmon       : num [1:27] -0.2198 -0.0367 0.2611 -0.2139 0.2644 ...</span>
+<span class="co">##   ..$ MElightyellow  : num [1:27] -0.0314 -0.0363 0.0514 -0.0225 0.1149 ...</span>
+<span class="co">##   ..$ MEsteelblue    : num [1:27] -0.03926 -0.00833 0.1253 0.02438 0.19694 ...</span>
+<span class="co">##   ..$ MEbrown        : num [1:27] 0.00191 -0.04294 0.02494 -0.01045 0.10074 ...</span>
+<span class="co">##   ..$ MElightcyan    : num [1:27] -0.1285 -0.0206 0.0604 -0.1031 0.2599 ...</span>
+<span class="co">##   ..$ MEyellow       : num [1:27] -0.06144 0.00663 0.0154 -0.05074 0.09611 ...</span>
+<span class="co">##   ..$ MEdarkorange   : num [1:27] 0.12158 0.05293 0.04975 0.06285 0.00826 ...</span>
+<span class="co">##   ..$ MEpink         : num [1:27] 0.0733 0.14387 0.14838 0.03634 -0.00164 ...</span>
+<span class="co">##   ..$ MEcyan         : num [1:27] 0.04925 0.07071 0.04568 0.05546 -0.00909 ...</span>
+<span class="co">##   ..$ MEskyblue      : num [1:27] 0.1935 0.1662 0.0918 0.1858 -0.0647 ...</span>
+<span class="co">##   ..$ MEgrey         : num [1:27] -0.0408 -0.0463 0.015 0.0414 0.0815 ...</span>
+<span class="co">##  $ genes_and_modules :'data.frame':  4000 obs. of  2 variables:</span>
+<span class="co">##   ..$ Genes  : chr [1:4000] "Glyma.01G003000" "Glyma.01G005500" "Glyma.01G005800" "Glyma.01G007800" ...</span>
+<span class="co">##   ..$ Modules: chr [1:4000] "sienna3" "cyan" "brown" "skyblue" ...</span>
+<span class="co">##  $ kIN               :'data.frame':  4000 obs. of  4 variables:</span>
+<span class="co">##   ..$ kTotal : num [1:4000] 274.5 53.8 36.1 52.1 80.2 ...</span>
+<span class="co">##   ..$ kWithin: num [1:4000] 230.17 17.19 9.21 29.5 74.1 ...</span>
+<span class="co">##   ..$ kOut   : num [1:4000] 44.34 36.61 26.86 22.58 6.13 ...</span>
+<span class="co">##   ..$ kDiff  : num [1:4000] 185.83 -19.42 -17.65 6.93 67.97 ...</span>
+<span class="co">##  $ moduleColors      : chr [1:4000] "sienna3" "cyan" "brown" "skyblue" ...</span>
+<span class="co">##  $ correlation_matrix: num [1:4000, 1:4000] 1 -0.2311 0.4125 -0.1392 -0.0395 ...</span>
+<span class="co">##   ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">##   .. ..$ : chr [1:4000] "Glyma.01G003000" "Glyma.01G005500" "Glyma.01G005800" "Glyma.01G007800" ...</span>
+<span class="co">##   .. ..$ : chr [1:4000] "Glyma.01G003000" "Glyma.01G005500" "Glyma.01G005800" "Glyma.01G007800" ...</span>
 </pre></div>
+</div>
+<div id="gene-coexpression-network-analysis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#gene-coexpression-network-analysis" class="anchor"></a>4 Gene coexpression network analysis</h2>
+<p>Now that we have our coexpression network, we can start exploring some of its properties. First, let’s calculate module-trait correlations. In this case, the trait will be considered the tissues.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span>(exp=<span class="kw">finalexp</span>, metadata=<span class="kw">metadata</span>, MEs=<span class="kw">net</span><span class="op">$</span><span class="kw">MEs</span>, 
+                 cor_method=<span class="st">"pearson"</span>)
+</pre></div>
+<p><img src="BioNERO_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> also allows for plot customization. For instance:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="co"># Transpose the matrix</span>
+<span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span>(exp=<span class="kw">finalexp</span>, metadata=<span class="kw">metadata</span>, MEs=<span class="kw">net</span><span class="op">$</span><span class="kw">MEs</span>, 
+                 cor_method=<span class="st">"pearson"</span>, transpose = <span class="fl">TRUE</span>)
+</pre></div>
+<p><img src="BioNERO_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb22"><pre class="downlit">
+
+<span class="co"># Change the palette (based on RColorBrewer's palette)</span>
+<span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span>(exp=<span class="kw">finalexp</span>, metadata=<span class="kw">metadata</span>, MEs=<span class="kw">net</span><span class="op">$</span><span class="kw">MEs</span>,
+                 cor_method=<span class="st">"pearson"</span>, palette=<span class="st">"PRGn"</span>)
+</pre></div>
+<p><img src="BioNERO_files/figure-html/unnamed-chunk-16-2.png" width="576" style="display: block; margin: auto;"></p>
 </div>
   </div>
 

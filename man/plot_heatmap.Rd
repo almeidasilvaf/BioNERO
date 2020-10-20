@@ -25,9 +25,9 @@ plot_heatmap(
 \arguments{
 \item{exp}{Expression data frame with genes in rows and samples in columns.}
 
-\item{col_metadata}{2-column data frame containing sample names in the first column and sample description in the second column.}
+\item{col_metadata}{A data frame containing sample names in the first column and sample description in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple column annotations.}
 
-\item{row_metadata}{2-column data frame containing gene names in the first column and functional annotation (e.g. KEGG pathway or GO) in the second column.}
+\item{row_metadata}{A data frame containing gene IDs in the first column and gene functional classification in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple gene annotation classifications.}
 
 \item{cor_method}{Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.}
 

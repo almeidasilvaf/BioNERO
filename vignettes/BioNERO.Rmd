@@ -139,10 +139,10 @@ plot_heatmap(finalexp, type="expr", col_metadata = metadata, cluster_rows=FALSE)
 
 **Principal component analysis (PCA):** the function `plot_PCA` performs a PCA and plots PC1 vs PC2 (by default), as well the percentage of variance explained by each PC. The users can also choose to plot PC1 vs PC3 or PC2 vs PC3. Besides, if `interactive = TRUE`, the function will display an interactive PCA plot.
 
-```{r}
+```{r cache=FALSE}
 # Simple PCA plot
 library(BioNERO)
-plot_PCA(exp_filt, metadata, size=4)
+plot_PCA(finalexp, metadata, size=4)
 
 # Interactive PCA
 plot_PCA(finalexp, metadata, size=4, interactive=TRUE)
@@ -167,7 +167,42 @@ Now, we can use the power calculated by `SFT_fit` to reconstruct the GCN. The fu
 ```{r}
 net <- exp2net(finalexp, net_type="signed", SFTpower=power, cor_method="pearson")
 names(net)
+str(net)
 ```
+
+## 4 Gene coexpression network analysis
+
+Now that we have our coexpression network, we can start exploring some of its properties. First, let's calculate module-trait correlations. In this case, the trait will be considered the tissues.
+
+```{r}
+module_trait_cor(exp=finalexp, metadata=metadata, MEs=net$MEs, 
+                 cor_method="pearson")
+```
+
+The function `module_trait_cor()` also allows for plot customization. For instance:
+
+```{r fig.width=8, fig.height=3}
+# Transpose the matrix
+module_trait_cor(exp=finalexp, metadata=metadata, MEs=net$MEs, 
+                 cor_method="pearson", transpose = TRUE)
+```
+
+```{r}
+# Change the palette (based on RColorBrewer's palette)
+module_trait_cor(exp=finalexp, metadata=metadata, MEs=net$MEs,
+                 cor_method="pearson", palette="PRGn")
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 

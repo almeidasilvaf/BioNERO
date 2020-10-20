@@ -13,7 +13,7 @@ SFT_fit(exp, net_type = "signed", rsquared = 0.8, cor_method = "spearman")
 
 \item{rsquared}{R squared cutoff. Default is 0.8.}
 
-\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.}
+\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".}
 }
 \value{
 Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory

@@ -8,6 +8,8 @@ module_preservation(
   exp_ref,
   exp_test,
   moduleColors,
+  net_type = "signed",
+  cor_method = "spearman",
   savePreservation = TRUE,
   plot_all_stats = FALSE,
   calculateClusterCoeff = FALSE
@@ -19,6 +21,10 @@ module_preservation(
 \item{exp_test}{Data frame of test gene expression data set, with gene IDs in row names and sample names in column names.}
 
 \item{moduleColors}{Vector of module assignment returned by \code{exp2net}.}
+
+\item{net_type}{Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.}
+
+\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".}
 
 \item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.}
 
