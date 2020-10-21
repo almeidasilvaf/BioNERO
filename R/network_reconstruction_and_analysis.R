@@ -503,9 +503,9 @@ get_hubs <- function(exp, genes_modules, MEs, kIN, cor_method = "spearman") {
 #' Perform enrichment analysis for functional annotation such as Gene Ontology (GO), pathway (KEGG, MapMan) or protein domains (PFAM, Panther).
 #'
 #' @param genes Character vector containing genes for overrepresentation analysis.
-#' @param exp Gene expression data frames with gene IDs in row names and column names in column names.
+#' @param exp Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.
 #' @param annotation Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.
-#' @param column Column name on the data frame specified in 'annotation' used to test for enrichment (e.g. "GO.ID").
+#' @param column Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.
 #' @param correction Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".
 #' @param p P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.
 #'
@@ -519,25 +519,76 @@ get_hubs <- function(exp, genes_modules, MEs, kIN, cor_method = "spearman") {
 #' @rdname enrichment_analysis
 #' @export
 #' @importFrom bc3net enrichment
-enrichment_analysis <- function(genes, exp, annotation, column, correction = "BH", p = 0.05) {
+enrichment_analysis <- function(genes, exp, annotation, column = NULL, correction = "BH", p = 0.05) {
 
     # Get a dataframe of expressed genes and their annotations
     background_genes <- rownames(exp)
     gene_column <- colnames(annotation)[1]
-    gene_annotation <- annotation[, c(paste(gene_column), column)]
+
+    # Handle missing values
+    annotation[is.na(annotation)] <- "Unannotated"
+
+    if(is.null(column)) { #all columns?
+      gene_annotation <- annotation
+    } else {
+      if(is.numeric(column)) { # Input is column indices
+        gene_annotation <- annotation[, c(1, column)]
+      } else { #Input is column names
+        gene_annotation <- annotation[, c(paste(gene_column), column)]
+      }
+    }
+
     background <- gene_annotation[gene_annotation[,1] %in% background_genes, ]
 
-    # Named list of expressed genes and their annotations
-    annotation_list <- split(background[,1], background[,2])
+    if(ncol(background) == 2) { #only one annotation category
+      # Named list of expressed genes and their annotations
+      annotation_list <- split(background[,1], background[,2])
 
-    # Perform the enrichment analysis
-    enrich <- bc3net::enrichment(genes, background_genes, annotation_list, adj = correction)
-    signif_enrich <- as.data.frame(enrich[enrich$padj < p, ], stringsAsFactors = FALSE)
+      # Perform the enrichment analysis
+      enrich <- bc3net::enrichment(genes, background_genes, annotation_list, adj = correction)
+      signif_enrich <- as.data.frame(enrich[enrich$padj < p, ], stringsAsFactors = FALSE)
 
-    signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
-    signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
+      signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
+      signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
 
-    final_list <- list(signif_enrich, signif_terms_genes); names(final_list) <- c("Significant_terms", "Associated_genes")
+      final_list <- list(signif_enrich, signif_terms_genes);
+      names(final_list) <- c("Significant_terms", "Associated_genes")
+
+    } else { # more than 1 annotation category
+      annotation_list <- lapply(2:ncol(background), function(x) {
+        return(split(background[,1], background[,x]))
+      })
+
+      # Remove unannotated genes
+      annotation_list_final <- lapply(annotation_list, function(x) {
+        return(x[names(x) != "Unannotated"])
+      })
+
+      # Perform the enrichment analysis
+      signif_enrich <- lapply(annotation_list_final, function(x) {
+        enrich <- bc3net::enrichment(genes, background_genes, x, adj=correction)
+        sig_enrich <- as.data.frame(enrich[enrich$padj < p, ], stringsAsFactors=FALSE)
+        return(sig_enrich)
+      })
+
+      # Add column containing the annotation class
+      classes <-  names(background)[2:length(background)]
+      list_signif_enrich <- lapply(1:length(classes), function(x) {
+        cbind(signif_enrich[[x]], Category = classes[x])
+      })
+
+      # Reduce list of data frames to a single data frame
+      df_signif_enrich <- Reduce(rbind, list_signif_enrich)
+
+      # Get genes associated to each term
+      annotation_list_concat <- unlist(annotation_list, recursive = FALSE) # create list from list of lists
+      signif_terms_genes <- annotation_list_concat[as.character(df_signif_enrich[,1])]
+      signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
+
+      final_list <- list(Significant_terms = df_signif_enrich,
+                         Associated_genes = signif_terms_genes)
+#      names(final_list) <- c("Significant_terms", "Associated_genes")
+    }
     return(final_list)
 }
 

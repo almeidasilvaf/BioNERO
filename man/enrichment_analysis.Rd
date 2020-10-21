@@ -8,7 +8,7 @@ enrichment_analysis(
   genes,
   exp,
   annotation,
-  column,
+  column = NULL,
   correction = "BH",
   p = 0.05
 )
@@ -16,11 +16,11 @@ enrichment_analysis(
 \arguments{
 \item{genes}{Character vector containing genes for overrepresentation analysis.}
 
-\item{exp}{Gene expression data frames with gene IDs in row names and column names in column names.}
+\item{exp}{Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.}
 
 \item{annotation}{Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.}
 
-\item{column}{Column name on the data frame specified in 'annotation' used to test for enrichment (e.g. "GO.ID").}
+\item{column}{Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.}
 
 \item{correction}{Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".}
 

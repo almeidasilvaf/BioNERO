@@ -172,7 +172,11 @@ str(net)
 
 ## 4 Gene coexpression network analysis
 
-Now that we have our coexpression network, we can start exploring some of its properties. First, let's calculate module-trait correlations. In this case, the trait will be considered the tissues.
+Now that we have our coexpression network, we can start exploring some of its properties. 
+
+### 4.1 Module-trait associations
+
+First, let's calculate module-trait correlations. In this case, tissues will be considered traits. This analysis is useful to identify modules that are positively or negatively correlated with particular traits, which means that their gene expression levels go up or down in these conditions. By treating tissues as traits, we want to identify groups of genes whose expression levels are inhibited or enhanced in particular tissues. Alternatively, one can also use continuous variables as traits, such as metabolite content, protein concentration, height, etc.
 
 ```{r}
 module_trait_cor(exp=finalexp, metadata=metadata, MEs=net$MEs, 
@@ -194,9 +198,21 @@ module_trait_cor(exp=finalexp, metadata=metadata, MEs=net$MEs,
 ```
 
 
+### 4.2 Enrichment analysis
 
+After identifying modules that are inhibited or enhanced in particular tissues, users would likely want to find to which biological processes (e.g. GO biological process) or pathways (e.g. KEGG, MapMan) these genes are related. This can be done with enrichment analyses, which can uncover terms (such as GO or KEGG pathways) that are found more than expected by chance in a group of genes.
+To illustrate the function `enrichment_analysis()`, we will look for enriched GO biological processes in the *black* module, which has a high positive correlation with seeds. The annotation data was downloaded from **[Phytozome's Biomart](https://phytozome.jgi.doe.gov/biomart/martview/b1db572bfe777ed7e17b91c2e955deda)**. 
 
+```{r}
+# Load annotation data
+annotation <- read.csv(unz("biomart_allgenes.txt.zip", "biomart_allgenes.txt"), 
+                       header=TRUE, sep="\t")
+enrichment_analysis(genes = net$genes_and_modules[net$genes_and_modules[,2] == "black", 1],
+                    exp=finalexp,
+                    annotation=annotation,
+                    column="GO.ID")
 
+```
 
 
 
