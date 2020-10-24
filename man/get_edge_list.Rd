@@ -4,30 +4,16 @@
 \alias{get_edge_list}
 \title{Get edge list from an adjacency matrix for a group of genes}
 \usage{
-get_edge_list(
-  adjacency,
-  genes_modules,
-  genes = NULL,
-  module = NULL,
-  cor_threshold = NULL,
-  net_type = NULL,
-  power
-)
+get_edge_list(net, genes = NULL, module = NULL, cor_threshold = NULL)
 }
 \arguments{
-\item{adjacency}{Adjacency matrix. First element of the output list from \code{exp2net}.}
-
-\item{genes_modules}{Data frame of genes and their corresponding modules. Third element of the output list from \code{exp2net}. Only used if the user wants to extract an edge list for a given module.}
+\item{net}{List object returned by \code{exp2net}.}
 
 \item{genes}{Character vector containing a subset of genes from which edges will be extracted. It can be ignored if the user wants to extract an edge list for a given module instead of individual genes.}
 
 \item{module}{Character with module name from which edges will be extracted. To include 2 or more modules, input the names in a character vector.}
 
 \item{cor_threshold}{Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.}
-
-\item{net_type}{Network type. This information will be used to transform the correlation threshold to an adjacency threshold.}
-
-\item{power}{Power used to fit scale-free topology. Output from the function \code{SFT_fit}.}
 }
 \value{
 Data frame with edge list for the input genes.

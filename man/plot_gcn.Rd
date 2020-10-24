@@ -6,9 +6,8 @@
 \usage{
 plot_gcn(
   edgelist_gcn,
-  genes_modules = NULL,
+  net,
   modulename = NULL,
-  kIN = NULL,
   hubs = NULL,
   show_labels = "tophubs",
   top_n_hubs = 5,
@@ -18,11 +17,9 @@ plot_gcn(
 \arguments{
 \item{edgelist_gcn}{Data frame containing the edge list for the PPI or GRN network. First column is the protein 1 (or TF) and second column is the protein 2 (or target gene). All other columns are interpreted as edge attributes.}
 
-\item{genes_modules}{Data frame containing genes in column 1 and their corresponding modules in column 2. It is the third element of the output list from \code{exp2net}.}
+\item{net}{List object returned by \code{exp2net}.}
 
 \item{modulename}{Character with the name of the module to be plotted.}
-
-\item{kIN}{Data frame containing intramodular connectivity for each gene in the network. It is the fourth element of the output list from \code{exp2net}.}
 
 \item{hubs}{Data frame containing hub genes in the first column, their modules in the second column, and intramodular connectivity in the third column.}
 

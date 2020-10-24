@@ -201,7 +201,8 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
 #' @rdname module_stability
 #' @export
 #' @importFrom WGCNA sampledBlockwiseModules initProgInd matchLabels updateProgInd plotDendroAndColors
-module_stability <- function(norm.exp, moduleColors, net_type = "signed hybrid", SFTpower, cor_method = "bicor",
+module_stability <- function(norm.exp, moduleColors, net_type = "signed hybrid",
+                             SFTpower, cor_method = "bicor",
                              module_merging_threshold = 0.2, nRuns = 30) {
 
     expr <- t(norm.exp)
@@ -440,9 +441,7 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
 #' Get hub genes in a given module or in all modules at once
 #'
 #' @param exp Gene expression data frame with gene IDs as row names and sample names as column names.
-#' @param genes_modules A 2-column data frame containing genes on the first column and modules on the second column. It is the 3rd element of the output from \code{exp2net}.
-#' @param MEs Data frame of module eigengenes. It is the 2nd element of the output from \code{exp2net}.
-#' @param kIN Data frame with intramodular connectivity (kIN) for each gene. It is the 4th element of the output from \code{exp2net}.
+#' @param net List object returned by \code{exp2net}.
 #' @param cor_method Correlation method. One of 'pearson' or 'spearman' (recommended). Default is 'spearman'.
 #'
 #' @return Data frame containing gene IDs, modules and intramodular connectivity of all hubs.
@@ -453,43 +452,48 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
 #' @export
 #' @importFrom WGCNA signedKME
 #' @importFrom dplyr filter
-get_hubs <- function(exp, genes_modules, MEs, kIN, cor_method = "spearman") {
+get_hubs <- function(exp, net, cor_method = "spearman") {
 
-    # List of genes and modules. Each element of the list is a module.
-    l1 <- split(genes_modules, f = genes_modules$new.module_colors)
-    l1$grey <- NULL
+  genes_modules <- net[[3]]
+  MEs <- net[[2]]
+  kIN <- net[[4]]
 
-    # Add kWithin info to each data frame in the list.
-    l2 <- lapply(l1, function(x) merge(x, kIN, by.x = "gene_ids", by.y = "row.names"))
+  # List of genes and modules. Each element of the list is a module
+  l1 <- split(genes_modules, f = genes_modules[,2])
+  l1$grey <- NULL
 
-    # Calculate kME
-    if (cor_method == "spearman") {
-        MM <- WGCNA::signedKME(t(exp), MEs, corOptions = "use = 'p', method = 'spearman'")
-    } else if (cor_method == "pearson") {
-        MM <- WGCNA::signedKME(t(exp), MEs)
-    } else {
-        print("Invalid correlation method. Pick one of 'spearman' or 'pearson'.")
-    }
 
-    # Add kME info to each data frame in the list
-    l3 <- lapply(l2, function(x) merge(x, MM, by.x = "gene_ids", by.y="row.names"))
+  # Add kWithin info to each data frame in the list.
+  l2 <- lapply(l1, function(x) merge(x, kIN, by.x = "Genes", by.y = "row.names"))
 
-    # Keep only top 10% degree genes
-    l4 <- lapply(l3, function(x) x[order(x$kWithin, decreasing = TRUE), ][1:round(nrow(x) * 0.1), ])
+  # Calculate kME
+  if (cor_method == "spearman") {
+    MM <- WGCNA::signedKME(t(exp), MEs, corOptions = "use = 'p', method = 'spearman'")
+  } else if (cor_method == "pearson") {
+    MM <- WGCNA::signedKME(t(exp), MEs)
+  } else {
+    print("Invalid correlation method. Pick one of 'spearman' or 'pearson'.")
+  }
 
-    # Remove 'kME' from colnames
-    l5 <- lapply(l4, function(x) {
-        colnames(x) <- gsub("kME", "", colnames(x))
-        return(x)
-    })
+  # Add kME info to each data frame in the list
+  l3 <- lapply(l2, function(x) merge(x, MM, by.x = "Genes", by.y="row.names"))
 
-    # Pick genes from the top 10% degree with kME above 0.8
-    final_list <- lapply(l5, function(x) {
-        y <- unique(x$new.module_colors)
-        z <- dplyr::filter(x, y >= 0.8)
-        z <- z[, c(1,2,4)]
-        return(z)
-    })
+  # Keep only top 10% degree genes
+  l4 <- lapply(l3, function(x) x[order(x$kWithin, decreasing = TRUE), ][1:round(nrow(x) * 0.1), ])
+
+  # Remove 'kME' from colnames
+  l5 <- lapply(l4, function(x) {
+    colnames(x) <- gsub("kME", "", colnames(x))
+    return(x)
+  })
+
+  # Pick genes from the top 10% degree with kME above 0.8
+  final_list <- lapply(l5, function(x) {
+    y <- unique(x$Modules)
+    z <- dplyr::filter(x, y >= 0.8)
+    z <- z[, c(1,2,4)]
+    return(z)
+  })
 
     hubs_df <- do.call(rbind, final_list)
     rownames(hubs_df) <- 1:nrow(hubs_df)
@@ -666,7 +670,9 @@ module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
 #'
 #' @rdname get_neighbors
 
-get_neighbors <- function(genes, adjacency, cor_threshold = 0.7, net_type = c("signed", "signed hybrid", "unsigned"), power) {
+get_neighbors <- function(genes, adjacency, cor_threshold = 0.7,
+                          net_type = c("signed", "signed hybrid", "unsigned"),
+                          power) {
     edges <- adjacency
     edges[lower.tri(edges, diag = TRUE)] <- NA
     edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE); colnames(edges) <- c("Gene1", "Gene2", "Weight")
@@ -721,7 +727,8 @@ get_neighbors <- function(genes, adjacency, cor_threshold = 0.7, net_type = c("s
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
-filter_edges <- function(cor_matrix, method = "optimalSFT", r_optimal_test = seq(0.7, 0.9, by=0.05),
+filter_edges <- function(cor_matrix, method = "optimalSFT",
+                         r_optimal_test = seq(0.7, 0.9, by=0.05),
                          Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
                          nSamples = NULL, check_SFT = FALSE) {
 
@@ -822,13 +829,11 @@ filter_edges <- function(cor_matrix, method = "optimalSFT", r_optimal_test = seq
 
 #' Get edge list from an adjacency matrix for a group of genes
 #'
-#' @param adjacency Adjacency matrix. First element of the output list from \code{exp2net}.
-#' @param genes_modules Data frame of genes and their corresponding modules. Third element of the output list from \code{exp2net}. Only used if the user wants to extract an edge list for a given module.
+#' @param net List object returned by \code{exp2net}.
 #' @param genes Character vector containing a subset of genes from which edges will be extracted. It can be ignored if the user wants to extract an edge list for a given module instead of individual genes.
 #' @param module Character with module name from which edges will be extracted. To include 2 or more modules, input the names in a character vector.
 #' @param cor_threshold Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.
-#' @param net_type Network type. This information will be used to transform the correlation threshold to an adjacency threshold.
-#' @param power Power used to fit scale-free topology. Output from the function \code{SFT_fit}.
+#'
 #' @return Data frame with edge list for the input genes.
 #'
 #' @seealso \code{SFT_fit}
@@ -837,9 +842,11 @@ filter_edges <- function(cor_matrix, method = "optimalSFT", r_optimal_test = seq
 #' @rdname get_edge_list
 #' @export
 
-get_edge_list <- function(adjacency, genes_modules, genes = NULL, module = NULL, cor_threshold = NULL,
-                          net_type = NULL, power) {
-    edges <- adjacency
+get_edge_list <- function(net, genes = NULL, module = NULL,
+                          cor_threshold = NULL) {
+    edges <- net[[6]]
+    genes_modules <- net[[3]]
+
     edges[lower.tri(edges, diag = TRUE)] <- NA
     edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
     colnames(edges) <- c("Gene1", "Gene2", "Weight")
@@ -849,26 +856,11 @@ get_edge_list <- function(adjacency, genes_modules, genes = NULL, module = NULL,
     edges_m2 <- merge(edges_m1, genes_modules, by.x = 2, by.y = 1)
     colnames(edges_m2) <- c("Gene1", "Gene2", "weight", "Module1", "Module2")
 
-    if(is.null(net_type)) {
-        print("Building edge list for weighted network...")
-    } else {
-        if(net_type == "signed") {
-            adj_threshold <- (0.5*(1 + cor_threshold))^power
-        } else if(net_type == "signed hybrid") {
-            if(cor_threshold > 0) {
-                adj_threshold <- cor_threshold^power
-            } else {
-                stop("Negative correlation chosen as threshold. Signed hybrid networks don't have negative values.")
-            }
-        } else {
-            adj_threshold <- abs(cor_threshold)^power
-        }
-    }
-
+    # Filter by correlation threshold
     if(is.null(cor_threshold)) {
         final_edges <- edges_m2
     } else {
-        final_edges <- edges_m2[edges_m2$weight >= adj_threshold, ]
+        final_edges <- edges_m2[edges_m2$weight >= cor_threshold, ]
     }
 
     if(is.null(genes)) {
@@ -982,7 +974,8 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes guides
-plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method = "infomap", show_labels = "tophubs",
+plot_ppi <- function(edgelist_int, detect_communities = TRUE,
+                     clustering_method = "infomap", show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE) {
     requireNamespace("intergraph", quietly=TRUE)
     nod_at <- data.frame(Gene = unique(c(as.character(edgelist_int[,1]), as.character(edgelist_int[,2]))),
@@ -1106,8 +1099,8 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE, clustering_method 
 #' @importFrom ggplot2 ggplot aes arrow scale_color_manual guides
 #' @importFrom ggnetwork geom_edges unit geom_nodes geom_nodetext theme_blank geom_nodelabel_repel
 #' @importFrom ggnewscale new_scale_color
-plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE,
-                     layout = "kk", arrow.gap = 0.01) {
+plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
+                     interactive = FALSE, layout = "kk", arrow.gap = 0.01) {
     requireNamespace("intergraph", quietly=TRUE)
 
     if(ncol(edgelist_grn) == 3) {
@@ -1235,9 +1228,8 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, inte
 #' Plot gene coexpression network from edge list
 #'
 #' @param edgelist_gcn Data frame containing the edge list for the PPI or GRN network. First column is the protein 1 (or TF) and second column is the protein 2 (or target gene). All other columns are interpreted as edge attributes.
-#' @param genes_modules Data frame containing genes in column 1 and their corresponding modules in column 2. It is the third element of the output list from \code{exp2net}.
+#' @param net List object returned by \code{exp2net}.
 #' @param modulename Character with the name of the module to be plotted.
-#' @param kIN Data frame containing intramodular connectivity for each gene in the network. It is the fourth element of the output list from \code{exp2net}.
 #' @param hubs Data frame containing hub genes in the first column, their modules in the second column, and intramodular connectivity in the third column.
 #' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".
 #' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
@@ -1254,11 +1246,15 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5, inte
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes guides
-plot_gcn <- function(edgelist_gcn, genes_modules = NULL, modulename = NULL, kIN = NULL, hubs = NULL,
-                     show_labels = "tophubs", top_n_hubs = 5, interactive = FALSE) {
+plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
+                     show_labels = "tophubs", top_n_hubs = 5,
+                     interactive = FALSE) {
     requireNamespace("intergraph", quietly=TRUE)
-    if(is.null(genes_modules) | is.null(modulename) | is.null(hubs) | is.null(kIN) | is.null(edgelist_gcn)) {
-        stop("Arguments edgelist_gcn, genes_modules, modulename, hubs, and kIN are mandatory for this bionetwork.")
+    genes_modules <- net[[3]]
+    kIN <- net[[4]]
+
+    if(is.null(modulename) | is.null(hubs) | is.null(edgelist_gcn)) {
+        stop("Arguments edgelist_gcn, modulename and hubs are mandatory for this network.")
     }
 
     #Create a data frame of nodes and node attributes
@@ -1285,7 +1281,7 @@ plot_gcn <- function(edgelist_gcn, genes_modules = NULL, modulename = NULL, kIN 
             nod_at$Degree2 <- nod_at$Degree
             graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
             nvertices <- igraph::vcount(graph)
-            if(nvertices > 200) {
+            if(nvertices > 400) {
                 print(paste("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
                   Number of vertices:", nvertices))
             }
