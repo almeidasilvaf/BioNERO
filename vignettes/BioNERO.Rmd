@@ -207,11 +207,6 @@ To illustrate the function `enrichment_analysis()`, we will look for enriched GO
 # Load annotation data
 annotation <- read.csv(unz("biomart_allgenes.txt.zip", "biomart_allgenes.txt"), 
                        header=TRUE, sep="\t")
-enrichment_analysis(genes = net$genes_and_modules[net$genes_and_modules[,2] == "black", 1],
-                    exp=finalexp,
-                    annotation=annotation,
-                    column="GO.ID")
-
 ```
 
 

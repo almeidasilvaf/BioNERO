@@ -519,7 +519,8 @@ get_hubs <- function(exp, genes_modules, MEs, kIN, cor_method = "spearman") {
 #' @rdname enrichment_analysis
 #' @export
 #' @importFrom bc3net enrichment
-enrichment_analysis <- function(genes, exp, annotation, column = NULL, correction = "BH", p = 0.05) {
+enrichment_analysis <- function(genes, exp, annotation, column = NULL,
+                                correction = "BH", p = 0.05) {
 
     # Get a dataframe of expressed genes and their annotations
     background_genes <- rownames(exp)
@@ -571,27 +572,84 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL, correctio
         return(sig_enrich)
       })
 
-      # Add column containing the annotation class
-      classes <-  names(background)[2:length(background)]
-      list_signif_enrich <- lapply(1:length(classes), function(x) {
-        cbind(signif_enrich[[x]], Category = classes[x])
-      })
+      # Remove empty data frames from list
+      signif_enrich <- signif_enrich[sapply(signif_enrich, nrow) > 0]
 
-      # Reduce list of data frames to a single data frame
-      df_signif_enrich <- Reduce(rbind, list_signif_enrich)
+      # Create a data frame containing annotations and the annotation class
+      #annot_correspondence <- list()
+      annot_correspondence <- Reduce(rbind, lapply(2:length(background), function(x) {
+        annot_correspondence <- data.frame(TermID = background[,x],
+                                           Category = names(background)[x],
+                                           stringsAsFactors = FALSE)
+        return(annot_correspondence)
+      }))
 
-      # Get genes associated to each term
-      annotation_list_concat <- unlist(annotation_list, recursive = FALSE) # create list from list of lists
-      signif_terms_genes <- annotation_list_concat[as.character(df_signif_enrich[,1])]
-      signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
 
-      final_list <- list(Significant_terms = df_signif_enrich,
-                         Associated_genes = signif_terms_genes)
-#      names(final_list) <- c("Significant_terms", "Associated_genes")
+      if(length(signif_enrich) > 0) {
+        # Add column containing the annotation class
+        list_signif_enrich <- lapply(signif_enrich, function(x) {
+          merge(x, annot_correspondence)
+        })
+
+        # Reduce list of data frames to a single data frame
+        df_signif_enrich <- Reduce(rbind, list_signif_enrich)
+
+        # Get genes associated to each term
+        annotation_list_concat <- unlist(annotation_list, recursive = FALSE) # create list from list of lists
+        signif_terms_genes <- annotation_list_concat[as.character(df_signif_enrich[,1])]
+        signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
+
+        final_list <- list(Significant_terms = df_signif_enrich,
+                           Associated_genes = signif_terms_genes)
+      } else {
+        final_list <- NULL
+      }
     }
     return(final_list)
 }
 
+#' Perform enrichment analysis for coexpression network modules
+#'
+#' Perform functional enrichment analysis for all coexpression network modules.
+#'
+#' @param net List object returned by \code{exp2net}.
+#' @param exp Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.
+#' @param annotation Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.
+#' @param column Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.
+#' @param correction Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".
+#' @param p P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.
+#'
+#' @return For each module, a list containing two elements: \describe{
+#'  \item{Significant_terms}{Data frame contaning significant terms and p-values}
+#'  \item{Associated_genes}{List containing genes associated with each significant term}
+#' }
+#' @author Fabricio Almeida-Silva
+#' @seealso
+#'  \code{\link[bc3net]{enrichment}}
+#' @rdname module_enrichment
+#' @export
+#'
+module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
+                              correction = "BH", p = 0.05) {
+
+  # Divide modules in different data frames of a list
+  genes.modules <- net[[3]]
+  list.gmodules <- split(genes.modules, genes.modules$Modules)
+
+  enrichment_allmodules <- lapply(1:length(list.gmodules), function(x) {
+    print(paste0("Enrichment analysis for module ", names(list.gmodules)[x],
+                 "..."))
+
+    l <- enrichment_analysis(genes = as.character(list.gmodules[[x]][,1]),
+                             exp = exp,
+                             annotation = annotation,
+                             correction = correction, p = p)
+    return(l)
+  })
+
+  names(enrichment_allmodules) <- names(list.gmodules)
+  return(enrichment_allmodules)
+}
 
 #' Get 1st-order neighbors of a given gene or group of genes
 #'
