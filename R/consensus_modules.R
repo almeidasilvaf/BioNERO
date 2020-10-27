@@ -26,7 +26,8 @@
 #' @importFrom WGCNA checkSets collectGarbage pickSoftThreshold addGrid adjacency TOMsimilarity pquantile labels2colors multiSetMEs consensusMEDissimilarity mergeCloseModules plotDendroAndColors
 #' @importFrom pals stepped
 #' @importFrom dynamicTreeCut cutreeDynamic
-consensus_modules <- function(exp_list, setLabels = NULL, metadata, cor_method = "spearman",
+consensus_modules <- function(exp_list, setLabels = NULL, metadata,
+                              cor_method = "spearman",
                               net_type = "signed hybrid", rsquared = 0.8,
                               module_merging_threshold = 0.2) {
     nSets <- length(exp_list)

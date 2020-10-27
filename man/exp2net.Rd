@@ -31,6 +31,7 @@ List containing: \itemize{
   \item Data frame of intramodular connectivity
   \item Vector of module assignment
   \item Correlation matrix
+  \item Parameters used for network reconstruction
 }
 }
 \description{

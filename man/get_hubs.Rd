@@ -4,14 +4,12 @@
 \alias{get_hubs}
 \title{Get hub genes in a given module or in all modules at once}
 \usage{
-get_hubs(exp, net, cor_method = "spearman")
+get_hubs(exp, net)
 }
 \arguments{
 \item{exp}{Gene expression data frame with gene IDs as row names and sample names as column names.}
 
 \item{net}{List object returned by \code{exp2net}.}
-
-\item{cor_method}{Correlation method. One of 'pearson' or 'spearman' (recommended). Default is 'spearman'.}
 }
 \value{
 Data frame containing gene IDs, modules and intramodular connectivity of all hubs.
