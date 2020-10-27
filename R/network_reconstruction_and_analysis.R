@@ -275,7 +275,7 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
         pind <- WGCNA::updateProgInd((r-1)/nRuns, pind)
     }
 
-    pdf(file = "module_stability.pdf", wi=10, h=12)
+    pdf(file = "module_stability.pdf", wi=8, h=9)
     WGCNA::plotDendroAndColors(mods0[[1]]$mods$dendrograms[[1]],
                         labels,
                         c("Full data set", paste("Resampling", c(1:nRuns))),
@@ -283,7 +283,7 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
                         autoColorHeight = FALSE, colorHeight = 0.65,
                         dendroLabels = FALSE, hang = 0.03, guideHang = 0.05,
                         addGuide = TRUE, guideAll = FALSE,
-                        cex.main = 2, cex.lab = 1.6, cex.colorLabels = 0.8,
+                        cex.main = 1.2, cex.lab = 0.9, cex.colorLabels = 0.8,
                         marAll = c(0, 5, 3, 0))
     dev.off()
 }
