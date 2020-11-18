@@ -32,7 +32,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
         print(paste("No power reached R-squared cut-off, now choosing max R-squared based power"))
         wgcna_power <- sft$fitIndices$Power[which(sft$fitIndices$SFT.R.sq == max(sft$fitIndices$SFT.R.sq))]
     }
-    pdf(file = "SFT and power beta selection.pdf", width=12, height=9)
+    pdf(file = "SFT_fit.pdf", width=12, height=9)
     par(mfrow = c(1,2));
     plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
          xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit, signed R^2",type="n",

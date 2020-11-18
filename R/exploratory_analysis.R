@@ -33,6 +33,8 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                          show_rownames = FALSE, show_colnames = TRUE,
                          scale = "none", fontsize = 10,
                          cutree_rows = 1, cutree_cols = 1) {
+    names(col_metadata) <- c("SampleID", "Sample class")
+
     if(log_trans == TRUE) {
         exp <- log2(exp+1)
     } else {
@@ -82,13 +84,30 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                     "Pairwise correlations between samples",
                     "Gene expression heatmap")
 
+    # Define colors
+    ccols <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
+               "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
+               "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
+               "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
+               "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
+    nlevels <- length(unique(as.character(annotation_col[,1])))
+    if(nlevels <= 20) {
+        custom_cols <- ccols[1:nlevels]
+    } else {
+        custom_cols <- colorRampPalette(ccols)(nlevels)
+    }
+    annotation_color <- list(`Sample class` = custom_cols)
+    names(annotation_color$`Sample class`) <- unique(annotation_col[,1])
+
+
     pheatmap::pheatmap(x, color=pal, border_color = NA, height = 20,
                        show_rownames = show_rownames, show_colnames = show_colnames,
                        annotation_row = annotation_row, annotation_col = annotation_col,
                        cluster_rows = cluster_rows, cluster_cols = cluster_cols,
                        scale = scale, fontsize = fontsize, main=title,
                        cutree_rows = cutree_rows, cutree_cols = cutree_cols,
-                      )
+                       annotation_colors = annotation_color
+    )
 
 }
 
