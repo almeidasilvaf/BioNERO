@@ -27,10 +27,7 @@ enrichment_analysis(
 \item{p}{P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.}
 }
 \value{
-List containing two elements: \describe{
- \item{Significant_terms}{Data frame contaning significant terms and p-values}
- \item{Associated_genes}{List containing genes associated with each significant term}
-}
+Data frame contaning significant terms, p-values and associated genes
 }
 \description{
 Perform enrichment analysis for functional annotation such as Gene Ontology (GO), pathway (KEGG, MapMan) or protein domains (PFAM, Panther).
