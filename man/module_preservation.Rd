@@ -2,29 +2,38 @@
 % Please edit documentation in R/network_comparison.R
 \name{module_preservation}
 \alias{module_preservation}
-\title{Calculate module preservation between two expression data sets}
+\title{Calculate network preservation between two expression data sets}
 \usage{
 module_preservation(
-  exp_ref,
-  exp_test,
-  moduleColors,
-  net_type = "signed",
-  cor_method = "spearman",
+  explist,
+  ref_net = NULL,
+  test_net = NULL,
+  algorithm = "netrep",
+  diffIDs = FALSE,
+  correspondence = NULL,
+  nPerm = 1000,
+  nThreads = 2,
   savePreservation = TRUE,
   plot_all_stats = FALSE,
   calculateClusterCoeff = FALSE
 )
 }
 \arguments{
-\item{exp_ref}{Data frame of reference gene expression data set, with gene IDs in row names and sample names in column names.}
+\item{explist}{List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.}
 
-\item{exp_test}{Data frame of test gene expression data set, with gene IDs in row names and sample names in column names.}
+\item{ref_net}{Reference network object returned by the function \code{exp2net}.}
 
-\item{moduleColors}{Vector of module assignment returned by \code{exp2net}.}
+\item{test_net}{Test network object returned by the function \code{exp2net}.}
 
-\item{net_type}{Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.}
+\item{algorithm}{Module preservation algorithm to be used. One of 'netrep' (default, permutation-based) or WGCNA.}
 
-\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".}
+\item{diffIDs}{Logical indicating whether the different data sets have different gene IDs (e.g., for different species). Default: FALSE}
+
+\item{correspondence}{Data frame containing gene IDs for the reference data set in the column 1 and gene IDs for the test data set in column 2. Only required if diffIDs is TRUE.}
+
+\item{nPerm}{Number of permutations. Default: 1000}
+
+\item{nThreads}{Number of threads to be used for parallel computing. Default: 2}
 
 \item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.}
 
@@ -33,13 +42,8 @@ module_preservation(
 \item{calculateClusterCoeff}{Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.}
 }
 \value{
-A list object resulting from \code{WGCNA::modulePreservation} and .pdf files with plot statistics.
+A list containing the preservation statistics. The list will be different depending on the chosen algorithm. See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
 }
 \description{
-Calculate module preservation between two expression data sets
-}
-\seealso{
-\code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
- \code{\link[ggpubr]{ggscatter}},\code{\link[ggpubr]{ggarrange}},\code{\link[ggpubr]{ggexport}}
- \code{\link[ggplot2]{theme}},\code{\link[ggplot2]{margin}},\code{\link[ggplot2]{geom_abline}}
+Calculate network preservation between two expression data sets
 }

@@ -1,10 +1,6 @@
-#' Calculate module preservation between two expression data sets
+#' Calculate module preservation between two expression data sets using WGCNA's algorithm
 #'
-#' @param exp_ref Data frame of reference gene expression data set, with gene IDs in row names and sample names in column names.
-#' @param exp_test Data frame of test gene expression data set, with gene IDs in row names and sample names in column names.
-#' @param moduleColors Vector of module assignment returned by \code{exp2net}.
-#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.
-#' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".
+#' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
 #' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
 #' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
 #' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.
@@ -14,17 +10,32 @@
 #'  \code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
 #'  \code{\link[ggpubr]{ggscatter}},\code{\link[ggpubr]{ggarrange}},\code{\link[ggpubr]{ggexport}}
 #'  \code{\link[ggplot2]{theme}},\code{\link[ggplot2]{margin}},\code{\link[ggplot2]{geom_abline}}
-#' @rdname module_preservation
+#' @rdname modPres_WGCNA
 #' @export
 #' @importFrom WGCNA modulePreservation standardColors
 #' @importFrom ggpubr ggscatter ggarrange ggexport
 #' @importFrom ggplot2 theme element_text geom_hline
-module_preservation <- function(exp_ref, exp_test, moduleColors,
-                                net_type="signed", cor_method="spearman",
-                                savePreservation = TRUE, plot_all_stats = FALSE,
-                                calculateClusterCoeff = FALSE) {
+modPres_WGCNA <- function(explist, ref_net,
+                          savePreservation = TRUE, plot_all_stats = FALSE,
+                          calculateClusterCoeff = FALSE) {
 
-    multiExpr <- list(ref = list(data = t(exp_ref)), test = list(data = t(exp_test)))
+    # Keep only genes/probes present in both data sets
+    overlap <- as.character(intersect(colnames(explist[[1]]), colnames(explist[[2]])))
+    explist[[1]] <- explist[[1]][, overlap]
+    explist[[2]] <- explist[[2]][, overlap]
+
+    # Set parameters for network reconstruction
+    net_type <- ref_net$params$net_type
+    cor_method <- ref_net$params$cor_method
+
+    # Create multiExpr object
+    multiExpr <- list(ref = list(data = explist[[1]]),
+                      test = list(data = explist[[2]]))
+
+    # Create vector of module assignments
+    moduleColors <- ref_net$genes_and_modules$Modules
+    names(moduleColors) <- ref_net$genes_and_modules$Genes
+
     multiColor <- list(ref = moduleColors)
 
     # Calculate module preservation
@@ -173,4 +184,128 @@ module_preservation <- function(exp_ref, exp_test, moduleColors,
     }
     return(pres)
 }
+
+
+#' Calculate module preservation between two expression data sets using NetRep's algorithm
+#'
+#' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
+#' @param ref_net Reference network object returned by the function \code{exp2net}.
+#' @param test_net Test network object returned by the function \code{exp2net}.
+#' @param nPerm Number of permutations. Default: 1000
+#' @param nThreads Number of threads to be used for parallel computing. Default: 2
+#' @return Output list from \code{NetRep::modulePreservation} and a message in user's standard output stating which modules are preserved.
+#' @seealso
+#'  \code{\link[NetRep]{modulePreservation}}
+#' @rdname modPres_netrep
+#' @export
+#' @importFrom NetRep modulePreservation
+modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
+                           nPerm = 1000, nThreads=2) {
+
+    # Keep only genes/probes present in both data sets
+    overlap <- as.character(intersect(colnames(explist[[1]]), colnames(explist[[2]])))
+    explist[[1]] <- explist[[1]][, overlap]
+    explist[[2]] <- explist[[2]][, overlap]
+
+    # Set data set names
+    if(is.null(names(explist))) {
+        data_names <- c("cohort1", "cohort2")
+    } else {
+        data_names <- names(explist)
+    }
+
+    # Create correlation list
+    correlation_list <- list(as.matrix(ref_net$correlation_matrix),
+                             as.matrix(test_net$correlation_matrix))
+    names(correlation_list) <- data_names
+
+    # Create network list
+    network_list <- list(as.matrix(ref_net$adjacency_matrix),
+                         as.matrix(test_net$adjacency_matrix))
+    names(network_list) <- data_names
+
+    # Set background label
+    if("grey" %in% ref_net$moduleColors) {
+        backgroundLabel <- "grey"
+    } else {
+        backgroundLabel <- 0
+    }
+
+    # Set module assignments
+    modAssignments <- ref_net$genes_and_modules$Modules
+    names(modAssignments) <- ref_net$genes_and_modules$Genes
+
+    # Calculate preservation statistics
+    pres <- NetRep::modulePreservation(
+        network=network_list, data=explist, correlation=correlation_list,
+        moduleAssignments=modAssignments,
+        discovery=data_names[1], test=data_names[2],
+        nPerm=nPerm, nThreads=nThreads
+    )
+
+    # Get preserved modules (p < 0.05 for all statistics)
+    max_pval <- apply(pres2$p.value, 1, max)
+    preservedmodules <- names(max_pval[max_pval < 0.05])
+    cat("We found", length(preservedmodules), "preserved modules:", preservedmodules)
+
+    return(pres)
+}
+
+
+
+#' Calculate network preservation between two expression data sets
+#'
+#' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
+#' @param ref_net Reference network object returned by the function \code{exp2net}.
+#' @param test_net Test network object returned by the function \code{exp2net}.
+#' @param algorithm Module preservation algorithm to be used. One of 'netrep' (default, permutation-based) or WGCNA.
+#' @param diffIDs Logical indicating whether the different data sets have different gene IDs (e.g., for different species). Default: FALSE
+#' @param correspondence Data frame containing gene IDs for the reference data set in the column 1 and gene IDs for the test data set in column 2. Only required if diffIDs is TRUE.
+#' @param nPerm Number of permutations. Default: 1000
+#' @param nThreads Number of threads to be used for parallel computing. Default: 2
+#' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
+#' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
+#' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.
+#' @return A list containing the preservation statistics. The list will be different depending on the chosen algorithm. See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
+#' @rdname module_preservation
+#' @export
+module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
+                                algorithm="netrep",
+                                diffIDs=FALSE,
+                                correspondence=NULL,
+                                nPerm = 1000, nThreads=2,
+                                savePreservation = TRUE,
+                                plot_all_stats = FALSE,
+                                calculateClusterCoeff = FALSE) {
+
+    if(diffIDs == TRUE) {
+        if(is.null(correspondence)) {
+            stop("Please, input a data frame of correspondence between IDs from the different data sets.")
+        }
+
+        # Set IDs of test data set to be equal to IDs of reference data set
+        colnames(explist[[2]]) <- colnames(explist[[1]])
+        colnames(explist[[2]]) <- correspondence[correspondence[,2] %in%
+                                                     colnames(explist[[2]]), 1]
+    }
+
+    if(algorithm == "netrep") {
+        pres <- modPres_netrep(explist = explist,
+                               ref_net = ref_net,
+                               test_net = test_net,
+                               nPerm = nPerm, nThreads = nThreads)
+
+    } else if(algorithm == "WGCNA") {
+        pres <- modPres_WGCNA(explist = explist,
+                              ref_net = ref_net,
+                              savePreservation = savePreservation,
+                              plot_all_stats = plot_all_stats,
+                              calculateClusterCoeff = calculateClusterCoeff)
+    } else {
+        stop("Please, specify a valid algorithm. One of 'netrep' or 'WGCNA'.")
+    }
+
+    return(pres)
+}
+
 
