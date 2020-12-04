@@ -32,7 +32,8 @@ Imports:
     ggnewscale,
     ggpubr,
     Biobase,
-    affy
+    affy,
+    NetRep
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

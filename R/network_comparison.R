@@ -12,7 +12,7 @@
 #'  \code{\link[ggplot2]{theme}},\code{\link[ggplot2]{margin}},\code{\link[ggplot2]{geom_abline}}
 #' @rdname modPres_WGCNA
 #' @export
-#' @importFrom WGCNA modulePreservation standardColors
+#' @importFrom WGCNA standardColors
 #' @importFrom ggpubr ggscatter ggarrange ggexport
 #' @importFrom ggplot2 theme element_text geom_hline
 modPres_WGCNA <- function(explist, ref_net,

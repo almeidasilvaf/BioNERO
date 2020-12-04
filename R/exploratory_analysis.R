@@ -32,8 +32,20 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                          cluster_rows = TRUE, cluster_cols = TRUE,
                          show_rownames = FALSE, show_colnames = TRUE,
                          scale = "none", fontsize = 10,
-                         cutree_rows = 1, cutree_cols = 1) {
-    names(col_metadata) <- c("SampleID", "Sample class")
+                         cutree_rows = 1, cutree_cols = 1, ...) {
+
+    if(is.null(col_metadata)) {
+        col_metadata <- NULL
+    } else if(ncol(col_metadata) == 2) {
+        names(col_metadata) <- c("SampleID", "Sample class")
+    } else if(ncol(col_metadata) == 3) {
+        names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2")
+    } else if(ncol(col_metadata == 4)) {
+        names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2",
+                                 "Sample class 3")
+    } else {
+        col_metadata <- NULL
+    }
 
     if(log_trans == TRUE) {
         exp <- log2(exp+1)
@@ -106,8 +118,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                        cluster_rows = cluster_rows, cluster_cols = cluster_cols,
                        scale = scale, fontsize = fontsize, main=title,
                        cutree_rows = cutree_rows, cutree_cols = cutree_cols,
-                       annotation_colors = annotation_color
-    )
+                       annotation_colors = annotation_color, ...)
 
 }
 
@@ -126,7 +137,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname plot_PCA
 #' @export
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_point scale_color_manual labs theme_classic ggtitle theme element_text
 #' @importFrom ggvis ggvis layer_points input_slider add_tooltip
 plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, interactive = FALSE) {
     if (log_trans == FALSE) {
@@ -242,7 +253,7 @@ get_HK <- function(exp) {
 #' @rdname plot_expression_profile
 #' @export
 #' @importFrom reshape2 melt
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes_ geom_tile aes geom_line stat_summary theme element_text element_blank element_rect ggtitle
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, genes_modules, modulename) {
     sample_names <- colnames(metadata)[1]
     sample_info <- colnames(metadata)[2]

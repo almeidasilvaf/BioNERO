@@ -635,10 +635,7 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL,
 #' @param correction Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".
 #' @param p P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.
 #'
-#' @return For each module, a list containing two elements: \describe{
-#'  \item{Significant_terms}{Data frame contaning significant terms and p-values}
-#'  \item{Associated_genes}{List containing genes associated with each significant term}
-#' }
+#' @return A data frame containing enriched terms, p-values, gene IDs and module names.
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[bc3net]{enrichment}}
@@ -649,12 +646,13 @@ module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
                               correction = "BH", p = 0.05) {
 
   # Divide modules in different data frames of a list
-  genes.modules <- net[[3]]
+  genes.modules <- net$genes_and_modules
   list.gmodules <- split(genes.modules, genes.modules$Modules)
+  list.gmodules <- list.gmodules[names(list.gmodules) != "grey"]
 
   enrichment_allmodules <- lapply(1:length(list.gmodules), function(x) {
-    print(paste0("Enrichment analysis for module ", names(list.gmodules)[x],
-                 "..."))
+    message("Enrichment analysis for module ", names(list.gmodules)[x],
+                 "...")
 
     l <- enrichment_analysis(genes = as.character(list.gmodules[[x]][,1]),
                              exp = exp,
@@ -662,9 +660,21 @@ module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
                              correction = correction, p = p)
     return(l)
   })
-
   names(enrichment_allmodules) <- names(list.gmodules)
-  return(enrichment_allmodules)
+
+  # Remove NULL elements from list
+  enrichment_filtered <- enrichment_allmodules[!sapply(enrichment_allmodules,
+                                                       is.null)]
+
+  # Add module name to each data frame
+  enrichment_modnames <- lapply(1:length(enrichment_filtered), function(x) {
+    return(cbind(enrichment_filtered[[x]],Module=names(enrichment_filtered)[x]))
+  })
+
+  # Reduce list of data frames to a single data frame
+  enrichment_final <- Reduce(rbind, enrichment_modnames)
+
+  return(enrichment_final)
 }
 
 #' Get 1st-order neighbors of a given gene or group of genes

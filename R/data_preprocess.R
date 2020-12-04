@@ -42,7 +42,7 @@ remove_na <- function(exp, replaceby = 0) {
 #' Remove genes that are not expressed based on a user-defined threshold
 #'
 #' @param exp Gene expression data frame, where rownames are gene IDs and colnames are sample names.
-#' @param method Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples".
+#' @param method Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is "median".
 #' @param min_exp If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.
 #' @param min_percentage_samples in case the user chooses 'percentage' as method, expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1.
 #'
@@ -50,12 +50,13 @@ remove_na <- function(exp, replaceby = 0) {
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @importFrom matrixStats rowMedians
-#' @import WGCNA
+#' @importFrom WGCNA goodSamplesGenes
+#' @importFrom dynamicTreeCut printFlush
 #' @seealso
 #'  \code{\link[matrixStats]{rowMedians}}
 #'  \code{\link[WGCNA]{goodSamplesGenes}}
 #' @rdname remove_nonexp
-remove_nonexp <- function(exp, method=c("mean", "median", "percentage", "allsamples"), min_exp=1, min_percentage_samples=0.25) {
+remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_samples=0.25) {
     if(method == "median") {
         final_exp <- exp[matrixStats::rowMedians(as.matrix(exp)) >= min_exp,]
     } else if (method == "mean") {
@@ -68,9 +69,9 @@ remove_nonexp <- function(exp, method=c("mean", "median", "percentage", "allsamp
         if (!gsg$allOK)
         {
             if (sum(!gsg$goodGenes)>0)
-                printFlush(paste("Removing genes:", paste(names(texp)[!gsg$goodGenes], collapse = "\t")))
+                dynamicTreeCut::printFlush(paste("Removing genes:", paste(names(texp)[!gsg$goodGenes], collapse = "\t")))
             if (sum(!gsg$goodSamples)>0)
-                printFlush(paste("Removing samples:", paste(rownames(texp)[!gsg$goodSamples], collapse = "\t")))
+                dynamicTreeCut::printFlush(paste("Removing samples:", paste(rownames(texp)[!gsg$goodSamples], collapse = "\t")))
             final_exp = exp[gsg$goodGenes, gsg$goodSamples]
         }
     } else if (method == "allsamples") {
@@ -115,7 +116,7 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
 #'
 #' @return Filtered gene expression dataframe.
 #' @author Fabricio Almeida-Silva
-#' @import WGCNA
+#' @importFrom WGCNA adjacency bicor
 #' @seealso
 #'  \code{\link[WGCNA]{adjacency}}
 #' @rdname ZKfiltering
@@ -172,7 +173,6 @@ ZKfiltering <- function(raw_exp, Zk = -2, cor_method = "spearman") {
 #'  \code{\link[DESeq2]{varianceStabilizingTransformation}}
 #' @rdname exp_preprocess
 #' @export
-#' @import WGCNA
 #' @importFrom DESeq2 varianceStabilizingTransformation
 exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, Zk_filtering = TRUE, Zk = -2, cor_method = "spearman",
                            remove_nonexpressed = TRUE, method = "median", min_exp = 1, min_percentage_samples = 0.25,
