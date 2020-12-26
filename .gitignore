@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+docs/
+vignettes/*.html
+vignettes/*.pdf
