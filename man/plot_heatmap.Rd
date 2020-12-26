@@ -53,6 +53,8 @@ plot_heatmap(
 \item{cutree_rows}{Number of clusters into which rows are divided. Default is 1, which is equivalent to no division.}
 
 \item{cutree_cols}{Number of clusters into which columns are divided. Default is 1, which is equivalent to no division.}
+
+\item{...}{Additional arguments to be passed to \code{pheatmap::pheatmap()}.}
 }
 \value{
 heatmap of hierarchically clustered samples with metadata information (optional)

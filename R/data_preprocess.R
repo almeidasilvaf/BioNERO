@@ -8,6 +8,7 @@
 #' @author Fabricio Almeida-Silva
 #' @rdname dfs2one
 #' @export
+#' @importFrom utils head read.csv write.table
 dfs2one <- function(mypath, pattern = ".tsv$"){
     filenames <- list.files(path=mypath, full.names=TRUE, pattern = pattern)
     datalist <- lapply(filenames, function(x) {

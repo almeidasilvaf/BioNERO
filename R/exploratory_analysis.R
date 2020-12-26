@@ -16,6 +16,7 @@
 #' @param fontsize Base fontsize for the plot.
 #' @param cutree_rows Number of clusters into which rows are divided. Default is 1, which is equivalent to no division.
 #' @param cutree_cols Number of clusters into which columns are divided. Default is 1, which is equivalent to no division.
+#' @param ... Additional arguments to be passed to \code{pheatmap::pheatmap()}.
 #'
 #' @return heatmap of hierarchically clustered samples with metadata information (optional)
 #' @author Fabricio Almeida-Silva

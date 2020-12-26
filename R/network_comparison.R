@@ -1,6 +1,7 @@
 #' Calculate module preservation between two expression data sets using WGCNA's algorithm
 #'
 #' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
+#' @param ref_net Reference network object returned by the function \code{exp2net}.
 #' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
 #' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
 #' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.

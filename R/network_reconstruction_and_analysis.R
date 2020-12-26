@@ -73,6 +73,8 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' @export
 #' @importFrom WGCNA adjacency.fromSimilarity TOMsimilarity standardColors labels2colors moduleEigengenes plotEigengeneNetworks mergeCloseModules plotDendroAndColors intramodularConnectivity
 #' @importFrom dynamicTreeCut cutreeDynamicTree
+#' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp qnorm qqplot quantile sd var
+#' @importFrom grDevices colorRampPalette dev.off pdf
 exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold = 0.2,
                     SFTpower, cor_method = "spearman") {
 
