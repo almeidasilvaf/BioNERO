@@ -27,10 +27,7 @@ module_enrichment(
 \item{p}{P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.}
 }
 \value{
-For each module, a list containing two elements: \describe{
- \item{Significant_terms}{Data frame contaning significant terms and p-values}
- \item{Associated_genes}{List containing genes associated with each significant term}
-}
+A data frame containing enriched terms, p-values, gene IDs and module names.
 }
 \description{
 Perform functional enrichment analysis for all coexpression network modules.

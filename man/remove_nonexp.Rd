@@ -6,7 +6,7 @@
 \usage{
 remove_nonexp(
   exp,
-  method = c("mean", "median", "percentage", "allsamples"),
+  method = "median",
   min_exp = 1,
   min_percentage_samples = 0.25
 )
@@ -14,7 +14,7 @@ remove_nonexp(
 \arguments{
 \item{exp}{Gene expression data frame, where rownames are gene IDs and colnames are sample names.}
 
-\item{method}{Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples".}
+\item{method}{Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is "median".}
 
 \item{min_exp}{If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.}
 

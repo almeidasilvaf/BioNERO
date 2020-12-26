@@ -665,6 +665,9 @@ module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
   # Remove NULL elements from list
   enrichment_filtered <- enrichment_allmodules[!sapply(enrichment_allmodules,
                                                        is.null)]
+  if(length(enrichment_filtered) == 0) {
+    stop("None of the modules had significant enrichment.")
+  }
 
   # Add module name to each data frame
   enrichment_modnames <- lapply(1:length(enrichment_filtered), function(x) {

@@ -19,7 +19,8 @@ plot_heatmap(
   scale = "none",
   fontsize = 10,
   cutree_rows = 1,
-  cutree_cols = 1
+  cutree_cols = 1,
+  ...
 )
 }
 \arguments{
