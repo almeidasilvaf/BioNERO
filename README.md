@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# BioNERO
+# BioNERO <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
 
@@ -12,14 +12,6 @@ status](https://www.r-pkg.org/badges/version/BioNERO)](https://CRAN.R-project.or
 <!-- badges: end -->
 
 ## Installation
-
-<!-- You can install the released version of BioNERO from [CRAN](https://CRAN.R-project.org) with: -->
-
-<!-- ``` r -->
-
-<!-- install.packages("BioNERO") -->
-
-<!-- ``` -->
 
 You can download the development version from
 [GitHub](https://github.com/) with:

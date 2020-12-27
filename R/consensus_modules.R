@@ -57,80 +57,80 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata,
     nSamples <- expSize$nSamples
 
     # Choose a set of soft-thresholding powers
-    powers <- c(seq(4, 10, by = 1), seq(12, 20, by = 2));
-    sft <- vector(mode = "list", length = nSets);
-    sft_power <- vector(mode = "list", length = nSets);
-    powerTables <- vector(mode = "list", length = nSets);
+    powers <- c(seq(4, 10, by = 1), seq(12, 20, by = 2))
+    sft <- vector(mode = "list", length = nSets)
+    sft_power <- vector(mode = "list", length = nSets)
+    powerTables <- vector(mode = "list", length = nSets)
     for(set in 1:nSets) {
         if(cor_method == "pearson") {
             sft[[set]] = WGCNA::pickSoftThreshold(multiExp[[set]]$data,
                                                   networkType = net_type, powerVector=powers,
-                                                  verbose = 2, RsquaredCut = rsquared);
+                                                  verbose = 2, RsquaredCut = rsquared)
             powerTables[[set]] <- list(data = sft[[set]]$fitIndices)
             sft_power[[set]] <- sft[[set]]$powerEstimate
 
         } else if(cor_method == "biweight") {
             sft[[set]] <- WGCNA::pickSoftThreshold(multiExp[[set]]$data,
                                                    networkType = net_type, powerVector=powers, RsquaredCut = rsquared,
-                                                   corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05));
+                                                   corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
             powerTables[[set]] <- list(data = sft[[set]]$fitIndices)
             sft_power[[set]] <- sft[[set]]$powerEstimate
 
         } else if (cor_method == "spearman") {
             sft[[set]] <- WGCNA::pickSoftThreshold(multiExp[[set]]$data,
                                                    networkType = net_type, powerVector=powers, RsquaredCut = rsquared,
-                                                   corOptions = list(use = 'p', method = "spearman"));
+                                                   corOptions = list(use = 'p', method = "spearman"))
             powerTables[[set]] <- list(data = sft[[set]]$fitIndices)
             sft_power[[set]] <- sft[[set]]$powerEstimate
 
         } else {
-            print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').");
+            print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
         }
     }
-    WGCNA::collectGarbage();
+    WGCNA::collectGarbage()
 
     # Plot the results:
     colors = pals::stepped(n = nSets)
     plotCols = c(2,5,6,7)
     colNames = c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
-                 "Max connectivity");
+                 "Max connectivity")
 
     # Get the minima and maxima of the plotted points
-    ylim = matrix(NA, nrow = 2, ncol = 4);
+    ylim = matrix(NA, nrow = 2, ncol = 4)
     for (set in 1:nSets)
     {
         for (col in 1:length(plotCols))
         {
-            ylim[1, col] = min(ylim[1, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
-            ylim[2, col] = max(ylim[2, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE);
+            ylim[1, col] = min(ylim[1, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE)
+            ylim[2, col] = max(ylim[2, col], powerTables[[set]]$data[, plotCols[col]], na.rm = TRUE)
         }
     }
     # Plot the quantities in the chosen columns vs. the soft thresholding power
-    pdf(file = "SFT_fit_consensus.pdf", wi = 8, he = 6)
-    par(mfcol = c(2,2));
+    pdf(file = "SFT_fit_consensus.pdf", width = 8, height = 6)
+    par(mfcol = c(2,2))
     par(mar = c(4.2, 4.2 , 2.2, 0.5))
-    cex1 = 0.7;
+    cex1 = 0.7
     for (col in 1:length(plotCols)) for (set in 1:nSets)
     {
         if (set==1)
         {
             plot(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
                  xlab="Soft Threshold (power)",ylab=colNames[col],type="n", ylim = ylim[, col],
-                 main = colNames[col]);
-            WGCNA::addGrid();
+                 main = colNames[col])
+            WGCNA::addGrid()
         }
         if (col==1)
         {
             text(powerTables[[set]]$data[,1], -sign(powerTables[[set]]$data[,3])*powerTables[[set]]$data[,2],
-                 labels=powers,cex=cex1,col=colors[set]);
+                 labels=powers,cex=cex1,col=colors[set])
         } else
             text(powerTables[[set]]$data[,1], powerTables[[set]]$data[,plotCols[col]],
-                 labels=powers,cex=cex1,col=colors[set]);
+                 labels=powers,cex=cex1,col=colors[set])
         if (col==1)
         {
-            legend("bottomright", legend = setLabels, col = colors, pch = 20) ;
+            legend("bottomright", legend = setLabels, col = colors, pch = 20)
         } else
-            legend("topright", legend = setLabels, col = colors, pch = 20) ;
+            legend("topright", legend = setLabels, col = colors, pch = 20)
     }
     dev.off()
 
@@ -208,7 +208,7 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata,
 
 
     if (nSets == 2) {
-        pdf(file = "TOMScaling-QQplot.pdf", wi=6, he=6)
+        pdf(file = "TOMScaling-QQplot.pdf", width=6, height=6)
         qqUnscaled <- qqplot(TOMScalingSamples[[1]], TOMScalingSamples[[2]],
                              plot.it=TRUE, cex=0.6,
                              xlab=paste("TOM in", setLabels[1]), ylab = paste("TOM in", setLabels[2]),
@@ -216,7 +216,7 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata,
 
         qqScaled <- qqplot(scaledTOMSamples[[1]], scaledTOMSamples[[2]],
                            plot.it = FALSE)
-        points(qqScaled$x, qqScaled$y, col = colors, cex = 0.6, pch = 20);
+        points(qqScaled$x, qqScaled$y, col = colors, cex = 0.6, pch = 20)
         abline(a=0, b=1, col = "blue")
         legend("topleft", legend = c("Unscaled TOM", "Scaled TOM"), pch=20,
                col = c("black", "red"))
@@ -298,33 +298,33 @@ consensus_set_relationship <- function(setMEs, setColors, consMEs, consColors) {
     nConsMods <- length(consModules)
 
     # Initialize tables of p-values and of the corresponding counts
-    pTable <- matrix(0, nrow = nsetMods, ncol = nConsMods);
-    CountTbl <- matrix(0, nrow = nsetMods, ncol = nConsMods);
+    pTable <- matrix(0, nrow = nsetMods, ncol = nConsMods)
+    CountTbl <- matrix(0, nrow = nsetMods, ncol = nConsMods)
 
     # Execute all pairwaise comparisons
     for (smod in 1:nsetMods)
         for (cmod in 1:nConsMods)
         {
-            setMembers <- (setColors == setModules[smod]);
-            consMembers <- (consColors == consModules[cmod]);
-            pTable[smod, cmod] <- -log10(fisher.test(femMembers, consMembers, alternative = "greater")$p.value);
+            setMembers <- (setColors == setModules[smod])
+            consMembers <- (consColors == consModules[cmod])
+            pTable[smod, cmod] <- -log10(fisher.test(femMembers, consMembers, alternative = "greater")$p.value)
             CountTbl[smod, cmod] <- sum(setColors == setModules[smod] & consColors ==
                                             consModules[cmod])
         }
 
     # Truncate p values smaller than 10^{-50} to 10^{-50}
-    pTable[is.infinite(pTable)] <- 1.3 * max(pTable[is.finite(pTable)]);
-    pTable[pTable>50 ] <- 50;
+    pTable[is.infinite(pTable)] <- 1.3 * max(pTable[is.finite(pTable)])
+    pTable[pTable>50 ] <- 50
 
     # Marginal counts (really module sizes)
     setModTotals <- apply(CountTbl, 1, sum)
     consModTotals <- apply(CountTbl, 2, sum)
 
     # Actual plotting
-    pdf(file = "ConsensusVsSet-specificModules.pdf", width = 10, height = 7);
-    par(mfrow = c(1,1));
-    par(cex = 1.0);
-    par(mar = c(8, 10.4, 2.7, 1) + 0.3);
+    pdf(file = "ConsensusVsSet-specificModules.pdf", width = 10, height = 7)
+    par(mfrow = c(1,1))
+    par(cex = 1.0)
+    par(mar = c(8, 10.4, 2.7, 1) + 0.3)
 
     # Use function labeledHeatmap to produce the color-coded table with all the trimmings
     WGCNA::labeledHeatmap(Matrix = pTable,
@@ -336,8 +336,8 @@ consensus_set_relationship <- function(setMEs, setColors, consMEs, consColors) {
                           textMatrix = CountTbl,
                           colors = WGCNA::blueWhiteRed(100)[50:100],
                           main = "Correspondence of set-specific and consensus modules",
-                          cex.text = 1.0, cex.lab = 1.0, setStdMargins = FALSE);
-    dev.off();
+                          cex.text = 1.0, cex.lab = 1.0, setStdMargins = FALSE)
+    dev.off()
 
 }
 
@@ -356,31 +356,31 @@ consensus_set_relationship <- function(setMEs, setColors, consMEs, consColors) {
 #' @export
 #' @importFrom WGCNA corPvalueFisher labels2colors labeledHeatmap blueWhiteRed
 consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_method = "spearman") {
-    moduleTraitCor <- list();
-    moduleTraitPvalue <- list();
+    moduleTraitCor <- list()
+    moduleTraitPvalue <- list()
     nSets <- exprSize$nSets
 
     # Calculate the correlations
     for (set in 1:nSets) {
         if(cor_method == "spearman") {
-            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, sampleInfo[[set]]$data, use = "p", method = "spearman");
-            moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set]);
+            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, sampleInfo[[set]]$data, use = "p", method = "spearman")
+            moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set])
         } else if(cor_method == "pearson") {
-            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, Traits[[set]]$data, use = "p", method = "pearson");
-            moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set]);
+            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, Traits[[set]]$data, use = "p", method = "pearson")
+            moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set])
         }
     }
 
-    MEColors <- WGCNA::labels2colors(as.numeric(substring(names(consMEs[[1]]$data), 3)));
-    MEColorNames <- paste("ME", MEColors, sep="");
+    MEColors <- WGCNA::labels2colors(as.numeric(substring(names(consMEs[[1]]$data), 3)))
+    MEColorNames <- paste("ME", MEColors, sep="")
 
     # Plot the module-trait relationship table for sets
-    pdf(file = "ModuleSampleRelationships.pdf", wi = 10, he = 7, onefile = TRUE);
+    pdf(file = "ModuleSampleRelationships.pdf", width = 10, height = 7, onefile = TRUE)
     for (set in 1:nSets) {
         textMatrix <- paste(signif(moduleTraitCor[[set]], 2), "\n(",
-                            signif(moduleTraitPvalue[[set]], 1), ")", sep = "");
+                            signif(moduleTraitPvalue[[set]], 1), ")", sep = "")
         dim(textMatrix) <- dim(moduleTraitCor[[set]])
-        par(mar = c(6, 8.8, 3, 2.2));
+        par(mar = c(6, 8.8, 3, 2.2))
         WGCNA::labeledHeatmap(Matrix = moduleTraitCor[[set]],
                               xLabels = names(sampleInfo[[set]]$data),
                               yLabels = MEColorNames,
@@ -393,197 +393,197 @@ consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_metho
                               zlim = c(-1,1),
                               main = paste("Module-sample relationships"))
     }
-    dev.off();
+    dev.off()
 
     # Initialize matrices to hold the consensus correlation and p-value
-    consensusCor <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]));
-    consensusPvalue <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]));
+    consensusCor <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]))
+    consensusPvalue <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]))
 
     if(nSets == 2) {
-        negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0;
-        consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative]);
-        consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative]);
+        negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0
+        consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative])
+        consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative])
 
-        positive = moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0;
-        consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive]);
-        consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive]);
+        positive = moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0
+        consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive])
+        consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive])
     } else if(nSets == 3) {
-        negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0;
+        negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
-                                       moduleTraitCor[[3]][negative]);
+                                       moduleTraitCor[[3]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
-                                          moduleTraitCor[[3]][negative]);
+                                          moduleTraitCor[[3]][negative])
 
-        positive = moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0;
+        positive = moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
-                                       moduleTraitCor[[3]][positive]);
+                                       moduleTraitCor[[3]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
-                                          moduleTraitCor[[3]][positive]);
+                                          moduleTraitCor[[3]][positive])
     } else if(nSets == 4) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
-            moduleTraitCor[[4]] < 0;
+            moduleTraitCor[[4]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
-                                       moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative]);
+                                       moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
-                                          moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative]);
+                                          moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
-            moduleTraitCor[[4]] > 0;
+            moduleTraitCor[[4]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
-                                       moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive]);
+                                       moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
-                                          moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive]);
+                                          moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive])
     } else if(nSets == 5) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
-            moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0;
+            moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
-                                       moduleTraitCor[[5]][negative]);
+                                       moduleTraitCor[[5]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
-                                          moduleTraitCor[[5]][negative]);
+                                          moduleTraitCor[[5]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
-            moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0;
+            moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
-                                       moduleTraitCor[[5]][positive]);
+                                       moduleTraitCor[[5]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
-                                          moduleTraitCor[[5]][positive]);
+                                          moduleTraitCor[[5]][positive])
     } else if(nSets == 6) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
-            moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0;
+            moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
-                                       moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative]);
+                                       moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
-                                          moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative]);
+                                          moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
-            moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0;
+            moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
-                                       moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive]);
+                                       moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
-                                          moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive]);
+                                          moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive])
     } else if(nSets == 7) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
             moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0 &
-            moduleTraitCor[[7]] < 0;
+            moduleTraitCor[[7]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                        moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
-                                       moduleTraitCor[[7]][negative]);
+                                       moduleTraitCor[[7]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                           moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
-                                          moduleTraitCor[[7]][negative]);
+                                          moduleTraitCor[[7]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
             moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0 &
-            moduleTraitCor[[7]] > 0;
+            moduleTraitCor[[7]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                        moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
-                                       moduleTraitCor[[7]][positive]);
+                                       moduleTraitCor[[7]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                           moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
-                                          moduleTraitCor[[7]][positive]);
+                                          moduleTraitCor[[7]][positive])
     } else if(nSets == 8) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
             moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0 &
-            moduleTraitCor[[7]] < 0 & moduleTraitCor[[8]] < 0;
+            moduleTraitCor[[7]] < 0 & moduleTraitCor[[8]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                        moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
-                                       moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative]);
+                                       moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                           moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
-                                          moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative]);
+                                          moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
             moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0 &
-            moduleTraitCor[[7]] > 0 & moduleTraitCor[[8]] > 0;
+            moduleTraitCor[[7]] > 0 & moduleTraitCor[[8]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                        moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
-                                       moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive]);
+                                       moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                           moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
-                                          moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive]);
+                                          moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive])
     } else if(nSets == 9) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
             moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0 &
-            moduleTraitCor[[7]] < 0 & moduleTraitCor[[8]] < 0 & moduleTraitCor[[9]] < 0;
+            moduleTraitCor[[7]] < 0 & moduleTraitCor[[8]] < 0 & moduleTraitCor[[9]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                        moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
                                        moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative],
-                                       moduleTraitCor[[9]][negative]);
+                                       moduleTraitCor[[9]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                           moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
                                           moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative],
-                                          moduleTraitCor[[9]][negative]);
+                                          moduleTraitCor[[9]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
             moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0 &
-            moduleTraitCor[[7]] > 0 & moduleTraitCor[[8]] > 0 & moduleTraitCor[[9]] > 0;
+            moduleTraitCor[[7]] > 0 & moduleTraitCor[[8]] > 0 & moduleTraitCor[[9]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                        moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
                                        moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive],
-                                       moduleTraitCor[[9]][positive]);
+                                       moduleTraitCor[[9]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                           moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
                                           moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive],
-                                          moduleTraitCor[[9]][positive]);
+                                          moduleTraitCor[[9]][positive])
     } else if(nSets == 10) {
         negative <- moduleTraitCor[[1]] < 0 & moduleTraitCor[[2]] < 0 & moduleTraitCor[[3]] < 0 &
             moduleTraitCor[[4]] < 0 & moduleTraitCor[[5]] < 0 & moduleTraitCor[[6]] < 0 &
             moduleTraitCor[[7]] < 0 & moduleTraitCor[[8]] < 0 & moduleTraitCor[[9]] < 0 &
-            moduleTraitCor[[10]] < 0;
+            moduleTraitCor[[10]] < 0
         consensusCor[negative] <- pmax(moduleTraitCor[[1]][negative], moduleTraitCor[[2]][negative],
                                        moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                        moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
                                        moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative],
-                                       moduleTraitCor[[9]][negative], moduleTraitCor[[10]][negative]);
+                                       moduleTraitCor[[9]][negative], moduleTraitCor[[10]][negative])
         consensusPvalue[negative] <- pmax(moduleTraitPvalue[[1]][negative], moduleTraitPvalue[[2]][negative],
                                           moduleTraitCor[[3]][negative], moduleTraitCor[[4]][negative],
                                           moduleTraitCor[[5]][negative], moduleTraitCor[[6]][negative],
                                           moduleTraitCor[[7]][negative], moduleTraitCor[[8]][negative],
-                                          moduleTraitCor[[9]][negative], moduleTraitCor[[10]][negative]);
+                                          moduleTraitCor[[9]][negative], moduleTraitCor[[10]][negative])
 
         positive <- moduleTraitCor[[1]] > 0 & moduleTraitCor[[2]] > 0 & moduleTraitCor[[3]] > 0 &
             moduleTraitCor[[3]] > 0 & moduleTraitCor[[5]] > 0 & moduleTraitCor[[6]] > 0 &
             moduleTraitCor[[7]] > 0 & moduleTraitCor[[8]] > 0 & moduleTraitCor[[9]] > 0 &
-            moduleTraitCor[[10]] > 0;
+            moduleTraitCor[[10]] > 0
         consensusCor[positive] <- pmin(moduleTraitCor[[1]][positive], moduleTraitCor[[2]][positive],
                                        moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                        moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
                                        moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive],
-                                       moduleTraitCor[[9]][positive], moduleTraitCor[[10]][positive]);
+                                       moduleTraitCor[[9]][positive], moduleTraitCor[[10]][positive])
         consensusPvalue[positive] <- pmax(moduleTraitPvalue[[1]][positive], moduleTraitPvalue[[2]][positive],
                                           moduleTraitCor[[3]][positive], moduleTraitCor[[4]][positive],
                                           moduleTraitCor[[5]][positive], moduleTraitCor[[6]][positive],
                                           moduleTraitCor[[7]][positive], moduleTraitCor[[8]][positive],
-                                          moduleTraitCor[[9]][positive], moduleTraitCor[[10]][positive]);
+                                          moduleTraitCor[[9]][positive], moduleTraitCor[[10]][positive])
     } else {
         stop("Maximum number of expression data sets for consensus module analysis is 10.")
     }
 
     textMatrix <- paste(signif(consensusCor, 2), "\n(",
-                        signif(consensusPvalue, 1), ")", sep = "");
+                        signif(consensusPvalue, 1), ")", sep = "")
     dim(textMatrix) <- dim(moduleTraitCor[[set]])
-    pdf(file = "ModuleTraitRelationships-consensus.pdf", wi = 10, he = 7);
-    par(mar = c(6, 8.8, 3, 2.2));
+    pdf(file = "ModuleTraitRelationships-consensus.pdf", width = 10, height = 7)
+    par(mar = c(6, 8.8, 3, 2.2))
     WGCNA::labeledHeatmap(Matrix = consensusCor,
                           xLabels = names(Traits[[set]]$data),
                           yLabels = MEColorNames,

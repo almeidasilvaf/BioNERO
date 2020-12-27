@@ -7,13 +7,11 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  comment = "#"
 )
 ```
 
-# BioNERO
+# BioNERO <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -22,12 +20,6 @@ knitr::opts_chunk$set(
 
 
 ## Installation
-
-<!-- You can install the released version of BioNERO from [CRAN](https://CRAN.R-project.org) with: -->
-
-<!-- ``` r -->
-<!-- install.packages("BioNERO") -->
-<!-- ``` -->
 
 You can download the development version from [GitHub](https://github.com/) with:
 

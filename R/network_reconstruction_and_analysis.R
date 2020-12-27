@@ -13,6 +13,7 @@
 #' @rdname SFT_fit
 #' @export
 #' @importFrom WGCNA pickSoftThreshold
+#' @importFrom graphics abline legend par points text
 SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman") {
     texp <- t(exp)
 
@@ -281,7 +282,7 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
         pind <- WGCNA::updateProgInd((r-1)/nRuns, pind)
     }
 
-    pdf(file = "module_stability.pdf", wi=8, h=9)
+    pdf(file = "module_stability.pdf", width=8, height=9)
     WGCNA::plotDendroAndColors(mods0[[1]]$mods$dendrograms[[1]],
                         labels,
                         c("Full data set", paste("Resampling", c(1:nRuns))),
