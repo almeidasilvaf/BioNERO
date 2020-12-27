@@ -139,7 +139,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
 #' @rdname plot_PCA
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual labs theme_classic ggtitle theme element_text
-#' @importFrom ggvis ggvis layer_points input_slider add_tooltip
+#' @importFrom plotly ggplotly
 plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, interactive = FALSE) {
     if (log_trans == FALSE) {
         pca <- prcomp(t(exp))
@@ -165,15 +165,14 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
     pca_df$SampleID <- rownames(pca_df)
     var_explained <- as.data.frame(round(100 * pca$sdev^2 / sum(pca$sdev^2), 1))
     rownames(var_explained) <- colnames(pca$x)
-    if(interactive == FALSE) {
-        if(PCs == "1x2") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Trait)) +
-                ggplot2::geom_point(size = size) +
-                ggplot2::scale_color_manual(values=custom_cols) +
-                ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
-                ggplot2::theme_classic() +
-                ggplot2::ggtitle("Principal component analysis of samples") +
-                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
+    if(PCs == "1x2") {
+        p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Trait)) +
+            ggplot2::geom_point(size = size) +
+            ggplot2::scale_color_manual(values=custom_cols) +
+            ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
+            ggplot2::theme_classic() +
+            ggplot2::ggtitle("Principal component analysis of samples") +
+            ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else if (PCs == "1x3") {
             p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Trait)) +
                 ggplot2::geom_point(size = size) +
@@ -193,24 +192,12 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
         } else {
             stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
         }
-    } else {
-        if(PCs == "1x2") {
-            p <- ggvis::ggvis(pca_df, ~PC1, ~PC2, fill = ~Trait, key := ~SampleID) %>%
-                ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
-                ggvis::add_tooltip(function(df) df$SampleID)
-        } else if (PCs == "1x3") {
-            p <- ggvis(pca_df, ~PC1, ~PC3, fill = ~Trait, key := ~SampleID) %>%
-                ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
-                ggvis::add_tooltip(function(df) df$SampleID)
-        } else if (PCs == "2x3") {
-            p <- ggvis(pca_df, ~PC2, ~PC3, fill = ~Trait, key := ~SampleID) %>%
-                ggvis::layer_points(size := ggvis::input_slider(10, 200, value = 50, label = "Point size")) %>%
-                ggvis::add_tooltip(function(df) df$SampleID)
-        } else {
-            stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
-        }
+
+    if(interactive == TRUE) {
+        p <- plotly::ggplotly(p)
     }
-    p
+
+    return(p)
 }
 
 

@@ -20,7 +20,6 @@ Imports:
     RColorBrewer,
     pheatmap,
     ggplot2,
-    ggvis,
     reshape2,
     dplyr,
     bc3net,
@@ -36,7 +35,8 @@ Imports:
     NetRep,
     stats,
     grDevices,
-    graphics
+    graphics,
+    plotly
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
