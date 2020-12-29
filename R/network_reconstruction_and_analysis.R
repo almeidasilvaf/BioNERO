@@ -996,14 +996,14 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
 #'  \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}},
 #' @rdname plot_ppi
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @importFrom igraph graph_from_data_frame degree simplify vcount
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
-#' @importFrom ggplot2 ggplot aes guides
+#' @importFrom ggplot2 ggplot aes_ guides
 plot_ppi <- function(edgelist_int, detect_communities = TRUE,
                      clustering_method = "infomap", show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE) {
@@ -1052,11 +1052,11 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
             graph <- igraph::simplify(graph)
             n <- ggnetwork::ggnetwork(graph)
             n$Cluster <- as.factor(n$mem)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, color = Cluster)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, color = ~Cluster)) +
                 ggplot2::guides(color = FALSE) +
-                ggnetwork::geom_nodetext(ggplot2::aes(label = name, size = 0.4 * Degree)) +
+                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = 0.4 * ~Degree)) +
                 ggnetwork::theme_blank()
 
         } else if(show_labels == "allhubs") {
@@ -1064,11 +1064,11 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
             graph <- igraph::simplify(graph)
             n <- ggnetwork::ggnetwork(graph)
             n$Cluster <- as.factor(n$mem)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, color = Cluster)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, color = ~Cluster)) +
                 ggplot2::guides(color = FALSE) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
@@ -1079,11 +1079,11 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
             graph <- igraph::simplify(graph)
             n <- ggnetwork::ggnetwork(graph)
             n$Cluster <- as.factor(n$mem)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, color = Cluster)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, color = ~Cluster)) +
                 ggplot2::guides(color = FALSE) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isTopHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
@@ -1092,9 +1092,9 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
             graph <- igraph::simplify(graph)
             n <- ggnetwork::ggnetwork(graph)
             n$Cluster <- as.factor(n$mem)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, color = Cluster)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, color = ~Cluster)) +
                 ggplot2::guides(color = FALSE) +
                 ggnetwork::theme_blank()
         }
@@ -1118,7 +1118,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
 #' @seealso
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
 #'  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
 #'  \code{\link[ggnewscale]{new_scale}}
 #' @rdname plot_grn
@@ -1126,7 +1126,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
 #' @export
 #' @importFrom igraph graph_from_data_frame degree vcount
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
-#' @importFrom ggplot2 ggplot aes arrow scale_color_manual guides
+#' @importFrom ggplot2 ggplot aes_ arrow scale_color_manual guides
 #' @importFrom ggnetwork geom_edges unit geom_nodes geom_nodetext theme_blank geom_nodelabel_repel
 #' @importFrom ggnewscale new_scale_color
 plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
@@ -1190,30 +1190,30 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
             }
             n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
 
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
-                ggnetwork::geom_edges(ggplot2::aes(color = Regulation), alpha = 0.5,
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
+                ggnetwork::geom_edges(ggplot2::aes_(color = ~Regulation), alpha = 0.5,
                                       arrow = ggplot2::arrow(length = ggnetwork::unit(0.1, "lines"), type = "closed"),
                                       curvature = 0.1, show.legend = showlegend) +
                 ggplot2::scale_color_manual(values = palette) +
                 ggnewscale::new_scale_color() +
-                ggnetwork::geom_nodes(ggplot2::aes(color = Molecule, size = Degree, shape = Molecule)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(color = ~Molecule, size = ~Degree, shape = ~Molecule)) +
                 ggplot2::scale_color_manual(values = palette2) +
-                ggnetwork::geom_nodetext(ggplot2::aes(label = name, size = 0.5 * Degree), vjust = -1) +
+                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = 0.5 * ~Degree), vjust = -1) +
                 ggnetwork::theme_blank()
 
         } else if(show_labels == "allhubs") {
             graph <- igraph::graph_from_data_frame(d = edgelist_grn, vertices = nod_at, directed = TRUE)
             n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
-                ggnetwork::geom_edges(ggplot2::aes(color = Regulation), alpha = 0.5,
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
+                ggnetwork::geom_edges(ggplot2::aes_(color = ~Regulation), alpha = 0.5,
                                       arrow = ggplot2::arrow(length = ggnetwork::unit(0.1, "lines"), type = "closed"),
                                       curvature = 0.1, show.legend = showlegend) +
                 ggplot2::scale_color_manual(values = palette) +
                 ggnewscale::new_scale_color() +
-                ggnetwork::geom_nodes(ggplot2::aes(color = Molecule, size = Degree, shape = Molecule)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(color = ~Molecule, size = ~Degree, shape = ~Molecule)) +
                 ggplot2::scale_color_manual(values = palette2) +
                 ggnewscale::new_scale_color() +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
@@ -1222,30 +1222,30 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
             nod_at$isTopHub <- ifelse(nod_at$Gene %in% tophubs, TRUE, FALSE)
             graph <- igraph::graph_from_data_frame(d = edgelist_grn, vertices = nod_at, directed = TRUE)
             n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
-                ggnetwork::geom_edges(ggplot2::aes(color = Regulation), alpha = 0.5,
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
+                ggnetwork::geom_edges(ggplot2::aes_(color = ~Regulation), alpha = 0.5,
                                       arrow = ggplot2::arrow(length = ggnetwork::unit(0.1, "lines"), type = "closed"),
                                       curvature = 0.1, show.legend = showlegend) +
                 ggplot2::scale_color_manual(values = palette) +
                 ggnewscale::new_scale_color() +
-                ggnetwork::geom_nodes(ggplot2::aes(color = Molecule, size = Degree, shape = Molecule)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(color = ~Molecule, size = ~Degree, shape = ~Molecule)) +
                 ggplot2::scale_color_manual(values = palette2) +
                 ggnewscale::new_scale_color() +
                 ggplot2::guides(color = FALSE) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isTopHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
         } else if(show_labels == "none") {
             graph <- igraph::graph_from_data_frame(d = edgelist_grn, vertices = nod_at, directed = TRUE)
             n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
-                ggnetwork::geom_edges(ggplot2::aes(color = Regulation), alpha = 0.5,
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
+                ggnetwork::geom_edges(ggplot2::aes_(color = ~Regulation), alpha = 0.5,
                                       arrow = ggplot2::arrow(length = ggnetwork::unit(0.1, "lines"), type = "closed"),
                                       curvature = 0.1, show.legend = showlegend) +
                 ggplot2::scale_color_manual(values = palette) +
                 ggnewscale::new_scale_color() +
-                ggnetwork::geom_nodes(ggplot2::aes(color = Molecule, size = Degree, shape = Molecule)) +
+                ggnetwork::geom_nodes(ggplot2::aes_(color = ~Molecule, size = ~Degree, shape = ~Molecule)) +
                 ggplot2::scale_color_manual(values = palette2) +
                 ggnetwork::theme_blank()
         }
@@ -1268,14 +1268,14 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #'  \code{\link[igraph]{simplify}},\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
 #'  \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
-#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}}
+#'  \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}}
 #' @rdname plot_gcn
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @importFrom igraph simplify graph_from_data_frame vcount
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
-#' @importFrom ggplot2 ggplot aes guides
+#' @importFrom ggplot2 ggplot aes_ guides
 plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5,
                      interactive = FALSE) {
@@ -1316,22 +1316,22 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
                   Number of vertices:", nvertices))
             }
             n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, alpha = Degree),
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
                                       color = unique(as.character(n$Module))) +
-                ggnetwork::geom_nodetext(ggplot2::aes(label = name, size = 0.4 * Degree), show.legend = FALSE) +
+                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = 0.4 * ~Degree), show.legend = FALSE) +
                 ggplot2::guides(alpha=FALSE) +
                 ggnetwork::theme_blank()
 
         } else if(show_labels == "allhubs") {
             graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
             n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, alpha = Degree),
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
                                       color = unique(as.character(n$Module))) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
@@ -1340,20 +1340,20 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
             nod_at$isTopHub <- ifelse(nod_at$Gene %in% tophubs, TRUE, FALSE)
             graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
             n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, alpha = Degree),
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
                                       color = unique(as.character(n$Module))) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes(label = name, color = isHub),
+                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isTopHub, ]}, show.legend = FALSE) +
                 ggnetwork::theme_blank()
         } else if(show_labels == "none") {
             graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
             n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)) +
+            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes(size = Degree, alpha = Degree),
+                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
                                                    color = unique(as.character(n$Module))) +
                 ggnetwork::theme_blank()
         } else {

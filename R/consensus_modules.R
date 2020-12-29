@@ -24,7 +24,6 @@
 #' @rdname consensus_modules
 #' @export
 #' @importFrom WGCNA checkSets collectGarbage pickSoftThreshold addGrid adjacency TOMsimilarity pquantile labels2colors multiSetMEs consensusMEDissimilarity mergeCloseModules plotDendroAndColors
-#' @importFrom pals stepped
 #' @importFrom dynamicTreeCut cutreeDynamic
 consensus_modules <- function(exp_list, setLabels = NULL, metadata,
                               cor_method = "spearman",
@@ -90,9 +89,13 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata,
     WGCNA::collectGarbage()
 
     # Plot the results:
-    colors = pals::stepped(n = nSets)
-    plotCols = c(2,5,6,7)
-    colNames = c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
+    colors <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
+                        "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
+                        "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
+                        "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
+                        "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")[1:nSets]
+    plotCols <- c(2,5,6,7)
+    colNames <- c("Scale Free Topology Model Fit", "Mean connectivity", "Median connectivity",
                  "Max connectivity")
 
     # Get the minima and maxima of the plotted points
@@ -284,7 +287,6 @@ consensus_modules <- function(exp_list, setLabels = NULL, metadata,
 #' @export
 #' @importFrom WGCNA orderMEs labeledHeatmap blueWhiteRed
 consensus_set_relationship <- function(setMEs, setColors, consMEs, consColors) {
-    setMEs <- WGCNA::orderMEs(MEs)
 
     setModuleLabels <- substring(names(setMEs), 3)
     consModuleLabels <- substring(names(consMEs[[1]]$data), 3)
@@ -307,7 +309,7 @@ consensus_set_relationship <- function(setMEs, setColors, consMEs, consColors) {
         {
             setMembers <- (setColors == setModules[smod])
             consMembers <- (consColors == consModules[cmod])
-            pTable[smod, cmod] <- -log10(fisher.test(femMembers, consMembers, alternative = "greater")$p.value)
+            pTable[smod, cmod] <- -log10(fisher.test(setMembers, consMembers, alternative = "greater")$p.value)
             CountTbl[smod, cmod] <- sum(setColors == setModules[smod] & consColors ==
                                             consModules[cmod])
         }
@@ -366,7 +368,7 @@ consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_metho
             moduleTraitCor[[set]] = cor(consMEs[[set]]$data, sampleInfo[[set]]$data, use = "p", method = "spearman")
             moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set])
         } else if(cor_method == "pearson") {
-            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, Traits[[set]]$data, use = "p", method = "pearson")
+            moduleTraitCor[[set]] = cor(consMEs[[set]]$data, sampleInfo[[set]]$data, use = "p", method = "pearson")
             moduleTraitPvalue[[set]] = WGCNA::corPvalueFisher(moduleTraitCor[[set]], exprSize$nSamples[set])
         }
     }
@@ -579,13 +581,15 @@ consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_metho
         stop("Maximum number of expression data sets for consensus module analysis is 10.")
     }
 
+    set <- 1
+    setLabels <- c("Set1", "Set2")
     textMatrix <- paste(signif(consensusCor, 2), "\n(",
                         signif(consensusPvalue, 1), ")", sep = "")
     dim(textMatrix) <- dim(moduleTraitCor[[set]])
     pdf(file = "ModuleTraitRelationships-consensus.pdf", width = 10, height = 7)
     par(mar = c(6, 8.8, 3, 2.2))
     WGCNA::labeledHeatmap(Matrix = consensusCor,
-                          xLabels = names(Traits[[set]]$data),
+                          xLabels = names(sampleInfo[[set]]$data),
                           yLabels = MEColorNames,
                           ySymbols = MEColorNames,
                           colorLabels = FALSE,
@@ -594,7 +598,7 @@ consensusmodules_sample_cor <- function(consMEs, exprSize, sampleInfo, cor_metho
                           setStdMargins = FALSE,
                           cex.text = 0.5,
                           zlim = c(-1,1),
-                          main = paste("Consensus module--trait relationships across\n",
+                          main = paste("Consensus module-trait relationships across\n",
                                        paste(setLabels, collapse = " and ")))
 
 }

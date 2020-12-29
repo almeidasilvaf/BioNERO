@@ -35,7 +35,7 @@ Plot gene regulatory network from edge list
 \seealso{
 \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{gorder}}
  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
+ \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
  \code{\link[ggnewscale]{new_scale}}
 }

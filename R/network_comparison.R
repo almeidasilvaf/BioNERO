@@ -245,7 +245,7 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
     )
 
     # Get preserved modules (p < 0.05 for all statistics)
-    max_pval <- apply(pres2$p.value, 1, max)
+    max_pval <- apply(pres$p.value, 1, max)
     preservedmodules <- names(max_pval[max_pval < 0.05])
     cat("We found", length(preservedmodules), "preserved modules:", preservedmodules)
 

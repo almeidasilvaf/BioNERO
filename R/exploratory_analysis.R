@@ -129,7 +129,6 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
 #' @param metadata Data frame containing sample IDs in first column and sample description (e.g. tissue or treatment) in the second column.
 #' @param log_trans Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).
 #' @param PCs Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
-#' @param interactive Logical indicating whether PCA should be plotted using Shiny's interactivity on RStudio. Default is FALSE.
 #' @param size Numeric indicating the point size. Default is 2.
 #'
 #' @return A ggplot object with the PCA plot.
@@ -138,9 +137,8 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname plot_PCA
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_point scale_color_manual labs theme_classic ggtitle theme element_text
-#' @importFrom plotly ggplotly
-plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, interactive = FALSE) {
+#' @importFrom ggplot2 ggplot aes aes_ geom_point scale_color_manual labs theme_classic ggtitle theme element_text
+plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
     if (log_trans == FALSE) {
         pca <- prcomp(t(exp))
     } else {
@@ -166,7 +164,7 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
     var_explained <- as.data.frame(round(100 * pca$sdev^2 / sum(pca$sdev^2), 1))
     rownames(var_explained) <- colnames(pca$x)
     if(PCs == "1x2") {
-        p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC2, color = Trait)) +
+        p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC2, color = ~Trait)) +
             ggplot2::geom_point(size = size) +
             ggplot2::scale_color_manual(values=custom_cols) +
             ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
@@ -174,7 +172,7 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
             ggplot2::ggtitle("Principal component analysis of samples") +
             ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else if (PCs == "1x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC1, PC3, color = Trait)) +
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC3, color = ~Trait)) +
                 ggplot2::geom_point(size = size) +
                 ggplot2::scale_color_manual(values=custom_cols) +
                 ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
@@ -182,7 +180,7 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
                 ggplot2::ggtitle("Principal component analysis of samples") +
                 ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
         } else if (PCs == "2x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes(PC2, PC3, color = Trait)) +
+            p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC2, ~PC3, color = ~Trait)) +
                 ggplot2::geom_point(size = size) +
                 ggplot2::scale_color_manual(values=custom_cols) +
                 ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
@@ -192,10 +190,6 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2, in
         } else {
             stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
         }
-
-    if(interactive == TRUE) {
-        p <- plotly::ggplotly(p)
-    }
 
     return(p)
 }
@@ -273,7 +267,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, ge
     # Plot expression profiles
     p <- ggplot2::ggplot(melt_exp, ggplot2::aes_(x = ~sample, y = ~expression)) +
         ggplot2::geom_tile(data = metadata, alpha = 0.3, height = Inf,
-                           ggplot2::aes(x = get(sample_names), y = background,
+                           ggplot2::aes_(x = get(sample_names), y = ~background,
                       fill = as.factor(get(sample_info))))
 
     p <- p + ggplot2::geom_line(ggplot2::aes_(group = ~id), alpha = 0.2,

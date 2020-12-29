@@ -4,14 +4,7 @@
 \alias{plot_PCA}
 \title{Plot Principal Component Analysis (PCA) of samples}
 \usage{
-plot_PCA(
-  exp,
-  metadata,
-  log_trans = FALSE,
-  PCs = "1x2",
-  size = 2,
-  interactive = FALSE
-)
+plot_PCA(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2)
 }
 \arguments{
 \item{exp}{Expression data frame with genes in rownames and samples in column names.}
@@ -23,8 +16,6 @@ plot_PCA(
 \item{PCs}{Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".}
 
 \item{size}{Numeric indicating the point size. Default is 2.}
-
-\item{interactive}{Logical indicating whether PCA should be plotted using Shiny's interactivity on RStudio. Default is FALSE.}
 }
 \value{
 A ggplot object with the PCA plot.
