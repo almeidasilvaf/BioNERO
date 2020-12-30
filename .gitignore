@@ -5,3 +5,6 @@
 docs/
 vignettes/*.html
 vignettes/*.pdf
+.DS_STORE
+*.Renviron
+.DS_STORE

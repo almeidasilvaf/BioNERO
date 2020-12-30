@@ -124,20 +124,20 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
 #' @export
 ZKfiltering <- function(raw_exp, Zk = -2, cor_method = "spearman") {
     if(cor_method == "pearson") {
-        A = WGCNA::adjacency(raw_exp, type = "distance")
+        A <- WGCNA::adjacency(raw_exp, type = "distance")
     } else if(cor_method == "biweight") {
-        A = WGCNA::adjacency(raw_exp, type = "distance", corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
+        A <- WGCNA::adjacency(raw_exp, type = "distance", corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
     } else if(cor_method == "spearman"){
-        A = WGCNA::adjacency(raw_exp, type = "distance", corOptions = list(use = 'p', method = "spearman"))
+        A <- WGCNA::adjacency(raw_exp, type = "distance", corOptions = list(use = 'p', method = "spearman"))
     } else {
         print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
     }
 
-    k = as.numeric(apply(A, 2, sum))-1
-    Z.k = scale(k)
+    k <- as.numeric(apply(A, 2, sum))-1
+    Z.k <- scale(k)
 
     #Say that every sample whose Z.k value is below <Zk> is an outlier
-    thresholdZ.k = Zk
+    thresholdZ.k <- Zk
 
     #Remove outliers
     remove.samples <- Z.k < thresholdZ.k | is.na(Z.k)

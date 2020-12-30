@@ -2,7 +2,13 @@ Package: BioNERO
 Type: Package
 Title: Easy and comprehensive biological network reconstruction and analysis
 Version: 0.1.0
-Authors@R: person("Fabricio", "Almeida-Silva", email="fabricio_almeidasilva@hotmail.com", role=c("cre", "aut"), comment = c(ORCID = "0000-0002-5314-2964"))
+Authors@R: c(person("Fabricio", "Almeida-Silva", 
+                    email="fabricio_almeidasilva@hotmail.com", 
+                    role=c("cre", "aut"), 
+                    comment = c(ORCID = "0000-0002-5314-2964")),
+            person("Thiago", "Venancio", 
+            role="aut", 
+            comment = c(ORCID = "0000-0002-2215-8082")))
 Description: This package is used to reconstruct biological networks (coexpression, protein-protein interaction and gene regulatory networks) and analyze them. For coexpression networks, several functions are available to automatically preprocess the expression data prior to network reconstruction.
 Depends: R (>= 4.0)
 License: GPL-3
@@ -39,5 +45,8 @@ Imports:
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0),
+    BiocStyle
 VignetteBuilder: knitr
+Config/testthat/edition: 3
