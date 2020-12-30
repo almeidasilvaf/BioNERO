@@ -35,17 +35,22 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                          scale = "none", fontsize = 10,
                          cutree_rows = 1, cutree_cols = 1, ...) {
 
+
     if(is.null(col_metadata)) {
         col_metadata <- NULL
     } else if(ncol(col_metadata) == 2) {
         names(col_metadata) <- c("SampleID", "Sample class")
+        col_metadata <- col_metadata[order(col_metadata[,2]), ]
     } else if(ncol(col_metadata) == 3) {
         names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2")
+        col_metadata <- col_metadata[order(col_metadata[,2], col_metadata[,3]), ]
     } else if(ncol(col_metadata == 4)) {
         names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2",
                                  "Sample class 3")
+        col_metadata <- col_metadata[order(col_metadata[,2], col_metadata[,3],
+                                           col_metadata[,4]), ]
     } else {
-        col_metadata <- NULL
+        stop("Too much sample information. Please, reduce the number of columns in col_metadata.")
     }
 
     if(log_trans == TRUE) {

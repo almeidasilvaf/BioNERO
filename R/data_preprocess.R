@@ -229,14 +229,9 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, Zk_filtering = TRUE
 #' @return Expression matrix with normalized values
 #' @rdname q_normalize
 #' @export
-
 q_normalize <- function(exp){
     n <- nrow(exp)
-    p <- ncol(exp)
-    rank.exp <- exp # matrix for ranking
-    for (i in 1:p){
-        rank.exp[,i] <- rank(exp[,i])
-    }
+    rank.exp <- apply(exp, 2, rank)
     U <- rank.exp/(n+1)
     qnorm(U)
 }
