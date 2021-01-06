@@ -6,7 +6,7 @@
 \usage{
 module_enrichment(
   net = NULL,
-  exp,
+  background_genes,
   annotation,
   column = NULL,
   correction = "BH",
@@ -16,7 +16,7 @@ module_enrichment(
 \arguments{
 \item{net}{List object returned by \code{exp2net}.}
 
-\item{exp}{Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.}
+\item{background_genes}{Character vector of genes to be used as background for the Fisher's Exact Test.}
 
 \item{annotation}{Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.}
 
@@ -31,9 +31,6 @@ A data frame containing enriched terms, p-values, gene IDs and module names.
 }
 \description{
 Perform functional enrichment analysis for all coexpression network modules.
-}
-\seealso{
-\code{\link[bc3net]{enrichment}}
 }
 \author{
 Fabricio Almeida-Silva

@@ -6,7 +6,7 @@
 \usage{
 enrichment_analysis(
   genes,
-  exp,
+  background_genes,
   annotation,
   column = NULL,
   correction = "BH",
@@ -16,7 +16,7 @@ enrichment_analysis(
 \arguments{
 \item{genes}{Character vector containing genes for overrepresentation analysis.}
 
-\item{exp}{Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.}
+\item{background_genes}{Character vector of genes to be used as background for the Fisher's Exact Test.}
 
 \item{annotation}{Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.}
 
@@ -31,9 +31,6 @@ Data frame contaning significant terms, p-values and associated genes
 }
 \description{
 Perform enrichment analysis for functional annotation such as Gene Ontology (GO), pathway (KEGG, MapMan) or protein domains (PFAM, Panther).
-}
-\seealso{
-\code{\link[bc3net]{enrichment}}
 }
 \author{
 Fabricio Almeida-Silva

@@ -515,13 +515,51 @@ get_hubs <- function(exp, net) {
     return(hubs_df)
 }
 
+#' Helper function to perform Fisher's Exact Test with parallel computing
+#'
+#' @param genes Character vector containing genes on which enrichment will be tested.
+#' @param reference Character vector containing genes to be used as background
+#' @param genesets List of functional annotation categories (e.g., GO, pathway, etc.) with their associated genes.
+#' @param adj Multiple testing correction method
+#' @noRd
+#' @importFrom stats p.adjust fisher.test
+#' @importFrom BiocParallel bplapply
+par_enrich <- function(genes, reference, genesets, adj = "BH") {
+  reference <- reference[!reference %in% genes]
+
+  tab <- BiocParallel::bplapply(seq_along(genesets), function(i) {
+
+    RinSet <- sum(reference %in% genesets[[i]])
+    RninSet <- length(reference) - RinSet
+    GinSet <- sum(genes %in% genesets[[i]])
+    GninSet <- length(genes) - GinSet
+    fmat <- matrix(c(GinSet, RinSet, GninSet, RninSet), nrow = 2,
+                   ncol = 2, byrow = FALSE)
+    colnames(fmat) <- c("inSet", "ninSet")
+    rownames(fmat) <- c("genes", "reference")
+    fish <- stats::fisher.test(fmat, alternative = "greater")
+    pval <- fish$p.value
+    inSet <- RinSet + GinSet
+    res <- c(GinSet, inSet, pval)
+    return(res)
+  })
+  rtab <- do.call(rbind, tab)
+  rtab <- data.frame(as.vector(names(genesets)), rtab)
+  rtab <- rtab[order(rtab[, 4]), ]
+  colnames(rtab) <- c("TermID", "genes", "all", "pval")
+  padj <- stats::p.adjust(rtab$pval, method = adj)
+  tab.out <- data.frame(rtab, padj)
+
+  return(tab.out)
+}
+
 
 #' Perform enrichment analysis for a set of genes
 #'
 #' Perform enrichment analysis for functional annotation such as Gene Ontology (GO), pathway (KEGG, MapMan) or protein domains (PFAM, Panther).
 #'
 #' @param genes Character vector containing genes for overrepresentation analysis.
-#' @param exp Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.
+#' @param background_genes Character vector of genes to be used as background for the Fisher's Exact Test.
 #' @param annotation Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.
 #' @param column Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.
 #' @param correction Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".
@@ -529,16 +567,13 @@ get_hubs <- function(exp, net) {
 #'
 #' @return Data frame contaning significant terms, p-values and associated genes
 #' @author Fabricio Almeida-Silva
-#' @seealso
-#'  \code{\link[bc3net]{enrichment}}
 #' @rdname enrichment_analysis
 #' @export
-#' @importFrom bc3net enrichment
-enrichment_analysis <- function(genes, exp, annotation, column = NULL,
-                                correction = "BH", p = 0.05) {
+#' @importFrom BiocParallel bplapply
+enrichment_analysis <- function(genes, background_genes, annotation, column = NULL,
+                                 correction = "BH", p = 0.05) {
 
-  # Get a dataframe of expressed genes and their annotations
-  background_genes <- rownames(exp)
+  ## Get a dataframe of expressed genes and their annotations
   gene_column <- colnames(annotation)[1]
 
   # Handle missing values
@@ -561,16 +596,20 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL,
     annotation_list <- split(background[,1], background[,2])
 
     # Perform the enrichment analysis
-    enrich <- bc3net::enrichment(genes, background_genes, annotation_list, adj = correction)
-    signif_enrich <- as.data.frame(enrich[enrich$padj < p, ], stringsAsFactors = FALSE)
+    enrich.table <- par_enrich(genes, background_genes, annotation_list, adj = correction)
+    signif_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ], stringsAsFactors = FALSE)
 
-    signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
-    signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
+    if(nrow(signif_enrich) > 0) {
+      signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
+      signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
 
-    # Save final result with a column containing gene IDs of associated genes
-    signif_enrich$GeneID <- unlist(lapply(signif_terms_genes,
-                                          paste, collapse = ","))
-
+      # Save final result with a column containing gene IDs of associated genes
+      signif_enrich$GeneID <- unlist(lapply(signif_terms_genes,
+                                            paste, collapse = ","))
+      df_signif_enrich <- signif_enrich
+    } else {
+      df_signif_enrich <- NULL
+    }
 
   } else { # more than 1 annotation category
     annotation_list <- lapply(2:ncol(background), function(x) {
@@ -583,28 +622,28 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL,
     })
 
     # Perform the enrichment analysis
-    signif_enrich <- lapply(annotation_list_final, function(x) {
-      enrich <- bc3net::enrichment(genes, background_genes, x, adj=correction)
-      sig_enrich <- as.data.frame(enrich[enrich$padj < p, ], stringsAsFactors=FALSE)
+    signif_enrich <- BiocParallel::bplapply(annotation_list_final, function(x) {
+      enrich.table <- par_enrich(genes, background_genes, x, adj=correction)
+      sig_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ], stringsAsFactors=FALSE)
       return(sig_enrich)
     })
 
     # Remove empty data frames from list
     signif_enrich <- signif_enrich[sapply(signif_enrich, nrow) > 0]
 
-    # Create a data frame containing annotations and the annotation class
-    annot_correspondence <- Reduce(rbind, lapply(2:length(background), function(x) {
-      annot_correspondence <- data.frame(TermID = background[,x],
-                                         Category = names(background)[x],
-                                         stringsAsFactors = FALSE)
-      annot_correspondence <- annot_correspondence[!duplicated(annot_correspondence[,c(1,2)]),]
-      return(annot_correspondence)
-    }))
-
-
     if(length(signif_enrich) > 0) {
+
+      # Create a data frame containing annotations and the annotation class
+      annot_correspondence <- Reduce(rbind, lapply(2:length(background), function(x) {
+        annot_correspondence <- data.frame(TermID = background[,x],
+                                           Category = names(background)[x],
+                                           stringsAsFactors = FALSE)
+        annot_correspondence <- annot_correspondence[!duplicated(annot_correspondence[,c(1,2)]),]
+        return(annot_correspondence)
+      }))
+
       # Add column containing the annotation class
-      list_signif_enrich <- lapply(signif_enrich, function(x) {
+      list_signif_enrich <- BiocParallel::bplapply(signif_enrich, function(x) {
         merge(x, annot_correspondence)
       })
 
@@ -627,12 +666,13 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL,
   return(df_signif_enrich)
 }
 
+
 #' Perform enrichment analysis for coexpression network modules
 #'
 #' Perform functional enrichment analysis for all coexpression network modules.
 #'
 #' @param net List object returned by \code{exp2net}.
-#' @param exp Data frame of expressed genes and their expression values across samples.Gene IDs must correspond to row names and column names represent sample names.
+#' @param background_genes Character vector of genes to be used as background for the Fisher's Exact Test.
 #' @param annotation Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.
 #' @param column Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.
 #' @param correction Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".
@@ -640,12 +680,11 @@ enrichment_analysis <- function(genes, exp, annotation, column = NULL,
 #'
 #' @return A data frame containing enriched terms, p-values, gene IDs and module names.
 #' @author Fabricio Almeida-Silva
-#' @seealso
-#'  \code{\link[bc3net]{enrichment}}
 #' @rdname module_enrichment
+#' @importFrom BiocParallel bplapply
 #' @export
 #'
-module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
+module_enrichment <- function(net=NULL, background_genes, annotation, column = NULL,
                               correction = "BH", p = 0.05) {
 
   # Divide modules in different data frames of a list
@@ -653,12 +692,12 @@ module_enrichment <- function(net=NULL, exp, annotation, column = NULL,
   list.gmodules <- split(genes.modules, genes.modules$Modules)
   list.gmodules <- list.gmodules[names(list.gmodules) != "grey"]
 
-  enrichment_allmodules <- lapply(1:length(list.gmodules), function(x) {
+  enrichment_allmodules <- BiocParallel::bplapply(seq_along(list.gmodules), function(x) {
     message("Enrichment analysis for module ", names(list.gmodules)[x],
                  "...")
 
     l <- enrichment_analysis(genes = as.character(list.gmodules[[x]][,1]),
-                             exp = exp,
+                             background_genes = background_genes,
                              annotation = annotation,
                              correction = correction, p = p)
     return(l)

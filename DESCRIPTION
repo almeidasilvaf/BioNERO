@@ -28,7 +28,6 @@ Imports:
     ggplot2,
     reshape2,
     dplyr,
-    bc3net,
     igraph,
     ggnetwork,
     intergraph,
@@ -42,6 +41,7 @@ Imports:
     stats,
     grDevices,
     graphics,
+    BiocParallel
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
