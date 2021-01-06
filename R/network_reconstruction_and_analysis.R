@@ -278,7 +278,7 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
     pind <- WGCNA::initProgInd()
     for (r in 2:(nRuns+1))
     {
-        labels[, r] = WGCNA::matchLabels(mods0[[r-1]]$mods$colors, labels[, 1])
+        labels[, r] <- WGCNA::matchLabels(mods0[[r-1]]$mods$colors, labels[, 1])
         pind <- WGCNA::updateProgInd((r-1)/nRuns, pind)
     }
 
@@ -323,7 +323,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
                               continuous_trait=FALSE) {
   sampleinfo <- metadata[metadata[,1] %in% colnames(exp), ]
 
-  if(continuous_trait == FALSE) {
+  if(!continuous_trait) {
     tablesamples <- table(sampleinfo)
     write.table(tablesamples, file="matrix.to.correlate.to.eigengenes.txt", quote=F, sep="\t", row.names=T)
     trait <- read.csv("matrix.to.correlate.to.eigengenes.txt", header=T, sep="\t", row.names=1, stringsAsFactors = FALSE)
@@ -348,7 +348,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
   dim(textMatrix) <- dim(modtraitcor)
   par(mar = c(6, 8.5, 3, 3))
 
-  if(transpose == TRUE) {
+  if(transpose) {
     #Transpose the matrices
     modtraitcor <- t(modtraitcor)
     textMatrix <- t(textMatrix)
@@ -374,6 +374,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
                                           cex.lab.y = 0.5, main = paste("Module-trait relationships"))
 
   }
+  return(ME.trait.cor)
 }
 
 #' Calculate gene significance for a given group of genes
@@ -407,7 +408,7 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
 
   final_exp <- exp[, colnames(exp) %in% metadata[,1]]
 
-  if(continuous_trait == FALSE) {
+  if(!continuous_trait) {
     tablesamples <- table(metadata)
     write.table(tablesamples, file="matrix.to.correlate.to.genes.txt", quote=F,
                 sep="\t", row.names=TRUE)
@@ -433,13 +434,13 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
 
   colnames(corandp) <- c("Gene", "Sample_info", "Cor", "pval")
 
-  if(use_abs == TRUE) {
+  if(use_abs) {
     corandp <- corandp[corandp$pval < alpha & abs(corandp$Cor) > min_cor, ]
   } else {
     corandp <- corandp[corandp$pval < alpha & corandp$Cor > min_cor, ]
   }
 
-  if(savetofile == TRUE) {
+  if(savetofile) {
     write.table(corandp, file = "gene_correlation_to_trait_and_pvalue.txt",
                 sep = "\t", row.names = FALSE, quote = FALSE)
   }
@@ -468,9 +469,9 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
 get_hubs <- function(exp, net) {
 
   cor_method <- net$params$cor_method
-  genes_modules <- net[[3]]
-  MEs <- net[[2]]
-  kIN <- net[[4]]
+  genes_modules <- net$genes_and_modules
+  MEs <- net$MEs
+  kIN <- net$kIN
 
   # List of genes and modules. Each element of the list is a module
   l1 <- split(genes_modules, f = genes_modules[,2])
@@ -510,7 +511,7 @@ get_hubs <- function(exp, net) {
   })
 
     hubs_df <- do.call(rbind, final_list)
-    rownames(hubs_df) <- 1:nrow(hubs_df)
+    rownames(hubs_df) <- seq_len(nrow(hubs_df))
     colnames(hubs_df) <- c("Gene", "Module", "kWithin")
     return(hubs_df)
 }
@@ -712,7 +713,7 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
   }
 
   # Add module name to each data frame
-  enrichment_modnames <- lapply(1:length(enrichment_filtered), function(x) {
+  enrichment_modnames <- lapply(seq_along(enrichment_filtered), function(x) {
     return(cbind(enrichment_filtered[[x]],Module=names(enrichment_filtered)[x]))
   })
 
@@ -796,6 +797,7 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
+#' @importFrom BiocParallel bplapply
 filter_edges <- function(cor_matrix, method = "optimalSFT",
                          r_optimal_test = seq(0.7, 0.9, by=0.05),
                          Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
@@ -804,7 +806,7 @@ filter_edges <- function(cor_matrix, method = "optimalSFT",
   # Create edge list from adjacency matrix
   edges <- cor_matrix
   edges[lower.tri(edges, diag = TRUE)] <- NA
-  edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE);
+  edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE)
   colnames(edges) <- c("Gene1", "Gene2", "Weight")
 
 
@@ -817,16 +819,28 @@ filter_edges <- function(cor_matrix, method = "optimalSFT",
   } else if(method == "optimalSFT") {
     cutoff <- r_optimal_test
 
-    # Create list of edge lists, each with a different correlation threshold
+    # Create list of 2 elements: edge lists, each with a different correlation threshold, and degree
     list_mat <- replicate(length(cutoff), cor_matrix, simplify = FALSE)
-    degree_list <- list()
-    for (i in 1:length(cutoff)) {
-      list_mat[[i]][list_mat[[i]] < cutoff[i]] <- NA
-      diag(list_mat[[i]]) <- 0
-      degree_list[[i]] <- apply(list_mat[[i]], 1, sum, na.rm=TRUE) # Calculate degree for each list
-      list_mat[[i]][lower.tri(list_mat[[i]], diag=TRUE)] <- NA
-      list_mat[[i]] <- na.omit(data.frame(as.table(list_mat[[i]]), stringsAsFactors = FALSE))
-    }
+
+    list_cormat_filtered <- BiocParallel::bplapply(seq_along(list_mat), function(x) {
+      # Convert r values below threshold to NA and set diagonals to 0
+      matrix <- list_mat[[x]]
+      matrix[matrix < cutoff[x] ] <- NA
+      diag(matrix) <- 0
+
+      # Calculate degree
+      degree <- rowSums(matrix, na.rm=TRUE)
+
+      # Convert lower triangle and diagonals to NA
+      matrix[lower.tri(matrix, diag=TRUE)] <- NA
+
+      # Convert symmetrical matrix to edge list (Gene1, Gene2, Weight)
+      matrix <- na.omit(data.frame(as.table(matrix), stringsAsFactors=FALSE))
+      result <- list(matrix=matrix, degree=degree)
+      return(result)
+    })
+
+    degree_list <- lapply(list_cormat_filtered, function(x) return(x[[2]]))
 
     # Calculate scale-free topology
     sft.rsquared <- unlist(lapply(degree_list, function(x) WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT))
@@ -913,8 +927,8 @@ filter_edges <- function(cor_matrix, method = "optimalSFT",
 
 get_edge_list <- function(net, genes = NULL, module = NULL,
                           cor_threshold = NULL) {
-    edges <- net[[6]]
-    genes_modules <- net[[3]]
+    edges <- net$correlation_matrix
+    genes_modules <- net$genes_and_modules
 
     edges[lower.tri(edges, diag = TRUE)] <- NA
     edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
@@ -1051,7 +1065,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
                          stringsAsFactors = FALSE)
 
     # Add communities
-    if(detect_communities == TRUE) {
+    if(detect_communities) {
         clusters <- detect_communities(edgelist_int, method = clustering_method)
         nod_at <- merge(nod_at, clusters, by.x="Gene", by.y="names")
     }
@@ -1068,7 +1082,7 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
     nod_at$isHub <- ifelse(nod_at$Gene %in% hubs[,1], TRUE, FALSE)
 
     # Should the network be interactive?
-    if(interactive == TRUE) {
+    if(interactive) {
         graph <- igraph::simplify(igraph::graph_from_data_frame(d = edgelist_int, vertices = nod_at, directed=FALSE))
 
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$mem)
@@ -1203,7 +1217,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
     nod_at$Molecule <- ifelse(nod_at$Gene %in% edgelist_grn[,1], "TF", "target")
 
     # Should the network be interactive?
-    if(interactive == TRUE) {
+    if(interactive) {
         graph <- igraph::graph_from_data_frame(d = edgelist_grn, vertices = nod_at, directed=TRUE)
 
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Molecule)
@@ -1319,8 +1333,8 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5,
                      interactive = FALSE) {
     requireNamespace("intergraph", quietly=TRUE)
-    genes_modules <- net[[3]]
-    kIN <- net[[4]]
+    genes_modules <- net$genes_and_modules
+    kIN <- net$kIN
 
     if(is.null(modulename) | is.null(hubs) | is.null(edgelist_gcn)) {
         stop("Arguments edgelist_gcn, modulename and hubs are mandatory for this network.")
@@ -1335,7 +1349,7 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
     nod_at <- nod_at[order(nod_at$Module, -nod_at$Degree), ]
 
     # Should the network be interactive?
-    if(interactive == TRUE) {
+    if(interactive) {
         graph <- igraph::simplify(igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed=FALSE))
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Module)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
@@ -1487,7 +1501,7 @@ net_stats <- function(adj_matrix = NULL, net_type=c("gcn", "ppi", "grn"),
     centralization <- igraph::centralization.degree(graph)$centralization
     diameter <- igraph::diameter(graph, directed=TRUE)
 
-    if(calculate_additional == TRUE) {
+    if(calculate_additional) {
       # Calculate vertex betweenness
       betweenness <- igraph::betweenness(graph, directed = TRUE)
       names(betweenness) <- igraph::V(graph)

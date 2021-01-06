@@ -7,10 +7,10 @@
 get_HK(exp)
 }
 \arguments{
-\item{exp}{Expression dataframe, where rownames are gene IDs and colnames are sample names}
+\item{exp}{Expression data frame, where row names are gene IDs and col names are sample names}
 }
 \value{
-vector object of gene IDs of housekeeping genes
+Character vector of housekeeping gene IDs
 }
 \description{
 Get a vector object with housekeeping genes

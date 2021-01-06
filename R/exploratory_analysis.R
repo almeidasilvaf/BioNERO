@@ -53,7 +53,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
         stop("Too much sample information. Please, reduce the number of columns in col_metadata.")
     }
 
-    if(log_trans == TRUE) {
+    if(log_trans) {
         exp <- log2(exp+1)
     } else {
         exp <- exp
@@ -110,7 +110,7 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
                "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
     nlevels <- length(unique(as.character(annotation_col[,1])))
     if(nlevels <= 20) {
-        custom_cols <- ccols[1:nlevels]
+        custom_cols <- ccols[seq_len(nlevels)]
     } else {
         custom_cols <- colorRampPalette(ccols)(nlevels)
     }
@@ -202,16 +202,16 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
 
 #' Get a vector object with housekeeping genes
 #'
-#' @param exp Expression dataframe, where rownames are gene IDs and colnames are sample names
+#' @param exp Expression data frame, where row names are gene IDs and col names are sample names
 #'
-#' @return vector object of gene IDs of housekeeping genes
+#' @return Character vector of housekeeping gene IDs
 #' @author Fabricio Almeida-Silva
 #' @rdname get_HK
 #' @export
 get_HK <- function(exp) {
-    exp=exp
+    exp <- exp
     exp[exp < 1] <- 0 #expression values below 1 are considered as not expressed
-    ncols=ncol(exp)
+    ncols <- ncol(exp)
     final.exp <- exp[rowSums(exp > 0) == ncols,]
     final.exp$mean <- rowMeans(final.exp[,1:ncols])
     final.exp$sd <-  apply(final.exp[,1:ncols], 1, sd)
@@ -222,6 +222,7 @@ get_HK <- function(exp) {
     final.exp$MFC.CoV <- final.exp$MFC * final.exp$covar
     hk <- head(final.exp[order(final.exp$MFC.CoV, decreasing=F),], n = nrow(final.exp)*0.25)
     hk.genes <- rownames(hk)
+    return(hk.genes)
 }
 
 #' Plot expression profile of given genes across samples
@@ -245,7 +246,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, ge
     sample_names <- colnames(metadata)[1]
     sample_info <- colnames(metadata)[2]
 
-    if(plot_module == TRUE) {
+    if(plot_module) {
         genes_in_module <- genes_modules[genes_modules[,2] == modulename, 1]
         filt_exp <- exp[rownames(exp) %in% genes_in_module, ]
         filt_exp$id <- rownames(filt_exp)

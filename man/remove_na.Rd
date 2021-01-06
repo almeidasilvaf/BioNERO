@@ -7,7 +7,7 @@
 remove_na(exp, replaceby = 0)
 }
 \arguments{
-\item{exp}{Gene expression data frame with genes in row names and samples IDs in column names.}
+\item{exp}{Gene expression data frame or with genes in row names and samples IDs in column names.}
 
 \item{replaceby}{What to use instead of NAs. One of 0 or 'mean'. Default is 0.}
 }

@@ -21,7 +21,7 @@ dfs2one <- function(mypath, pattern = ".tsv$"){
 
 #' Remove missing values in a gene expression data frame
 #'
-#' @param exp Gene expression data frame with genes in row names and samples IDs in column names.
+#' @param exp Gene expression data frame or with genes in row names and samples IDs in column names.
 #' @param replaceby What to use instead of NAs. One of 0 or 'mean'. Default is 0.
 #'
 #' @return Gene expression data frame with all NAs replaced according to the argument 'replaceby'
@@ -71,9 +71,7 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
         {
             if (sum(!gsg$goodGenes)>0)
                 dynamicTreeCut::printFlush(paste("Removing genes:", paste(names(texp)[!gsg$goodGenes], collapse = "\t")))
-            if (sum(!gsg$goodSamples)>0)
-                dynamicTreeCut::printFlush(paste("Removing samples:", paste(rownames(texp)[!gsg$goodSamples], collapse = "\t")))
-            final_exp = exp[gsg$goodGenes, gsg$goodSamples]
+            final_exp = exp[gsg$goodGenes, ]
         }
     } else if (method == "allsamples") {
         final_exp <- exp[rowSums(exp >= min_exp) == ncol(exp), ]
@@ -181,39 +179,39 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0, Zk_filtering = TRUE
                            vstransform = FALSE) {
 
     # Remove missing values
-    if(NA_rm == TRUE) {
+    if(NA_rm) {
         exp1 <- remove_na(exp, replaceby = replaceby)
     } else {
         exp1 <- exp
     }
 
     # Remove non-expressed genes
-    if(remove_nonexpressed == TRUE) {
+    if(remove_nonexpressed) {
         exp2 <- remove_nonexp(exp1, method = method, min_exp = min_exp, min_percentage_samples = min_percentage_samples)
     } else {
         exp2 <- exp1
     }
 
-    if(vstransform == TRUE) {
+    if(vstransform) {
         exp2 <- as.data.frame(DESeq2::varianceStabilizingTransformation(exp2))
     }
 
     # Filter by variance
-    if(variance_filter == TRUE) {
+    if(variance_filter) {
         exp3 <- filter_by_variance(exp2, n = n, percentile = percentile)
     } else {
         exp3 <- exp2
     }
 
     # Zk filtering
-    if(Zk_filtering == TRUE) {
+    if(Zk_filtering) {
         exp4 <- ZKfiltering(exp3, Zk = Zk, cor_method = cor_method)
     } else {
         exp4 <- exp3
     }
 
     # Remove confounders
-    if(remove_confounders == TRUE) {
+    if(remove_confounders) {
         exp5 <- as.data.frame(PC_correction(exp4))
     } else {
         exp5 <- exp4
