@@ -304,6 +304,9 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
 #' @param transpose Logical indicating whether to transpose the heatmap of not. Default is FALSE.
 #' @param palette RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.
 #' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
+#' @param cex.lab.x Font size for x axis labels. Default: 0.6.
+#' @param cex.lab.y Font size for y axis labels. Default: 0.6.
+#' @param cex.text Font size for numbers inside matrix. Default: 0.6.
 #'
 #' @return A heatmap showing the correlations between module eigengenes and trait with their associated significance levels.
 #' @details Significance levels:
@@ -319,8 +322,10 @@ module_stability <- function(norm.exp, net, nRuns = 30) {
 #' @export
 #' @importFrom WGCNA corPvalueStudent labeledHeatmap blueWhiteRed
 module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
-                              transpose=FALSE, palette="RdYlBu",
-                              continuous_trait=FALSE) {
+                             transpose=FALSE, palette="RdYlBu",
+                             continuous_trait=FALSE,
+                             cex.lab.x=0.6, cex.lab.y=0.6,
+                             cex.text=0.6) {
   sampleinfo <- metadata[metadata[,1] %in% colnames(exp), ]
 
   if(!continuous_trait) {
@@ -353,25 +358,34 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
     modtraitcor <- t(modtraitcor)
     textMatrix <- t(textMatrix)
     ME.trait.cor <- WGCNA::labeledHeatmap(Matrix = modtraitcor,
-                                          yLabels = colnames(trait), xLabels = names(MEs),
+                                          yLabels = colnames(trait),
+                                          xLabels = names(MEs),
                                           xSymbols = names(MEs),
-                                          xColorLabels = TRUE, yColorLabels = FALSE,
-                                          colorLabels=FALSE,
-                                          colors=colorRampPalette(
-                                            rev(RColorBrewer::brewer.pal(10, palette)))(100),
-                                          textMatrix=textMatrix, setStdMargins = FALSE,
-                                          cex.text = 0.6, zlim = c(-1,1),
-                                          cex.lab.x = 0.7, main = paste("Module-trait relationships"))
+                                          xColorLabels = TRUE,
+                                          yColorLabels = FALSE,
+                                          colorLabels = FALSE,
+                                          colors = colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100),
+                                          textMatrix = textMatrix,
+                                          setStdMargins = FALSE,
+                                          cex.text = cex.text,
+                                          cex.lab.x = cex.lab.x,
+                                          cex.lab.y = cex.lab.y,
+                                          zlim = c(-1,1),
+                                          main = paste("Module-trait relationships"))
   } else {
     ME.trait.cor <- WGCNA::labeledHeatmap(Matrix = modtraitcor,
-                                          xLabels = colnames(trait), yLabels = names(MEs),
+                                          xLabels = colnames(trait),
+                                          yLabels = names(MEs),
                                           ySymbols = names(MEs),
-                                          colorLabels=FALSE,
-                                          colors=colorRampPalette(
-                                            rev(RColorBrewer::brewer.pal(10, palette)))(100),
-                                          textMatrix=textMatrix, setStdMargins = FALSE,
-                                          cex.text = 0.6, zlim = c(-1,1),
-                                          cex.lab.y = 0.5, main = paste("Module-trait relationships"))
+                                          colorLabels = FALSE,
+                                          colors = colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100),
+                                          textMatrix = textMatrix,
+                                          setStdMargins = FALSE,
+                                          cex.text = cex.text,
+                                          cex.lab.y = cex.lab.y,
+                                          cex.lab.x = cex.lab.x,
+                                          zlim = c(-1,1),
+                                          main = paste("Module-trait relationships"))
 
   }
   return(ME.trait.cor)
@@ -708,17 +722,19 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
   # Remove NULL elements from list
   enrichment_filtered <- enrichment_allmodules[!sapply(enrichment_allmodules,
                                                        is.null)]
+
   if(length(enrichment_filtered) == 0) {
-    stop("None of the modules had significant enrichment.")
+    message("None of the modules had significant enrichment.")
+    enrichment_final <- NULL
+  } else {
+    # Add module name to each data frame
+    enrichment_modnames <- lapply(seq_along(enrichment_filtered), function(x) {
+      return(cbind(enrichment_filtered[[x]],Module=names(enrichment_filtered)[x]))
+    })
+
+    # Reduce list of data frames to a single data frame
+    enrichment_final <- Reduce(rbind, enrichment_modnames)
   }
-
-  # Add module name to each data frame
-  enrichment_modnames <- lapply(seq_along(enrichment_filtered), function(x) {
-    return(cbind(enrichment_filtered[[x]],Module=names(enrichment_filtered)[x]))
-  })
-
-  # Reduce list of data frames to a single data frame
-  enrichment_final <- Reduce(rbind, enrichment_modnames)
 
   return(enrichment_final)
 }

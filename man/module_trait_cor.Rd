@@ -11,7 +11,10 @@ module_trait_cor(
   cor_method = "spearman",
   transpose = FALSE,
   palette = "RdYlBu",
-  continuous_trait = FALSE
+  continuous_trait = FALSE,
+  cex.lab.x = 0.6,
+  cex.lab.y = 0.6,
+  cex.text = 0.6
 )
 }
 \arguments{
@@ -28,6 +31,12 @@ module_trait_cor(
 \item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.}
 
 \item{continuous_trait}{Logical indicating if trait is a continuous variable. Default is FALSE.}
+
+\item{cex.lab.x}{Font size for x axis labels. Default: 0.6.}
+
+\item{cex.lab.y}{Font size for y axis labels. Default: 0.6.}
+
+\item{cex.text}{Font size for numbers inside matrix. Default: 0.6.}
 }
 \value{
 A heatmap showing the correlations between module eigengenes and trait with their associated significance levels.
