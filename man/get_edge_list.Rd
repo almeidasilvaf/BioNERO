@@ -4,7 +4,19 @@
 \alias{get_edge_list}
 \title{Get edge list from an adjacency matrix for a group of genes}
 \usage{
-get_edge_list(net, genes = NULL, module = NULL, cor_threshold = NULL)
+get_edge_list(
+  net,
+  genes = NULL,
+  module = NULL,
+  filter = FALSE,
+  method = "optimalSFT",
+  r_optimal_test = seq(0.4, 0.9, by = 0.1),
+  Zcutoff = 1.96,
+  pvalue_cutoff = 0.05,
+  rcutoff = 0.7,
+  nSamples = NULL,
+  check_SFT = FALSE
+)
 }
 \arguments{
 \item{net}{List object returned by \code{exp2net}.}
@@ -13,7 +25,21 @@ get_edge_list(net, genes = NULL, module = NULL, cor_threshold = NULL)
 
 \item{module}{Character with module name from which edges will be extracted. To include 2 or more modules, input the names in a character vector.}
 
-\item{cor_threshold}{Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.}
+\item{filter}{Logical indicating whether to filter the edge list or not.}
+
+\item{method}{Method to filter spurious correlations. One of "Zscore", "optimalSFT", "pvalue" or "min_cor". See details for more information on the methods. Default: 'optimalSFT'}
+
+\item{r_optimal_test}{Numeric vector with the correlation thresholds to be tested for optimal scale-free topology fit. Only valid if \code{method} equals "optimalSFT". Default: seq(0.4, 0.9, by = 0.1)}
+
+\item{Zcutoff}{Minimum Z-score threshold. Only valid if \code{method} equals "Zscore". Default: 1.96}
+
+\item{pvalue_cutoff}{Maximum P-value threshold. Only valid if \code{method} equals "pvalue". Default: 0.05}
+
+\item{rcutoff}{Minimum correlation threshold. Only valid if \code{method} equals "min_cor". Default: 0.7}
+
+\item{nSamples}{Number of samples in the dataset from which the correlation matrix was calculated. Only required if \code{method} equals "pvalue".}
+
+\item{check_SFT}{Logical indicating whether to test if the resulting network is scale-free or not. Default: FALSE}
 }
 \value{
 Data frame with edge list for the input genes.
@@ -21,7 +47,16 @@ Data frame with edge list for the input genes.
 \description{
 Get edge list from an adjacency matrix for a group of genes
 }
+\details{
+The default method ("optimalSFT") will create several different edge lists by filtering the original correlation matrix by the thresholds specified in \code{r_optimal_test}. Then, it will calculate a scale-free topology fit index for each of the possible networks and return the network that best fits the scale-free topology.
+The method "Zscore" will apply a Fisher Z-transformation for the correlation coefficients and remove the Z-scores below the threshold specified in \code{Zcutoff}.
+The method "pvalue" will calculate Student asymptotic p-value for the correlations and remove correlations whose p-values are above the threshold specified in \code{pvalue_cutoff}.
+The method "min_cor" will remove correlations below the minimum correlation threshold specified in \code{rcutoff}.
+}
 \seealso{
+\code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
+ \code{\link[igraph]{fit_power_law}}
+
 \code{SFT_fit}
 
 \code{exp2net}.

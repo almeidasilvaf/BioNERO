@@ -27,9 +27,9 @@ A list containing the following elements: \itemize{
   \item Centralization
   \item Heterogeneity (gcn only)
   \item nCliques
-  \item diameter
-  \item betweenness
-  \item closeness
+  \item Diameter
+  \item Betweenness
+  \item Closeness
 }
 }
 \description{

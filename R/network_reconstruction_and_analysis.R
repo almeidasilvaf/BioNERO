@@ -26,11 +26,11 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
         sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=1:20,
                                         RsquaredCut = rsquared, corOptions = list(use = 'p', method = "spearman"))
     } else {
-        print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
+        stop("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
     }
     wgcna_power <- sft$powerEstimate
     if(is.na(wgcna_power)){
-        print(paste("No power reached R-squared cut-off, now choosing max R-squared based power"))
+        message("No power reached R-squared cut-off, now choosing max R-squared based power")
         wgcna_power <- sft$fitIndices$Power[which(sft$fitIndices$SFT.R.sq == max(sft$fitIndices$SFT.R.sq))]
     }
     pdf(file = "SFT_fit.pdf", width=12, height=9)
@@ -135,7 +135,7 @@ exp2net <- function(norm.exp, net_type="signed hybrid", module_merging_threshold
     old.module_colors <- WGCNA::labels2colors(old.module_labels, colorSeq = palette)
 
     #Calculate eigengenes and merge the ones who are highly correlated
-    print("Calculating module eigengenes (MEs)...")
+    message("Calculating module eigengenes (MEs)...")
     old.MElist <- WGCNA::moduleEigengenes(t(norm.exp), colors = old.module_colors, softPower = SFTpower)
     old.MEs <- old.MElist$eigengenes
 
@@ -501,7 +501,7 @@ get_hubs <- function(exp, net) {
   } else if (cor_method == "pearson") {
     MM <- WGCNA::signedKME(t(exp), MEs)
   } else {
-    print("Invalid correlation method. Pick one of 'spearman' or 'pearson'.")
+    stop("Invalid correlation method. Pick one of 'spearman' or 'pearson'.")
   }
 
   # Add kME info to each data frame in the list
@@ -752,7 +752,6 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
 #' @export
 #'
 #' @rdname get_neighbors
-
 get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 
     net_type <- net$params$net_type
@@ -789,17 +788,22 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
     return(list)
 }
 
-#' Filter edge list to remove spurious correlations
+
+#' Get edge list from an adjacency matrix for a group of genes
 #'
-#' @param cor_matrix Correlation matrix, such as the one returned by \code{exp2net}. It is the last element of the resulting list from \code{exp2net}.
+#' @param net List object returned by \code{exp2net}.
+#' @param genes Character vector containing a subset of genes from which edges will be extracted. It can be ignored if the user wants to extract an edge list for a given module instead of individual genes.
+#' @param module Character with module name from which edges will be extracted. To include 2 or more modules, input the names in a character vector.
+#' @param filter Logical indicating whether to filter the edge list or not.
 #' @param method Method to filter spurious correlations. One of "Zscore", "optimalSFT", "pvalue" or "min_cor". See details for more information on the methods. Default: 'optimalSFT'
-#' @param r_optimal_test Numeric vector with the correlation thresholds to be tested for optimal scale-free topology fit. Only valid if \code{method} equals "optimalSFT". Default: seq(0.7, 0.9, by = 0.05)
+#' @param r_optimal_test Numeric vector with the correlation thresholds to be tested for optimal scale-free topology fit. Only valid if \code{method} equals "optimalSFT". Default: seq(0.4, 0.9, by = 0.1)
 #' @param Zcutoff Minimum Z-score threshold. Only valid if \code{method} equals "Zscore". Default: 1.96
 #' @param pvalue_cutoff Maximum P-value threshold. Only valid if \code{method} equals "pvalue". Default: 0.05
 #' @param rcutoff Minimum correlation threshold. Only valid if \code{method} equals "min_cor". Default: 0.7
 #' @param nSamples Number of samples in the dataset from which the correlation matrix was calculated. Only required if \code{method} equals "pvalue".
 #' @param check_SFT Logical indicating whether to test if the resulting network is scale-free or not. Default: FALSE
-#' @return A filtered edge list.
+#'
+#' @return Data frame with edge list for the input genes.
 #' @details The default method ("optimalSFT") will create several different edge lists by filtering the original correlation matrix by the thresholds specified in \code{r_optimal_test}. Then, it will calculate a scale-free topology fit index for each of the possible networks and return the network that best fits the scale-free topology.
 #' The method "Zscore" will apply a Fisher Z-transformation for the correlation coefficients and remove the Z-scores below the threshold specified in \code{Zcutoff}.
 #' The method "pvalue" will calculate Student asymptotic p-value for the correlations and remove correlations whose p-values are above the threshold specified in \code{pvalue_cutoff}.
@@ -807,107 +811,130 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @seealso
 #'  \code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
 #'  \code{\link[igraph]{fit_power_law}}
-#' @rdname filter_edges
+#' @seealso \code{SFT_fit}
+#' @seealso \code{exp2net}.
+#' @author Fabricio Almeida-Silva
+#' @rdname get_edge_list
 #' @export
 #' @importFrom WGCNA scaleFreeFitIndex corPvalueStudent
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
 #' @importFrom BiocParallel bplapply
-filter_edges <- function(cor_matrix, method = "optimalSFT",
-                         r_optimal_test = seq(0.7, 0.9, by=0.05),
-                         Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
-                         nSamples = NULL, check_SFT = FALSE) {
+get_edge_list <- function(net, genes = NULL, module = NULL,
+                          filter = FALSE, method = "optimalSFT",
+                          r_optimal_test = seq(0.4, 0.9, by=0.1),
+                          Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
+                          nSamples = NULL,
+                          check_SFT = FALSE) {
 
-  # Create edge list from adjacency matrix
-  edges <- cor_matrix
-  edges[lower.tri(edges, diag = TRUE)] <- NA
-  edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE)
-  colnames(edges) <- c("Gene1", "Gene2", "Weight")
+  # Define objects containing correlation matrix and data frame of genes and modules
+  cor_matrix <- net$correlation_matrix
+  genes_modules <- net$genes_and_modules
 
-
-  if(method == "Zscore") {
-    # Apply Fisher-Z transformation to correlation values
-    edgesZ <- edges
-    edgesZ$Weight <- 0.5 * log((1+edges$Weight) / (1-edges$Weight))
-
-    edgelist <- edgesZ[edgesZ$Weight >= Zcutoff, ]
-  } else if(method == "optimalSFT") {
-    cutoff <- r_optimal_test
-
-    # Create list of 2 elements: edge lists, each with a different correlation threshold, and degree
-    list_mat <- replicate(length(cutoff), cor_matrix, simplify = FALSE)
-
-    list_cormat_filtered <- BiocParallel::bplapply(seq_along(list_mat), function(x) {
-      # Convert r values below threshold to NA and set diagonals to 0
-      matrix <- list_mat[[x]]
-      matrix[matrix < cutoff[x] ] <- NA
-      diag(matrix) <- 0
-
-      # Calculate degree
-      degree <- rowSums(matrix, na.rm=TRUE)
-
-      # Convert lower triangle and diagonals to NA
-      matrix[lower.tri(matrix, diag=TRUE)] <- NA
-
-      # Convert symmetrical matrix to edge list (Gene1, Gene2, Weight)
-      matrix <- na.omit(data.frame(as.table(matrix), stringsAsFactors=FALSE))
-      result <- list(matrix=matrix, degree=degree)
-      return(result)
-    })
-
-    degree_list <- lapply(list_cormat_filtered, function(x) return(x[[2]]))
-
-    # Calculate scale-free topology
-    sft.rsquared <- unlist(lapply(degree_list, function(x) WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT))
-    max.index <- which.max(sft.rsquared)
-
-    # Plot scale-free topology fit for r values
-    plot.data <- data.frame(x=cutoff, y=sft.rsquared, stringsAsFactors = FALSE)
-    ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
-                   color="firebrick",
-                   xlab = "Correlation (r) values",
-                   ylab = expression(paste("Scale-free topology fit -", R^{2})),
-                   title = "Scale-free topology fit for given r values", font.title = c(17, "bold")) +
-      ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
-
-    optimalr <- cutoff[max.index]
-    print(paste("The correlation threshold that best fits the scale-free topology is", optimalr))
-
-    edgelist <- list_mat[[max.index]]
-
-  } else if(method == "pvalue") {
-    if(is.null(nSamples)) { stop("Please, specify the number of samples used to calculate the correlation matrix")}
-
-    # Transform symmetrical matrix in a 3-column data frame with correlations
-    edges <- cor_matrix
-    edges[lower.tri(edges, diag=TRUE)] <- NA
-    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE))
-    colnames(edges) <- c("Gene1", "Gene2", "Weight")
-
-    # Calculate Student asymptotic p-value for given correlations
-    cor.pvalue <- WGCNA::corPvalueStudent(edges$Weight, nSamples)
-
-    # Create a data frame of correlations and p-values
-    corandp <- edges; corandp$pvalue <- cor.pvalue
-
-    # Create a final edge list containing only significant correlations
-    edgelist <- corandp[corandp$pvalue < pvalue_cutoff, c(1:3)]
-
-  } else if(method == "min_cor") {
-    edges <- cor_matrix
-    edges[lower.tri(edges, diag = TRUE)] <- NA
-    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
-    colnames(edges) <- c("Gene1", "Gene2", "Weight")
-
-    edgelist <- edges[edges$Weight >= rcutoff, ]
-
-  } else{
-    stop("Please, specify a valid filtering method.")
+  # Should we extract genes in a module?
+  if(!is.null(module)) {
+    keep <- genes_modules[genes_modules$Modules == module, 1]
+    cor_matrix <- cor_matrix[keep, keep]
   }
 
-  if(check_SFT == TRUE) {
+  # Should we extract a user-defined gene set?
+  if(!is.null(genes)) {
+    cor_matrix <- cor_matrix[genes, genes]
+  }
 
+  # Should we filter the matrix?
+  if(filter) {
+    # Create edge list from correlation matrix
+    edges <- cor_matrix
+    edges[lower.tri(edges, diag = TRUE)] <- NA
+    edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE)
+    colnames(edges) <- c("Gene1", "Gene2", "Weight")
+
+    if(method == "Zscore") {
+      # Apply Fisher-Z transformation to correlation values
+      edgesZ <- edges
+      edgesZ$Weight <- 0.5 * log((1+edges$Weight) / (1-edges$Weight))
+
+      edgelist <- edgesZ[edgesZ$Weight >= Zcutoff, ]
+    } else if(method == "optimalSFT") {
+      cutoff <- r_optimal_test
+
+      # Create list of 2 elements: edge lists, each with a different correlation threshold, and degree
+      list_mat <- replicate(length(cutoff), cor_matrix, simplify = FALSE)
+
+      list_cormat_filtered <- BiocParallel::bplapply(seq_along(list_mat), function(x) {
+        # Convert r values below threshold to NA and set diagonals to 0
+        matrix <- list_mat[[x]]
+        matrix[matrix < cutoff[x] ] <- NA
+        diag(matrix) <- 0
+
+        # Calculate degree
+        degree <- rowSums(matrix, na.rm=TRUE)
+
+        # Convert lower triangle and diagonals to NA
+        matrix[lower.tri(matrix, diag=TRUE)] <- NA
+
+        # Convert symmetrical matrix to edge list (Gene1, Gene2, Weight)
+        matrix <- na.omit(data.frame(as.table(matrix), stringsAsFactors=FALSE))
+        result <- list(matrix=matrix, degree=degree)
+        return(result)
+      })
+
+      degree_list <- lapply(list_cormat_filtered, function(x) return(x[[2]]))
+
+      # Calculate scale-free topology
+      sft.rsquared <- unlist(lapply(degree_list, function(x) WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT))
+      max.index <- which.max(sft.rsquared)
+
+      # Plot scale-free topology fit for r values
+      plot.data <- data.frame(x=cutoff, y=sft.rsquared, stringsAsFactors = FALSE)
+      plot <- ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
+                     color="firebrick",
+                     xlab = "Correlation (r) values",
+                     ylab = expression(paste("Scale-free topology fit -", R^{2})),
+                     title = "Scale-free topology fit for given r values", font.title = c(13, "bold")) +
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+      print(plot)
+
+
+      optimalr <- cutoff[max.index]
+      message("The correlation threshold that best fits the scale-free topology is ", optimalr)
+
+      edgelist <- list_mat[[max.index]]
+
+    } else if(method == "pvalue") {
+      if(is.null(nSamples)) {
+        stop("Please, specify the number of samples used to calculate the correlation matrix")
+      }
+
+      # Calculate Student asymptotic p-value for given correlations
+      cor.pvalue <- WGCNA::corPvalueStudent(edges$Weight, nSamples)
+
+      # Create a data frame of correlations and p-values
+      corandp <- edges
+      corandp$pvalue <- cor.pvalue
+
+      # Create a final edge list containing only significant correlations
+      edgelist <- corandp[corandp$pvalue < pvalue_cutoff, c(1:3)]
+
+    } else if(method == "min_cor") {
+      edgelist <- edges[edges$Weight >= rcutoff, ]
+
+    } else{
+      stop("Please, specify a valid filtering method.")
+    }
+
+  } else {
+    # Create edge list from correlation matrix without filtering
+    edgelist <- cor_matrix
+    edgelist[lower.tri(edgelist, diag = TRUE)] <- NA
+    edgelist <- na.omit(data.frame(as.table(edgelist)), stringsAsFactors = FALSE)
+    colnames(edgelist) <- c("Gene1", "Gene2", "Weight")
+  }
+
+  # Check scale-free topology fit
+  if(check_SFT) {
     # Calculate degree of the resulting graph
     graph <- igraph::graph_from_data_frame(edgelist, directed=FALSE)
     adj <- igraph::as_adjacency_matrix(graph, sparse = FALSE)
@@ -917,61 +944,13 @@ filter_edges <- function(cor_matrix, method = "optimalSFT",
     # Test for scale-free topology fit
     test <- igraph::fit_power_law(degree)
     if(test$KS.p < 0.05) {
-      print(paste("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p))
-    } else{
-      print(paste("Your graph fits the scale-free topology. P-value:", test$KS.p))
+      message("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p)
+    } else {
+      message("Your graph fits the scale-free topology. P-value:", test$KS.p)
     }
   }
 
   return(edgelist)
-}
-
-#' Get edge list from an adjacency matrix for a group of genes
-#'
-#' @param net List object returned by \code{exp2net}.
-#' @param genes Character vector containing a subset of genes from which edges will be extracted. It can be ignored if the user wants to extract an edge list for a given module instead of individual genes.
-#' @param module Character with module name from which edges will be extracted. To include 2 or more modules, input the names in a character vector.
-#' @param cor_threshold Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.
-#'
-#' @return Data frame with edge list for the input genes.
-#'
-#' @seealso \code{SFT_fit}
-#' @seealso \code{exp2net}.
-#' @author Fabricio Almeida-Silva
-#' @rdname get_edge_list
-#' @export
-
-get_edge_list <- function(net, genes = NULL, module = NULL,
-                          cor_threshold = NULL) {
-    edges <- net$correlation_matrix
-    genes_modules <- net$genes_and_modules
-
-    edges[lower.tri(edges, diag = TRUE)] <- NA
-    edges <- na.omit(data.frame(as.table(edges), stringsAsFactors = FALSE));
-    colnames(edges) <- c("Gene1", "Gene2", "Weight")
-
-    edges_m1 <- merge(edges, genes_modules, by = 1)
-    colnames(edges_m1) <- c("Gene1", "Gene2", "weight", "Module1")
-    edges_m2 <- merge(edges_m1, genes_modules, by.x = 2, by.y = 1)
-    colnames(edges_m2) <- c("Gene1", "Gene2", "weight", "Module1", "Module2")
-
-    # Filter by correlation threshold
-    if(is.null(cor_threshold)) {
-        final_edges <- edges_m2
-    } else {
-        final_edges <- edges_m2[edges_m2$weight >= cor_threshold, ]
-    }
-
-    if(is.null(genes)) {
-        if(length(module) == 1) {
-            edge_list <- final_edges[rowSums(final_edges == module) == 2, 1:3]
-        } else {
-            edge_list <- final_edges[final_edges$Module1 %in% module & final_edges$Module2 %in% module, ]
-        }
-    } else {
-        edge_list <- final_edges[final_edges$Gene1 %in% genes & final_edges$Gene2 %in% genes, ]
-    }
-    return(edge_list)
 }
 
 
@@ -1115,8 +1094,8 @@ plot_ppi <- function(edgelist_int, detect_communities = TRUE,
             graph <- igraph::graph_from_data_frame(d = edgelist_int, vertices = nod_at, directed = FALSE)
             nvertices <- igraph::vcount(graph)
             if(nvertices > 200) {
-                print(paste("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
-                  Number of vertices:", nvertices))
+                message("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
+                  Number of vertices:", nvertices)
             }
             graph <- igraph::simplify(graph)
             n <- ggnetwork::ggnetwork(graph)
@@ -1254,8 +1233,8 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
             graph <- igraph::graph_from_data_frame(d = edgelist_grn, vertices = nod_at, directed = TRUE)
             nvertices <- igraph::vcount(graph)
             if(nvertices > 200) {
-                print(paste("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
-                  Number of vertices:", nvertices))
+                message("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
+                  Number of vertices:", nvertices)
             }
             n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
 
@@ -1359,7 +1338,11 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
     #Create a data frame of nodes and node attributes
     nod_at <- data.frame(Gene = unique(c(as.character(edgelist_gcn[,1]), as.character(edgelist_gcn[,2]))),
                          stringsAsFactors = FALSE)
-    nod_at$Module <- as.character(genes_modules[genes_modules[,1] %in% nod_at$Gene, 2])
+    if(is.null(modulename)) {
+      nod_at$Module <- as.character(genes_modules[genes_modules[,1] %in% nod_at$Gene, 2])
+    } else {
+      nod_at$Module <- modulename
+    }
     nod_at$Degree <- kIN$kWithin[rownames(kIN) %in% nod_at$Gene]
     nod_at$isHub <- ifelse(nod_at$Gene %in% hubs[,1], TRUE, FALSE)
     nod_at <- nod_at[order(nod_at$Module, -nod_at$Degree), ]
@@ -1373,23 +1356,23 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
                                      Nodesize = 'Degree', height=900, width=1200,
-                                     opacity=0.8, zoom = TRUE, fontSize = 20)
+                                     opacity=0.8, zoom = TRUE, fontSize = 13)
     } else {
         # Define plotting parameters
         if(show_labels == "all") {
-            nod_at$Degree2 <- nod_at$Degree
+            nod_at$Degree2 <- nod_at$Degree * 0.4
             graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
             nvertices <- igraph::vcount(graph)
             if(nvertices > 400) {
-                print(paste("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
-                  Number of vertices:", nvertices))
+                message("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
+                  Number of vertices:", nvertices)
             }
             n <- ggnetwork::ggnetwork(graph)
             p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
                 ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = unique(as.character(n$Module))) +
-                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = 0.4 * ~Degree), show.legend = FALSE) +
+                                      color = modulename) +
+                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = ~Degree2), show.legend = FALSE) +
                 ggplot2::guides(alpha=FALSE) +
                 ggnetwork::theme_blank()
 
@@ -1399,7 +1382,7 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
             p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
                 ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = unique(as.character(n$Module))) +
+                                      color = modulename) +
                 ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isHub, ]}, show.legend = FALSE) +
@@ -1412,7 +1395,7 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
             p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
                 ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = unique(as.character(n$Module))) +
+                                      color = modulename) +
                 ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
                                                 box.padding = ggnetwork::unit(1, "lines"),
                                                 data = function(x) { x[ x$isTopHub, ]}, show.legend = FALSE) +
@@ -1423,7 +1406,7 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
             p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
                 ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
                 ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                                   color = unique(as.character(n$Module))) +
+                                                   color = modulename) +
                 ggnetwork::theme_blank()
         } else {
             stop("Please, specify a valid option of show_labels.")
@@ -1447,9 +1430,9 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
 #'   \item Centralization
 #'   \item Heterogeneity (gcn only)
 #'   \item nCliques
-#'   \item diameter
-#'   \item betweenness
-#'   \item closeness
+#'   \item Diameter
+#'   \item Betweenness
+#'   \item Closeness
 #' }
 #'
 #' @seealso
