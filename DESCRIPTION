@@ -40,7 +40,9 @@ Imports:
     stats,
     grDevices,
     graphics,
-    BiocParallel
+    BiocParallel,
+    minet, 
+    GENIE3
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

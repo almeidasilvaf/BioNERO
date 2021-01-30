@@ -5,7 +5,10 @@
 #' @param rsquared R squared cutoff. Default is 0.8.
 #' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".
 #'
-#' @return Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
+#' @return A list containing: \itemize{
+#'   \item{power}{Optimal power based on scale-free topology fit}
+#'   \item{plot}{A ggplot object displaying main statistics of the SFT fit test}
+#' } Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
 #'
 #' @author Fabricio Almeida-Silva
 #' @seealso
@@ -33,19 +36,39 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
         message("No power reached R-squared cut-off, now choosing max R-squared based power")
         wgcna_power <- sft$fitIndices$Power[which(sft$fitIndices$SFT.R.sq == max(sft$fitIndices$SFT.R.sq))]
     }
-    pdf(file = "SFT_fit.pdf", width=12, height=9)
-    par(mfrow = c(1,2));
-    plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
-         xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit, signed R^2",type="n",
-         main = paste("Scale independence"), ylim=c(0,1));
-    text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
-         labels=1:20,cex=0.9,col="black");
-    abline(h=0.80,col="red")
-    plot(sft$fitIndices[,1], sft$fitIndices[,5], main = paste("Mean connectivity"), xlab="Soft Threshold (power)", ylab="Mean connectivity (k)")
-    text(sft$fitIndices[,1], sft$fitIndices[,5], labels=1:20, cex=0.9,col="red")
-    dev.off()
 
-    return(wgcna_power)
+    # Create data frame with indices to plot
+    sft_df <- data.frame(power = sft$fitIndices[,1],
+                         fit = -sign(sft$fitIndices[,3]) * sft$fitIndices[,2],
+                         meank = sft$fitIndices[,5])
+    # Plot 1
+    sft_plot1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
+                                  xlab="Soft threshold (power)",
+                                  ylab=expression(paste("Scale-free topology fit - ", R^{2})),
+                                  title = "Scale independence",
+                                  ylim=c(0, 1), label="power", size=1,
+                                  font.label=10,
+                                  color="gray10",
+                                  font.tickslab=10, ytickslab.rt=90) +
+      geom_hline(yintercept = rsquared, color="brown3") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    # Plot 2
+    sft_plot2 <- ggscatter(sft_df, x="power", y="meank",
+                           xlab="Soft threshold (power)",
+                           ylab="Mean connectivity (k)",
+                           title="Mean connectivity",
+                           label="power", size=1, font.label=10,
+                           color="gray10",
+                           font.tickslab=10, ytickslab.rt=90) +
+      theme(plot.title = element_text(hjust=0.5))
+
+    # Combined plot
+    sft_plot <- ggarrange(sft_plot1, sft_plot2)
+
+    result <- list(power=wgcna_power, plot=sft_plot)
+
+    return(result)
 }
 
 
@@ -892,7 +915,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
       plot <- ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
                      color="firebrick",
                      xlab = "Correlation (r) values",
-                     ylab = expression(paste("Scale-free topology fit -", R^{2})),
+                     ylab = expression(paste("Scale-free topology fit - ", R^{2})),
                      title = "Scale-free topology fit for given r values", font.title = c(13, "bold")) +
         ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
       print(plot)
@@ -929,7 +952,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
     # Create edge list from correlation matrix without filtering
     edgelist <- cor_matrix
     edgelist[lower.tri(edgelist, diag = TRUE)] <- NA
-    edgelist <- na.omit(data.frame(as.table(edgelist)), stringsAsFactors = FALSE)
+    edgelist <- na.omit(data.frame(as.table(edgelist), stringsAsFactors = FALSE))
     colnames(edgelist) <- c("Gene1", "Gene2", "Weight")
   }
 
