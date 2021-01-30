@@ -4,10 +4,12 @@
 \alias{grn_aracne}
 \title{Infer gene regulatory network with the ARACNE algorithm}
 \usage{
-grn_aracne(exp)
+grn_aracne(exp, estimator = "spearman")
 }
 \arguments{
 \item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
+
+\item{estimator}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
 }
 \value{
 A gene regulatory network represented as an edge list.
