@@ -853,11 +853,11 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
 
     # Define objects containing correlation matrix and data frame of genes and modules
     cor_matrix <- net$correlation_matrix
-    genes_modules <- net$genes_and_modules
 
     # Should we extract genes in a module?
     if(!is.null(module)) {
-        keep <- genes_modules[genes_modules$Modules == module, 1]
+        genes_modules <- net$genes_and_modules
+        keep <- genes_modules[genes_modules$Modules %in% module, 1]
         cor_matrix <- cor_matrix[keep, keep]
     }
 
@@ -924,7 +924,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
             optimalr <- cutoff[max.index]
             message("The correlation threshold that best fits the scale-free topology is ", optimalr)
 
-            edgelist <- list_mat[[max.index]]
+            edgelist <- list_cormat_filtered[[max.index]][[1]]
 
         } else if(method == "pvalue") {
             if(is.null(nSamples)) {

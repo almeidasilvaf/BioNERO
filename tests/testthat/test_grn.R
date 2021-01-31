@@ -2,7 +2,7 @@ context("GRN inference")
 library(BioNERO)
 
 #----Simulate expression matrix----
-exp <- matrix(rnorm(10000), nrow=2000, ncol=50)
+exp <- t(matrix(rnorm(10000), ncol=1000, nrow=200))
 rownames(exp) <- paste0("Gene", 1:nrow(exp))
 colnames(exp) <- paste0("Sample", 1:ncol(exp))
 

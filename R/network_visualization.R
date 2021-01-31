@@ -349,11 +349,11 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 
 #' Plot gene coexpression network from edge list
 #'
-#' @param edgelist_gcn Data frame containing the edge list for the PPI or GRN network. First column is the protein 1 (or TF) and second column is the protein 2 (or target gene). All other columns are interpreted as edge attributes.
+#' @param edgelist_gcn Data frame containing the edge list for the GCN. The edge list can be generated with \code{get_edge_list()}.
 #' @param net List object returned by \code{exp2net}.
-#' @param modulename Character with the name of the module to be plotted.
+#' @param color_by How should nodes be colored? It must be either "module" (nodes will have the colors of their modules) or a 2-column data frame containing genes in the first column and a custom gene annotation in the second column. Default: "module".
 #' @param hubs Data frame containing hub genes in the first column, their modules in the second column, and intramodular connectivity in the third column.
-#' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".
+#' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none". Default: tophubs.
 #' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
 #' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
 #' @seealso
@@ -364,37 +364,39 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' @rdname plot_gcn
 #' @author Fabricio Almeida-Silva
 #' @export
-#' @importFrom igraph simplify graph_from_data_frame vcount
+#' @importFrom igraph simplify graph_from_data_frame
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes_ guides
-plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
+plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5,
                      interactive = FALSE) {
     requireNamespace("intergraph", quietly=TRUE)
-    genes_modules <- net$genes_and_modules
+
+    if(is.null(hubs) | is.null(edgelist_gcn)) {
+        stop("Arguments 'edgelist_gcn' and 'hubs' are mandatory for this network.")
+    }
+
+    # How should genes be colored?
+    if(is.data.frame(color_by)) {
+        gene_annotation <- color_by # color by custom annotation
+    } else {
+        gene_annotation <- net$genes_and_modules # color by module color
+    }
     kIN <- net$kIN
 
-    if(is.null(modulename) | is.null(hubs) | is.null(edgelist_gcn)) {
-        stop("Arguments edgelist_gcn, modulename and hubs are mandatory for this network.")
-    }
-
-    #Create a data frame of nodes and node attributes
-    nod_at <- data.frame(Gene = unique(c(as.character(edgelist_gcn[,1]), as.character(edgelist_gcn[,2]))),
-                         stringsAsFactors = FALSE)
-    if(is.null(modulename)) {
-        nod_at$Module <- as.character(genes_modules[genes_modules[,1] %in% nod_at$Gene, 2])
-    } else {
-        nod_at$Module <- modulename
-    }
+    # Create a data frame of nodes and node attributes
+    geneIDs <- unique(c(as.character(edgelist_gcn[,1]), as.character(edgelist_gcn[,2])))
+    nod_at <- data.frame(Gene = geneIDs, stringsAsFactors = FALSE)
+    nod_at$Class <- as.factor(gene_annotation[gene_annotation[,1] %in% nod_at$Gene, 2])
     nod_at$Degree <- kIN$kWithin[rownames(kIN) %in% nod_at$Gene]
     nod_at$isHub <- ifelse(nod_at$Gene %in% hubs[,1], TRUE, FALSE)
-    nod_at <- nod_at[order(nod_at$Module, -nod_at$Degree), ]
+    nod_at <- nod_at[order(nod_at$Class, -nod_at$Degree), ]
 
     # Should the network be interactive?
     if(interactive) {
         graph <- igraph::simplify(igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed=FALSE))
-        graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Module)
+        graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
@@ -403,59 +405,65 @@ plot_gcn <- function(edgelist_gcn, net, modulename = NULL, hubs = NULL,
                                      opacity=0.8, zoom = TRUE, fontSize = 13)
     } else {
         # Define plotting parameters
+        # Handle gene coloring based on number of annotation classes
+        if(nlevels(nod_at$Class) == 1) {
+            nodecol <- levels(nod_at$Class)
+            add_nodes <- ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
+                                               color = nodecol)
+        } else {
+            add_nodes <- ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree,
+                                                             color = ~Class))
+        }
+
+        if(is.data.frame(color_by)) {
+            palette <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
+                         "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
+                         "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
+                         "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
+                         "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
+            scale_color <- ggplot2::scale_color_manual(values = palette[1:nlevels(nod_at$Class)])
+        } else {
+            scale_color <- ggplot2::scale_color_manual(values = levels(nod_at$Class))
+        }
+
+        # Handle node labeling based on which labels to display (top hubs, hubs or all genes)
         if(show_labels == "all") {
             nod_at$Degree2 <- nod_at$Degree * 0.4
-            graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
-            nvertices <- igraph::vcount(graph)
-            if(nvertices > 400) {
-                message("WARNING: Graph has more than 400 vertices. Consider displaying labels of hubs or top hubs only.
-                  Number of vertices:", nvertices)
-            }
-            n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
-                ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = modulename) +
-                ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = ~Degree2), show.legend = FALSE) +
-                ggplot2::guides(alpha=FALSE) +
-                ggnetwork::theme_blank()
-
+            add_nodelabel <- ggnetwork::geom_nodetext(ggplot2::aes_(label = ~name, size = ~Degree2),
+                                                      show.legend = FALSE)
         } else if(show_labels == "allhubs") {
-            graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
-            n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
-                ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = modulename) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
-                                                box.padding = ggnetwork::unit(1, "lines"),
-                                                data = function(x) { x[ x$isHub, ]}, show.legend = FALSE) +
-                ggnetwork::theme_blank()
+            add_nodelabel <- ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name),
+                                                             color="azure4",
+                                                             box.padding = ggnetwork::unit(1, "lines"),
+                                                             data = function(x) { x[ x$isHub, ]},
+                                                             show.legend = FALSE, max.overlaps=Inf)
         } else if(show_labels == "tophubs") {
             tophubs <- nod_at[nod_at$isHub == TRUE, 1][1:top_n_hubs]
             nod_at$isTopHub <- ifelse(nod_at$Gene %in% tophubs, TRUE, FALSE)
-            graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
-            n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
-                ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = modulename) +
-                ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name, color = ~isHub),
-                                                box.padding = ggnetwork::unit(1, "lines"),
-                                                data = function(x) { x[ x$isTopHub, ]}, show.legend = FALSE) +
-                ggnetwork::theme_blank()
+            add_nodelabel <- ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name),
+                                                             color="azure4",
+                                                             box.padding = ggnetwork::unit(1, "lines"),
+                                                             data = function(x) { x[ x$isTopHub, ]},
+                                                             show.legend = FALSE)
+
         } else if(show_labels == "none") {
-            graph <- igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed = FALSE)
-            n <- ggnetwork::ggnetwork(graph)
-            p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
-                ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend = FALSE) +
-                ggnetwork::geom_nodes(ggplot2::aes_(size = ~Degree, alpha = ~Degree),
-                                      color = modulename) +
-                ggnetwork::theme_blank()
+            add_nodelabel <- NULL
         } else {
-            stop("Please, specify a valid option of show_labels.")
+            stop("Please, specify a valid option for 'show_labels'.")
         }
+
+        # Create graph object
+        graph <- igraph::graph_from_data_frame(d=edgelist_gcn, vertices=nod_at, directed=FALSE)
+        n <- igraph2ggnetwork(graph, arrow.gap=0)
+
+        # Plot graph
+        p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
+            ggnetwork::geom_edges(color = "grey75", alpha = 0.5, show.legend=FALSE) +
+            add_nodes +
+            scale_color +
+            add_nodelabel +
+            ggnetwork::theme_blank()
     }
+
     return(p)
 }
-
