@@ -8,3 +8,5 @@ vignettes/*.pdf
 .DS_STORE
 *.Renviron
 .DS_STORE
+inst/doc
+*_cache/
