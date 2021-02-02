@@ -1,5 +1,3 @@
-context("GRN inference")
-library(BioNERO)
 
 #----Simulate expression matrix----
 set.seed(123)
@@ -65,6 +63,9 @@ test_that("grn_average_rank() ranks GRN weights and calculate the average across
 })
 
 
+test_that("check_sft() checks SFT fit for different network types", {
+    expect_message(check_sft(clr, net_type = "grn"), "Your graph fits the scale-free topology. P-value:0.905436442816135")
+})
 
 
 

@@ -1,22 +1,3 @@
-#' Transform a correlation matrix to an edge list
-#'
-#' @param matrix Symmetrical correlation matrix.
-#'
-#' @return A 2-column data frame containing node 1, node 2 and edge weight
-#' @export
-#' @rdname cormat_to_edgelist
-#' @export
-cormat_to_edgelist <- function(matrix) {
-    edgelist <- matrix
-    edgelist[lower.tri(edgelist, diag=TRUE)] <- NA
-    edgelist <- na.omit(data.frame(as.table(edgelist), stringsAsFactors=FALSE))
-    colnames(edgelist) <- c("Node1", "Node2", "Weight")
-    edgelist$Node1 <- as.character(edgelist$Node1)
-    edgelist$Node2 <- as.character(edgelist$Node2)
-    edgelist$Weight <- as.numeric(edgelist$Weight)
-    return(edgelist)
-}
-
 
 #' Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
 #'

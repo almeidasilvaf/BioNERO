@@ -1,5 +1,3 @@
-context("Test GCN inference and analysis")
-library(BioNERO)
 
 #----Simulate expression and correlation matrices----
 set.seed(1)

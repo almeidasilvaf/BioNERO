@@ -842,7 +842,6 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @importFrom WGCNA scaleFreeFitIndex corPvalueStudent
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
-#' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
 #' @importFrom BiocParallel bplapply
 get_edge_list <- function(net, genes = NULL, module = NULL,
                           filter = FALSE, method = "optimalSFT",
@@ -869,9 +868,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
     # Should we filter the matrix?
     if(filter) {
         # Create edge list from correlation matrix
-        edges <- cor_matrix
-        edges[lower.tri(edges, diag = TRUE)] <- NA
-        edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE)
+        edges <- cormat_to_edgelist(cor_matrix)
         colnames(edges) <- c("Gene1", "Gene2", "Weight")
 
         if(method == "Zscore") {
@@ -950,27 +947,13 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
 
     } else {
         # Create edge list from correlation matrix without filtering
-        edgelist <- cor_matrix
-        edgelist[lower.tri(edgelist, diag = TRUE)] <- NA
-        edgelist <- na.omit(data.frame(as.table(edgelist), stringsAsFactors = FALSE))
+        edgelist <- cormat_to_edgelist(cor_matrix)
         colnames(edgelist) <- c("Gene1", "Gene2", "Weight")
     }
 
     # Check scale-free topology fit
     if(check_SFT) {
-        # Calculate degree of the resulting graph
-        graph <- igraph::graph_from_data_frame(edgelist, directed=FALSE)
-        adj <- igraph::as_adjacency_matrix(graph, sparse = FALSE)
-        diag(adj) <- 0
-        degree <- apply(adj, 1, sum, na.rm=TRUE)
-
-        # Test for scale-free topology fit
-        test <- igraph::fit_power_law(degree)
-        if(test$KS.p < 0.05) {
-            message("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p)
-        } else {
-            message("Your graph fits the scale-free topology. P-value:", test$KS.p)
-        }
+        test <- check_sft(edgelist, net_type="gcn")
     }
 
     return(edgelist)

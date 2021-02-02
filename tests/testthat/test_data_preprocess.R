@@ -1,5 +1,3 @@
-context("Expression data processing")
-library(BioNERO)
 
 test_that("dfs2one reads in multiple tables and binds them into a data frame", {
     genes <- paste0(rep("Gene", 100), 1:100)
