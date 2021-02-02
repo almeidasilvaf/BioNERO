@@ -156,8 +156,35 @@ grn_filter <- function(edgelist, nsplit=10) {
 }
 
 
+#' Get hubs for gene regulatory network
+#'
+#' @param edgelist A gene regulatory network represented as an edge list.
+#' @param top_percentile Numeric from 0 to 1 indicating the percentage of genes with the highest degree to consider hubs. Default: 0.1.
+#' @param top_n Numeric indicating the number of genes with the highest degree to consider hubs.
+#'
+#' @return A data frame with gene ID in the first column and out degree in the second column.
+#' @export
+#' @importFrom igraph graph_from_data_frame degree
+get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL) {
 
+    # Calculate degree
+    graph <- igraph::graph_from_data_frame(edgelist, directed = TRUE)
+    degree <- sort(igraph::degree(graph, mode="out"), decreasing = TRUE)
 
+    # Find hubs
+    degree_df <- data.frame(row.names=1:length(degree),
+                            Gene=names(degree),
+                            Degree=degree, stringsAsFactors = FALSE)
+
+    if(is.null(top_n)) {
+        nrows <- nrow(degree_df) * top_percentile
+        hubs <- degree_df[1:nrows, ]
+    } else {
+        hubs <- degree_df[1:top_n, ]
+    }
+
+    return(hubs)
+}
 
 
 
