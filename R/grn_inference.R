@@ -42,13 +42,12 @@ grn_aracne <- function(exp, estimator = "spearman") {
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
 #' @return A gene regulatory network represented as an edge list.
-#' @importFrom GENIE3 GENIE3 getLinkList
+#' @importFrom GENIE3 GENIE3
 #' @rdname grn_genie3
 #' @export
-#' @importFrom GENIE3 GENIE3 getLinkList
 grn_genie3 <- function(exp, regulators = NULL, ...) {
     grn <- GENIE3::GENIE3(as.matrix(exp), regulators = regulators, ...)
-    edges <- GENIE3::getLinkList(grn)
+    edges <- cormat_to_edgelist(grn)
     edges[, 1] <- as.character(edges[, 1])
     edges[, 2] <- as.character(edges[, 2])
     edges[, 3] <- as.numeric(edges[, 3])
@@ -106,8 +105,55 @@ grn_average_rank <- function(list_edges) {
 
 
 
+#' Filter a gene regulatory network based on optimal scale-free topology fit
+#'
+#' @param edgelist A gene regulatory network represented as an edge list.
+#' @param nsplit Number of groups in which the edge list will be split. Default: 10.
+#'
+#' @details The edge list will be split in n groups and the scale-free topology fit will be tested for each subset of the edge list.
+#' For instance, if an edge list of 10000 rows is used as input, the function will test SFT fit for the top 1000 edges, then top 2000 edges, an so on up to the whole edge list.
+#' @return The edge list that best fits the scale-free topology.
+#' @export
+#' @importFrom igraph graph_from_data_frame degree
+#' @importFrom BiocParallel bplapply
+#' @importFrom WGCNA scaleFreeFitIndex
+#' @importFrom ggpubr ggline
+#' @importFrom ggplot2 theme element_text
+grn_filter <- function(edgelist, nsplit=10) {
 
+    # Split edge list into n data frames and calculate degree
+    n_edges <- seq_len(nrow(edgelist))
+    cutpoints <- round(unname(quantile(n_edges, probs = seq(0, 1, 1/nsplit))))[-1]
 
+    list_degree <- BiocParallel::bplapply(cutpoints, function(x) {
+        filt_edges <- edgelist[1:x, 1:2]
+        graph <- igraph::graph_from_data_frame(filt_edges, directed=TRUE)
+        degree <- igraph::degree(graph, mode = "out")
+    })
+
+    # Calculate scale-free topology fit for the degree list
+    sft.rsquared <- unlist(BiocParallel::bplapply(list_degree, function(x) {
+        return(WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT)
+        }))
+    max.index <- which.max(sft.rsquared)
+
+    # Plot scale-free topology fit for r values
+    plot.data <- data.frame(x=cutpoints, y=sft.rsquared, stringsAsFactors = FALSE)
+    plot <- ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
+                           color="firebrick",
+                           xlab = "Number of top edges considered",
+                           xtickslab.rt = 45,
+                           ylab = expression(paste("Scale-free topology fit - ", R^{2})),
+                           title = "Scale-free topology fit for top n edges", font.title = c(13, "bold")) +
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    print(plot)
+
+    optimal_cutoff <- cutpoints[max.index]
+    message("The top number of edges that best fits the scale-free topology is ", optimal_cutoff)
+
+    edgelist <- edgelist[1:optimal_cutoff, 1:2]
+    return(edgelist)
+}
 
 
 

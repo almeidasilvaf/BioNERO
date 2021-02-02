@@ -68,14 +68,12 @@ test_that("check_sft() checks SFT fit for different network types", {
 })
 
 
-
-
-
-
-
-
-
-
+test_that("grn_filter() calculates the best SFT fit for n number of top edges", {
+    filtered_edges <- grn_filter(ranked_grn, nsplit=5)
+    expect_equal(ncol(filtered_edges), 2)
+    expect_lte(nrow(filtered_edges), nrow(ranked_grn))
+    expect_message(grn_filter(ranked_grn, nsplit=5), "The top number of edges that best fits the scale-free topology is 90900")
+})
 
 
 
