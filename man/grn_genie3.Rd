@@ -4,12 +4,14 @@
 \alias{grn_genie3}
 \title{Infer gene regulatory network with GENIE3}
 \usage{
-grn_genie3(exp, regulators = NULL, ...)
+grn_genie3(exp, regulators = NULL, remove_zero = TRUE, ...)
 }
 \arguments{
 \item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
 
 \item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+
+\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.}
 
 \item{...}{Additional arguments passed to `GENIE3::GENIE3()`.}
 }

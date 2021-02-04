@@ -4,12 +4,13 @@ set.seed(123)
 exp <- matrix(rnorm(10000), ncol=200, nrow=1000)
 rownames(exp) <- paste0("Gene", 1:nrow(exp))
 colnames(exp) <- paste0("Sample", 1:ncol(exp))
+tfs <- paste0("Gene", 1:100)
 
 #----Infer GRNs----
-clr <- grn_clr(exp)
-aracne <- grn_aracne(exp)
-genie3 <- grn_genie3(exp=exp, nTrees=5)
-grn_list <- grn_combined(exp, nTrees=5)
+clr <- grn_clr(exp, regulators = tfs)
+aracne <- grn_aracne(exp, regulators = tfs)
+genie3 <- grn_genie3(exp=exp, regulators=tfs, nTrees=5)
+grn_list <- grn_combined(exp, regulators=tfs, nTrees=5)
 ranked_grn <- grn_average_rank(grn_list)
 
 #----Start tests----
@@ -50,9 +51,20 @@ test_that("grn_combined() produces a list of edge lists", {
     nrow1 <- nrow(grn_list[[1]])
     nrow2 <- nrow(grn_list[[2]])
     nrow3 <- nrow(grn_list[[3]])
-    expect_equal(all.equal(nrow1, nrow2, nrow3), TRUE)
     expect_equal(class(grn_list), "list")
     expect_equal(length(grn_list), 3)
+})
+
+test_that("all inference algorithms return regulators in the first column and target in the second column", {
+    edge_structure <- function(grn, tfs) {
+        x <- nrow(grn[grn[,2] %in% tfs, ])
+        y <- nrow(grn[grn[,1] %in% tfs, ])
+        result <- c(x,y)
+        return(result)
+    }
+    expect_equal(edge_structure(genie3, tfs), c(0, nrow(genie3)))
+    expect_equal(edge_structure(clr, tfs), c(0, nrow(clr)))
+    expect_equal(edge_structure(aracne, tfs), c(0, nrow(aracne)))
 })
 
 
@@ -64,7 +76,7 @@ test_that("grn_average_rank() ranks GRN weights and calculate the average across
 
 
 test_that("check_sft() checks SFT fit for different network types", {
-    expect_message(check_sft(clr, net_type = "grn"), "Your graph fits the scale-free topology. P-value:0.905436442816135")
+    expect_message(check_sft(clr, net_type = "grn"), "Your graph fits the scale-free topology. P-value:0.999964664866023")
 })
 
 
@@ -72,9 +84,15 @@ test_that("grn_filter() calculates the best SFT fit for n number of top edges", 
     filtered_edges <- grn_filter(ranked_grn, nsplit=5)
     expect_equal(ncol(filtered_edges), 2)
     expect_lte(nrow(filtered_edges), nrow(ranked_grn))
-    expect_message(grn_filter(ranked_grn, nsplit=5), "The top number of edges that best fits the scale-free topology is 90900")
 })
 
+
+test_that("get_hubs_grn() return a data frame with hub genes and their out degree", {
+    filtered_edges <- grn_filter(ranked_grn, nsplit = 5)
+    n_genes <- length(unique(c(as.character(filtered_edges[,1]), as.character(filtered_edges[,2]))))
+    hubs <- get_hubs_grn(filtered_edges)
+    expect_equal(nrow(hubs), floor(n_genes * 0.1))
+})
 
 
 

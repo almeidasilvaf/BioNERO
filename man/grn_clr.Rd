@@ -4,12 +4,16 @@
 \alias{grn_clr}
 \title{Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm}
 \usage{
-grn_clr(exp, estimator = "pearson")
+grn_clr(exp, estimator_clr = "pearson", regulators = NULL, remove_zero = TRUE)
 }
 \arguments{
 \item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
 
-\item{estimator}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
+\item{estimator_clr}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
+
+\item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+
+\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Default: TRUE}
 }
 \value{
 A gene regulatory network represented as an edge list.

@@ -4,12 +4,28 @@
 \alias{grn_combined}
 \title{Infer gene regulatory network with multiple algorithms and combine results in a list}
 \usage{
-grn_combined(exp, regulators = NULL, ...)
+grn_combined(
+  exp,
+  regulators = NULL,
+  eps = 0,
+  estimator_aracne = "spearman",
+  estimator_clr = "pearson",
+  remove_zero = TRUE,
+  ...
+)
 }
 \arguments{
 \item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
 
 \item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+
+\item{eps}{Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.}
+
+\item{estimator_aracne}{Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
+
+\item{estimator_clr}{Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
+
+\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.}
 
 \item{...}{Additional arguments passed to `GENIE3::GENIE3()`.}
 }

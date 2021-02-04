@@ -4,12 +4,24 @@
 \alias{grn_aracne}
 \title{Infer gene regulatory network with the ARACNE algorithm}
 \usage{
-grn_aracne(exp, estimator = "spearman")
+grn_aracne(
+  exp,
+  estimator_aracne = "spearman",
+  regulators = NULL,
+  eps = 0.1,
+  remove_zero = TRUE
+)
 }
 \arguments{
 \item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
 
-\item{estimator}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
+\item{estimator_aracne}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
+
+\item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+
+\item{eps}{Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.}
+
+\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.}
 }
 \value{
 A gene regulatory network represented as an edge list.

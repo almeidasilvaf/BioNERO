@@ -2,17 +2,38 @@
 #' Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
 #'
 #' @param exp Expression matrix with gene IDs as row names and samples as column names.
-#' @param estimator Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
+#' @param estimator_clr Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
+#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
+#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Default: TRUE
 #'
 #' @return A gene regulatory network represented as an edge list.
 #' @export
 #' @rdname grn_clr
 #' @importFrom minet build.mim clr
-grn_clr <- function(exp, estimator = "pearson") {
-    mi_mat <- minet::build.mim(t(exp), estimator = estimator)
+grn_clr <- function(exp, estimator_clr = "pearson",
+                    regulators=NULL,
+                    remove_zero=TRUE) {
+
+    if(is.null(regulators)) {
+        stop("Please, input a character vector of IDs of regulators.")
+    }
+
+    # Build Mutual Information matrix and infer GRN
+    mi_mat <- minet::build.mim(t(exp), estimator = estimator_clr)
     grn <- minet::clr(mi_mat)
+
+    # Keep only interactions between regulators and targets
+    grn <- grn[regulators, !(colnames(grn) %in% regulators)]
     grn_edges <- cormat_to_edgelist(grn)
-    grn_edges <- grn_edges[order(-grn_edges[,3]), ]
+
+    # Should we remove edges whose weight is zero?
+    if(remove_zero) {
+        grn_edges <- grn_edges[grn_edges$Weight != 0, ]
+    }
+
+    # Sort weights in decreasing order
+    grn_edges <- grn_edges[order(-grn_edges$Weight), ]
+
     return(grn_edges)
 }
 
@@ -20,17 +41,39 @@ grn_clr <- function(exp, estimator = "pearson") {
 #' Infer gene regulatory network with the ARACNE algorithm
 #'
 #' @param exp Expression matrix with gene IDs as row names and samples as column names.
-#' @param estimator Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
+#' @param estimator_aracne Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
+#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
+#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
 #'
 #' @return A gene regulatory network represented as an edge list.
 #' @export
 #' @rdname grn_aracne
 #' @importFrom minet aracne
-grn_aracne <- function(exp, estimator = "spearman") {
-    mi_mat <- minet::build.mim(t(exp), estimator = estimator)
-    grn <- minet::aracne(mi_mat, eps = 0.1)
+grn_aracne <- function(exp, estimator_aracne = "spearman",
+                       regulators=NULL, eps=0.1,
+                       remove_zero=TRUE) {
+
+    if(is.null(regulators)) {
+        stop("Please, input a character vector of IDs of regulators.")
+    }
+
+    # Build Mutual Information matrix and infer GRN
+    mi_mat <- minet::build.mim(t(exp), estimator = estimator_aracne)
+    grn <- minet::aracne(mi_mat, eps = eps)
+
+    # Keep only interactions between regulators and targets
+    grn <- grn[regulators, !(colnames(grn) %in% regulators)]
     grn_edges <- cormat_to_edgelist(grn)
-    grn_edges <- grn_edges[order(-grn_edges[,3]), ]
+
+    # Should we remove edges that were removed by ARACNE?
+    if(remove_zero) {
+        grn_edges <- grn_edges[grn_edges$Weight != 0, ]
+    }
+
+    # Sort weights in decreasing order
+    grn_edges <- grn_edges[order(-grn_edges$Weight), ]
+
     return(grn_edges)
 }
 
@@ -39,41 +82,67 @@ grn_aracne <- function(exp, estimator = "spearman") {
 #'
 #' @param exp Expression matrix with gene IDs as row names and samples as column names.
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
+#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
 #' @return A gene regulatory network represented as an edge list.
 #' @importFrom GENIE3 GENIE3
 #' @rdname grn_genie3
 #' @export
-grn_genie3 <- function(exp, regulators = NULL, ...) {
+grn_genie3 <- function(exp, regulators = NULL,
+                       remove_zero=TRUE, ...) {
+
+    if(is.null(regulators)) {
+        stop("Please, input a character vector of IDs of regulators.")
+    }
+
+    # Infer GRN
     grn <- GENIE3::GENIE3(as.matrix(exp), regulators = regulators, ...)
-    edges <- cormat_to_edgelist(grn)
-    edges[, 1] <- as.character(edges[, 1])
-    edges[, 2] <- as.character(edges[, 2])
-    edges[, 3] <- as.numeric(edges[, 3])
-    colnames(edges) <- c("Node1", "Node2", "Weight")
-    edges <- edges[!duplicated(cbind(pmin(edges$Node1, edges$Node2),
-                                     pmax(edges$Node1, edges$Node2))), ]
-    edges <- edges[order(-edges[,3]), ]
-    return(edges)
+
+    # Keep only interactions between regulators and targets
+    grn <- grn[regulators, !(colnames(grn) %in% regulators)]
+    grn_edges <- cormat_to_edgelist(grn)
+
+    # Should we remove edges that were removed by ARACNE?
+    if(remove_zero) {
+        grn_edges <- grn_edges[grn_edges$Weight != 0, ]
+    }
+
+    # Sort weights in decreasing order
+    grn_edges <- grn_edges[order(-grn_edges$Weight), ]
+
+    return(grn_edges)
 }
 
 
 #' Infer gene regulatory network with multiple algorithms and combine results in a list
 #'
 #' @param exp Expression matrix with gene IDs as row names and samples as column names.
+#' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
+#' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
+#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
+#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
 #' @return A list of data frames representing edge lists. Each list element is an edge list for a specific method.
 #' @rdname grn_combined
 #' @export
-grn_combined <- function(exp, regulators = NULL, ...) {
-    genie3 <- grn_genie3(exp, regulators, ...)
-    aracne <- grn_aracne(exp)
-    clr <- grn_clr(exp)
+grn_combined <- function(exp, regulators = NULL,
+                         eps=0,
+                         estimator_aracne = "spearman",
+                         estimator_clr = "pearson",
+                         remove_zero=TRUE, ...) {
 
-    res_list <- list(genie3, aracne, clr)
+    genie3 <- grn_genie3(exp, regulators, remove_zero=remove_zero, ...)
+
+    aracne <- grn_aracne(exp, regulators = regulators, eps=eps,
+                         estimator_aracne = estimator_aracne, remove_zero=remove_zero)
+
+    clr <- grn_clr(exp, regulators = regulators,
+                   estimator_clr = estimator_clr, remove_zero=remove_zero)
+
+    res_list <- list(genie3=genie3, aracne=aracne, clr=clr)
 }
 
 #' Rank edge weights for GRNs and calculate average across different methods
