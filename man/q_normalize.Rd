@@ -7,11 +7,16 @@
 q_normalize(exp)
 }
 \arguments{
-\item{exp}{Gene expression matrix, where rownames are sample names and colnames are gene IDs.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names.}
 }
 \value{
 Expression matrix with normalized values
 }
 \description{
 Quantile normalize the expression data
+}
+\examples{
+data(se.seed)
+exp <- SummarizedExperiment::assay(se.seed)
+norm_exp <- q_normalize(exp)
 }

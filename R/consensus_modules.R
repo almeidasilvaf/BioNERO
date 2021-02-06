@@ -19,7 +19,6 @@
 #'
 #' @seealso
 #'  \code{\link[WGCNA]{checkSets}},\code{\link[WGCNA]{pickSoftThreshold}},\code{\link[WGCNA]{adjacency}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{pquantile}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{multiSetMEs}},\code{\link[WGCNA]{consensusMEDissimilarity}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}}
-#'  \code{\link[pals]{discrete}}
 #'  \code{\link[dynamicTreeCut]{cutreeDynamic}}
 #' @rdname consensus_modules
 #' @export

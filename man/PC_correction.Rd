@@ -4,16 +4,24 @@
 \alias{PC_correction}
 \title{Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks}
 \usage{
-PC_correction(exp_df)
+PC_correction(exp)
 }
 \arguments{
-\item{exp_df}{Expression dataframe where rownames are gene IDs and colnames are sample names. Expression data must not have undergone normalization.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 }
 \value{
-Corrected expression data frame
+Corrected expression data frame or `SummarizedExperiment` object.
 }
 \description{
 Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks
+}
+\examples{
+data(se.seed)
+exp <- filter_by_variance(se.seed, n=500)
+exp <- PC_correction(exp)
+}
+\references{
+Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., & Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of gene co-expression networks. Genome biology, 20(1), 1-6.
 }
 \seealso{
 \code{\link[sva]{num.sv}},\code{\link[sva]{sva_network}}

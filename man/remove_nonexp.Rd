@@ -12,19 +12,23 @@ remove_nonexp(
 )
 }
 \arguments{
-\item{exp}{Gene expression data frame, where rownames are gene IDs and colnames are sample names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{method}{Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is "median".}
 
 \item{min_exp}{If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.}
 
-\item{min_percentage_samples}{in case the user chooses 'percentage' as method, expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1.}
+\item{min_percentage_samples}{In case the user chooses 'percentage' as method, expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1.}
 }
 \value{
-Dataframe containing only expressed genes in rownames and sample names in colnames
+Filtered gene expression data frame or `SummarizedExperiment` object.
 }
 \description{
 Remove genes that are not expressed based on a user-defined threshold
+}
+\examples{
+data(se.seed)
+filt_exp <- remove_nonexp(se.seed, min_exp = 5)
 }
 \seealso{
 \code{\link[matrixStats]{rowMedians}}

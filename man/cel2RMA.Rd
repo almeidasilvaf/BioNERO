@@ -4,7 +4,7 @@
 \alias{cel2RMA}
 \title{Create an RMA-normalized expression data frame from .cel files}
 \usage{
-cel2RMA(cel_dir = "./", pattern = "cel")
+cel2RMA(cel_dir = "./", pattern = ".cel")
 }
 \arguments{
 \item{cel_dir}{Path to directory containing binary .cel files. Default is the current working directory.}

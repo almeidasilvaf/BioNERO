@@ -44,6 +44,5 @@ Calculate gene significance for a given group of genes
 \seealso{
 \code{\link[reshape2]{melt}}
  \code{\link[WGCNA]{corPvalueStudent}}
- \code{\link[pheatmap]{pheatmap}}
  \code{\link[RColorBrewer]{RColorBrewer}}
 }

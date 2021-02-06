@@ -1,6 +1,6 @@
 Package: BioNERO
 Type: Package
-Title: Easy and comprehensive biological network reconstruction and analysis
+Title: Biological Network Reconstruction Omnibus
 Version: 0.1.0
 Authors@R: c(person("Fabricio", "Almeida-Silva", 
                     email="fabricio_almeidasilva@hotmail.com", 
@@ -10,12 +10,29 @@ Authors@R: c(person("Fabricio", "Almeida-Silva",
             role="aut", 
             comment = c(ORCID = "0000-0002-2215-8082")))
 Description: This package is used to reconstruct biological networks (coexpression, protein-protein interaction and gene regulatory networks) and analyze them. For coexpression networks, several functions are available to automatically preprocess the expression data prior to network reconstruction.
-Depends: R (>= 4.0)
+Depends: R (>= 4.1)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/almeidasilvaf/BioNERO
 BugReports: https://github.com/almeidasilvaf/BioNERO/issues
+biocViews: 
+    GeneExpression, 
+    Transcription, 
+    GeneRegulation,
+    GeneSetEnrichment,
+    NetworkEnrichment,
+    NetworkInference,
+    SystemsBiology,
+    Transcriptomics,
+    ComparativeGenomics,
+    GraphAndNetwork,
+    Clustering,
+    Sequencing,
+    Microarray,
+    Preprocessing,
+    Normalization,
+    Visualization
 Imports: 
     WGCNA,
     dynamicTreeCut,
@@ -23,7 +40,7 @@ Imports:
     DESeq2,
     sva,
     RColorBrewer,
-    pheatmap,
+    ComplexHeatmap,
     ggplot2,
     reshape2,
     dplyr,
@@ -42,7 +59,9 @@ Imports:
     graphics,
     BiocParallel,
     minet, 
-    GENIE3
+    GENIE3,
+    utils,
+    SummarizedExperiment
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

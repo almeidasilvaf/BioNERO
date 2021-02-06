@@ -1,62 +1,60 @@
 
 #' Plot heatmap of hierarchically clustered sample correlations or gene expression
 #'
-#' @param exp Expression data frame with genes in rows and samples in columns.
-#' @param col_metadata A data frame containing sample names in the first column and sample description in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple column annotations.
-#' @param row_metadata A data frame containing gene IDs in the first column and gene functional classification in the subsequent columns. If there are more than 2 columns, additional columns will be interpreted as multiple gene annotation classifications.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param col_metadata A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Default: NA.
+#' @param row_metadata A data frame containing gene IDs in row names and gene functional classification in the first column. Only one column is allowed to ensure legends can be visualized. Default: NA.
 #' @param cor_method Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.
-#' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default is 'samplecor'.
+#' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default: 'samplecor'.
 #' @param palette RColorBrewer palette to use. Default is "Blues" for sample correlation heatmap and "YlOrRd" for gene expression heatmap.
-#' @param log_trans Logical. It specifies whether to log transform data or not. Default is FALSE.
-#' @param cluster_rows Logical indicating whether to cluster rows or not. Default is TRUE.
-#' @param cluster_cols Logical indicating whether to cluster columns or not. Default is TRUE.
-#' @param show_rownames Logical indicating whether to show row names or not. Default is FALSE.
+#' @param log_trans Logical indicating whether to log transform the expression data or not. Default: FALSE.
+#' @param cluster_rows Logical indicating whether to cluster rows or not. Default: TRUE.
+#' @param cluster_cols Logical indicating whether to cluster columns or not. Default: TRUE.
+#' @param show_rownames Logical indicating whether to show row names or not. Default: FALSE.
 #' @param show_colnames Logical indicating whether to show column names or not. Default is TRUE.
-#' @param scale Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default is 'none'.
-#' @param fontsize Base fontsize for the plot.
-#' @param cutree_rows Number of clusters into which rows are divided. Default is 1, which is equivalent to no division.
-#' @param cutree_cols Number of clusters into which columns are divided. Default is 1, which is equivalent to no division.
-#' @param ... Additional arguments to be passed to \code{pheatmap::pheatmap()}.
+#' @param scale Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.
+#' @param fontsize Base font size for the plot.
+#' @param cutree_rows Number of clusters into which rows are divided. Default: NA (no division).
+#' @param cutree_cols Number of clusters into which columns are divided. Default: NA (no division).
+#' @param ... Additional arguments to be passed to \code{ComplexHeatmap::pheatmap()}.
 #'
-#' @return heatmap of hierarchically clustered samples with metadata information (optional)
+#' @return Heatmap of hierarchically clustered samples with metadata information (optional)
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[RColorBrewer]{RColorBrewer}}
-#'  \code{\link[pheatmap]{pheatmap}}
 #' @rdname plot_heatmap
 #' @export
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom pheatmap pheatmap
-plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
+#' @importFrom ComplexHeatmap pheatmap
+#' @examples
+#' data(se.seed)
+#' filt.se <- filter_by_variance(se.seed, n=100)
+#' plot_heatmap(filt.se)
+#' plot_heatmap(filt.se, type="expr", log_trans=TRUE)
+plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
                          cor_method = 'spearman', type = "samplecor",
                          palette = NULL, log_trans = FALSE,
                          cluster_rows = TRUE, cluster_cols = TRUE,
                          show_rownames = FALSE, show_colnames = TRUE,
-                         scale = "none", fontsize = 10,
-                         cutree_rows = 1, cutree_cols = 1, ...) {
-
-
-    if(is.null(col_metadata)) {
-        col_metadata <- NULL
-    } else if(ncol(col_metadata) == 2) {
-        names(col_metadata) <- c("SampleID", "Sample class")
-        col_metadata <- col_metadata[order(col_metadata[,2]), ]
-    } else if(ncol(col_metadata) == 3) {
-        names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2")
-        col_metadata <- col_metadata[order(col_metadata[,2], col_metadata[,3]), ]
-    } else if(ncol(col_metadata == 4)) {
-        names(col_metadata) <- c("SampleID", "Sample class 1", "Sample class 2",
-                                 "Sample class 3")
-        col_metadata <- col_metadata[order(col_metadata[,2], col_metadata[,3],
-                                           col_metadata[,4]), ]
-    } else {
-        stop("Too much sample information. Please, reduce the number of columns in col_metadata.")
+                         scale = "none", fontsize = 9,
+                         cutree_rows = NA, cutree_cols = NA, ...) {
+    fexp <- handleSE(exp)
+    if(is_SE(exp)) {
+        col_metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
 
+    # Rename and reorder columns based on annotation and handle colors
+    col_metadata <- sample_cols_heatmap(col_metadata, fexp)[[1]]
+    fexp <- sample_cols_heatmap(col_metadata, fexp)[[2]]
+    annotation_color <- sample_cols_heatmap(col_metadata, fexp)[[3]]
+
+    # Rename and reorder rows based on annotation and handle colors
+    row_metadata <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[1]]
+    fexp <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[2]]
+    annotation_color <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[3]]
+
     if(log_trans) {
-        exp <- log2(exp+1)
-    } else {
-        exp <- exp
+        fexp <- log2(fexp+1)
     }
 
     if(is.null(palette)) {
@@ -68,63 +66,32 @@ plot_heatmap <- function(exp, col_metadata = NULL, row_metadata = NULL,
             stop("Please, specify a valid type. One of 'samplecor' or 'expr'.")
         }
     } else {
-        pal <- RColorBrewer::brewer.pal(9, palette)
-    }
-
-    # How should we handle column annotation?
-    if(is.null(col_metadata)) {
-        annotation_col <- NULL
-    } else {
-        annotation_col <- col_metadata
-        rownames(annotation_col) <- annotation_col[,1]
-        annotation_col[,1] <- NULL
-    }
-
-    # How should we handle row annotation?
-    if(is.null(row_metadata)) {
-        annotation_row <- NULL
-    } else {
-        annotation_row <- row_metadata
-        rownames(annotation_row) <- annotation_row[,1]
-        annotation_row[,1] <- NULL
+        pal <- colorRampPalette(RColorBrewer::brewer.pal(9, palette))(100)
     }
 
 
     if(type == "samplecor") {
-        x <- cor(exp, method = cor_method)
+        x <- cor(fexp, method = cor_method)
+        title <- "Pairwise correlations between samples"
     } else if(type == "expr") {
-        x <- exp
+        x <- fexp
+        title <- "Gene expression heatmap"
     } else {
         stop("Please, specify a type. One of 'samplecor' or 'expr'.")
     }
 
-    title <- ifelse(type == "samplecor",
-                    "Pairwise correlations between samples",
-                    "Gene expression heatmap")
-
-    # Define colors
-    ccols <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
-               "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
-               "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
-               "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
-               "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
-    nlevels <- length(unique(as.character(annotation_col[,1])))
-    if(nlevels <= 20) {
-        custom_cols <- ccols[seq_len(nlevels)]
-    } else {
-        custom_cols <- colorRampPalette(ccols)(nlevels)
-    }
-    annotation_color <- list(`Sample class` = custom_cols)
-    names(annotation_color$`Sample class`) <- unique(annotation_col[,1])
-
-
-    pheatmap::pheatmap(x, color=pal, border_color = NA, height = 20,
-                       show_rownames = show_rownames, show_colnames = show_colnames,
-                       annotation_row = annotation_row, annotation_col = annotation_col,
-                       cluster_rows = cluster_rows, cluster_cols = cluster_cols,
-                       scale = scale, fontsize = fontsize, main=title,
-                       cutree_rows = cutree_rows, cutree_cols = cutree_cols,
-                       annotation_colors = annotation_color, ...)
+    hm <- ComplexHeatmap::pheatmap(as.matrix(x), color=pal, border_color = NA,
+                                   show_rownames = show_rownames,
+                                   show_colnames = show_colnames,
+                                   annotation_row = row_metadata,
+                                   annotation_col = col_metadata,
+                                   cluster_rows = cluster_rows,
+                                   cluster_cols = cluster_cols,
+                                   scale = scale, fontsize = fontsize,
+                                   main=title, cutree_rows = cutree_rows,
+                                   cutree_cols = cutree_cols,
+                                   annotation_colors = annotation_color, ...)
+    return(hm)
 
 }
 

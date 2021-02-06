@@ -7,17 +7,21 @@
 filter_by_variance(exp, n = NULL, percentile = NULL)
 }
 \arguments{
-\item{exp}{Expression data frame with genes as rows and samples as columns}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{n}{Number of most variable genes (e.g. n=5000 will keep the top 5000 most variable genes).}
 
 \item{percentile}{Percentile of most highly variable genes (e.g. percentile=0.1 will keep the top 10 percent most variable genes). Values must range from 0 to 1.}
 }
 \value{
-Expressed data frame with the most variable genes in row names and samples in column names.
+Gxpression data frame or `SummarizedExperiment` object with the most variable genes in row names and samples in column names.
 }
 \description{
 Filter expression data frame to keep only the most varying genes
+}
+\examples{
+data(se.seed)
+filt_exp <- filter_by_variance(se.seed, p=0.1)
 }
 \author{
 Fabricio Almeida-Silva

@@ -9,7 +9,7 @@ exp_preprocess(
   NA_rm = TRUE,
   replaceby = 0,
   Zk_filtering = TRUE,
-  Zk = -2,
+  zk = -2,
   cor_method = "spearman",
   remove_nonexpressed = TRUE,
   method = "median",
@@ -23,15 +23,15 @@ exp_preprocess(
 )
 }
 \arguments{
-\item{exp}{Gene Expression data frame with gene IDs as rownames and sample names as column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{NA_rm}{Logical. It specifies whether to remove missing values from the expression data frame or not. Default = TRUE.}
 
 \item{replaceby}{If NA_rm is TRUE, what to use instead of NAs. One of 0 or 'mean'. Default is 0.}
 
-\item{Zk_filtering}{Logical. It specifies whether to filter outlying samples by Zk or not. Default = TRUE.}
+\item{Zk_filtering}{Logical. It specifies whether to filter outlying samples by Zk or not. Default: TRUE.}
 
-\item{Zk}{If Zk_filtering is TRUE, the standardized connectivity threshold. Samples below this threshold will be considered outliers. Default is -2.}
+\item{zk}{If Zk_filtering is TRUE, the standardized connectivity threshold. Samples below this threshold will be considered outliers. Default is -2.}
 
 \item{cor_method}{If Zk_filtering is TRUE, the correlation method to use. One of 'spearman', 'bicor', or 'pearson'. Default is 'spearman'.}
 
@@ -54,10 +54,17 @@ exp_preprocess(
 \item{vstransform}{Logical indicating if data should be variance stabilizing transformed. This parameter can only be set to TRUE if data is a matrix of raw read counts.}
 }
 \value{
-Processed gene expression data frame with gene IDs in row names and sample names in column names.
+Processed gene expression data frame or `SummarizedExperiment` object with gene IDs in row names and sample names in column names.
 }
 \description{
 Preprocess expression data for network reconstruction
+}
+\examples{
+data(se.seed)
+exp <- exp_preprocess(se.seed, variance_filter=TRUE, n=1000)
+}
+\references{
+Love, M. I., Huber, W., & Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome biology, 15(12), 1-21.
 }
 \seealso{
 \code{\link[DESeq2]{varianceStabilizingTransformation}}

@@ -4,20 +4,27 @@
 \alias{ZKfiltering}
 \title{Filter outlying samples based on standardized connectivity (Zk) method}
 \usage{
-ZKfiltering(raw_exp, Zk = -2, cor_method = "spearman")
+ZKfiltering(exp, zk = -2, cor_method = "spearman")
 }
 \arguments{
-\item{raw_exp}{Raw gene expression table, where rownames are gene IDs and colnames are sample names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{Zk}{Standardized connectivity threshold. Default is -2.}
+\item{zk}{Standardized connectivity threshold. Default is -2.}
 
 \item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.}
 }
 \value{
-Filtered gene expression dataframe.
+Filtered gene expression data frame or `SummarizedExperiment` object.
 }
 \description{
 Filter outlying samples based on standardized connectivity (Zk) method
+}
+\examples{
+data(se.seed)
+filt_exp <- ZKfiltering(se.seed)
+}
+\references{
+Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease. BMC systems biology, 6(1), 1-18.
 }
 \seealso{
 \code{\link[WGCNA]{adjacency}}

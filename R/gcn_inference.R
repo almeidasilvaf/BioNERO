@@ -430,13 +430,12 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @seealso
 #'  \code{\link[reshape2]{melt}}
 #'  \code{\link[WGCNA]{corPvalueStudent}}
-#'  \code{\link[pheatmap]{pheatmap}}
 #'  \code{\link[RColorBrewer]{RColorBrewer}}
 #' @rdname gene_significance
 #' @export
 #' @importFrom reshape2 melt
 #' @importFrom WGCNA corPvalueStudent
-#' @importFrom pheatmap pheatmap
+#' @importFrom ComplexHeatmap pheatmap
 #' @importFrom RColorBrewer brewer.pal
 gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
                               use_abs = TRUE, savetofile = FALSE,
@@ -482,8 +481,9 @@ gene_significance <- function(exp, metadata, alpha = 0.05, min_cor = 0,
                     sep = "\t", row.names = FALSE, quote = FALSE)
     }
 
-    pheatmap::pheatmap(GS, color=colorRampPalette(RColorBrewer::brewer.pal(10, palette))(100),
-                       show_rownames=show_rownames, main="Gene-trait correlations")
+    ComplexHeatmap::pheatmap(as.matrix(GS),
+                             color=colorRampPalette(RColorBrewer::brewer.pal(10, palette))(100),
+                             show_rownames=show_rownames, main="Gene-trait correlations")
 
     resultlist <- list(filtered_corandp = corandp, raw_GS = GS)
     return(resultlist)
@@ -560,6 +560,7 @@ get_hubs <- function(exp, net) {
 #' @param genesets List of functional annotation categories (e.g., GO, pathway, etc.) with their associated genes.
 #' @param adj Multiple testing correction method
 #' @noRd
+#' @return Results of Fisher's Exact Test in a data frame with TermID, number of associated genes, number of genes in reference set, P-value and adjusted P-value.
 #' @importFrom stats p.adjust fisher.test
 #' @importFrom BiocParallel bplapply
 par_enrich <- function(genes, reference, genesets, adj = "BH") {
