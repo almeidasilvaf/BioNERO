@@ -9,28 +9,33 @@ plot_expression_profile(
   exp,
   metadata,
   plot_module = TRUE,
-  genes_modules,
+  net,
   modulename
 )
 }
 \arguments{
 \item{genes}{Character vector containing a subset of genes from which edges will be extracted. It can be ignored if \code{plot_module} is TRUE.}
 
-\item{exp}{Data frame containing genes IDs in row names and sample names in column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A 2-column data frame containing sample names in the first column and sample descriptions in the second column.}
+\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
 
 \item{plot_module}{Logical indicating whether to plot a whole module or not. If set to FALSE, \code{genes} must be specified.}
 
-\item{genes_modules}{Data frame containing genes in column 1 and their corresponding modules in column 2. It is the third element of the output list from \code{exp2net}.}
+\item{net}{List object returned by \code{exp2net}.}
 
-\item{modulename}{Character with name of the module to be plotted. To include 2 or more modules, input the names in a character vector.}
+\item{modulename}{Name of the module to plot.}
 }
 \value{
 A ggplot object showing the expression profile of some genes across all samples.
 }
 \description{
 Plot expression profile of given genes across samples
+}
+\examples{
+data(se.seed)
+genes <- rownames(filter_by_variance(se.seed, n=100))
+plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
 }
 \seealso{
 \code{\link[reshape2]{melt}}

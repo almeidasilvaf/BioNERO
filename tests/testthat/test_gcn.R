@@ -6,7 +6,20 @@ rownames(exp) <- paste0("Gene", 1:nrow(exp))
 colnames(exp) <- paste0("Sample", 1:ncol(exp))
 cormat <- cor(t(exp))
 
+data(se.seed)
+filt.se <- filter_by_variance(se.seed, n=500)
+
 #----Start tests----
+test_that("SFT_fit() performs SFT fit test and returns a list with", {
+    sft <- SFT_fit(filt.se, cor_method="pearson")
+    expect_equal(class(sft), "list")
+    expect_equal(length(sft), 2)
+    expect_true(all.equal(class(sft$plot), c("gg", "ggplot", "ggarrange")))
+    expect_equal(class(sft$power), "numeric")
+})
+
+
+
 test_that("get_edge_list() generates an edge list as a 3-column data frame", {
     genes <- paste0("Gene", 1:200)
     net <- list(correlation_matrix = cormat)

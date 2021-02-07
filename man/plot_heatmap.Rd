@@ -26,7 +26,7 @@ plot_heatmap(
 \arguments{
 \item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{col_metadata}{A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Default: NA.}
+\item{col_metadata}{A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData. Default: NA.}
 
 \item{row_metadata}{A data frame containing gene IDs in row names and gene functional classification in the first column. Only one column is allowed to ensure legends can be visualized. Default: NA.}
 

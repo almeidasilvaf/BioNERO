@@ -2,7 +2,7 @@
 #' Plot heatmap of hierarchically clustered sample correlations or gene expression
 #'
 #' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param col_metadata A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Default: NA.
+#' @param col_metadata A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData. Default: NA.
 #' @param row_metadata A data frame containing gene IDs in row names and gene functional classification in the first column. Only one column is allowed to ensure legends can be visualized. Default: NA.
 #' @param cor_method Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.
 #' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default: 'samplecor'.
@@ -97,8 +97,8 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 
 #' Plot Principal Component Analysis (PCA) of samples
 #'
-#' @param exp Expression data frame with genes in rownames and samples in column names.
-#' @param metadata Data frame containing sample IDs in first column and sample description (e.g. tissue or treatment) in the second column.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param metadata A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.
 #' @param log_trans Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).
 #' @param PCs Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
 #' @param size Numeric indicating the point size. Default is 2.
@@ -110,72 +110,74 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 #' @rdname plot_PCA
 #' @export
 #' @importFrom ggplot2 ggplot aes aes_ geom_point scale_color_manual labs theme_classic ggtitle theme element_text
+#' @importFrom SummarizedExperiment colData
+#' @examples
+#' data(se.seed)
+#' plot_PCA(se.seed, log_trans = TRUE)
 plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
-    if (log_trans == FALSE) {
-        pca <- prcomp(t(exp))
-    } else {
-        pca <- prcomp(t(log2(exp+1)))
+    fexp <- handleSE(exp)
+    if(is_SE(exp)) {
+        metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
 
-    # Define colors
-    ccols <- c("#1F77B4FF", "#FF7F0EFF", "#2CA02CFF", "#D62728FF",
-                     "#9467BDFF", "#8C564BFF", "#E377C2FF", "#7F7F7FFF",
-                     "#BCBD22FF", "#17BECFFF", "#AEC7E8FF", "#FFBB78FF",
-                     "#98DF8AFF", "#FF9896FF", "#C5B0D5FF", "#C49C94FF",
-                     "#F7B6D2FF", "#C7C7C7FF", "#DBDB8DFF", "#9EDAE5FF")
-    nlevels <- length(unique(as.character(metadata[,2])))
-    if(nlevels <= 20) {
-        custom_cols <- ccols
+    if(log_trans) {
+        pca <- prcomp(t(log2(fexp+1)))
     } else {
-        custom_cols <- colorRampPalette(ccols)(nlevels)
+        pca <- prcomp(t(fexp))
     }
 
+    cols <- custom_palette(1)[seq_along(unique(metadata[,1]))]
     pca_df <- as.data.frame(pca$x)
-    pca_df$Trait <- metadata[metadata[,1] %in% rownames(pca_df), 2]
+    pca_df$`Sample group` <- metadata[rownames(pca_df), 1]
     pca_df$SampleID <- rownames(pca_df)
     var_explained <- as.data.frame(round(100 * pca$sdev^2 / sum(pca$sdev^2), 1))
     rownames(var_explained) <- colnames(pca$x)
-    if(PCs == "1x2") {
-        p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC2, color = ~Trait)) +
-            ggplot2::geom_point(size = size) +
-            ggplot2::scale_color_manual(values=custom_cols) +
-            ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")) +
-            ggplot2::theme_classic() +
-            ggplot2::ggtitle("Principal component analysis of samples") +
-            ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
-        } else if (PCs == "1x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC3, color = ~Trait)) +
-                ggplot2::geom_point(size = size) +
-                ggplot2::scale_color_manual(values=custom_cols) +
-                ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                ggplot2::theme_classic() +
-                ggplot2::ggtitle("Principal component analysis of samples") +
-                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
-        } else if (PCs == "2x3") {
-            p <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC2, ~PC3, color = ~Trait)) +
-                ggplot2::geom_point(size = size) +
-                ggplot2::scale_color_manual(values=custom_cols) +
-                ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""), y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")) +
-                ggplot2::theme_classic() +
-                ggplot2::ggtitle("Principal component analysis of samples") +
-                ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
-        } else {
-            stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
-        }
 
+    if(PCs == "1x2") {
+        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC2, color = ~`Sample group`))
+        labs <- ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
+                              y = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""))
+    } else if(PCs == "1x3") {
+        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC3, color = ~`Sample group`))
+        labs <- ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
+                              y = paste("PC3 (", var_explained["PC3", ], "%)", sep = ""))
+    } else if(PCs == "2x3") {
+        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC2, ~PC3, color = ~`Sample group`))
+        labs <- ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""),
+                              y = paste("PC3 (", var_explained["PC3", ], "%)", sep = ""))
+    } else {
+        stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
+    }
+    p <- aes_map +
+        ggplot2::geom_point(size = size) +
+        ggplot2::scale_color_manual(values = cols) +
+        labs +
+        ggplot2::theme_classic() +
+        ggplot2::ggtitle("Principal component analysis of samples") +
+        ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
     return(p)
 }
 
 
-#' Get a vector object with housekeeping genes
+#' Get housekeeping genes from global expression profile
 #'
-#' @param exp Expression data frame, where row names are gene IDs and col names are sample names
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
 #'
-#' @return Character vector of housekeeping gene IDs
+#' @details This function identifies housekeeping genes, which are broadly expressed genes with low variation in a global scale across samples.
+#' For some cases, users would want to remove these genes as they are not interesting for coexpression network analyses.
+#' See references for more details.
+#'
+#' @return Character vector of housekeeping gene IDs.
 #' @author Fabricio Almeida-Silva
 #' @rdname get_HK
 #' @export
+#' @references
+#' Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K., Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020), Systematic analysis of 1298 RNA‐Seq samples and construction of a comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
+#' @examples
+#' data(se.seed)
+#' hk <- get_HK(se.seed)
 get_HK <- function(exp) {
+    exp <- handleSE(exp)
     exp <- exp
     exp[exp < 1] <- 0 #expression values below 1 are considered as not expressed
     ncols <- ncol(exp)
@@ -195,11 +197,11 @@ get_HK <- function(exp) {
 #' Plot expression profile of given genes across samples
 #'
 #' @param genes Character vector containing a subset of genes from which edges will be extracted. It can be ignored if \code{plot_module} is TRUE.
-#' @param exp Data frame containing genes IDs in row names and sample names in column names.
-#' @param metadata A 2-column data frame containing sample names in the first column and sample descriptions in the second column.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param metadata A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.
 #' @param plot_module Logical indicating whether to plot a whole module or not. If set to FALSE, \code{genes} must be specified.
-#' @param genes_modules Data frame containing genes in column 1 and their corresponding modules in column 2. It is the third element of the output list from \code{exp2net}.
-#' @param modulename Character with name of the module to be plotted. To include 2 or more modules, input the names in a character vector.
+#' @param net List object returned by \code{exp2net}.
+#' @param modulename Name of the module to plot.
 #'
 #' @return A ggplot object showing the expression profile of some genes across all samples.
 #' @author Fabricio Almeida-Silva
@@ -208,68 +210,54 @@ get_HK <- function(exp) {
 #' @rdname plot_expression_profile
 #' @export
 #' @importFrom reshape2 melt
-#' @importFrom ggplot2 ggplot aes_ geom_tile aes geom_line stat_summary theme element_text element_blank element_rect ggtitle
-plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE, genes_modules, modulename) {
-    sample_names <- colnames(metadata)[1]
-    sample_info <- colnames(metadata)[2]
-
-    if(plot_module) {
-        genes_in_module <- genes_modules[genes_modules[,2] == modulename, 1]
-        filt_exp <- exp[rownames(exp) %in% genes_in_module, ]
-        filt_exp$id <- rownames(filt_exp)
-
-        melt_exp <- reshape2::melt(filt_exp, "id",
-                                   variable.name = "sample",
-                                   value.name = "expression")
-    } else {
-        melt_exp <- reshape2::melt(filt_exp[genes, ], "id",
-                                   variable.name = "sample",
-                                   value.name = "expression")
+#' @importFrom ggplot2 ggplot aes_ geom_tile aes geom_line stat_summary ggtitle
+#' @importFrom SummarizedExperiment colData
+#' @examples
+#' data(se.seed)
+#' genes <- rownames(filter_by_variance(se.seed, n=100))
+#' plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
+plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
+                                    net, modulename) {
+    if(is_SE(exp)) {
+        metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
-    # order sample info by tissue
-    metadata <- metadata[metadata[,1] %in% colnames(filt_exp), ]
-    metadata <- metadata[order(metadata[,2]), ]
-    metadata[,1] <- factor(metadata[,1], levels = metadata[,1])
+    exp <- handleSE(exp)
 
-    melt_exp[, "sample"] <- factor(melt_exp[, "sample"],
-                                   levels = metadata[,1])
+    title <- "Expression profile"
+    if(plot_module) {
+        genes_modules <- net$genes_and_modules
+        genes <- genes_modules[genes_modules[,2] == modulename, 1]
+        title <- paste("Expression profile for module", modulename)
+    }
+    fexp <- exp[genes, ]
+    fexp$id <- rownames(fexp)
+    melt_exp <- reshape2::melt(fexp, "id", variable.name = "Samples",
+                               value.name = "Expression")
+
+    # Reorder samples by tissue
+    metadata <- metadata[colnames(fexp)[-ncol(fexp)], , drop=FALSE]
+    metadata$Sample <- rownames(metadata)
+    colnames(metadata) <- c("Sample group", "Sample")
+    metadata <- metadata[order(metadata[,1]), ]
+    metadata[,2] <- factor(metadata[,2], levels = metadata[,2])
+    melt_exp[, "Samples"] <- factor(melt_exp[, "Samples"], levels = metadata[,2])
 
     # Background tiles
-    background <- mean(melt_exp[, "expression"])
+    background <- mean(melt_exp[, "Expression"])
 
     # Plot expression profiles
-    p <- ggplot2::ggplot(melt_exp, ggplot2::aes_(x = ~sample, y = ~expression)) +
-        ggplot2::geom_tile(data = metadata, alpha = 0.3, height = Inf,
-                           ggplot2::aes_(x = get(sample_names), y = ~background,
-                      fill = as.factor(get(sample_info))))
-
-    p <- p + ggplot2::geom_line(ggplot2::aes_(group = ~id), alpha = 0.2,
+    cols <- custom_palette(1)[seq_along(unique(metadata$`Sample group`))]
+    p <- ggplot2::ggplot(melt_exp, ggplot2::aes_(x = ~Samples, y = ~Expression)) +
+        ggplot2::geom_tile(data = metadata, alpha = 0.4, height = Inf,
+                           ggplot2::aes_(x = ~Sample, y = ~background,
+                      fill = ~`Sample group`)) +
+        ggplot2::scale_fill_manual(values = cols) +
+        ggplot2::geom_line(ggplot2::aes_(group = ~id), alpha = 0.2,
                        color = "firebrick") +
-        ggplot2::stat_summary(ggplot2::aes(group = 1), size = 1, fun = "median", geom = "line")
-
-    p <- p + ggplot2::theme(plot.title=ggplot2::element_text(lineheight=0.8,
-                                           face='bold',
-                                           colour='black',
-                                           size=15),
-                   axis.title=ggplot2::element_text(face='bold',
-                                           colour='black',
-                                           size=15),
-                   axis.text.y=ggplot2::element_text(angle=0,
-                                            vjust=0.5,
-                                            size=8),
-                   axis.text.x=ggplot2::element_text(angle=90,
-                                            vjust=0.5,
-                                            size=6),
-                   panel.grid=ggplot2::element_blank(),
-                   legend.title=ggplot2::element_blank(),
-                   legend.text=ggplot2::element_text(size = 8),
-                   legend.background=ggplot2::element_rect(fill='gray90',
-                                                  size=0.5,
-                                                  linetype='dotted'),
-                   legend.position='bottom'
-    )
-
-    p <- p + ggplot2::ggtitle(modulename)
+        ggplot2::stat_summary(ggplot2::aes(group = 1), size = 1,
+                              fun = "median", geom = "line") +
+        theme_exp_profile() +
+        ggplot2::ggtitle(title)
 
     return(p)
 }

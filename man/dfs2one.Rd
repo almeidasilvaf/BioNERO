@@ -15,7 +15,27 @@ dfs2one(mypath, pattern = ".tsv$")
 Data frame with gene IDs as row names and their expression values in each sample (columns).
 }
 \description{
-This function reads multiple expression tables (.tsv files) in a directory and combine them into one single gene expression dataframe.
+This function reads multiple expression tables (.tsv files) in a directory and combine them into one single gene expression data frame.
+}
+\examples{
+# Simulate two expression data frames of 100 genes and 30 samples
+genes <- paste0(rep("Gene", 100), 1:100)
+samples1 <- paste0(rep("Sample", 30), 1:30)
+samples2 <- paste0(rep("Sample", 30), 31:60)
+exp1 <- cbind(genes, as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30)))
+exp2 <- cbind(genes, as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30)))
+colnames(exp1) <- c("Gene", samples1)
+colnames(exp2) <- c("Gene", samples2)
+
+# Write data frames to temporary files
+tmpdir <- tempdir()
+tmp1 <- tempfile(tmpdir = tmpdir, fileext = ".exp.tsv")
+tmp2 <- tempfile(tmpdir = tmpdir, fileext = ".exp.tsv")
+write.table(exp1, file=tmp1, quote=FALSE, sep="\t")
+write.table(exp2, file=tmp2, quote=FALSE, sep="\t")
+
+# Load the files into one
+exp <- dfs2one(mypath = tmpdir, pattern=".exp.tsv")
 }
 \author{
 Fabricio Almeida-Silva

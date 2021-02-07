@@ -12,9 +12,12 @@ se.seed
 }
 \description{
 Filtered expression data in transcripts per million (TPM) from Danzer et al., 2015.
-Genes with TPM values < 1 in any of samples were removed to reduce package size.
+Genes with TPM values < 2 in any of samples were removed to reduce package size.
 The expression data and associated sample metadata are stored in a SummarizedExperiment
-object with 13278 genes and 51 samples.
+object with 10381 genes and 51 samples.
+}
+\examples{
+data(se.seed)
 }
 \references{
 Danzer, J., Mellott, E., Bui, A. Q., Le, B. H., Martin, P., Hashimoto, M., ... & Goldberg, R. B. (2015).

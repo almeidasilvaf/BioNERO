@@ -7,9 +7,9 @@
 plot_PCA(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2)
 }
 \arguments{
-\item{exp}{Expression data frame with genes in rownames and samples in column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{Data frame containing sample IDs in first column and sample description (e.g. tissue or treatment) in the second column.}
+\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
 
 \item{log_trans}{Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).}
 
@@ -22,6 +22,10 @@ A ggplot object with the PCA plot.
 }
 \description{
 Plot Principal Component Analysis (PCA) of samples
+}
+\examples{
+data(se.seed)
+plot_PCA(se.seed, log_trans = TRUE)
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

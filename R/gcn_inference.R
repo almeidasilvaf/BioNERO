@@ -17,7 +17,13 @@
 #' @export
 #' @importFrom WGCNA pickSoftThreshold
 #' @importFrom graphics abline legend par points text
+#' @importFrom ggpubr ggarrange
+#' @examples
+#' data(se.seed)
+#' filt.se <- filter_by_variance(se.seed, n=500)
+#' sft <- SFT_fit(filt.se, cor_method="pearson")
 SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman") {
+    exp <- handleSE(exp)
     texp <- t(exp)
 
     if(cor_method == "pearson") {
@@ -42,32 +48,28 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
                          fit = -sign(sft$fitIndices[,3]) * sft$fitIndices[,2],
                          meank = sft$fitIndices[,5])
     # Plot 1
-    sft_plot1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
-                                   xlab="Soft threshold (power)",
-                                   ylab=expression(paste("Scale-free topology fit - ", R^{2})),
-                                   title = "Scale independence",
-                                   ylim=c(0, 1), label="power", size=1,
-                                   font.label=10,
-                                   color="gray10",
-                                   font.tickslab=10, ytickslab.rt=90) +
+    p1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
+                            xlab="Soft threshold (power)",
+                            ylab=expression(paste("Scale-free topology fit - ", R^{2})),
+                            title = "Scale independence",
+                            ylim=c(0, 1), label="power", size=1,
+                            font.label=10,
+                            color="gray10",
+                            font.tickslab=10, ytickslab.rt=90) +
         geom_hline(yintercept = rsquared, color="brown3") +
         theme(plot.title = element_text(hjust = 0.5))
 
     # Plot 2
-    sft_plot2 <- ggscatter(sft_df, x="power", y="meank",
-                           xlab="Soft threshold (power)",
-                           ylab="Mean connectivity (k)",
-                           title="Mean connectivity",
-                           label="power", size=1, font.label=10,
-                           color="gray10",
-                           font.tickslab=10, ytickslab.rt=90) +
+    p2 <- ggscatter(sft_df, x="power", y="meank",
+                    xlab="Soft threshold (power)", ylab="Mean connectivity (k)",
+                    title="Mean connectivity",
+                    label="power", size=1, font.label=10, color="gray10",
+                    font.tickslab=10, ytickslab.rt=90) +
         theme(plot.title = element_text(hjust=0.5))
 
     # Combined plot
-    sft_plot <- ggarrange(sft_plot1, sft_plot2)
-
-    result <- list(power=wgcna_power, plot=sft_plot)
-
+    sft_plot <- ggpubr::ggarrange(p1, p2)
+    result <- list(power=as.numeric(wgcna_power), plot=sft_plot)
     return(result)
 }
 

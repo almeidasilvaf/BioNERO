@@ -29,3 +29,28 @@ test_that("plot_heatmap() correctly handles row and col annotation", {
     expect_true(class(p4) == "Heatmap")
     expect_true(class(p5) == "Heatmap")
 })
+
+
+test_that("plot_PCA() performs PCA and plots it", {
+    p1 <- plot_PCA(exp, metadata, log_trans = TRUE)
+    p2 <- plot_PCA(filt.se, log_trans = TRUE)
+
+    expect_true(all.equal(class(p1), c("gg", "ggplot")))
+    expect_true(all.equal(class(p2), c("gg", "ggplot")))
+})
+
+
+test_that("get_HK() returns housekeeping genes in a character vector", {
+    hk <- get_HK(se.seed)
+
+    expect_equal(class(hk), "character")
+    expect_equal(length(hk), floor(nrow(se.seed) * 0.25))
+})
+
+
+test_that("plot_expression_profile() plots expression in a line plot", {
+    genes <- rownames(filter_by_variance(se.seed, n=100))
+    p1 <- plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
+    expect_true(all.equal(class(p1), c("gg", "ggplot")))
+})
+

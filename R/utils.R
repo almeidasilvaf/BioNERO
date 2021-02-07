@@ -155,6 +155,36 @@ gene_cols_heatmap <- function(row_metadata, fexp, annotation_color) {
 }
 
 
+#' Set theme for expression profile plot
+#'
+#' @return Custom theme for the function \code{plot_expression_profile}.
+#' @noRd
+#' @importFrom ggplot2 theme element_text element_blank element_rect
+theme_exp_profile <- function() {
+    theme <- ggplot2::theme(
+        plot.title = ggplot2::element_text(lineheight=0.8,
+                                           face='bold',
+                                           colour='black',
+                                           size=13,
+                                           hjust=0.5),
+        axis.title = ggplot2::element_text(size=11),
+        axis.text.y = ggplot2::element_text(angle=0,
+                                          vjust=0.5,
+                                          size=8),
+        axis.text.x = ggplot2::element_text(angle=90,
+                                          vjust=0.5,
+                                          size=6),
+        panel.grid = ggplot2::element_blank(),
+        legend.title = ggplot2::element_blank(),
+        legend.text = ggplot2::element_text(size = 8),
+        legend.background = ggplot2::element_rect(fill='gray90',
+                                                  size=0.5,
+                                                  linetype='dotted'),
+        legend.position='bottom'
+    )
+    return(theme)
+}
+
 #' Transform a correlation matrix to an edge list
 #'
 #' @param matrix Symmetrical correlation matrix.

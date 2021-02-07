@@ -11,24 +11,23 @@ test_that("dfs2one reads in multiple tables and binds them into a data frame", {
     genes <- paste0(rep("Gene", 100), 1:100)
     samples1 <- paste0(rep("Sample", 30), 1:30)
     samples2 <- paste0(rep("Sample", 30), 31:60)
-    # Simulate an expression data frame of 100 genes and 30 samples
-    exp1 <- as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30))
-    colnames(exp1) <- samples1
-    exp1 <- cbind(genes, exp1)
 
-    # Simulate an expression data frame of 100 genes and 30 different samples
-    exp2 <- as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30))
-    colnames(exp2) <- samples2
-    exp2 <- cbind(genes, exp2)
+    # Simulate two expression data frames of 100 genes and 30 samples
+    exp1 <- cbind(genes, as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30)))
+    exp2 <- cbind(genes, as.data.frame(matrix(rnorm(100*30),nrow=100,ncol=30)))
+    colnames(exp1) <- c("Gene", samples1)
+    colnames(exp2) <- c("Gene", samples2)
 
-    write.table(exp1, file="exp1.tsv", quote=FALSE, sep="\t")
-    write.table(exp2, file="exp2.tsv", quote=FALSE, sep="\t")
+    # Write data frames to temporary files
+    tmpdir <- tempdir()
+    tmp1 <- tempfile(tmpdir = tmpdir, fileext = ".exp.tsv")
+    tmp2 <- tempfile(tmpdir = tmpdir, fileext = ".exp.tsv")
 
-    expect_equal(nrow(dfs2one(mypath="./")), 100)
-    expect_equal(ncol(dfs2one(mypath="./")), 60)
+    write.table(exp1, file=tmp1, quote=FALSE, sep="\t")
+    write.table(exp2, file=tmp2, quote=FALSE, sep="\t")
 
-    unlink("exp1.tsv")
-    unlink("exp2.tsv")
+    expect_equal(nrow(dfs2one(mypath = tmpdir, pattern=".exp.tsv")), 100)
+    expect_equal(ncol(dfs2one(mypath = tmpdir, pattern=".exp.tsv")), 60)
 })
 
 
@@ -52,10 +51,10 @@ test_that("remove_nonexp() removes non-expressed genes", {
     expect_true(all.equal(dim(filt_exp1), dim(filt_exp2)))
     expect_equal(class(filt_exp1), "data.frame")
     expect_true(class(filt_exp2) == "SummarizedExperiment")
-    expect_equal(nrow(filt_exp2), 12594)
-    expect_equal(nrow(filt_exp3), 13150)
-    expect_equal(nrow(filt_exp4), 12884)
-    expect_equal(nrow(filt_exp5), 5953)
+    expect_true(nrow(filt_exp2) < nrow(se.seed))
+    expect_true(nrow(filt_exp3) < nrow(se.seed))
+    expect_true(nrow(filt_exp4) < nrow(se.seed))
+    expect_true(nrow(filt_exp5) < nrow(se.seed))
 })
 
 

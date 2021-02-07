@@ -24,6 +24,11 @@ A list containing: \itemize{
 \description{
 Pick power to fit network to a scale-free topology
 }
+\examples{
+data(se.seed)
+filt.se <- filter_by_variance(se.seed, n=500)
+sft <- SFT_fit(filt.se, cor_method="pearson")
+}
 \seealso{
 \code{\link[WGCNA]{pickSoftThreshold}}
 }
