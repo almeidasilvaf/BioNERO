@@ -1,9 +1,10 @@
 
 #----Set up data----
 data(se.seed)
+data(filt.se)
 exp <- SummarizedExperiment::assay(se.seed)
 exp <- filter_by_variance(exp, n=100)
-filt.se <- filter_by_variance(se.seed, n=100)
+filtered.se <- filter_by_variance(se.seed, n=100)
 metadata <- as.data.frame(SummarizedExperiment::colData(se.seed))
 
 #----Start tests----
@@ -49,14 +50,13 @@ test_that("get_HK() returns housekeeping genes in a character vector", {
 
 
 test_that("plot_expression_profile() plots expression in a line plot", {
-    genes <- rownames(filter_by_variance(se.seed, n=100))
+    genes <- rownames(filt.se)
     p1 <- plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
     expect_true(all.equal(class(p1), c("gg", "ggplot")))
 })
 
 
 test_that("plot_ngenes_per_module() returns a barplot of genes per module", {
-    filt.se <- filter_by_variance(se.seed, n=500)
     gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson",
                    reportPDF = FALSE)
     p <- plot_ngenes_per_module(gcn)

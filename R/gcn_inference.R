@@ -19,8 +19,7 @@
 #' @importFrom graphics abline legend par points text
 #' @importFrom ggpubr ggarrange
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' sft <- SFT_fit(filt.se, cor_method="pearson")
 SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman") {
     exp <- handleSE(exp)
@@ -103,8 +102,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp qnorm qqplot quantile sd var
 #' @importFrom grDevices colorRampPalette dev.off pdf
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
 #' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 exp2gcn <- function(exp, net_type="signed",
@@ -244,8 +242,7 @@ exp2gcn <- function(exp, net_type="signed",
 #' @importFrom WGCNA sampledBlockwiseModules matchLabels plotDendroAndColors
 #' @examples
 #' \donttest{
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
 #' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 #' # For simplicity, only 2 runs
@@ -326,8 +323,7 @@ module_stability <- function(exp, net, nRuns = 20) {
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom SummarizedExperiment colData
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 #' module_trait_cor(filt.se, MEs=gcn$MEs)
 module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
@@ -417,8 +413,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom SummarizedExperiment colData
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' gs <- gene_significance(filt.se)
 gene_significance <- function(exp, metadata, genes=NULL,
                               alpha = 0.05, min_cor = 0.2,
@@ -485,8 +480,7 @@ gene_significance <- function(exp, metadata, genes=NULL,
 #' @export
 #' @importFrom WGCNA signedKME
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=500)
+#' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 #' hubs <- get_hubs_gcn(filt.se, gcn)
 get_hubs_gcn <- function(exp, net) {
@@ -596,9 +590,8 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
 #' @importFrom BiocParallel bplapply
 #' @examples
 #' \donttest{
-#' data(se.seed)
+#' data(filt.se)
 #' data(soybean_interpro)
-#' filt.se <- filter_by_variance(se.seed, n=500)
 #' genes <- rownames(filt.se)[1:50]
 #' background_genes <- rownames(filt.se)
 #' annotation <- soybean_interpro
@@ -725,9 +718,8 @@ enrichment_analysis <- function(genes, background_genes, annotation, column = NU
 #' @export
 #' @examples
 #' \donttest{
-#' data(se.seed)
+#' data(filt.se)
 #' data(soybean_interpro)
-#' filt.se <- filter_by_variance(se.seed, n=500)
 #' background <- rownames(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 #' mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
@@ -774,6 +766,7 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
     return(enrichment_final)
 }
 
+
 #' Get 1st-order neighbors of a given gene or group of genes
 #'
 #' @param genes Character vector containing genes from which direct neighbors will be extracted.
@@ -781,12 +774,15 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
 #' @param cor_threshold Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.
 #'
 #' @return List containing 1st-order neighbors for each input gene.
-#'
 #' @seealso \code{exp2gcn} \code{SFT_fit}
 #' @author Fabricio Almeida-Silva
 #' @export
-#'
 #' @rdname get_neighbors
+#' @examples
+#' data(filt.se)
+#' genes <- rownames(filt.se)[1:10]
+#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' neighbors <- get_neighbors(genes, gcn)
 get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 
     net_type <- net$params$net_type
@@ -855,6 +851,11 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
 #' @importFrom BiocParallel bplapply
+#' @examples
+#' data(filt.se)
+#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' genes <- rownames(filt.se)[1:50]
+#' edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
 get_edge_list <- function(net, genes = NULL, module = NULL,
                           filter = FALSE, method = "optimalSFT",
                           r_optimal_test = seq(0.4, 0.9, by=0.1),

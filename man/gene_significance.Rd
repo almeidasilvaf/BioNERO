@@ -45,8 +45,7 @@ A heatmap of gene significance (GS) and a list containing filtered and raw GS.
 Calculate gene significance for a given group of genes
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 gs <- gene_significance(filt.se)
 }
 \seealso{

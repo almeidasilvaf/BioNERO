@@ -52,8 +52,7 @@ Significance levels:
 no asterisk: not significant.
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 module_trait_cor(filt.se, MEs=gcn$MEs)
 }

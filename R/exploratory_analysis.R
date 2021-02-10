@@ -27,10 +27,8 @@
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom ComplexHeatmap pheatmap
 #' @examples
-#' data(se.seed)
-#' filt.se <- filter_by_variance(se.seed, n=100)
+#' data(filt.se)
 #' plot_heatmap(filt.se)
-#' plot_heatmap(filt.se, type="expr", log_trans=TRUE)
 plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
                          cor_method = 'spearman', type = "samplecor",
                          palette = NULL, log_trans = FALSE,
@@ -214,7 +212,8 @@ get_HK <- function(exp) {
 #' @importFrom SummarizedExperiment colData
 #' @examples
 #' data(se.seed)
-#' genes <- rownames(filter_by_variance(se.seed, n=100))
+#' data(filt.se)
+#' genes <- rownames(filt.se)
 #' plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
                                     net, modulename) {
@@ -273,6 +272,10 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 #' @export
 #' @importFrom ggpubr ggbarplot
 #' @importFrom ggplot2 theme element_text
+#' @examples
+#' data(filt.se)
+#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' plot_ngenes_per_module(gcn)
 plot_ngenes_per_module <- function(net = NULL) {
     genes_and_modules <- net$genes_and_modules
     frequency_df <- as.data.frame(table(genes_and_modules[,2]),

@@ -25,8 +25,7 @@ A list containing: \itemize{
 Pick power to fit network to a scale-free topology
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 sft <- SFT_fit(filt.se, cor_method="pearson")
 }
 \seealso{

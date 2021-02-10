@@ -53,6 +53,12 @@ The method "Zscore" will apply a Fisher Z-transformation for the correlation coe
 The method "pvalue" will calculate Student asymptotic p-value for the correlations and remove correlations whose p-values are above the threshold specified in \code{pvalue_cutoff}.
 The method "min_cor" will remove correlations below the minimum correlation threshold specified in \code{rcutoff}.
 }
+\examples{
+data(filt.se)
+gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+genes <- rownames(filt.se)[1:50]
+edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
+}
 \seealso{
 \code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
  \code{\link[igraph]{fit_power_law}}

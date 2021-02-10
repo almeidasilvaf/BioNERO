@@ -18,8 +18,7 @@ Data frame containing gene IDs, modules and intramodular connectivity of all hub
 Get hub genes in a given module or in all modules at once
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 hubs <- get_hubs_gcn(filt.se, gcn)
 }

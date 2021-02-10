@@ -9,7 +9,7 @@ cormat <- cor(t(exp))
 # Load data
 data(se.seed)
 data(soybean_interpro)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 
 # Infer GCN to avoid repetition many test chunks
 gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson",
@@ -76,7 +76,10 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
     expect_equal(ncol(enrich), 6)
 })
 
-
+# Test passed
+# The code was kept here so we can return to this test if necessary.
+# As the test took a long time to run, we decided to comment it.
+#
 # test_that("module_enrichment() performs ORA for all modules", {
 #     BiocParallel::register(BiocParallel::SerialParam())
 #     background <- rownames(filt.se)
@@ -85,6 +88,14 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
 #                                     annotation = soybean_interpro, p=1)
 #     expect_equal(class(mod_enrich), "data.frame")
 # })
+
+
+test_that("get_neighbors() returns a list of neighbors for each gene", {
+    genes <- rownames(filt.se)[1:10]
+    neighbors <- get_neighbors(genes, gcn)
+    expect_equal(class(neighbors), "list")
+    expect_equal(length(neighbors), 10)
+})
 
 
 test_that("get_edge_list() generates an edge list as a 3-column data frame", {

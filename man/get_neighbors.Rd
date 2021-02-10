@@ -19,6 +19,12 @@ List containing 1st-order neighbors for each input gene.
 \description{
 Get 1st-order neighbors of a given gene or group of genes
 }
+\examples{
+data(filt.se)
+genes <- rownames(filt.se)[1:10]
+gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+neighbors <- get_neighbors(genes, gcn)
+}
 \seealso{
 \code{exp2gcn} \code{SFT_fit}
 }

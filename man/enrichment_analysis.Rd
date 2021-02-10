@@ -39,9 +39,8 @@ If that happens, run the following: \code{BiocParallel::register(BiocParallel::S
 }
 \examples{
 \donttest{
-data(se.seed)
+data(filt.se)
 data(soybean_interpro)
-filt.se <- filter_by_variance(se.seed, n=500)
 genes <- rownames(filt.se)[1:50]
 background_genes <- rownames(filt.se)
 annotation <- soybean_interpro

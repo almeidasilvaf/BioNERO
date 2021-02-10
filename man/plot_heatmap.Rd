@@ -63,10 +63,8 @@ Heatmap of hierarchically clustered samples with metadata information (optional)
 Plot heatmap of hierarchically clustered sample correlations or gene expression
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=100)
+data(filt.se)
 plot_heatmap(filt.se)
-plot_heatmap(filt.se, type="expr", log_trans=TRUE)
 }
 \seealso{
 \code{\link[RColorBrewer]{RColorBrewer}}

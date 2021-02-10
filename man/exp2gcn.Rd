@@ -41,8 +41,7 @@ List containing: \itemize{
 Reconstruct gene coexpression network from gene expression
 }
 \examples{
-data(se.seed)
-filt.se <- filter_by_variance(se.seed, n=500)
+data(filt.se)
 # The SFT fit was previously calculated and the optimal power was 16
 gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 }

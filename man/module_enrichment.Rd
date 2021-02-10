@@ -39,9 +39,8 @@ If that happens, run the following: \code{BiocParallel::register(BiocParallel::S
 }
 \examples{
 \donttest{
-data(se.seed)
+data(filt.se)
 data(soybean_interpro)
-filt.se <- filter_by_variance(se.seed, n=500)
 background <- rownames(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
 mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)

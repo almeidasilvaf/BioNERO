@@ -34,7 +34,8 @@ Plot expression profile of given genes across samples
 }
 \examples{
 data(se.seed)
-genes <- rownames(filter_by_variance(se.seed, n=100))
+data(filt.se)
+genes <- rownames(filt.se)
 plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
 }
 \seealso{
