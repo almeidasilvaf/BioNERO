@@ -7,8 +7,9 @@
 gene_significance(
   exp,
   metadata,
+  genes = NULL,
   alpha = 0.05,
-  min_cor = 0,
+  min_cor = 0.2,
   use_abs = TRUE,
   savetofile = FALSE,
   palette = "RdYlBu",
@@ -17,15 +18,17 @@ gene_significance(
 )
 }
 \arguments{
-\item{exp}{Data frame of gene expression with gene IDs in row names and sample names in column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{Data frame containing sample names on the first column and sample information on the second column.}
+\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
+
+\item{genes}{Character vector of genes to be correlated with traits. If not given, all genes in `exp` will be considered.}
 
 \item{alpha}{Significance level. Default is 0.05.}
 
-\item{min_cor}{Minimum correlation coefficient. Default is 0, which excludes negative correlations.}
+\item{min_cor}{Minimum correlation coefficient. Default is 0.2.}
 
-\item{use_abs}{Logical indicating whether to filter by correlation using absolute value or not. If TRUE, a \code{min_cor} of say 0.4 would keep all correlations above 0.4 and below -0.4. Default is TRUE.}
+\item{use_abs}{Logical indicating whether to filter by correlation using absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all correlations above 0.4 and below -0.4. Default is TRUE.}
 
 \item{savetofile}{Logical indicating whether to save the table to correlations and p-values to a tab-delimited file or not.}
 
@@ -41,8 +44,12 @@ A heatmap of gene significance (GS) and a list containing filtered and raw GS.
 \description{
 Calculate gene significance for a given group of genes
 }
+\examples{
+data(se.seed)
+filt.se <- filter_by_variance(se.seed, n=500)
+gs <- gene_significance(filt.se)
+}
 \seealso{
-\code{\link[reshape2]{melt}}
- \code{\link[WGCNA]{corPvalueStudent}}
+\code{\link[WGCNA]{corPvalueStudent}}
  \code{\link[RColorBrewer]{RColorBrewer}}
 }

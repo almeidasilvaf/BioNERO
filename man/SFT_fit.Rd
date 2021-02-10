@@ -7,7 +7,7 @@
 SFT_fit(exp, net_type = "signed", rsquared = 0.8, cor_method = "spearman")
 }
 \arguments{
-\item{exp}{Normalized expression table, where rownames are gene IDs and colnames are sample names}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{net_type}{Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.}
 

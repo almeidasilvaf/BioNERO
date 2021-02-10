@@ -185,6 +185,87 @@ theme_exp_profile <- function() {
     return(theme)
 }
 
+
+#' Wrapper to calculate correlation matrix and adjacency matrices
+#'
+#' @param cor_method Correlation method.
+#' @param norm.exp Gene expression data frame.
+#' @param SFTpower SFT power calculated with \code{SFT_fit}.
+#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'.
+#'
+#' @return List containing the correlation matrix and the adjacency matrix.
+#' @noRd
+#' @importFrom WGCNA adjacency.fromSimilarity bicor
+calculate_cor_adj <- function(cor_method, norm.exp, SFTpower,
+                              net_type) {
+
+    if(cor_method == "pearson") {
+        cor_matrix <- cor(t(norm.exp), method = "pearson")
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
+                                                      power = SFTpower,
+                                                      type=net_type)
+    } else if(cor_method == "spearman") {
+        cor_matrix <- cor(t(norm.exp), use="p", method = "spearman")
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
+                                                      power=SFTpower,
+                                                      type=net_type)
+    } else if (cor_method == "biweight") {
+        cor_matrix <- WGCNA::bicor(t(norm.exp), maxPOutliers = 0.1)
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
+                                                      power=SFTpower,
+                                                      type=net_type)
+    } else {
+        stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
+    }
+    results <- list(cor_matrix = cor_matrix,
+                    adj_matrix = adj_matrix)
+    return(results)
+}
+
+
+#' Wrapper to assign TOM type
+#'
+#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'.
+#'
+#' @return Character of TOM type
+#' @noRd
+get_TOMtype <- function(net_type) {
+    if(net_type == "signed hybrid") {
+        TOMType <- "signed"
+    } else if(net_type == "signed") {
+        TOMType <- "signed Nowick"
+    } else {
+        TOMType <- "unsigned"
+    }
+    return(TOMType)
+}
+
+
+#' Wrapper to handle variable type for trait object
+#'
+#' @param metadata A data frame containing sample names in row names and sample annotation in the first column.
+#' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
+#'
+#' @return Processed trait object.
+#' @noRd
+handle_trait_type <- function(metadata, continuous_trait) {
+    if(!continuous_trait) {
+        sampleinfo <- cbind(Samples=rownames(metadata), metadata)
+        tmpdir <- tempdir()
+        tmpfile <- tempfile(tmpdir = tmpdir, fileext = "traitmatrix.txt")
+        tablesamples <- table(sampleinfo)
+        write.table(tablesamples, file = tmpfile,
+                    quote = FALSE, sep="\t", row.names=TRUE)
+        trait <- read.csv(tmpfile, header=TRUE,
+                          sep="\t", row.names=1, stringsAsFactors = FALSE)
+        unlink(tmpfile)
+    } else {
+        trait <- metadata
+    }
+    return(trait)
+}
+
+
 #' Transform a correlation matrix to an edge list
 #'
 #' @param matrix Symmetrical correlation matrix.

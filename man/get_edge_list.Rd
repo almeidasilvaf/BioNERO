@@ -19,7 +19,7 @@ get_edge_list(
 )
 }
 \arguments{
-\item{net}{List object returned by \code{exp2net}.}
+\item{net}{List object returned by \code{exp2gcn}.}
 
 \item{genes}{Character vector containing a subset of genes from which edges will be extracted. It can be ignored if the user wants to extract an edge list for a given module instead of individual genes.}
 
@@ -59,7 +59,7 @@ The method "min_cor" will remove correlations below the minimum correlation thre
 
 \code{SFT_fit}
 
-\code{exp2net}.
+\code{exp2gcn}.
 }
 \author{
 Fabricio Almeida-Silva

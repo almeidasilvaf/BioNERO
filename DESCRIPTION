@@ -43,7 +43,6 @@ Imports:
     ComplexHeatmap,
     ggplot2,
     reshape2,
-    dplyr,
     igraph,
     ggnetwork,
     intergraph,

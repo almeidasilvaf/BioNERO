@@ -14,7 +14,7 @@ module_enrichment(
 )
 }
 \arguments{
-\item{net}{List object returned by \code{exp2net}.}
+\item{net}{List object returned by \code{exp2gcn}.}
 
 \item{background_genes}{Character vector of genes to be used as background for the Fisher's Exact Test.}
 
@@ -31,6 +31,21 @@ A data frame containing enriched terms, p-values, gene IDs and module names.
 }
 \description{
 Perform functional enrichment analysis for all coexpression network modules.
+}
+\details{
+The enrichment analysis is parallelized with BiocParallel, resulting in a dramatic increase in speed.
+However, if you try to run this function in a laptop with low memory, you might have problems with memory usage.
+If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
+}
+\examples{
+\donttest{
+data(se.seed)
+data(soybean_interpro)
+filt.se <- filter_by_variance(se.seed, n=500)
+background <- rownames(filt.se)
+gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
+}
 }
 \author{
 Fabricio Almeida-Silva

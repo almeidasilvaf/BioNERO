@@ -233,6 +233,7 @@ grn_filter <- function(edgelist, nsplit=10) {
 #'
 #' @return A data frame with gene ID in the first column and out degree in the second column.
 #' @export
+#' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree
 get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL) {
 

@@ -4,20 +4,30 @@
 \alias{module_stability}
 \title{Perform module stability analysis}
 \usage{
-module_stability(norm.exp, net, nRuns = 30)
+module_stability(exp, net, nRuns = 20)
 }
 \arguments{
-\item{norm.exp}{Normalized gene expression data frame, where row names are gene IDs and column names are sample names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
-\item{net}{List object returned by \code{exp2net}.}
+\item{net}{List object returned by \code{exp2gcn}.}
 
-\item{nRuns}{Number of times to resample. Default is 30.}
+\item{nRuns}{Number of times to resample. Default is 20.}
 }
 \value{
 A .pdf file in the current working directory representing the module stability across the resamplings.
 }
 \description{
 Perform module stability analysis
+}
+\examples{
+\donttest{
+data(se.seed)
+filt.se <- filter_by_variance(se.seed, n=500)
+# The SFT fit was previously calculated and the optimal power was 16
+gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+# For simplicity, only 2 runs
+module_stability(exp = filt.se, net = gcn, nRuns = 2)
+}
 }
 \seealso{
 \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}

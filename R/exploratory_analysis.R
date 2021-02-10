@@ -265,15 +265,16 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 
 #' Plot number of genes per module
 #'
-#' @param genes_and_modules A 2-column data frame with gene IDs in the first column and module names in the second column. Third element of the result list from \code{exp2net}.
-#' @return A ggplot object with a barplot of gene number in each module.
+#' @param net List object returned by \code{exp2gcn}.
+#' @return A ggplot object with a bar plot of gene number in each module.
 #' @seealso
 #'  \code{\link[ggpubr]{ggbarplot}}
 #' @rdname plot_ngenes_per_module
 #' @export
 #' @importFrom ggpubr ggbarplot
 #' @importFrom ggplot2 theme element_text
-plot_ngenes_per_module <- function(genes_and_modules = NULL) {
+plot_ngenes_per_module <- function(net = NULL) {
+    genes_and_modules <- net$genes_and_modules
     frequency_df <- as.data.frame(table(genes_and_modules[,2]),
                                   stringsAsFactors=FALSE)
     names(frequency_df) <- c("Module", "Frequency")

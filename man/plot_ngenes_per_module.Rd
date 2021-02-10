@@ -4,13 +4,13 @@
 \alias{plot_ngenes_per_module}
 \title{Plot number of genes per module}
 \usage{
-plot_ngenes_per_module(genes_and_modules = NULL)
+plot_ngenes_per_module(net = NULL)
 }
 \arguments{
-\item{genes_and_modules}{A 2-column data frame with gene IDs in the first column and module names in the second column. Third element of the result list from \code{exp2net}.}
+\item{net}{List object returned by \code{exp2gcn}.}
 }
 \value{
-A ggplot object with a barplot of gene number in each module.
+A ggplot object with a bar plot of gene number in each module.
 }
 \description{
 Plot number of genes per module
