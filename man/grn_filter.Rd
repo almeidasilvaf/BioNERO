@@ -21,3 +21,11 @@ Filter a gene regulatory network based on optimal scale-free topology fit
 The edge list will be split in n groups and the scale-free topology fit will be tested for each subset of the edge list.
 For instance, if an edge list of 10000 rows is used as input, the function will test SFT fit for the top 1000 edges, then top 2000 edges, an so on up to the whole edge list.
 }
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+ranked_grn <- grn_average_rank(grn_list)
+# split in only 2 groups for demonstration purposes
+filtered_edges <- grn_filter(ranked_grn, nsplit=2)
+}

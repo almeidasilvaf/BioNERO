@@ -19,3 +19,12 @@ A data frame with gene ID in the first column and out degree in the second colum
 \description{
 Get hubs for gene regulatory network
 }
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+ranked_grn <- grn_average_rank(grn_list)
+# split in only 2 groups for demonstration purposes
+filtered_edges <- grn_filter(ranked_grn, nsplit=2)
+hubs <- get_hubs_grn(filtered_edges)
+}

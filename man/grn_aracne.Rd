@@ -13,7 +13,7 @@ grn_aracne(
 )
 }
 \arguments{
-\item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{estimator_aracne}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
 
@@ -28,4 +28,9 @@ A gene regulatory network represented as an edge list.
 }
 \description{
 Infer gene regulatory network with the ARACNE algorithm
+}
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+aracne <- grn_aracne(filt.se, regulators=tfs)
 }

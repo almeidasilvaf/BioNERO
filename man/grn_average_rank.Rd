@@ -15,3 +15,9 @@ Edge list containing regulator, target and mean rank from all algorithms.
 \description{
 Rank edge weights for GRNs and calculate average across different methods
 }
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+ranked_grn <- grn_average_rank(grn_list)
+}

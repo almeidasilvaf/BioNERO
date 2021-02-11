@@ -7,7 +7,7 @@
 grn_clr(exp, estimator_clr = "pearson", regulators = NULL, remove_zero = TRUE)
 }
 \arguments{
-\item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{estimator_clr}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
 
@@ -20,4 +20,9 @@ A gene regulatory network represented as an edge list.
 }
 \description{
 Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
+}
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+clr <- grn_clr(filt.se, regulators=tfs)
 }

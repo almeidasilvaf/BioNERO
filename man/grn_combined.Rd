@@ -15,7 +15,7 @@ grn_combined(
 )
 }
 \arguments{
-\item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
 
@@ -34,4 +34,9 @@ A list of data frames representing edge lists. Each list element is an edge list
 }
 \description{
 Infer gene regulatory network with multiple algorithms and combine results in a list
+}
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
 }

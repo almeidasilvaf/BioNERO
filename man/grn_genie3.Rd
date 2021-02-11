@@ -7,7 +7,7 @@
 grn_genie3(exp, regulators = NULL, remove_zero = TRUE, ...)
 }
 \arguments{
-\item{exp}{Expression matrix with gene IDs as row names and samples as column names.}
+\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
 
 \item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
 
@@ -20,4 +20,9 @@ A gene regulatory network represented as an edge list.
 }
 \description{
 Infer gene regulatory network with GENIE3
+}
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2) # only 2 trees for demonstration purpose
 }

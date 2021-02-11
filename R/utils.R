@@ -312,7 +312,7 @@ check_sft <- function(edgelist, net_type = "gcn") {
     }
 
     # Test for scale-free topology fit
-    test <- igraph::fit_power_law(degree)
+    test <- as.list(igraph::fit_power_law(degree))
     if(test$KS.p < 0.05) {
         message("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p)
     } else {

@@ -1,7 +1,7 @@
 
 #' Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
 #'
-#' @param exp Expression matrix with gene IDs as row names and samples as column names.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
 #' @param estimator_clr Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
 #' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Default: TRUE
@@ -10,10 +10,14 @@
 #' @export
 #' @rdname grn_clr
 #' @importFrom minet build.mim clr
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+#' clr <- grn_clr(filt.se, regulators=tfs)
 grn_clr <- function(exp, estimator_clr = "pearson",
                     regulators=NULL,
                     remove_zero=TRUE) {
-
+    exp <- handleSE(exp)
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
@@ -40,7 +44,7 @@ grn_clr <- function(exp, estimator_clr = "pearson",
 
 #' Infer gene regulatory network with the ARACNE algorithm
 #'
-#' @param exp Expression matrix with gene IDs as row names and samples as column names.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
 #' @param estimator_aracne Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
 #' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
@@ -50,10 +54,14 @@ grn_clr <- function(exp, estimator_clr = "pearson",
 #' @export
 #' @rdname grn_aracne
 #' @importFrom minet aracne
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+#' aracne <- grn_aracne(filt.se, regulators=tfs)
 grn_aracne <- function(exp, estimator_aracne = "spearman",
                        regulators=NULL, eps=0.1,
                        remove_zero=TRUE) {
-
+    exp <- handleSE(exp)
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
@@ -80,7 +88,7 @@ grn_aracne <- function(exp, estimator_aracne = "spearman",
 
 #' Infer gene regulatory network with GENIE3
 #'
-#' @param exp Expression matrix with gene IDs as row names and samples as column names.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
 #' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
@@ -89,9 +97,13 @@ grn_aracne <- function(exp, estimator_aracne = "spearman",
 #' @importFrom GENIE3 GENIE3
 #' @rdname grn_genie3
 #' @export
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+#' genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2) # only 2 trees for demonstration purpose
 grn_genie3 <- function(exp, regulators = NULL,
                        remove_zero=TRUE, ...) {
-
+    exp <- handleSE(exp)
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
@@ -117,7 +129,7 @@ grn_genie3 <- function(exp, regulators = NULL,
 
 #' Infer gene regulatory network with multiple algorithms and combine results in a list
 #'
-#' @param exp Expression matrix with gene IDs as row names and samples as column names.
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
 #' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
 #' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
@@ -128,12 +140,16 @@ grn_genie3 <- function(exp, regulators = NULL,
 #' @return A list of data frames representing edge lists. Each list element is an edge list for a specific method.
 #' @rdname grn_combined
 #' @export
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+#' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
 grn_combined <- function(exp, regulators = NULL,
                          eps=0,
                          estimator_aracne = "spearman",
                          estimator_clr = "pearson",
                          remove_zero=TRUE, ...) {
-
+    exp <- handleSE(exp)
     genie3 <- grn_genie3(exp, regulators, remove_zero=remove_zero, ...)
 
     aracne <- grn_aracne(exp, regulators = regulators, eps=eps,
@@ -152,6 +168,11 @@ grn_combined <- function(exp, regulators = NULL,
 #' @return Edge list containing regulator, target and mean rank from all algorithms.
 #' @rdname grn_average_rank
 #' @export
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+#' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+#' ranked_grn <- grn_average_rank(grn_list)
 grn_average_rank <- function(list_edges) {
 
     # Add ranks to each edge list
@@ -188,6 +209,13 @@ grn_average_rank <- function(list_edges) {
 #' @importFrom WGCNA scaleFreeFitIndex
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+#' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+#' ranked_grn <- grn_average_rank(grn_list)
+#' # split in only 2 groups for demonstration purposes
+#' filtered_edges <- grn_filter(ranked_grn, nsplit=2)
 grn_filter <- function(edgelist, nsplit=10) {
 
     # Split edge list into n data frames and calculate degree
@@ -235,6 +263,14 @@ grn_filter <- function(edgelist, nsplit=10) {
 #' @export
 #' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+#' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+#' ranked_grn <- grn_average_rank(grn_list)
+#' # split in only 2 groups for demonstration purposes
+#' filtered_edges <- grn_filter(ranked_grn, nsplit=2)
+#' hubs <- get_hubs_grn(filtered_edges)
 get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL) {
 
     # Calculate degree
