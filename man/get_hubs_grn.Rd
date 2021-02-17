@@ -2,22 +2,44 @@
 % Please edit documentation in R/grn_inference.R
 \name{get_hubs_grn}
 \alias{get_hubs_grn}
+\alias{get_hubs_ppi}
 \title{Get hubs for gene regulatory network}
 \usage{
-get_hubs_grn(edgelist, top_percentile = 0.1, top_n = NULL)
+get_hubs_grn(
+  edgelist,
+  top_percentile = 0.1,
+  top_n = NULL,
+  return_degree = FALSE,
+  ranked = TRUE
+)
+
+get_hubs_ppi(
+  edgelist,
+  top_percentile = 0.1,
+  top_n = NULL,
+  return_degree = FALSE
+)
 }
 \arguments{
-\item{edgelist}{A gene regulatory network represented as an edge list.}
+\item{edgelist}{A protein-protein interaction network represented as an edge list.}
 
-\item{top_percentile}{Numeric from 0 to 1 indicating the percentage of genes with the highest degree to consider hubs. Default: 0.1.}
+\item{top_percentile}{Numeric from 0 to 1 indicating the percentage of proteins with the highest degree to consider hubs. Default: 0.1.}
 
-\item{top_n}{Numeric indicating the number of genes with the highest degree to consider hubs.}
+\item{top_n}{Numeric indicating the number of proteins with the highest degree to consider hubs.}
+
+\item{return_degree}{Logical indicating whether to return a data frame of degree for all proteins. If TRUE, the function will return a list instead of a data frame. Default: FALSE.}
+
+\item{ranked}{Logical indicating whether to treat third column of the edge list (edge weights) as ranked values. Ignored if the edge list only contains 2 columns. Default: TRUE.}
 }
 \value{
-A data frame with gene ID in the first column and out degree in the second column.
+A data frame with gene ID in the first column and out degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
+
+A data frame with protein ID in the first column and degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
 }
 \description{
 Get hubs for gene regulatory network
+
+Get hubs for protein-protein interaction network
 }
 \examples{
 data(filt.se)
@@ -27,4 +49,6 @@ ranked_grn <- grn_average_rank(grn_list)
 # split in only 2 groups for demonstration purposes
 filtered_edges <- grn_filter(ranked_grn, nsplit=2)
 hubs <- get_hubs_grn(filtered_edges)
+ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
 }

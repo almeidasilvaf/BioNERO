@@ -32,6 +32,15 @@ plot_gcn(
 \description{
 Plot gene coexpression network from edge list
 }
+\examples{
+data(filt.se)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
+               reportPDF = FALSE)
+gcn_edges <- get_edge_list(gcn, module="brown", filter=TRUE,
+                           method="min_cor")
+hubs <- get_hubs_gcn(filt.se, gcn)
+p <- plot_gcn(gcn_edges, gcn, hubs = hubs)
+}
 \seealso{
 \code{\link[igraph]{simplify}},\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{gorder}}
  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}

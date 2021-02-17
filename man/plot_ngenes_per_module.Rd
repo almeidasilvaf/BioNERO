@@ -17,7 +17,7 @@ Plot number of genes per module
 }
 \examples{
 data(filt.se)
-gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 plot_ngenes_per_module(gcn)
 }
 \seealso{

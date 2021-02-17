@@ -7,12 +7,12 @@ colnames(exp) <- paste0("Sample", 1:ncol(exp))
 cormat <- cor(t(exp))
 
 # Load data
-data(se.seed)
-data(soybean_interpro)
+data(zma.se)
+data(zma.interpro)
 data(filt.se)
 
 # Infer GCN to avoid repetition many test chunks
-gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson",
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
                reportPDF = FALSE)
 
 #----Start tests----
@@ -26,7 +26,7 @@ test_that("SFT_fit() performs SFT fit test and returns a list with", {
 
 
 test_that("exp2gcn() infers GCN and returns as a list", {
-    gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson",
+    gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
                    reportPDF = FALSE)
     expect_equal(class(gcn), "list")
     expect_equal(length(gcn), 7)
@@ -34,7 +34,7 @@ test_that("exp2gcn() infers GCN and returns as a list", {
 
 
 test_that("module_stability() recomputes network with n resamplings", {
-    module_stability(exp = filt.se, net = gcn, nRuns = 2)
+    module_stability(exp = filt.se, net = gcn, nRuns = 1)
     output_file <- paste0(Sys.Date(), "_module_stability.pdf")
     expect_true(file.exists(output_file))
     unlink(output_file)
@@ -69,7 +69,7 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
     BiocParallel::register(BiocParallel::SerialParam())
     genes <- rownames(filt.se)[1:50]
     background_genes <- rownames(filt.se)
-    annotation <- soybean_interpro
+    annotation <- zma.interpro
     enrich <- enrichment_analysis(genes, background_genes,
                                   annotation, p = 1)
     expect_equal(class(enrich), "data.frame")
@@ -85,7 +85,7 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
 #     background <- rownames(filt.se)
 #     mod_enrich <- module_enrichment(net = gcn,
 #                                     background_genes = background,
-#                                     annotation = soybean_interpro, p=1)
+#                                     annotation = zma.interpro, p=1)
 #     expect_equal(class(mod_enrich), "data.frame")
 # })
 

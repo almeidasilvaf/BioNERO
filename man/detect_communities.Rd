@@ -4,18 +4,26 @@
 \alias{detect_communities}
 \title{Detect communities in a network}
 \usage{
-detect_communities(edgelist, method = "infomap")
+detect_communities(edgelist, method = "infomap", directed = TRUE)
 }
 \arguments{
 \item{edgelist}{Data frame containing the network as an edge list. First column must be node 1 and second column must be node 2. Additional columns will be interpreted as edge attributes and will be modified by this function.}
 
 \item{method}{Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".}
+
+\item{directed}{Logical indicating whether the network is directed (GRN only) or not (GCN and PPI networks). Default: TRUE.}
 }
 \value{
 A data frame containing node names in the first column, and communities to which nodes belong in the second column.
 }
 \description{
 Detect communities in a network
+}
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_edges <- grn_clr(filt.se, regulators = tfs)
+com <- detect_communities(grn_edges, directed=TRUE)
 }
 \seealso{
 \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{simplify}},\code{\link[igraph]{cluster_infomap}},\code{\link[igraph]{cluster_edge_betweenness}},\code{\link[igraph]{cluster_fast_greedy}},\code{\link[igraph]{cluster_walktrap}},\code{\link[igraph]{cluster_spinglass}},\code{\link[igraph]{cluster_leading_eigen}},\code{\link[igraph]{cluster_louvain}},\code{\link[igraph]{cluster_label_prop}}

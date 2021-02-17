@@ -27,8 +27,8 @@ Filtered gene expression data frame or `SummarizedExperiment` object.
 Remove genes that are not expressed based on a user-defined threshold
 }
 \examples{
-data(se.seed)
-filt_exp <- remove_nonexp(se.seed, min_exp = 5)
+data(zma.se)
+filt_exp <- remove_nonexp(zma.se, min_exp = 5)
 }
 \seealso{
 \code{\link[matrixStats]{rowMedians}}

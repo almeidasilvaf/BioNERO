@@ -20,8 +20,8 @@ Filtered gene expression data frame or `SummarizedExperiment` object.
 Filter outlying samples based on standardized connectivity (Zk) method
 }
 \examples{
-data(se.seed)
-filt_exp <- ZKfiltering(se.seed)
+data(zma.se)
+filt_exp <- ZKfiltering(zma.se)
 }
 \references{
 Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease. BMC systems biology, 6(1), 1-18.

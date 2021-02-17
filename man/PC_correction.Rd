@@ -16,8 +16,8 @@ Corrected expression data frame or `SummarizedExperiment` object.
 Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks
 }
 \examples{
-data(se.seed)
-exp <- filter_by_variance(se.seed, n=500)
+data(zma.se)
+exp <- filter_by_variance(zma.se, n=500)
 exp <- PC_correction(exp)
 }
 \references{

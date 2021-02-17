@@ -43,7 +43,7 @@ Reconstruct gene coexpression network from gene expression
 \examples{
 data(filt.se)
 # The SFT fit was previously calculated and the optimal power was 16
-gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 }
 \seealso{
 \code{\link[WGCNA]{adjacency.fromSimilarity}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{standardColors}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{moduleEigengenes}},\code{\link[WGCNA]{plotEigengeneNetworks}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}},\code{\link[WGCNA]{intramodularConnectivity}}

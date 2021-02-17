@@ -42,7 +42,7 @@ If that happens, run the following: \code{BiocParallel::register(BiocParallel::S
 data(filt.se)
 data(soybean_interpro)
 background <- rownames(filt.se)
-gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
 }
 }

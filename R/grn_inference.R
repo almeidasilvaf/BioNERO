@@ -204,6 +204,7 @@ grn_average_rank <- function(list_edges) {
 #' For instance, if an edge list of 10000 rows is used as input, the function will test SFT fit for the top 1000 edges, then top 2000 edges, an so on up to the whole edge list.
 #' @return The edge list that best fits the scale-free topology.
 #' @export
+#' @rdname grn_filter
 #' @importFrom igraph graph_from_data_frame degree
 #' @importFrom BiocParallel bplapply
 #' @importFrom WGCNA scaleFreeFitIndex
@@ -253,13 +254,54 @@ grn_filter <- function(edgelist, nsplit=10) {
 }
 
 
+#' Infer gene regulatory network from expression data
+#'
+#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
+#' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
+#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
+#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
+#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
+#' @param nsplit Number of groups in which the edge list will be split. Default: 10.
+#' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
+#' @details
+#' This function infers GRNs with ARACNE, GENIE3 and CLR, ranks correlation weights for each GRN and calculates the average rank for each edge.
+#' Then, the resulting GRN is filtered to keep the top n edges that lead to the optimal scale-free topology fit.
+#'
+#' @rdname exp2grn
+#' @export
+#' @return A filtered edge list with regulators in the first column and targets in the second column.
+#' @examples
+#' data(filt.se)
+#' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+#' # Test with small number of trees for demonstration purpose
+#' grn <- exp2grn(filt.se, regulators = tfs, nTrees=2, nsplit=2)
+exp2grn <- function(exp, regulators = NULL,
+                    eps=0,
+                    estimator_aracne = "spearman",
+                    estimator_clr = "pearson",
+                    remove_zero=TRUE,
+                    nsplit=10,
+                    ...) {
+    grn_list <- grn_combined(exp, regulators = regulators,
+                             eps = eps,
+                             estimator_aracne = estimator_aracne,
+                             estimator_clr = estimator_clr,
+                             remove_zero = remove_zero, ...)
+
+    grn_ranks <- grn_average_rank(grn_list)
+    final_grn <- grn_filter(grn_ranks, nsplit=nsplit)
+    return(final_grn)
+}
+
 #' Get hubs for gene regulatory network
 #'
 #' @param edgelist A gene regulatory network represented as an edge list.
 #' @param top_percentile Numeric from 0 to 1 indicating the percentage of genes with the highest degree to consider hubs. Default: 0.1.
 #' @param top_n Numeric indicating the number of genes with the highest degree to consider hubs.
-#'
-#' @return A data frame with gene ID in the first column and out degree in the second column.
+#' @param return_degree Logical indicating whether to return a data frame of degree for all genes. If TRUE, the function will return a list instead of a data frame. Default: FALSE.
+#' @param ranked Logical indicating whether to treat third column of the edge list (edge weights) as ranked values. Ignored if the edge list only contains 2 columns. Default: TRUE.
+#' @return A data frame with gene ID in the first column and out degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
 #' @export
 #' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree
@@ -271,9 +313,15 @@ grn_filter <- function(edgelist, nsplit=10) {
 #' # split in only 2 groups for demonstration purposes
 #' filtered_edges <- grn_filter(ranked_grn, nsplit=2)
 #' hubs <- get_hubs_grn(filtered_edges)
-get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL) {
+get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
+                         return_degree=FALSE, ranked=TRUE) {
 
     # Calculate degree
+    if(ncol(edgelist) != 2) {
+        if(ranked) {
+            edgelist[,3] <- 10 / edgelist[,3]
+        }
+    }
     graph <- igraph::graph_from_data_frame(edgelist, directed = TRUE)
     degree <- sort(igraph::degree(graph, mode="out"), decreasing = TRUE)
 
@@ -288,10 +336,53 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL) {
     } else {
         hubs <- degree_df[1:top_n, ]
     }
-
-    return(hubs)
+    results <- hubs
+    if(return_degree) {
+        results <- list(Hubs=hubs,
+                        Degree=degree_df)
+    }
+    return(results)
 }
 
+
+#' Get hubs for protein-protein interaction network
+#'
+#' @param edgelist A protein-protein interaction network represented as an edge list.
+#' @param top_percentile Numeric from 0 to 1 indicating the percentage of proteins with the highest degree to consider hubs. Default: 0.1.
+#' @param top_n Numeric indicating the number of proteins with the highest degree to consider hubs.
+#' @param return_degree Logical indicating whether to return a data frame of degree for all proteins. If TRUE, the function will return a list instead of a data frame. Default: FALSE.
+#' @return A data frame with protein ID in the first column and degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
+#' @export
+#' @rdname get_hubs_grn
+#' @importFrom igraph graph_from_data_frame degree
+#' @examples
+#' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+#' hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
+get_hubs_ppi <- function(edgelist, top_percentile = 0.1, top_n = NULL,
+                         return_degree=FALSE) {
+
+    # Calculate degree
+    graph <- igraph::graph_from_data_frame(edgelist, directed = FALSE)
+    degree <- sort(igraph::degree(graph), decreasing = TRUE)
+
+    # Find hubs
+    degree_df <- data.frame(row.names=1:length(degree),
+                            Protein=names(degree),
+                            Degree=degree, stringsAsFactors = FALSE)
+
+    if(is.null(top_n)) {
+        nrows <- nrow(degree_df) * top_percentile
+        hubs <- degree_df[1:nrows, ]
+    } else {
+        hubs <- degree_df[1:top_n, ]
+    }
+    results <- hubs
+    if(return_degree) {
+        results <- list(Hubs=hubs,
+                        Degree=degree_df)
+    }
+    return(results)
+}
 
 
 

@@ -16,7 +16,7 @@ Expression matrix with normalized values
 Quantile normalize the expression data
 }
 \examples{
-data(se.seed)
-exp <- SummarizedExperiment::assay(se.seed)
+data(zma.se)
+exp <- SummarizedExperiment::assay(zma.se)
 norm_exp <- q_normalize(exp)
 }

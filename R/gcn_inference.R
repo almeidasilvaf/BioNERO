@@ -104,7 +104,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' @examples
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 exp2gcn <- function(exp, net_type="signed",
                     module_merging_threshold = 0.8,
                     SFTpower = NULL, cor_method = "spearman",
@@ -244,7 +244,7 @@ exp2gcn <- function(exp, net_type="signed",
 #' \donttest{
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' # For simplicity, only 2 runs
 #' module_stability(exp = filt.se, net = gcn, nRuns = 2)
 #' }
@@ -324,7 +324,7 @@ module_stability <- function(exp, net, nRuns = 20) {
 #' @importFrom SummarizedExperiment colData
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' module_trait_cor(filt.se, MEs=gcn$MEs)
 module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
                              transpose=FALSE, palette="RdYlBu",
@@ -481,7 +481,7 @@ gene_significance <- function(exp, metadata, genes=NULL,
 #' @importFrom WGCNA signedKME
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' hubs <- get_hubs_gcn(filt.se, gcn)
 get_hubs_gcn <- function(exp, net) {
     exp <- handleSE(exp)
@@ -721,7 +721,7 @@ enrichment_analysis <- function(genes, background_genes, annotation, column = NU
 #' data(filt.se)
 #' data(soybean_interpro)
 #' background <- rownames(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
 #' }
 module_enrichment <- function(net=NULL, background_genes, annotation, column = NULL,
@@ -781,42 +781,32 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
 #' @examples
 #' data(filt.se)
 #' genes <- rownames(filt.se)[1:10]
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' neighbors <- get_neighbors(genes, gcn)
 get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 
     net_type <- net$params$net_type
     power <- net$params$SFTpower
-    edges <- net$adjacency_matrix
+    edges <- net$correlation_matrix
 
-    edges[lower.tri(edges, diag = TRUE)] <- NA
-    edges <- na.omit(data.frame(as.table(edges)), stringsAsFactors = FALSE);
+    edges <- cormat_to_edgelist(edges)
     colnames(edges) <- c("Gene1", "Gene2", "Weight")
 
+    filt_edges <- edges[edges$Gene1 %in% genes | edges$Gene2 %in% genes, ]
     if(net_type == "signed") {
-        adj_threshold <- (0.5*(1 - cor_threshold))^power
-    } else if(net_type == "signed hybrid") {
-        if(cor_threshold > 0) {
-            adj_threshold <- cor_threshold^power
-        } else {
-            stop("Negative correlation chosen as threshold. Signed hybrid networks don't have negative values.")
-        }
-    } else if(net_type == "unsigned") {
-        adj_threshold <- abs(cor_threshold)^power
+        filt_edges <- filt_edges[abs(filt_edges$Weight) >= cor_threshold, ]
     } else {
-        stop("Please, specify a network type. One of 'signed', 'signed hybrid' or 'unsigned'.")
+        filt_edges <- filt_edges[filt_edges$Weight >= cor_threshold, ]
     }
 
-    filt_edges <- edges[edges$Gene1 %in% genes | edges$Gene2 %in% genes, ]
-    filt_edges <- filt_edges[filt_edges$Weight >= adj_threshold, ]
-
-    list <- sapply(genes, function(x) {
+    result_list <- lapply(genes, function(x) {
         y <- filt_edges[rowSums(filt_edges == x) > 0, ]
         y <- c(as.character(y$Gene1), as.character(y$Gene2))
         y <- unique(y[y != x])
-        y
+        return(y)
     })
-    return(list)
+    names(result_list) <- genes
+    return(result_list)
 }
 
 
@@ -853,7 +843,7 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @importFrom BiocParallel bplapply
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' genes <- rownames(filt.se)[1:50]
 #' edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
 get_edge_list <- function(net, genes = NULL, module = NULL,

@@ -92,6 +92,20 @@ test_that("get_hubs_grn() returns a data frame with hub genes and their out degr
     expect_equal(nrow(hubs), floor(n_genes * 0.1))
 })
 
+test_that("get_hubs_ppi() returns a list or data frame of hubs and degree", {
+    ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+    hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
+    expect_equal(class(hubs[[1]]), "data.frame")
+    expect_equal(class(hubs), "list")
+})
+
+
+test_that("exp2grn() infers a GRN from expression", {
+    grn <- exp2grn(filt.se, regulators = tfs, nTrees=2, nsplit=2)
+
+    expect_equal(ncol(grn), 2)
+    expect_equal(class(grn), "data.frame")
+})
 
 
 

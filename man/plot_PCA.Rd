@@ -24,8 +24,8 @@ A ggplot object with the PCA plot.
 Plot Principal Component Analysis (PCA) of samples
 }
 \examples{
-data(se.seed)
-plot_PCA(se.seed, log_trans = TRUE)
+data(zma.se)
+plot_PCA(zma.se, log_trans = TRUE)
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

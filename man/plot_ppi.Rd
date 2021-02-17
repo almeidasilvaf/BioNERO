@@ -6,17 +6,18 @@
 \usage{
 plot_ppi(
   edgelist_int,
-  detect_communities = TRUE,
+  color_by = "community",
   clustering_method = "infomap",
   show_labels = "tophubs",
   top_n_hubs = 5,
-  interactive = FALSE
+  interactive = FALSE,
+  add_color_legend = TRUE
 )
 }
 \arguments{
 \item{edgelist_int}{Data frame containing the edge list for the PPI network. First column is the protein 1 and second column is the protein 2. All other columns are interpreted as edge attributes.}
 
-\item{detect_communities}{Logical indicating whether to detect communities or not. Default is TRUE.}
+\item{color_by}{How should nodes be colored? It must be either "community" or a 2-column data frame containing proteins in the first column and a custom annotation in the second column. If "community", a clustering algorithm will be applied. Default: "community".}
 
 \item{clustering_method}{Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".}
 
@@ -25,15 +26,19 @@ plot_ppi(
 \item{top_n_hubs}{Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.}
 
 \item{interactive}{Logical indicating whether the network should be interactive or not. Default is FALSE.}
+
+\item{add_color_legend}{Logical indicating whether to add a color legend for nodes. Default: TRUE.}
 }
 \description{
 Plot protein-protein interaction network from edge list
 }
+\examples{
+ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
+p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
+}
 \seealso{
 \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
- \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}},
 }
 \author{
 Fabricio Almeida-Silva

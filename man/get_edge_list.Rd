@@ -55,7 +55,7 @@ The method "min_cor" will remove correlations below the minimum correlation thre
 }
 \examples{
 data(filt.se)
-gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 genes <- rownames(filt.se)[1:50]
 edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
 }

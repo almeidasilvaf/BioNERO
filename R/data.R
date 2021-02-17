@@ -1,46 +1,57 @@
 
-#' Soybean seed gene expression data from SRA study PRJNA197251
+#' Maize gene expression data from Shin et al., 2021.
 #'
-#' Filtered expression data in transcripts per million (TPM) from Danzer et al., 2015.
-#' Genes with TPM values < 2 in any of samples were removed to reduce package size.
-#' The expression data and associated sample metadata are stored in a SummarizedExperiment
-#' object with 10381 genes and 51 samples.
+#' Filtered expression data in transcripts per million (TPM) from Shin et al., 2021.
+#' Genes with TPM values <5 in more than 60% of the samples were removed to reduce package size.
+#' The expression data and associated sample metadata are stored in a SummarizedExperiment object.
 #'
-#' @name se.seed
+#' @name zma.se
 #' @format An object of class \code{SummarizedExperiment}
-#' @references Danzer, J., Mellott, E., Bui, A. Q., Le, B. H., Martin, P., Hashimoto, M., ... & Goldberg, R. B. (2015).
-#' Down-regulating the expression of 53 soybean transcription factor genes uncovers a role for SPEECHLESS in
-#' initiating stomatal cell lineages during embryo development. Plant Physiology, 168(3), 1025-1035.
+#' @references Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
-#' data(se.seed)
-"se.seed"
+#' data(zma.se)
+"zma.se"
 
 
-#' Filtered soybean seed gene expression data from SRA study PRJNA197251
+#' Rice gene expression data from Shin et al., 2021.
 #'
-#' Filtered expression data in transcripts per million (TPM) from Danzer et al., 2015.
-#' This is the same data set described in \code{se.seed}, but it only contains the top 500 genes with the highest variances.
+#' Filtered expression data in transcripts per million (TPM) from Shin et al., 2021.
+#' Genes with TPM values <5 in more than 60% of the samples were removed to reduce package size.
+#' The expression data and associated sample metadata are stored in a SummarizedExperiment object.
+#'
+#' @name osa.se
+#' @format An object of class \code{SummarizedExperiment}
+#' @references Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
+#' @examples
+#' data(osa.se)
+"osa.se"
+
+
+#' Filtered maize gene expression data from Shin et al., 2021.
+#'
+#' Filtered expression data in transcripts per million (TPM) from Shin et al., 2021.
+#' This is the same data set described in \code{zma.se}, but it only contains the top 500 genes with the highest variances.
 #' This data set was created to be used in unit tests and examples.
 #'
 #' @name filt.se
 #' @format An object of class \code{SummarizedExperiment}
-#' @references Danzer, J., Mellott, E., Bui, A. Q., Le, B. H., Martin, P., Hashimoto, M., ... & Goldberg, R. B. (2015).
-#' Down-regulating the expression of 53 soybean transcription factor genes uncovers a role for SPEECHLESS in
-#' initiating stomatal cell lineages during embryo development. Plant Physiology, 168(3), 1025-1035.
+#' @references Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
 #' data(filt.se)
 "filt.se"
 
 
-#' Soybean Interpro annotation
+#' Maize Interpro annotation
 #'
-#' Interpro protein domain annotation retrieved from the PLAZA 4.0 database.
-#' Only genes included in \code{se.seed} are present in this subset.
+#' Interpro protein domain annotation retrieved from the PLAZA Monocots 4.0 database.
+#' Only genes included in \code{zma.se} are present in this subset.
 #'
-#' @name soybean_interpro
-#' @format A 2-column data frame containing gene IDs and their associated Intepro annotations.
+#' @name zma.interpro
+#' @format A 2-column data frame containing gene IDs and their associated Interpro annotations.
 #' @references
 #' Van Bel, M., Diels, T., Vancaester, E., Kreft, L., Botzki, A., Van de Peer, Y., ... & Vandepoele, K. (2018). PLAZA 4.0: an integrative resource for functional, evolutionary and comparative plant genomics. Nucleic acids research, 46(D1), D1190-D1196.
 #' @examples
-#' data(soybean_interpro)
-"soybean_interpro"
+#' data(zma.interpro)
+"zma.interpro"
+
+

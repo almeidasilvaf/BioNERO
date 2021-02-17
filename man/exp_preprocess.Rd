@@ -60,8 +60,8 @@ Processed gene expression data frame or `SummarizedExperiment` object with gene 
 Preprocess expression data for network reconstruction
 }
 \examples{
-data(se.seed)
-exp <- exp_preprocess(se.seed, variance_filter=TRUE, n=1000)
+data(zma.se)
+exp <- exp_preprocess(zma.se, variance_filter=TRUE, n=1000)
 }
 \references{
 Love, M. I., Huber, W., & Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome biology, 15(12), 1-21.

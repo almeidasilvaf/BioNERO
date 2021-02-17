@@ -50,8 +50,8 @@ dfs2one <- function(mypath, pattern = ".tsv$"){
 #' @export
 #' @rdname remove_na
 #' @examples
-#' data(se.seed)
-#' exp <- remove_na(se.seed)
+#' data(zma.se)
+#' exp <- remove_na(zma.se)
 #' sum(is.na(exp))
 remove_na <- function(exp, replaceby = 0) {
     fexp <- handleSE(exp)
@@ -92,8 +92,8 @@ remove_na <- function(exp, replaceby = 0) {
 #'  \code{\link[WGCNA]{goodSamplesGenes}}
 #' @rdname remove_nonexp
 #' @examples
-#' data(se.seed)
-#' filt_exp <- remove_nonexp(se.seed, min_exp = 5)
+#' data(zma.se)
+#' filt_exp <- remove_nonexp(zma.se, min_exp = 5)
 remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_samples=0.25) {
     fexp <- handleSE(exp)
 
@@ -128,8 +128,8 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
 #' @export
 #' @rdname filter_by_variance
 #' @examples
-#' data(se.seed)
-#' filt_exp <- filter_by_variance(se.seed, p=0.1)
+#' data(zma.se)
+#' filt_exp <- filter_by_variance(zma.se, p=0.1)
 filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
     fexp <- handleSE(exp)
 
@@ -167,8 +167,8 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
 #' @rdname ZKfiltering
 #' @export
 #' @examples
-#' data(se.seed)
-#' filt_exp <- ZKfiltering(se.seed)
+#' data(zma.se)
+#' filt_exp <- ZKfiltering(zma.se)
 #' @references
 #' Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease. BMC systems biology, 6(1), 1-18.
 ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
@@ -207,8 +207,8 @@ ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
 #' @rdname q_normalize
 #' @export
 #' @examples
-#' data(se.seed)
-#' exp <- SummarizedExperiment::assay(se.seed)
+#' data(zma.se)
+#' exp <- SummarizedExperiment::assay(zma.se)
 #' norm_exp <- q_normalize(exp)
 q_normalize <- function(exp) {
     n <- nrow(exp)
@@ -229,8 +229,8 @@ q_normalize <- function(exp) {
 #' @rdname PC_correction
 #' @importFrom sva num.sv sva_network
 #' @examples
-#' data(se.seed)
-#' exp <- filter_by_variance(se.seed, n=500)
+#' data(zma.se)
+#' exp <- filter_by_variance(zma.se, n=500)
 #' exp <- PC_correction(exp)
 #' @references
 #' Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., & Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of gene co-expression networks. Genome biology, 20(1), 1-6.
@@ -287,8 +287,8 @@ PC_correction <- function(exp) {
 #' @export
 #' @importFrom DESeq2 varianceStabilizingTransformation
 #' @examples
-#' data(se.seed)
-#' exp <- exp_preprocess(se.seed, variance_filter=TRUE, n=1000)
+#' data(zma.se)
+#' exp <- exp_preprocess(zma.se, variance_filter=TRUE, n=1000)
 #' @references
 #' Love, M. I., Huber, W., & Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome biology, 15(12), 1-21.
 exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,

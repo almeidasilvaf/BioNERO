@@ -33,10 +33,10 @@ A ggplot object showing the expression profile of some genes across all samples.
 Plot expression profile of given genes across samples
 }
 \examples{
-data(se.seed)
+data(zma.se)
 data(filt.se)
 genes <- rownames(filt.se)
-plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
+plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
 }
 \seealso{
 \code{\link[reshape2]{melt}}

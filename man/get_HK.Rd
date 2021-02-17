@@ -21,8 +21,8 @@ For some cases, users would want to remove these genes as they are not interesti
 See references for more details.
 }
 \examples{
-data(se.seed)
-hk <- get_HK(se.seed)
+data(zma.se)
+hk <- get_HK(zma.se)
 }
 \references{
 Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K., Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020), Systematic analysis of 1298 RNA‐Seq samples and construction of a comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.

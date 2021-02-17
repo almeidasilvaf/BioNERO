@@ -18,8 +18,8 @@ Gene expression data frame or `SummarizedExperiment` object with all NAs replace
 Remove missing values in a gene expression data frame
 }
 \examples{
-data(se.seed)
-exp <- remove_na(se.seed)
+data(zma.se)
+exp <- remove_na(zma.se)
 sum(is.na(exp))
 }
 \author{

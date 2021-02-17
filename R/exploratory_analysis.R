@@ -110,8 +110,8 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 #' @importFrom ggplot2 ggplot aes aes_ geom_point scale_color_manual labs theme_classic ggtitle theme element_text
 #' @importFrom SummarizedExperiment colData
 #' @examples
-#' data(se.seed)
-#' plot_PCA(se.seed, log_trans = TRUE)
+#' data(zma.se)
+#' plot_PCA(zma.se, log_trans = TRUE)
 plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
     fexp <- handleSE(exp)
     if(is_SE(exp)) {
@@ -172,8 +172,8 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
 #' @references
 #' Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K., Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020), Systematic analysis of 1298 RNA‐Seq samples and construction of a comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
 #' @examples
-#' data(se.seed)
-#' hk <- get_HK(se.seed)
+#' data(zma.se)
+#' hk <- get_HK(zma.se)
 get_HK <- function(exp) {
     exp <- handleSE(exp)
     exp <- exp
@@ -211,10 +211,10 @@ get_HK <- function(exp) {
 #' @importFrom ggplot2 ggplot aes_ geom_tile aes geom_line stat_summary ggtitle
 #' @importFrom SummarizedExperiment colData
 #' @examples
-#' data(se.seed)
+#' data(zma.se)
 #' data(filt.se)
 #' genes <- rownames(filt.se)
-#' plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
+#' plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
                                     net, modulename) {
     if(is_SE(exp)) {
@@ -274,7 +274,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 #' @importFrom ggplot2 theme element_text
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
 #' plot_ngenes_per_module(gcn)
 plot_ngenes_per_module <- function(net = NULL) {
     genes_and_modules <- net$genes_and_modules

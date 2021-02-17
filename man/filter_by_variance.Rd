@@ -20,8 +20,8 @@ Gxpression data frame or `SummarizedExperiment` object with the most variable ge
 Filter expression data frame to keep only the most varying genes
 }
 \examples{
-data(se.seed)
-filt_exp <- filter_by_variance(se.seed, p=0.1)
+data(zma.se)
+filt_exp <- filter_by_variance(zma.se, p=0.1)
 }
 \author{
 Fabricio Almeida-Silva

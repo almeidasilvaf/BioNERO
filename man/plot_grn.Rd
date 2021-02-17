@@ -10,7 +10,8 @@ plot_grn(
   top_n_hubs = 5,
   interactive = FALSE,
   layout = "kk",
-  arrow.gap = 0.01
+  arrow.gap = 0.01,
+  ranked = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plot_grn(
 \item{layout}{Network layout. One of "dh", "drl", "gem", "lgl", "fr", "graphopt", "kk" and "mds". Default is "kk".}
 
 \item{arrow.gap}{Numeric indicating the distance between nodes and arrows. Default is 0.2.}
+
+\item{ranked}{Logical indicating whether to treat third column of the edgelist (edge weights) as ranked values. Default: TRUE.}
 }
 \value{
 A ggplot object containing the network.
@@ -32,10 +35,14 @@ A ggplot object containing the network.
 \description{
 Plot gene regulatory network from edge list
 }
+\examples{
+data(filt.se)
+tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
+grn_edges <- grn_clr(filt.se, regulators = tfs)
+p <- plot_grn(grn_edges, ranked=FALSE)
+}
 \seealso{
-\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{gorder}}
- \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}},\code{\link[ggplot2]{reexports}},\code{\link[ggplot2]{scale_manual}}
+\code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
  \code{\link[ggnewscale]{new_scale}}
 }

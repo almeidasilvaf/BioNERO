@@ -1,11 +1,11 @@
 
 #----Set up data----
-data(se.seed)
+data(zma.se)
 data(filt.se)
-exp <- SummarizedExperiment::assay(se.seed)
+exp <- SummarizedExperiment::assay(zma.se)
 exp <- filter_by_variance(exp, n=100)
-filtered.se <- filter_by_variance(se.seed, n=100)
-metadata <- as.data.frame(SummarizedExperiment::colData(se.seed))
+filtered.se <- filter_by_variance(zma.se, n=100)
+metadata <- as.data.frame(SummarizedExperiment::colData(zma.se))
 
 #----Start tests----
 test_that("plot_heatmap() correctly handles row and col annotation", {
@@ -42,16 +42,16 @@ test_that("plot_PCA() performs PCA and plots it", {
 
 
 test_that("get_HK() returns housekeeping genes in a character vector", {
-    hk <- get_HK(se.seed)
+    hk <- get_HK(zma.se)
 
     expect_equal(class(hk), "character")
-    expect_equal(length(hk), floor(nrow(se.seed) * 0.25))
+    expect_true(length(hk) <= floor(nrow(zma.se) * 0.25))
 })
 
 
 test_that("plot_expression_profile() plots expression in a line plot", {
     genes <- rownames(filt.se)
-    p1 <- plot_expression_profile(genes=genes, exp=se.seed, plot_module=FALSE)
+    p1 <- plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
     expect_true(all.equal(class(p1), c("gg", "ggplot")))
 })
 
