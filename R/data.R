@@ -55,3 +55,14 @@
 "zma.interpro"
 
 
+#' Maize transcription factors
+#'
+#' Transcription factors and their families were downloaded from PlantTFDB 4.0.
+#'
+#' @name zma.tfs
+#' @format A data frame with gene IDs of TFs and their associated families.
+#' @references
+#' Jin, J., Tian, F., Yang, D. C., Meng, Y. Q., Kong, L., Luo, J., & Gao, G. (2016). PlantTFDB 4.0: toward a central hub for transcription factors and regulatory interactions in plants. Nucleic acids research, gkw982.
+#' @examples
+#' data(zma.tfs)
+"zma.tfs"

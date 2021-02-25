@@ -50,8 +50,6 @@ Imports:
     networkD3,
     ggnewscale,
     ggpubr,
-    Biobase,
-    affy,
     NetRep,
     stats,
     grDevices,

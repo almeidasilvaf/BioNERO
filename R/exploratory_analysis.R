@@ -228,7 +228,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
         genes <- genes_modules[genes_modules[,2] == modulename, 1]
         title <- paste("Expression profile for module", modulename)
     }
-    fexp <- exp[genes, ]
+    fexp <- as.data.frame(exp[rownames(exp) %in% genes, ])
     fexp$id <- rownames(fexp)
     melt_exp <- reshape2::melt(fexp, "id", variable.name = "Samples",
                                value.name = "Expression")

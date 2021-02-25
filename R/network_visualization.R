@@ -255,12 +255,10 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
         graph <- igraph::simplify(graph)
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
-        my_color <- 'd3.scaleOrdinal() .domain(["TF", "target"]) .range(["forestgreen", "orange"])'
+        my_color <- 'd3.scaleOrdinal() .domain(["Regulator", "Target"]) .range(["forestgreen", "orange"])'
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
-                                     Value = 'value',
-                                     linkColour = ifelse(graph_d3$links$value > 0, "red", "blue"),
                                      colourScale = my_color,
                                      Nodesize = 'Degree', height=900, width=1200,
                                      opacity=1, zoom = TRUE, fontSize = 20, legend=TRUE)
@@ -301,13 +299,14 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
                                                vertices=nod_at, directed=TRUE)
         graph <- igraph::simplify(graph)
         n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
+        n$Class <- factor(n$Class, levels=c("Target", "Regulator"))
 
         # Plot graph
         p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
             add_edges +
             ggnewscale::new_scale_color() +
             ggnetwork::geom_nodes(ggplot2::aes_(color = ~Class, size = ~Degree, shape = ~Class)) +
-            ggplot2::scale_color_manual(values = c("gold", "green4")) +
+            ggplot2::scale_color_manual(values = c("orange", "darkgreen")) +
             add_nodelabel +
             ggnetwork::theme_blank()
         }

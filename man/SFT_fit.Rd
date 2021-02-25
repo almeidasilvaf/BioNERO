@@ -19,7 +19,7 @@ SFT_fit(exp, net_type = "signed", rsquared = 0.8, cor_method = "spearman")
 A list containing: \itemize{
   \item{power}{Optimal power based on scale-free topology fit}
   \item{plot}{A ggplot object displaying main statistics of the SFT fit test}
-} Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
+}
 }
 \description{
 Pick power to fit network to a scale-free topology

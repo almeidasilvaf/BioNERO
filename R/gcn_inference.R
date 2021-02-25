@@ -8,7 +8,7 @@
 #' @return A list containing: \itemize{
 #'   \item{power}{Optimal power based on scale-free topology fit}
 #'   \item{plot}{A ggplot object displaying main statistics of the SFT fit test}
-#' } Power to fit network to a scale-free topology and SFT fit plots in PDF in the user's working directory
+#' }
 #'
 #' @author Fabricio Almeida-Silva
 #' @seealso
@@ -16,8 +16,8 @@
 #' @rdname SFT_fit
 #' @export
 #' @importFrom WGCNA pickSoftThreshold
-#' @importFrom graphics abline legend par points text
-#' @importFrom ggpubr ggarrange
+#' @importFrom ggpubr ggarrange ggscatter
+#' @importFrom ggplot2 theme element_text geom_hline
 #' @examples
 #' data(filt.se)
 #' sft <- SFT_fit(filt.se, cor_method="pearson")
@@ -101,6 +101,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' @importFrom dynamicTreeCut cutreeDynamicTree
 #' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp qnorm qqplot quantile sd var
 #' @importFrom grDevices colorRampPalette dev.off pdf
+#' @importFrom graphics par
 #' @examples
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
@@ -322,6 +323,7 @@ module_stability <- function(exp, net, nRuns = 20) {
 #' @importFrom reshape2 melt
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom SummarizedExperiment colData
+#' @importFrom graphics par
 #' @examples
 #' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
@@ -341,11 +343,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
     modtraitcor <- cor(as.matrix(MEs), trait, use = "p", method=cor_method)
     nSamples <- ncol(exp)
     modtraitpvalue <- WGCNA::corPvalueStudent(modtraitcor, nSamples)
-    modtraitsymbol <- modtraitpvalue
-    modtraitsymbol[modtraitsymbol < 0.001] <- "***"
-    modtraitsymbol[modtraitsymbol >= 0.001 & modtraitsymbol < 0.01] <- "**"
-    modtraitsymbol[modtraitsymbol >= 0.01 & modtraitsymbol < 0.05] <- "*"
-    modtraitsymbol[modtraitsymbol >= 0.05] <- ""
+    modtraitsymbol <- pval2symbol(modtraitpvalue)
 
     modtrait_long <- reshape2::melt(modtraitcor)
     pvals_long <- reshape2::melt(modtraitpvalue)
@@ -372,7 +370,6 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
         xColorLabels <- FALSE
         xSymbols <- NULL
         ySymbols <- names(MEs)
-        xColorLabels <- FALSE
     }
     cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
     hm <- WGCNA::labeledHeatmap(Matrix = modtraitcor,

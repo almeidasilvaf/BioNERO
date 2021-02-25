@@ -6,28 +6,29 @@
 \usage{
 consensus_modules(
   exp_list,
-  setLabels = NULL,
   metadata,
+  power,
   cor_method = "spearman",
   net_type = "signed hybrid",
-  rsquared = 0.8,
-  module_merging_threshold = 0.2
+  module_merging_threshold = 0.8,
+  reportPDF = FALSE
 )
 }
 \arguments{
 \item{exp_list}{A list containing the expression data frames. For each expression data frame, row names correspond to gene IDs and column names correspond to sample names. The list can be created by using \code{list(exp1, exp2, ..., expn)}.}
 
-\item{setLabels}{Character vector containing labels for each expression set.}
+\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column.
+Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since the function will extract colData.}
 
-\item{metadata}{Data frame containing sample information. The first column must contain sample names and the second column must contain sample information.}
+\item{power}{Numeric vector of beta power for each expression set as calculated by \code{consensus_SFT_fit}.}
 
 \item{cor_method}{Correlation method used for network reconstruction. One of "spearman" (default), "biweight", or "pearson".}
 
 \item{net_type}{Network type. One of "signed hybrid" (default), "signed" or "unsigned".}
 
-\item{rsquared}{Minimum R squared to consider the network similar to a scale-free topology. Default is 0.8.}
+\item{module_merging_threshold}{Correlation threshold to merge similar modules into a single one. Default: 0.8.}
 
-\item{module_merging_threshold}{Cut-off for merging similar modules based on the dissimilarity of their eigengenes. Default is 0.2, indicating that modules that have correlation >= 0.8 will be merged into one.}
+\item{reportPDF}{Logical indicating whether to save a PDF figure with dendrogram and modules. Default: FALSE.}
 }
 \value{
 A list containing 4 elements: \describe{
@@ -40,7 +41,17 @@ A list containing 4 elements: \describe{
 \description{
 This function identifies modules that are conserved across multiple data sets. It can be used for evolutionary analyses and for testing robustness of coexpression modules in data sets from different sources, for instance.
 }
+\examples{
+set.seed(12)
+data(zma.se)
+filt.zma <- filter_by_variance(zma.se, n=500)
+zma.set1 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
+zma.set2 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
+list.sets <- list(zma.set1, zma.set2)
+# SFT power previously identified with consensus_SFT_fit()
+cons_mod <- consensus_modules(list.sets, power = c(11, 13),
+                              cor_method = "pearson")
+}
 \seealso{
-\code{\link[WGCNA]{checkSets}},\code{\link[WGCNA]{pickSoftThreshold}},\code{\link[WGCNA]{adjacency}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{pquantile}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{multiSetMEs}},\code{\link[WGCNA]{consensusMEDissimilarity}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}}
- \code{\link[dynamicTreeCut]{cutreeDynamic}}
+\code{\link[dynamicTreeCut]{cutreeDynamic}}
 }

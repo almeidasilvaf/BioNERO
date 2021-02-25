@@ -248,7 +248,7 @@ get_TOMtype <- function(net_type) {
 #'
 #' @return Processed trait object.
 #' @noRd
-handle_trait_type <- function(metadata, continuous_trait) {
+handle_trait_type <- function(metadata, continuous_trait = FALSE) {
     if(!continuous_trait) {
         sampleinfo <- cbind(Samples=rownames(metadata), metadata)
         tmpdir <- tempdir()
@@ -312,7 +312,7 @@ check_sft <- function(edgelist, net_type = "gcn") {
     }
 
     # Test for scale-free topology fit
-    test <- as.list(igraph::fit_power_law(degree))
+    test <- igraph::fit_power_law(degree)
     if(test$KS.p < 0.05) {
         message("At the 95% confidence level for the Kolmogorov-Smirnov statistic, your graph does not fit the scale-free topology. P-value:", test$KS.p)
     } else {
@@ -323,16 +323,59 @@ check_sft <- function(edgelist, net_type = "gcn") {
 }
 
 
+#' Helper to handle list of SummarizedExperiment objects as input
+#'
+#' @param exp List of data frames or SummarizedExperiment objects.
+#'
+#' @return If exp is a list of SummarizedExperiment objects,
+#' it will return a list of data frames. Otherwise, it will simply return exp as it is.
+#' @noRd
+#' @importFrom SummarizedExperiment assay
+handleSElist <- function(exp) {
+    if(is_SE(exp[[1]])) {
+        list <- lapply(exp, handleSE)
+    } else {
+        list <- exp
+    }
+    return(list)
+}
+
+
+#' Helper function to handle metadata input for consensus modules identification
+#'
+#' @param exp List of data frames or SummarizedExperiment objects.
+#' @param metadata A data frame containing sample names in row names and sample annotation in the first column.
+#' @return Data frame of metadata for all expression sets.
+#' @noRd
+#' @importFrom SummarizedExperiment colData
+handle_metadata <- function(exp, metadata) {
+    if(is_SE(exp[[1]])) {
+        metadata <- Reduce(rbind, lapply(exp, function(x) {
+            meta <- as.data.frame(SummarizedExperiment::colData(x))
+            return(meta)
+        }))
+    } else {
+        metadata <- metadata
+    }
+    return(metadata)
+}
 
 
 
-
-
-
-
-
-
-
+#' Convert p-values in matrix to symbols
+#'
+#' @param matrix Matrix of p-values.
+#'
+#' @return Matrix of symbols.
+#' @noRd
+pval2symbol <- function(matrix) {
+    modtraitsymbol <- matrix
+    modtraitsymbol[modtraitsymbol < 0.001] <- "***"
+    modtraitsymbol[modtraitsymbol >= 0.001 & modtraitsymbol < 0.01] <- "**"
+    modtraitsymbol[modtraitsymbol >= 0.01 & modtraitsymbol < 0.05] <- "*"
+    modtraitsymbol[modtraitsymbol >= 0.05] <- ""
+    return(modtraitsymbol)
+}
 
 
 

@@ -21,6 +21,7 @@ grn_clr <- function(exp, estimator_clr = "pearson",
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
+    regulators <- regulators[regulators %in% rownames(exp)]
 
     # Build Mutual Information matrix and infer GRN
     mi_mat <- minet::build.mim(t(exp), estimator = estimator_clr)
@@ -65,6 +66,7 @@ grn_aracne <- function(exp, estimator_aracne = "spearman",
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
+    regulators <- regulators[regulators %in% rownames(exp)]
 
     # Build Mutual Information matrix and infer GRN
     mi_mat <- minet::build.mim(t(exp), estimator = estimator_aracne)
@@ -107,6 +109,7 @@ grn_genie3 <- function(exp, regulators = NULL,
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
+    regulators <- regulators[regulators %in% rownames(exp)]
 
     # Infer GRN
     grn <- GENIE3::GENIE3(as.matrix(exp), regulators = regulators, ...)
@@ -133,7 +136,7 @@ grn_genie3 <- function(exp, regulators = NULL,
 #' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
 #' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
 #' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
+#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
 #' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
@@ -145,11 +148,11 @@ grn_genie3 <- function(exp, regulators = NULL,
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 #' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
 grn_combined <- function(exp, regulators = NULL,
-                         eps=0,
+                         eps=0.1,
                          estimator_aracne = "spearman",
                          estimator_clr = "pearson",
                          remove_zero=TRUE, ...) {
-    exp <- handleSE(exp)
+    regulators <- regulators[regulators %in% rownames(exp)]
     genie3 <- grn_genie3(exp, regulators, remove_zero=remove_zero, ...)
 
     aracne <- grn_aracne(exp, regulators = regulators, eps=eps,
