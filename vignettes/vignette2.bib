@@ -1,0 +1,101 @@
+@article{Huynh-Thu2010,
+abstract = {One of the pressing open problems of computational systems biology is the elucidation of the topology of genetic regulatory networks (GRNs) using high throughput genomic data, in particular microarray gene expression data. The Dialogue for Reverse Engineering Assessments and Methods (DREAM) challenge aims to evaluate the success of GRN inference algorithms on benchmarks of simulated data. In this article, we present GENIE3, a new algorithm for the inference of GRNs that was best performer in the DREAM4 In Silico Multifactorial challenge. GENIE3 decomposes the prediction of a regulatory network between p genes into p different regression problems. In each of the regression problems, the expression pattern of one of the genes (target gene) is predicted from the expression patterns of all the other genes (input genes), using tree-based ensemble methods Random Forests or Extra-Trees. The importance of an input gene in the prediction of the target gene expression pattern is taken as an indication of a putative regulatory link. Putative regulatory links are then aggregated over all genes to provide a ranking of interactions from which the whole network is reconstructed. In addition to performing well on the DREAM4 In Silico Multifactorial challenge simulated data, we show that GENIE3 compares favorably with existing algorithms to decipher the genetic regulatory network of Escherichia coli. It doesn't make any assumption about the nature of gene regulation, can deal with combinatorial and non-linear interactions, produces directed GRNs, and is fast and scalable. In conclusion, we propose a new algorithm for GRN inference that performs well on both synthetic and real gene expression data. The algorithm, based on feature selection with tree-based ensemble methods, is simple and generic, making it adaptable to other types of genomic data and interactions. {\textcopyright} 2010 Huynh-Thu et al.},
+author = {Huynh-Thu, V{\^{a}}n Anh and Irrthum, Alexandre and Wehenkel, Louis and Geurts, Pierre},
+doi = {10.1371/journal.pone.0012776},
+file = {:Users/macbook/Documents/Papers/pone.0012776.pdf:pdf},
+issn = {19326203},
+journal = {PLoS ONE},
+number = {9},
+pages = {1--10},
+pmid = {20927193},
+title = {{Inferring regulatory networks from expression data using tree-based methods}},
+volume = {5},
+year = {2010}
+}
+@article{Faith2007,
+abstract = {Machine learning approaches offer the potential to systematically identify transcriptional regulatory interactions from a compendium of microarray expression profiles. However, experimental validation of the performance of these methods at the genome scale has remained elusive. Here we assess the global performance of four existing classes of inference algorithms using 445 Escherichia coli Affymetrix arrays and 3,216 known E. coli regulatory interactions from RegulonDB. We also developed and applied the context likelihood of relatedness (CLR) algorithm, a novel extension of the relevance networks class of algorithms. CLR demonstrates an average precision gain of 36{\%} relative to the next-best performing algorithm. At a 60{\%} true positive rate, CLR identifies 1,079 regulatory interactions, of which 338 were in the previously known network and 741 were novel predictions. We tested the predicted interactions for three transcription factors with chromatin immunoprecipitation, confirming 21 novel interactions and verifying our RegulonDB-based performance estimates. CLR also identified a regulatory link providing central metabolic control of iron transport, which we confirmed with real-time quantitative PCR. The compendium of expression data compiled in this study, coupled with RegulonDB, provides a valuable model system for further improvement of network inference algorithms using experimental data. {\textcopyright} 2007 Faith et al.},
+author = {Faith, Jeremiah J. and Hayete, Boris and Thaden, Joshua T. and Mogno, Ilaria and Wierzbowski, Jamey and Cottarel, Guillaume and Kasif, Simon and Collins, James J. and Gardner, Timothy S.},
+doi = {10.1371/journal.pbio.0050008},
+file = {:Users/macbook/Documents/Papers/pbio.0050008.pdf:pdf},
+issn = {15449173},
+journal = {PLoS Biology},
+number = {1},
+pages = {0054--0066},
+pmid = {17214507},
+title = {{Large-scale mapping and validation of Escherichia coli transcriptional regulation from a compendium of expression profiles}},
+volume = {5},
+year = {2007}
+}
+@article{Meyer2008,
+abstract = {Results: This paper presents the R/Bioconductor package minet (version 1.1.6) which provides a set of functions to infer mutual information networks from a dataset. Once fed with a microarray dataset, the package returns a network where nodes denote genes, edges model statistical dependencies between genes and the weight of an edge quantifies the statistical evidence of a specific (e.g transcriptional) gene-to-gene interaction. Four different entropy estimators are made available in the package minet (empirical, Miller-Madow, Schurmann-Grassberger and shrink) as well as four different inference methods, namely relevance networks, ARACNE, CLR and MRNET. Also, the package integrates accuracy assessment tools, like F-scores, PR-curves and ROC-curves in order to compare the inferred network with a reference one. Conclusion: The package minet provides a series of tools for inferring transcriptional networks from microarray data. It is freely available from the Comprehensive R Archive Network (CRAN) as well as from the Bioconductor website. {\textcopyright} 2008 Meyer et al; licensee BioMed Central Ltd.},
+author = {Meyer, Patrick E. and Lafitte, Fr{\'{e}}d{\'{e}}ric and Bontempi, Gianluca},
+doi = {10.1186/1471-2105-9-461},
+file = {:Users/macbook/Documents/Papers/1471-2105-9-461.pdf:pdf},
+issn = {14712105},
+journal = {BMC Bioinformatics},
+pages = {1--10},
+pmid = {18959772},
+title = {{Minet: A r/bioconductor package for inferring large transcriptional networks using mutual information}},
+volume = {9},
+year = {2008}
+}
+@article{Marbach2012,
+abstract = {Reconstructing gene regulatory networks from high-throughput data is a long-standing challenge. Through the Dialogue on Reverse Engineering Assessment and Methods (DREAM) project, we performed a comprehensive blind assessment of over 30 network inference methods on Escherichia coli, Staphylococcus aureus, Saccharomyces cerevisiae and in silico microarray data. We characterize the performance, data requirements and inherent biases of different inference approaches, and we provide guidelines for algorithm application and development. We observed that no single inference method performs optimally across all data sets. In contrast, integration of predictions from multiple inference methods shows robust and high performance across diverse data sets. We thereby constructed high-confidence networks for E. coli and S. aureus, each comprising ∼1,700 transcriptional interactions at a precision of ∼50{\%}. We experimentally tested 53 previously unobserved regulatory interactions in E. coli, of which 23 (43{\%}) were supported. Our results establish community-based methods as a powerful and robust tool for the inference of transcriptional gene regulatory networks. {\textcopyright} 2012 Nature America, Inc. All rights reserved.},
+author = {Marbach, Daniel and Costello, James C. and K{\"{u}}ffner, Robert and Vega, Nicole M. and Prill, Robert J. and Camacho, Diogo M. and Allison, Kyle R. and Kellis, Manolis and Collins, James J. and Aderhold, Andrej and Stolovitzky, Gustavo and Bonneau, Richard and Chen, Yukun and Cordero, Francesca and Crane, Martin and Dondelinger, Frank and Drton, Mathias and Esposito, Roberto and Foygel, Rina and {De La Fuente}, Alberto and Gertheiss, Jan and Geurts, Pierre and Greenfield, Alex and Grzegorczyk, Marco and Haury, Anne Claire and Holmes, Benjamin and Hothorn, Torsten and Husmeier, Dirk and Huynh-Thu, V{\^{a}}n Anh and Irrthum, Alexandre and Karlebach, Guy and L{\`{e}}bre, Sophie and {De Leo}, Vincenzo and Madar, Aviv and Mani, Subramani and Mordelet, Fantine and Ostrer, Harry and Ouyang, Zhengyu and Pandya, Ravi and Petri, Tobias and Pinna, Andrea and Poultney, Christopher S. and Rezny, Serena and Ruskin, Heather J. and Saeys, Yvan and Shamir, Ron and S{\^{i}}rbu, Alina and Song, Mingzhou and Soranzo, Nicola and Statnikov, Alexander and Vega, Nicci and Vera-Licona, Paola and Vert, Jean Philippe and Visconti, Alessia and Wang, Haizhou and Wehenkel, Louis and Windhager, Lukas and Zhang, Yang and Zimmer, Ralf},
+doi = {10.1038/nmeth.2016},
+file = {:Users/macbook/Documents/Papers/nmeth.2016.pdf:pdf},
+issn = {15487091},
+journal = {Nature Methods},
+number = {8},
+pages = {796--804},
+pmid = {22796662},
+title = {{Wisdom of crowds for robust gene network inference}},
+volume = {9},
+year = {2012}
+}
+@article{Margolin2006,
+abstract = {Background: Elucidating gene regulatory networks is crucial for understanding normal cell physiology and complex pathologic phenotypes. Existing computational methods for the genomewide "reverse engineering" of such networks have been successful only for lower eukaryotes with simple genomes. Here we present ARACNE, a novel algorithm, using microarray expression profiles, specifically designed to scale up to the complexity of regulatory networks in mammalian cells, yet general enough to address a wider range of network deconvolution problems. This method uses an information theoretic approach to eliminate the majority of indirect interactions inferred by coexpression methods. Results: We prove that ARACNE reconstructs the network exactly (asymptotically) if the effect of loops in the network topology is negligible, and we show that the algorithm works well in practice, even in the presence of numerous loops and complex topologies. We assess ARACNE's ability to reconstruct transcriptional regulatory networks using both a realistic synthetic dataset and a microarray dataset from human B cells. On synthetic datasets ARACNE achieves very low error rates and outperforms established methods, such as Relevance Networks and Bayesian Networks. Application to the deconvolution of genetic networks in human B cells demonstrates ARACNE's ability to infer validated transcriptional targets of the cMYC proto-oncogene. We also study the effects of misestimation of mutual information on network reconstruction, and show that algorithms based on mutual information ranking are more resilient to estimation errors. Conclusion: ARACNE shows promise in identifying direct transcriptional interactions in mammalian cellular networks, a problem that has challenged existing reverse engineering algorithms. This approach should enhance our ability to use microarray data to elucidate functional mechanisms that underlie cellular processes and to identify molecular targets of pharmacological compounds in mammalian cellular networks.},
+archivePrefix = {arXiv},
+arxivId = {q-bio/0410037},
+author = {Margolin, Adam A. and Nemenman, Ilya and Basso, Katia and Wiggins, Chris and Stolovitzky, Gustavo and Favera, Riccardo Dalla and Califano, Andrea},
+doi = {10.1186/1471-2105-7-S1-S7},
+eprint = {0410037},
+file = {:Users/macbook/Documents/Papers/1471-2105-7-S1-S7.pdf:pdf},
+issn = {14712105},
+journal = {BMC Bioinformatics},
+number = {SUPPL.1},
+pages = {1--15},
+pmid = {16723010},
+primaryClass = {q-bio},
+title = {{ARACNE: An algorithm for the reconstruction of gene regulatory networks in a mammalian cellular context}},
+volume = {7},
+year = {2006}
+}
+@article{Jin2017,
+abstract = {With the goal of providing a comprehensive, high-quality resource for both plant transcription factors (TFs) and their regulatory interactions with target genes, we upgraded plant TF database PlantTFDB to version 4.0 (http://planttfdb.cbi.pku.edu.cn/). In the new version, we identified 320 370 TFs from 165 species, presenting a more comprehensive genomic TF repertoires of green plants. Besides updating the pre-existing abundant functional and evolutionary annotation for identified TFs, we generated three new types of annotation which provide more directly clues to investigate functional mechanisms underlying: (i) a set of high-quality, non-redundant TF binding motifs derived from experiments; (ii) multiple types of regulatory elements identified from high-throughput sequencing data; (iii) regulatory interactions curated from literature and inferred by combining TF binding motifs and regulatory elements. In addition, we upgraded previous TF prediction server, and set up four novel tools for regulation prediction and functional enrichment analyses. Finally, we set up a novel companion portal PlantRegMap (http://plantregmap.cbi.pku.edu.cn) for users to access the regulation resource and analysis tools conveniently.},
+annote = {Jin, Jinpu
+Tian, Feng
+Yang, De-Chang
+Meng, Yu-Qi
+Kong, Lei
+Luo, Jingchu
+Gao, Ge
+eng
+Research Support, Non-U.S. Gov't
+England
+2016/12/08 06:00
+Nucleic Acids Res. 2017 Jan 4;45(D1):D1040-D1045. doi: 10.1093/nar/gkw982. Epub 2016 Oct 24.},
+author = {Jin, J and Tian, F and Yang, D C and Meng, Y Q and Kong, L and Luo, J and Gao, G},
+doi = {10.1093/nar/gkw982},
+file = {:Users/macbook/Documents/Papers/gkw982.pdf:pdf},
+isbn = {1362-4962 (Electronic)0305-1048 (Linking)},
+journal = {Nucleic Acids Res},
+keywords = {*Databases, Genetic,*Gene Expression Regulation, Plant,*Gene Regulatory Networks,Binding Sites,Computational Biology/methods,Evolution, Molecular,Genomics/methods,Molecular Sequence Annotation,Nucleotide Motifs,Plants/*genetics/*metabolism,Protein Binding,Transcription Factors/*metabolism,Web Browser,Workflow},
+number = {D1},
+pages = {D1040--D1045},
+pmid = {27924042},
+title = {{PlantTFDB 4.0: toward a central hub for transcription factors and regulatory interactions in plants}},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/27924042},
+volume = {45},
+year = {2017}
+}

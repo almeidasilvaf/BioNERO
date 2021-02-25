@@ -1,0 +1,169 @@
+---
+title: "Gene regulatory network inference with BioNERO"
+author: 
+- name: Fabricio Almeida-Silva
+  affiliation: Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil
+- name: Thiago Motta Venancio
+  affiliation: Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil
+output: 
+  BiocStyle::html_document:
+    toc: true
+    highlight: pygments
+    number_sections: yes
+bibliography: vignette2.bib
+vignette: >
+  %\VignetteIndexEntry{Gene regulatory network inference with BioNERO}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = TRUE,
+  warning = FALSE,
+  cache = FALSE,
+  fig.align = 'center',
+  fig.width = 6,
+  fig.height = 5
+)
+```
+
+# Installation
+
+```{r installation, eval=FALSE}
+if(!requireNamespace('BiocManager', quietly = TRUE))
+  install.packages('BiocManager')
+
+BiocManager::install("BioNERO")
+```
+
+```{r load_package}
+# Load package after installation
+library(BioNERO)
+set.seed(123) # for reproducibility
+```
+
+
+# Introduction and algorithm description
+
+In the previous vignette, we explored all the aspects of gene coexpression networks (GCNs), which are represented as **undirected weighted graphs**. It is **undirected** because, for a given link between *gene A* and *gene B*, we can only say that these genes are coexpressed, but we cannot know whether *gene A* controls *gene B* or otherwise. Further, **weighted** means that some coexpression relationships between gene pairs are stronger than others. In this vignette, we will demonstrate how to infer gene regulatory networks (GRNs) from expression data with BioNERO. GRNs display interactions between regulators (e.g., transcription factors or miRNAs) and their targets (e.g., genes), and they are represented as **directed unweighted graphs**. Graphically, GRNs are the opposite of GCNs: they can depict which node controls the other (**directed**) and are typically binary (**unweighted**). 
+
+Numerous algorithms have been developed to infer GRNs from expression data. However, the algorithm performances are highly dependent on the benchmark data set. To solve this uncertainty, @Marbach2012 proposed the application of the *"wisdom of the crowds"* principle to GRN inference. This approach consists in inferring GRNs with different algorithms, ranking the interactions identified by each method, and calculating the average rank for each interaction across all algorithms used. This way, we can have consensus, high-confidence edges to be used in biological interpretations. For that, `BioNERO` implements three popular algorithms: GENIE3 [@Huynh-Thu2010], ARACNE [@Margolin2006] and CLR [@Faith2007].
+
+
+# Data preprocessing
+
+Before inferring the GRN, we will preprocess the expression data the same way we did in the previous vignette.
+
+```{r}
+# Load example data set
+data(zma.se)
+
+# Preprocess the expression data
+final_exp <- exp_preprocess(zma.se, min_exp = 10, variance_filter = TRUE, n=2000)
+```
+
+
+# Gene regulatory network inference
+
+`BioNERO` requires only 2 objects for GRN inference: the **expression data** (SummarizedExperiment, matrix or data frame) and a character vector of **regulators** (transcription factors or miRNAs). The transcription factors used in this vignette were downloaded from PlantTFDB 4.0 [@Jin2017].
+
+```{r load_tfs}
+data(zma.tfs)
+head(zma.tfs)
+```
+
+## Consensus GRN inference
+
+Inferring GRNs based on the *wisdom of the crowds* principle can be done with a single function: `exp2grn()`. This function will infer GRNs with GENIE3, ARACNE and CLR, calculate average ranks for each interaction and filter the resulting network based on the optimal scale-free topology (SFT) fit. In the filtering step, *n* different networks are created by subsetting the top *n* quantiles. For instance, if a network of 10,000 edges is given as input with `nsplit = 10`, 10 different networks will be created: the first with 1,000 edges, the second with 2,000 edges, and so on, with the last network being the original input network. Then, for each network, the function will calculate the SFT fit and select the best fit.
+
+```{r}
+grn <- exp2grn(exp = final_exp, regulators = zma.tfs$Gene)
+head(grn)
+```
+
+
+## Algorithm-specific GRN inference
+
+This section is directed to users who, for some reason (e.g., comparison, exploration), want to infer GRNs with particular algorithms. The available algorithms are:
+
+**GENIE3:** a regression-tree based algorithm that decomposes the prediction of GRNs for *n* genes into *n* regression problems. For each regression problem, the expression profile of a target gene is predicted from the expression profiles of all other genes using random forests (default) or extra-trees.
+
+```{r genie3}
+# Using 10 trees for simplicity. Default: 1000.
+genie3 <- grn_genie3(final_exp, regulators = zma.tfs$Gene, nTrees=10)
+head(genie3)
+dim(genie3)
+```
+
+
+**ARACNE:** information-theoretic algorithm that aims to remove indirect interactions inferred by coexpression.
+
+```{r aracne}
+aracne <- grn_aracne(final_exp, regulators = zma.tfs$Gene)
+head(aracne)
+dim(aracne)
+```
+
+
+**CLR:** extension of the relevance networks algorithm that uses mutual information to identify regulatory interactions.
+
+```{r clr}
+clr <- grn_clr(final_exp, regulators = zma.tfs$Gene)
+head(clr)
+dim(clr)
+```
+
+
+Users can also infer GRNs with the 3 algorithms at once using the function `exp_combined()`. The resulting edge lists are stored in a list of 3 elements. [^1]
+
+[^1]: **NOTE:** Under the hood, `exp2grn()` uses `exp_combined()` followed by averaging ranks with `grn_average_rank()` and filtering with `grn_filter()`.
+
+```{r grn_combined}
+grn_list <- grn_combined(final_exp, regulators = zma.tfs$Gene, nTrees=10)
+head(grn_list$genie3)
+head(grn_list$aracne)
+head(grn_list$clr)
+```
+
+# Gene regulatory network analysis
+
+After inferring the GRN, `BioNERO` allows users to perform some common post-inference analyses.
+
+## Hub gene identification
+
+GRN hubs are defined as the top 10% most highly connected regulators, but this percentile is flexible.[^2] They can be identified with `get_hubs_grn()`. 
+
+[^2]: **NOTE:** Remember: GRNs are represented as **directed** graphs. This implies that only regulators are taken into account when identifying hubs. The goal here is to identify regulators (e.g., transcription factors) that control the expression of several genes.
+
+```{r get_hubs}
+hubs <- get_hubs_grn(grn)
+hubs
+```
+
+## Network visualization
+
+
+```{r plot_static}
+plot_grn(grn)
+```
+
+GRNs can also be visualized interactively for exploratory purposes.
+
+```{r plot_interactive}
+plot_grn(grn, interactive = TRUE)
+```
+
+Finally, `BioNERO` can also be used for visualization and hub identification in protein-protein (PPI) interaction networks. The functions `get_hubs_ppi()` and `plot_ppi()` work the same way as their equivalents for GRNs (`get_hubs_grn()` and `plot_grn()`).
+
+
+# Session information {.unnumbered}
+
+This vignette was created under the following conditions:
+
+```{r}
+sessionInfo()
+```
+
+# References
