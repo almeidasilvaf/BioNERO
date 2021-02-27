@@ -17,6 +17,6 @@ Transform a correlation matrix to an edge list
 }
 \examples{
 data(filt.se)
-cor_mat <- cor(t(assay(filt.se)))
+cor_mat <- cor(t(SummarizedExperiment::assay(filt.se)))
 edgelist <- cormat_to_edgelist(cor_mat)
 }

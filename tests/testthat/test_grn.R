@@ -12,7 +12,7 @@ ranked_grn <- grn_average_rank(grn_list)
 
 #----Start tests----
 test_that("cormat_to_edgelist() converts correlation matrix to edge list", {
-    cor_mat <- cor(t(assay(filt.se)))
+    cor_mat <- cor(t(SummarizedExperiment::assay(filt.se)))
     edgelist <- cormat_to_edgelist(cor_mat)
     expect_equal(ncol(edgelist), 3)
     expect_equal(colnames(edgelist), c("Node1", "Node2", "Weight"))

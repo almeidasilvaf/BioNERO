@@ -5,6 +5,7 @@
 #'
 #' @return Logical indicating whether object is SummarizedExperiment or not.
 #' @noRd
+#' @importFrom methods is
 is_SE <- function(object) {
     if(is(object, "SummarizedExperiment")) {
         x <- TRUE
@@ -275,7 +276,7 @@ handle_trait_type <- function(metadata, continuous_trait = FALSE) {
 #' @rdname cormat_to_edgelist
 #' @examples
 #' data(filt.se)
-#' cor_mat <- cor(t(assay(filt.se)))
+#' cor_mat <- cor(t(SummarizedExperiment::assay(filt.se)))
 #' edgelist <- cormat_to_edgelist(cor_mat)
 cormat_to_edgelist <- function(matrix) {
     edgelist <- matrix

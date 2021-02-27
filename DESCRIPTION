@@ -66,6 +66,7 @@ Imports:
     stats,
     grDevices,
     graphics,
+    methods,
     BiocParallel,
     minet, 
     GENIE3,
