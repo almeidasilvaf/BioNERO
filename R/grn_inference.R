@@ -227,7 +227,7 @@ grn_filter <- function(edgelist, nsplit=10) {
     cutpoints <- round(unname(quantile(n_edges, probs = seq(0, 1, 1/nsplit))))[-1]
 
     list_degree <- BiocParallel::bplapply(cutpoints, function(x) {
-        filt_edges <- edgelist[1:x, 1:2]
+        filt_edges <- edgelist[seq_len(x), c(1,2)]
         graph <- igraph::graph_from_data_frame(filt_edges, directed=TRUE)
         degree <- igraph::degree(graph, mode = "out")
     })
@@ -252,7 +252,7 @@ grn_filter <- function(edgelist, nsplit=10) {
     optimal_cutoff <- cutpoints[max.index]
     message("The top number of edges that best fits the scale-free topology is ", optimal_cutoff)
 
-    edgelist <- edgelist[1:optimal_cutoff, 1:2]
+    edgelist <- edgelist[seq_len(optimal_cutoff), c(1,2)]
     return(edgelist)
 }
 
@@ -329,15 +329,15 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
     degree <- sort(igraph::degree(graph, mode="out"), decreasing = TRUE)
 
     # Find hubs
-    degree_df <- data.frame(row.names=1:length(degree),
+    degree_df <- data.frame(row.names=seq_along(degree),
                             Gene=names(degree),
                             Degree=degree, stringsAsFactors = FALSE)
 
     if(is.null(top_n)) {
         nrows <- nrow(degree_df) * top_percentile
-        hubs <- degree_df[1:nrows, ]
+        hubs <- degree_df[seq_len(nrows), ]
     } else {
-        hubs <- degree_df[1:top_n, ]
+        hubs <- degree_df[seq_len(top_n), ]
     }
     results <- hubs
     if(return_degree) {
@@ -369,15 +369,15 @@ get_hubs_ppi <- function(edgelist, top_percentile = 0.1, top_n = NULL,
     degree <- sort(igraph::degree(graph), decreasing = TRUE)
 
     # Find hubs
-    degree_df <- data.frame(row.names=1:length(degree),
+    degree_df <- data.frame(row.names=seq_along(degree),
                             Protein=names(degree),
                             Degree=degree, stringsAsFactors = FALSE)
 
     if(is.null(top_n)) {
         nrows <- nrow(degree_df) * top_percentile
-        hubs <- degree_df[1:nrows, ]
+        hubs <- degree_df[seq_len(nrows), ]
     } else {
-        hubs <- degree_df[1:top_n, ]
+        hubs <- degree_df[seq_len(top_n), ]
     }
     results <- hubs
     if(return_degree) {

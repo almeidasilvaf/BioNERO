@@ -12,9 +12,16 @@ Authors@R: c(person("Fabricio", "Almeida-Silva",
 Description: BioNERO aims to integrate all aspects of biological network inference
         in a single package, including data preprocessing, exploratory analyses,
         network inference, and analyses for biological interpretations. BioNERO
-        can be used to infer gene coexpression networks and gene regulatory networks
-        from gene expression data, and it can also be used to explore some aspects
-        of protein-protein interaction networks.
+        can be used to infer gene coexpression networks (GCNs) and gene 
+        regulatory networks (GRNs) from gene expression data. Additionally,
+        it can be used to explore topological properties of protein-protein 
+        interaction (PPI) networks. GCN infenrence relies on the popular WGCNA 
+        algorithm. GRN inference is based on the "wisdom of the crowds" principle,
+        which consists in inferring GRNs with multiple algorithms (here, CLR,
+        GENIE3 and ARACNE) and calculating the average rank for each interaction
+        pair. As all steps of network analyses are included in this package,
+        BioNERO makes users avoid having to learn the syntaxes of several 
+        packages and how to communicate between them.
 Depends: R (>= 4.1)
 License: GPL-3
 Encoding: UTF-8
@@ -37,7 +44,8 @@ biocViews:
     Microarray,
     Preprocessing,
     Normalization,
-    Visualization
+    Visualization,
+    Network
 Imports: 
     WGCNA,
     dynamicTreeCut,
@@ -51,7 +59,6 @@ Imports:
     igraph,
     ggnetwork,
     intergraph,
-    magrittr,
     networkD3,
     ggnewscale,
     ggpubr,

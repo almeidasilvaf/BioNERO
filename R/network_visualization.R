@@ -91,6 +91,8 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
 #' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
 #' @param add_color_legend Logical indicating whether to add a color legend for nodes. Default: TRUE.
+#'
+#' @return A ggplot object.
 #' @seealso
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
@@ -101,6 +103,7 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes_ guides
+#' @import intergraph
 #' @examples
 #' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
 #' p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
@@ -171,7 +174,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
                                                              data = function(x) { x[ x$isHub, ]},
                                                              show.legend = FALSE, max.overlaps=Inf)
         } else if(show_labels == "tophubs") {
-            tophubs <- nod_at[nod_at$isHub == TRUE, 1][1:top_n_hubs]
+            tophubs <- nod_at[nod_at$isHub == TRUE, 1][seq_len(top_n_hubs)]
             nod_at$isTopHub <- ifelse(nod_at$Protein %in% tophubs, TRUE, FALSE)
             add_nodelabel <- ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name),
                                                              color="azure4",
@@ -222,6 +225,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' @rdname plot_grn
 #' @author Fabricio Almeida-Silva
 #' @export
+#' @import intergraph
 #' @importFrom igraph graph_from_data_frame degree vcount
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggplot2 ggplot aes_ arrow scale_color_manual guides
@@ -323,6 +327,8 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none". Default: tophubs.
 #' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
 #' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
+#'
+#' @return A ggplot object.
 #' @seealso
 #'  \code{\link[igraph]{simplify}},\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{gorder}}
 #'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
@@ -335,6 +341,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes_ guides
+#' @import intergraph
 #' @examples
 #' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
@@ -408,7 +415,7 @@ plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
                                                              data = function(x) { x[ x$isHub, ]},
                                                              show.legend = FALSE, max.overlaps=Inf)
         } else if(show_labels == "tophubs") {
-            tophubs <- nod_at[nod_at$isHub == TRUE, 1][1:top_n_hubs]
+            tophubs <- nod_at[nod_at$isHub == TRUE, 1][seq_len(top_n_hubs)]
             nod_at$isTopHub <- ifelse(nod_at$Gene %in% tophubs, TRUE, FALSE)
             add_nodelabel <- ggnetwork::geom_nodelabel_repel(ggplot2::aes_(label = ~name),
                                                              color="azure4",

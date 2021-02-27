@@ -17,18 +17,10 @@ test_that("plot_heatmap() correctly handles row and col annotation", {
                             Class=sample(c("Pathway1", "Pathway2",
                                            "Pathway3"),
                                          size=nrow(exp), replace=TRUE))
-    p1 <- plot_heatmap(exp)
-    p2 <- plot_heatmap(exp, col_metadata = metadata, cluster_cols=FALSE)
-    p3 <- plot_heatmap(exp, col_metadata = metadata2, cluster_cols=FALSE)
-    p4 <- plot_heatmap(exp, col_metadata = metadata2, row_metadata = row_annot,
+    p <- plot_heatmap(exp, col_metadata = metadata2, row_metadata = row_annot,
                  cluster_cols=FALSE, cluster_rows=FALSE, type="expr",
                  log_trans=TRUE)
-    p5 <- plot_heatmap(filt.se, col_metadata = metadata2, cluster_cols=FALSE)
-    expect_true(class(p1) == "Heatmap")
-    expect_true(class(p2) == "Heatmap")
-    expect_true(class(p3) == "Heatmap")
-    expect_true(class(p4) == "Heatmap")
-    expect_true(class(p5) == "Heatmap")
+    expect_true(class(p) == "Heatmap")
 })
 
 

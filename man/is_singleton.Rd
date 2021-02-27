@@ -4,18 +4,24 @@
 \alias{is_singleton}
 \title{Boolean expression to check if gene or gene set is singleton or not}
 \usage{
-is_singleton(genes, dup_pairs)
+is_singleton(genes, og)
 }
 \arguments{
 \item{genes}{Character containing gene or group of genes to be evaluated.}
 
-\item{dup_pairs}{Data frame containing all duplicate pairs. Column 1 and column 2 must contain gene 1 and gene 2 from the pair, respectively. Addiotional columns are interpreted as pairs info (e.g. mode of duplication).}
+\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.}
 }
 \value{
 Vector of logical values indicating if gene or group of genes is singleton or not.
 }
 \description{
 For a given gene or group of genes, this function returns logical values indicating whether they are singletons or not.
+}
+\examples{
+data(og.zma.osa)
+data(filt.se)
+genes <- tail(rownames(filt.se), n = 100)
+is_singleton(genes, og.zma.osa)
 }
 \seealso{
 \code{is_duplicated}

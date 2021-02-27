@@ -29,6 +29,9 @@ plot_gcn(
 
 \item{interactive}{Logical indicating whether the network should be interactive or not. Default is FALSE.}
 }
+\value{
+A ggplot object.
+}
 \description{
 Plot gene coexpression network from edge list
 }

@@ -26,12 +26,12 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
     texp <- t(exp)
 
     if(cor_method == "pearson") {
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=1:20, RsquaredCut = rsquared)
+        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20, RsquaredCut = rsquared)
     } else if(cor_method == "biweight") {
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=1:20,
+        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20,
                                         RsquaredCut = rsquared, corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
     } else if (cor_method == "spearman"){
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=1:20,
+        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20,
                                         RsquaredCut = rsquared, corOptions = list(use = 'p', method = "spearman"))
     } else {
         stop("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
@@ -518,7 +518,7 @@ get_hubs_gcn <- function(exp, net) {
     hubs <- Reduce(rbind, lapply(top_10, function(x) {
         cols <- c("Genes", "Modules", "kWithin", unique(x$Modules))
         h <- x[, cols]
-        h <- h[h[,4] > 0.8, 1:3]
+        h <- h[h[,4] > 0.8, c(1,2,3)]
     }))
     rownames(hubs) <- seq_len(nrow(hubs))
     colnames(hubs) <- c("Gene", "Module", "kWithin")
@@ -936,7 +936,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
             corandp$pvalue <- cor.pvalue
 
             # Create a final edge list containing only significant correlations
-            edgelist <- corandp[corandp$pvalue < pvalue_cutoff, c(1:3)]
+            edgelist <- corandp[corandp$pvalue < pvalue_cutoff, c(1,2,3)]
 
         } else if(method == "min_cor") {
             edgelist <- edges[edges$Weight >= rcutoff, ]

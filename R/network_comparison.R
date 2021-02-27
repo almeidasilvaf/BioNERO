@@ -232,7 +232,7 @@ modPres_WGCNA <- function(explist, ref_net,
             ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
           return(y)
           })
-        pl1 <- plots[1:4]
+        pl1 <- plots[c(1,2,3,4)]
         pl2 <- plots[5:8]
         pl3 <- plots[9:12]
         pl4 <- plots[13:16]

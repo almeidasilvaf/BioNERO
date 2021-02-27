@@ -15,3 +15,8 @@ A 2-column data frame containing node 1, node 2 and edge weight
 \description{
 Transform a correlation matrix to an edge list
 }
+\examples{
+data(filt.se)
+cor_mat <- cor(t(assay(filt.se)))
+edgelist <- cormat_to_edgelist(cor_mat)
+}

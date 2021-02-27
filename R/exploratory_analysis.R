@@ -182,14 +182,15 @@ get_HK <- function(exp) {
     exp[exp < 1] <- 0 #expression values below 1 are considered as not expressed
     ncols <- ncol(exp)
     final.exp <- exp[rowSums(exp > 0) == ncols,]
-    final.exp$mean <- rowMeans(final.exp[,1:ncols])
-    final.exp$sd <-  apply(final.exp[,1:ncols], 1, sd)
+    final.exp$mean <- rowMeans(final.exp[, seq_len(ncols)])
+    final.exp$sd <-  apply(final.exp[, seq_len(ncols)], 1, sd)
     final.exp$covar <- final.exp$sd/final.exp$mean
-    final.exp$max <- apply(final.exp[,1:ncols], 1, max)
-    final.exp$min <- apply(final.exp[,1:ncols], 1, min)
+    final.exp$max <- apply(final.exp[, seq_len(ncols)], 1, max)
+    final.exp$min <- apply(final.exp[, seq_len(ncols)], 1, min)
     final.exp$MFC <- final.exp$max/final.exp$min
     final.exp$MFC.CoV <- final.exp$MFC * final.exp$covar
-    hk <- head(final.exp[order(final.exp$MFC.CoV, decreasing=F),], n = nrow(final.exp)*0.25)
+    hk <- head(final.exp[order(final.exp$MFC.CoV, decreasing=FALSE),],
+               n = nrow(final.exp)*0.25)
     hk.genes <- rownames(hk)
     return(hk.genes)
 }

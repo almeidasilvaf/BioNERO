@@ -4,18 +4,24 @@
 \alias{is_duplicated}
 \title{Boolean expression to check if gene or gene set is duplicated in the genome or not}
 \usage{
-is_duplicated(genes, dup_pairs)
+is_duplicated(genes, og)
 }
 \arguments{
 \item{genes}{Character containing gene or group of genes to be evaluated.}
 
-\item{dup_pairs}{Data frame containing all duplicate pairs. Column 1 and column 2 must contain gene 1 and gene 2 from the pair, respectively. Addiotional columns are interpreted as pairs info (e.g. mode of duplication).}
+\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.}
 }
 \value{
 Vector of logical values indicating if gene or group of genes has copies in the genome or not.
 }
 \description{
 For a given gene or group of genes, this function returns logical values indicating whether they have copies in the genome or not.
+}
+\examples{
+data(og.zma.osa)
+data(filt.se)
+genes <- tail(rownames(filt.se), n = 100)
+is_duplicated(genes, og.zma.osa)
 }
 \seealso{
 \code{is_singleton}

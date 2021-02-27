@@ -29,6 +29,9 @@ plot_ppi(
 
 \item{add_color_legend}{Logical indicating whether to add a color legend for nodes. Default: TRUE.}
 }
+\value{
+A ggplot object.
+}
 \description{
 Plot protein-protein interaction network from edge list
 }

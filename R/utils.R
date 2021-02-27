@@ -6,7 +6,7 @@
 #' @return Logical indicating whether object is SummarizedExperiment or not.
 #' @noRd
 is_SE <- function(object) {
-    if(class(object) == "SummarizedExperiment") {
+    if(is(object, "SummarizedExperiment")) {
         x <- TRUE
     } else {
         x <- FALSE
@@ -273,6 +273,10 @@ handle_trait_type <- function(metadata, continuous_trait = FALSE) {
 #' @return A 2-column data frame containing node 1, node 2 and edge weight
 #' @export
 #' @rdname cormat_to_edgelist
+#' @examples
+#' data(filt.se)
+#' cor_mat <- cor(t(assay(filt.se)))
+#' edgelist <- cormat_to_edgelist(cor_mat)
 cormat_to_edgelist <- function(matrix) {
     edgelist <- matrix
     edgelist[lower.tri(edgelist, diag=TRUE)] <- NA
@@ -291,7 +295,7 @@ cormat_to_edgelist <- function(matrix) {
 #' @param net_type Type of biological network. One of "gcn", "grn", or "ppi". Default: gcn.
 #'
 #' @rdname check_sft
-#' @export
+#' @noRd
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
 check_sft <- function(edgelist, net_type = "gcn") {
 
