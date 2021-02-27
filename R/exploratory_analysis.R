@@ -27,8 +27,10 @@
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom ComplexHeatmap pheatmap
 #' @examples
+#' \donttest{
 #' data(filt.se)
 #' plot_heatmap(filt.se)
+#' }
 plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
                          cor_method = 'spearman', type = "samplecor",
                          palette = NULL, log_trans = FALSE,

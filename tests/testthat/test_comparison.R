@@ -6,9 +6,9 @@ data(zma.se)
 data(osa.se)
 og <- og.zma.osa
 explist <- list(osa=osa.se, zma=zma.se)
+explist <- lapply(explist, filter_by_variance, n=2000)
 exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
-exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
-powers <- c(13, 15)
+powers <- c(15, 13)
 gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
                    SFTpower = powers[1], cor_method = "pearson",
                    reportPDF=FALSE)
@@ -18,6 +18,13 @@ gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
 
 
 #----Start tests----
+test_that("parse_orthofinder() parses OrthoFinder's orthogroups", {
+    path <- system.file("extdata", "Orthogroups.tsv", package = "BioNERO",
+                        mustWork = TRUE)
+    og <- parse_orthofinder(path)
+    expect_equal(ncol(og), 3)
+})
+
 
 test_that("exp_genes2orthogroups() replaces genes with orthogroups", {
     exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
