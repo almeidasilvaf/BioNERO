@@ -2,10 +2,7 @@
 #----Create data for testing----
 set.seed(12)
 data("zma.se")
-data("osa.se")
 filt.zma <- filter_by_variance(zma.se, n=500)
-filt.osa <- filter_by_variance(osa.se, n=500)
-list.se <- list(filt.zma, filt.osa)
 zma.set1 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
 zma.set2 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
 list.sets <- list(zma.set1, zma.set2)
@@ -18,7 +15,7 @@ test_that("consensus_SFT_fit() calculates best SFT fit for all networks", {
                                   cor_method = "pearson")
     expect_equal(class(cons_sft[[1]]), "numeric")
     expect_equal(class(cons_sft[[2]]), c("gg", "ggplot", "ggarrange"))
-    expect_equal(length(cons_sft[[1]]), length(list.se))
+    expect_equal(length(cons_sft[[1]]), length(list.sets))
 })
 
 test_that("consensus_modules() identified consensus modules across sets", {

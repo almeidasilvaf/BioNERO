@@ -35,7 +35,8 @@
 #'
 #' @name filt.se
 #' @format An object of class \code{SummarizedExperiment}
-#' @references Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
+#' @references
+#' Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
 #' data(filt.se)
 "filt.se"
@@ -66,3 +67,19 @@
 #' @examples
 #' data(zma.tfs)
 "zma.tfs"
+
+
+#' Orthogroups between maize and rice
+#'
+#' The orthogroups were downloaded from the PLAZA 4.0 Monocots database.
+#'
+#' @name og.zma.osa
+#' @format A 3-column data frame with orthogroups, species IDs and gene IDs.
+#' @references
+#' Van Bel, M., Diels, T., Vancaester, E., Kreft, L., Botzki, A., Van de Peer, Y., ... & Vandepoele, K. (2018). PLAZA 4.0: an integrative resource for functional, evolutionary and comparative plant genomics. Nucleic acids research, 46(D1), D1190-D1196.
+#'
+#' @examples
+#' data(og.zma.osa)
+"og.zma.osa"
+
+

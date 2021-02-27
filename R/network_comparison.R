@@ -1,12 +1,62 @@
+
+
+
+
+#' Collapse gene-level expression data to orthogroup level
+#'
+#' For a given list of expression data, this function replaces genes with
+#' their corresponding orthogroups to allow inter-species comparisons.
+#'
+#' @param explist List of expression data frames or SummarizedExperiment objects.
+#' @param og Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.
+#' Species IDs must be the same as the names of the expression list.
+#' @param summarize Centrality measure to summarize multiple paralogous genes in the same orthogroup.
+#' One of "median" or "mean". Default: "median".
+#' @return List of expression data frames for each species with expression
+#' summarized at the orthogroup level.
+#'
+#' @export
+#' @importFrom stats aggregate
+#' @rdname exp_genes2orthogroups
+#' @examples
+#' \donttest{
+#' data(og.zma.osa)
+#' data(zma.se)
+#' data(osa.se)
+#' explist <- list(zma = zma.se,
+#'                 osa = osa.se)
+#' og <- og.zma.osa
+#' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+#' }
+exp_genes2orthogroups <- function(explist = NULL, og = NULL,
+                                  summarize="median") {
+    colnames(og) <- c("Family", "Species", "Gene")
+    exp <- handleSElist(explist)
+    exp <- exp[order(names(exp))]
+    og_list <- split(og, og$Species)
+    og_list <- og_list[order(names(og_list))]
+    og_exp <- lapply(seq_along(exp), function(x) {
+        set <- merge(exp[[x]], og_list[[x]], by.x="row.names", by.y=3)
+        set <- set[, -c(1, ncol(set))]
+        set <- suppressWarnings(aggregate(set, by=list(set$Family), FUN=summarize))
+        rownames(set) <- set[,1]
+        set <- set[, -c(1, ncol(set))]
+        return(set)
+    })
+    names(og_exp) <- names(exp)
+
+    return(og_exp)
+}
+
 #' Calculate module preservation between two expression data sets using WGCNA's algorithm
 #'
 #' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
 #' @param ref_net Reference network object returned by the function \code{exp2net}.
-#' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
+#' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default: FALSE.
 #' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
-#' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.
+#' @param nPerm Number of permutations for the module preservation statistics. Default: 200.
 #'
-#' @return A list object resulting from \code{WGCNA::modulePreservation} and .pdf files with plot statistics.
+#' @return A ggplot object with module preservation statistics.
 #' @seealso
 #'  \code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
 #'  \code{\link[ggpubr]{ggscatter}},\code{\link[ggpubr]{ggarrange}},\code{\link[ggpubr]{ggexport}}
@@ -16,14 +66,31 @@
 #' @importFrom WGCNA standardColors
 #' @importFrom ggpubr ggscatter ggarrange ggexport
 #' @importFrom ggplot2 theme element_text geom_hline
+#' @examples
+#' \donttest{
+#' set.seed(1)
+#' data(og.zma.osa)
+#' data(zma.se)
+#' data(osa.se)
+#' og <- og.zma.osa
+#' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+#' exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+#' # Previously calculated power
+#' powers <- c(13, 15)
+#' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+#'                    SFTpower = powers[1], cor_method = "pearson",
+#'                    reportPDF=FALSE)
+#' explist <- exp_ortho
+#' ref_net <- gcn_osa
+#' # 5 permutations for demonstration purposes
+#' pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
+#' }
 modPres_WGCNA <- function(explist, ref_net,
-                          savePreservation = TRUE, plot_all_stats = FALSE,
-                          calculateClusterCoeff = FALSE) {
-
-    # Keep only genes/probes present in both data sets
-    overlap <- as.character(intersect(colnames(explist[[1]]), colnames(explist[[2]])))
-    explist[[1]] <- explist[[1]][, overlap]
-    explist[[2]] <- explist[[2]][, overlap]
+                          savePreservation = FALSE,
+                          plot_all_stats = FALSE,
+                          nPerm = 200) {
+    explist <- handleSElist(explist)
+    explist <- lapply(explist, function(x) return(t(x)))
 
     # Set parameters for network reconstruction
     net_type <- ref_net$params$net_type
@@ -41,44 +108,40 @@ modPres_WGCNA <- function(explist, ref_net,
 
     # Calculate module preservation
     if(cor_method == "pearson") {
-        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
-                                          referenceNetworks = 1,
-                                          nPermutations = 200,
-                                          randomSeed = 1,
-                                          quickCor = 0,
-                                          verbose = 3, networkType=net_type,
-                                          calculateClusterCoeff = calculateClusterCoeff)
+      corOptions <- "use = 'p'"
+      corFnc <- "cor"
     } else if(cor_method == "spearman") {
-        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
-                                          referenceNetworks = 1,
-                                          nPermutations = 200,
-                                          randomSeed = 1,
-                                          quickCor = 0,
-                                          corOptions = list(use="p", method="spearman"),
-                                          verbose = 3, networkType=net_type,
-                                          calculateClusterCoeff = calculateClusterCoeff)
+      corOptions <- list(use = 'p', method="spearman")
+      corFnc <- "cor"
     } else if(cor_method == "biweight") {
-        pres <- WGCNA::modulePreservation(multiExpr, multiColor,
-                                          referenceNetworks = 1,
-                                          nPermutations = 200,
-                                          randomSeed = 1,
-                                          quickCor = 0, corFnc = "bicor",
-                                          verbose = 3, networkType=net_type,
-                                          calculateClusterCoeff = calculateClusterCoeff)
+      corOptions <- list(use = 'p', maxPOutliers = 0.05)
+      corFnc <- "bicor"
     } else {
-        stop("Please, specify a valid correlation method.")
+      stop("Please, specify a valid correlation method.")
     }
 
-    if(savePreservation == TRUE) {
-        save(pres, file = "modulePreservation.RData");
+    pres <- WGCNA::modulePreservation(multiExpr, multiColor,
+                                      referenceNetworks = 1,
+                                      nPermutations = nPerm,
+                                      randomSeed = 1,
+                                      quickCor = 0, corFnc = corFnc,
+                                      corOptions = corOptions,
+                                      verbose = 0, networkType = net_type,
+                                      savePermutedStatistics = FALSE,
+                                      plotInterpolation = FALSE)
+
+    if(savePreservation) {
+      date <- Sys.Date()
+      save(pres, file = paste0(date, "_modulePreservation.rda"), compress="xz")
     }
 
     # Isolate the observed statistics and their Z-scores
     ref <- 1
     test <- 2
-    statsObs <- cbind(pres$quality$observed[[ref]][[test]][, -1], pres$preservation$observed[[ref]][[test]][, -1])
-    statsZ <- cbind(pres$quality$Z[[ref]][[test]][, -1], pres$preservation$Z[[ref]][[test]][, -1])
-
+    statsObs <- cbind(pres$quality$observed[[ref]][[test]][, -1],
+                      pres$preservation$observed[[ref]][[test]][, -1])
+    statsZ <- cbind(pres$quality$Z[[ref]][[test]][, -1],
+                    pres$preservation$Z[[ref]][[test]][, -1])
 
     # Module labels and module sizes are also contained in the results
     modColors <- rownames(pres$preservation$observed[[ref]][[test]])
@@ -91,47 +154,40 @@ modPres_WGCNA <- function(explist, ref_net,
     text <- modColors[plotMods]
 
     # Auxiliary convenience variable
-    plotData <- cbind(pres$preservation$observed[[ref]][[test]][, 2], pres$preservation$Z[[ref]][[test]][, 2])
+    plotData <- cbind(pres$preservation$observed[[ref]][[test]][, 2],
+                      pres$preservation$Z[[ref]][[test]][, 2])
 
-    # Main titles for the plot
-    mains <- c("Preservation Median rank", "Preservation Zsummary");
 
     # Plot preservation median rank
-    dplot1 <- data.frame(x=moduleSizes[plotMods], y=plotData[plotMods, 1], label=text, stringsAsFactors=FALSE)
-    p1 <- ggpubr::ggscatter(dplot1, x = "x", y = "y", size=4,
+    dplot1 <- data.frame(x=moduleSizes[plotMods], y=plotData[plotMods, 1],
+                         label=as.factor(text))
+    p1 <- suppressWarnings(ggpubr::ggscatter(dplot1, x = "x", y = "y", size=4,
                             color="black", fill=text, shape=21,
                             label = "label", repel = TRUE,
-                            xlab = "Module size", ylab = mains[1],
-                            title = mains[1], font.title = c(17, "bold")) +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+                            xlab = "Module size", ylab = "Median rank",
+                            title = "Preservation median rank",
+                            font.title = c(13, "bold")) +
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)))
 
     # Plot preservation Z-summary
     dplot2 <- data.frame(x=moduleSizes[plotMods], y=plotData[plotMods, 2], label=text, stringsAsFactors=FALSE)
-    p2 <- ggscatter(dplot2, x = "x", y = "y", size=4,
+    p2 <- suppressWarnings(ggscatter(dplot2, x = "x", y = "y", size=4,
                     color="black", fill=text, shape=21,
                     label = "label", repel = TRUE,
-                    xlab = "Module size", ylab = mains[2],
-                    title = mains[2], font.title = c(17, "bold")) +
+                    xlab = "Module size", ylab = expression("Z"[summary]),
+                    title = expression("Preservation Z"[summary]),
+                    font.title = c(13, "bold")) +
         ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-        ggplot2::geom_hline(yintercept = 0) +
+        ggplot2::geom_hline(yintercept = 0, linetype = 2) +
         ggplot2::geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
-        ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2)
+        ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
 
     fig1 <- ggpubr::ggarrange(p1, p2, ncol=2, nrow=1)
-    ggpubr::ggexport(fig1, filename = "Module_preservation.pdf", height=6, width=12)
-
-
-    if(plot_all_stats == TRUE) {
-
+    if(plot_all_stats) {
         # Re-initialize module color labels and sizes
         modColors <- rownames(statsZ)
         moduleSizes <- pres$quality$Z[[ref]][[test]][, 1];
-
-        # Exclude improper modules
-        plotMods <- !(modColors %in% c("grey", "gold"));
-
-        # Create numeric labels for each module
-        labs <- match(modColors[plotMods], WGCNA::standardColors(50));
+        plotMods <- !(modColors %in% c("grey", "gold"))
 
         # Create a list of plots per column of statsZ
         df <- cbind(moduleSizes[plotMods], statsZ[plotMods, ])
@@ -139,51 +195,36 @@ modPres_WGCNA <- function(explist, ref_net,
         ylabs <- colnames(df)[2:ncol(df)]
         df$labels <- rownames(df)
 
-        plots <- lapply(ylabs, function(x) ggpubr::ggscatter(df, x = "module_size", y = x, size=4,
-                                                             color="black", fill=labels, shape=21,
-                                                             label = "labels", repel = TRUE,
-                                                             xlab = "Module size", ylab = x,
-                                                             title = x, font.title = c(17, "bold")) +
-                            ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-                            ggplot2::geom_hline(yintercept = 0) +
-                            ggplot2::geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
-                            ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
+        plots <- lapply(ylabs, function(x) {
+          y <- suppressWarnings(ggpubr::ggscatter(df, x = "module_size", y = x, size=4,
+                                 color="black", fill=df$labels, shape=21,
+                                 label = "labels", repel = TRUE,
+                                 xlab = "Module size", ylab = x,
+                                 title = x, font.title = c(13, "bold")) +
+            ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
+            ggplot2::geom_hline(yintercept = 0, linetype = 2) +
+            ggplot2::geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
+            ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
+          return(y)
+          })
+        pl1 <- plots[1:4]
+        pl2 <- plots[5:8]
+        pl3 <- plots[9:12]
+        pl4 <- plots[13:16]
+        pl5 <- plots[17:19]
+        mpage1 <- ggpubr::ggarrange(plotlist = pl1)
+        mpage2 <- ggpubr::ggarrange(plotlist = pl2)
+        mpage3 <- ggpubr::ggarrange(plotlist = pl3)
+        mpage4 <- ggpubr::ggarrange(plotlist = pl4)
+        mpage5 <- ggpubr::ggarrange(plotlist = pl5)
+        final_list <- list(mpage1, mpage2, mpage3, mpage4, mpage5)
 
-        if(calculateClusterCoeff == FALSE) {
-            pl1 <- plots[1:4]
-            pl2 <- plots[5:8]
-            pl3 <- plots[9:12]
-            pl4 <- plots[13:16]
-            pl5 <- plots[17:19]
-            mpage1 <- ggpubr::ggarrange(plotlist = pl1)
-            mpage2 <- ggpubr::ggarrange(plotlist = pl2)
-            mpage3 <- ggpubr::ggarrange(plotlist = pl3)
-            mpage4 <- ggpubr::ggarrange(plotlist = pl4)
-            mpage5 <- ggpubr::ggarrange(plotlist = pl5)
-            final_list <- list(mpage1, mpage2, mpage3, mpage4, mpage5)
-
-            multipage <- ggpubr::ggarrange(plotlist = final_list, ncol=1, nrow=1)
-            ggpubr::ggexport(multipage, filename="all_Zstats.pdf", height = 9, width=9)
-        } else {
-            pl1 <- plots[1:4]
-            pl2 <- plots[5:8]
-            pl3 <- plots[9:12]
-            pl4 <- plots[13:16]
-            pl5 <- plots[17:20]
-            pl6 <- plots[21:22]
-            mpage1 <- ggpubr::ggarrange(plotlist = pl1)
-            mpage2 <- ggpubr::ggarrange(plotlist = pl2)
-            mpage3 <- ggpubr::ggarrange(plotlist = pl3)
-            mpage4 <- ggpubr::ggarrange(plotlist = pl4)
-            mpage5 <- ggpubr::ggarrange(plotlist = pl5)
-            mpage6 <- ggpubr::ggarrange(plotlist = pl6)
-            final_list <- list(mpage1, mpage2, mpage3, mpage4, mpage5, mpage6)
-
-            multipage <- ggpubr::ggarrange(plotlist = final_list, ncol=1, nrow=1)
-            ggpubr::ggexport(multipage, filename = "all_Zstats.pdf", height = 9, width=9)
+        multipage <- ggpubr::ggarrange(plotlist = final_list, ncol=1, nrow=1)
+        date <- Sys.Date()
+        ggpubr::ggexport(multipage, filename=paste0(date, "all_Zstats.pdf"),
+                         height = 9, width = 9)
         }
-    }
-    return(pres)
+    return(fig1)
 }
 
 
@@ -193,26 +234,48 @@ modPres_WGCNA <- function(explist, ref_net,
 #' @param ref_net Reference network object returned by the function \code{exp2net}.
 #' @param test_net Test network object returned by the function \code{exp2net}.
 #' @param nPerm Number of permutations. Default: 1000
-#' @param nThreads Number of threads to be used for parallel computing. Default: 2
+#' @param nThreads Number of threads to be used for parallel computing. Default: 1
 #' @return Output list from \code{NetRep::modulePreservation} and a message in user's standard output stating which modules are preserved.
 #' @seealso
 #'  \code{\link[NetRep]{modulePreservation}}
 #' @rdname modPres_netrep
 #' @export
 #' @importFrom NetRep modulePreservation
+#' @examples
+#' \donttest{
+#' set.seed(1)
+#' data(og.zma.osa)
+#' data(zma.se)
+#' data(osa.se)
+#' og <- og.zma.osa
+#' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+#' exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+#' # Previously calculated SFT powers
+#' powers <- c(13, 15)
+#' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+#'                    SFTpower = powers[1], cor_method = "pearson",
+#'                    reportPDF=FALSE)
+#' gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
+#'                    SFTpower = powers[2], cor_method = "pearson",
+#'                    reportPDF=FALSE)
+#' explist <- exp_ortho
+#' ref_net <- gcn_osa
+#' test_net <- gcn_zma
+#' # 10 permutations for demonstration purposes
+#' pres_netrep <- modPres_netrep(explist, ref_net, test_net,
+#'                               nPerm=10, nThreads = 2)
+#' }
+#'
 modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
-                           nPerm = 1000, nThreads=2) {
-
-    # Keep only genes/probes present in both data sets
-    overlap <- as.character(intersect(colnames(explist[[1]]), colnames(explist[[2]])))
-    explist[[1]] <- explist[[1]][, overlap]
-    explist[[2]] <- explist[[2]][, overlap]
+                           nPerm = 1000, nThreads = 1) {
+    explist <- handleSElist(explist)
+    explist <- lapply(explist, function(x) return(t(x)))
 
     # Set data set names
     if(is.null(names(explist))) {
-        data_names <- c("cohort1", "cohort2")
+      data_names <- c("cohort1", "cohort2")
     } else {
-        data_names <- names(explist)
+      data_names <- names(explist)
     }
 
     # Create correlation list
@@ -247,8 +310,14 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
     # Get preserved modules (p < 0.05 for all statistics)
     max_pval <- apply(pres$p.value, 1, max)
     preservedmodules <- names(max_pval[max_pval < 0.05])
-    cat("We found", length(preservedmodules), "preserved modules:", preservedmodules)
-
+    if(length(preservedmodules) > 0) {
+      message(length(preservedmodules), " modules in ", data_names[1],
+              " were preserved in ", data_names[2], ":", "\n",
+              toString(preservedmodules))
+    } else {
+      message("None of the modules in ", data_names[1],
+              " were preserved in ", data_names[2], ".")
+    }
     return(pres)
 }
 
@@ -256,39 +325,48 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 
 #' Calculate network preservation between two expression data sets
 #'
-#' @param explist List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.
-#' @param ref_net Reference network object returned by the function \code{exp2net}.
-#' @param test_net Test network object returned by the function \code{exp2net}.
+#' @param explist List of SummarizedExperiment objects or expression data frames with genes in row names and samples in column names.
+#' @param ref_net Reference network object returned by the function \code{exp2gcn}.
+#' @param test_net Test network object returned by the function \code{exp2gcn}.
 #' @param algorithm Module preservation algorithm to be used. One of 'netrep' (default, permutation-based) or WGCNA.
-#' @param diffIDs Logical indicating whether the different data sets have different gene IDs (e.g., for different species). Default: FALSE
-#' @param correspondence Data frame containing gene IDs for the reference data set in the column 1 and gene IDs for the test data set in column 2. Only required if diffIDs is TRUE.
 #' @param nPerm Number of permutations. Default: 1000
-#' @param nThreads Number of threads to be used for parallel computing. Default: 2
-#' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.
-#' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.
-#' @param calculateClusterCoeff Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.
-#' @return A list containing the preservation statistics. The list will be different depending on the chosen algorithm. See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
+#' @param nThreads Number of threads to be used for parallel computing. Default: 1
+#' @param savePreservation Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default: FALSE.
+#' @param plot_all_stats Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default: FALSE.
+#'
+#' @return A list containing the preservation statistics (netrep) or a ggplot object with preservation statistics.
+#' See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
 #' @rdname module_preservation
 #' @export
+#' @examples
+#' \donttest{
+#' set.seed(1)
+#' data(og.zma.osa)
+#' data(zma.se)
+#' data(osa.se)
+#' og <- og.zma.osa
+#' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+#' exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+#' # Previously calculated SFT powers
+#' powers <- c(13, 15)
+#' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+#'                    SFTpower = powers[1], cor_method = "pearson",
+#'                    reportPDF=FALSE)
+#' gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
+#'                    SFTpower = powers[2], cor_method = "pearson",
+#'                    reportPDF=FALSE)
+#' explist <- exp_ortho
+#' ref_net <- gcn_osa
+#' test_net <- gcn_zma
+#' # 10 permutations for demonstration purposes
+#' pres <- module_preservation(explist, ref_net, test_net, nPerm=10)
+#' }
+#'
 module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
-                                algorithm="netrep",
-                                diffIDs=FALSE,
-                                correspondence=NULL,
-                                nPerm = 1000, nThreads=2,
-                                savePreservation = TRUE,
-                                plot_all_stats = FALSE,
-                                calculateClusterCoeff = FALSE) {
-
-    if(diffIDs == TRUE) {
-        if(is.null(correspondence)) {
-            stop("Please, input a data frame of correspondence between IDs from the different data sets.")
-        }
-
-        # Set IDs of test data set to be equal to IDs of reference data set
-        colnames(explist[[2]]) <- colnames(explist[[1]])
-        colnames(explist[[2]]) <- correspondence[correspondence[,2] %in%
-                                                     colnames(explist[[2]]), 1]
-    }
+                                algorithm = "netrep",
+                                nPerm = 1000, nThreads = 1,
+                                savePreservation = FALSE,
+                                plot_all_stats = FALSE) {
 
     if(algorithm == "netrep") {
         pres <- modPres_netrep(explist = explist,
@@ -301,7 +379,7 @@ module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
                               ref_net = ref_net,
                               savePreservation = savePreservation,
                               plot_all_stats = plot_all_stats,
-                              calculateClusterCoeff = calculateClusterCoeff)
+                              nPerm = nPerm)
     } else {
         stop("Please, specify a valid algorithm. One of 'netrep' or 'WGCNA'.")
     }

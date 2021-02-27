@@ -9,41 +9,58 @@ module_preservation(
   ref_net = NULL,
   test_net = NULL,
   algorithm = "netrep",
-  diffIDs = FALSE,
-  correspondence = NULL,
   nPerm = 1000,
-  nThreads = 2,
-  savePreservation = TRUE,
-  plot_all_stats = FALSE,
-  calculateClusterCoeff = FALSE
+  nThreads = 1,
+  savePreservation = FALSE,
+  plot_all_stats = FALSE
 )
 }
 \arguments{
-\item{explist}{List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.}
+\item{explist}{List of SummarizedExperiment objects or expression data frames with genes in row names and samples in column names.}
 
-\item{ref_net}{Reference network object returned by the function \code{exp2net}.}
+\item{ref_net}{Reference network object returned by the function \code{exp2gcn}.}
 
-\item{test_net}{Test network object returned by the function \code{exp2net}.}
+\item{test_net}{Test network object returned by the function \code{exp2gcn}.}
 
 \item{algorithm}{Module preservation algorithm to be used. One of 'netrep' (default, permutation-based) or WGCNA.}
 
-\item{diffIDs}{Logical indicating whether the different data sets have different gene IDs (e.g., for different species). Default: FALSE}
-
-\item{correspondence}{Data frame containing gene IDs for the reference data set in the column 1 and gene IDs for the test data set in column 2. Only required if diffIDs is TRUE.}
-
 \item{nPerm}{Number of permutations. Default: 1000}
 
-\item{nThreads}{Number of threads to be used for parallel computing. Default: 2}
+\item{nThreads}{Number of threads to be used for parallel computing. Default: 1}
 
-\item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.}
+\item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default: FALSE.}
 
-\item{plot_all_stats}{Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.}
-
-\item{calculateClusterCoeff}{Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.}
+\item{plot_all_stats}{Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default: FALSE.}
 }
 \value{
-A list containing the preservation statistics. The list will be different depending on the chosen algorithm. See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
+A list containing the preservation statistics (netrep) or a ggplot object with preservation statistics.
+See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
 }
 \description{
 Calculate network preservation between two expression data sets
+}
+\examples{
+\donttest{
+set.seed(1)
+data(og.zma.osa)
+data(zma.se)
+data(osa.se)
+og <- og.zma.osa
+exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+# Previously calculated SFT powers
+powers <- c(13, 15)
+gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+                   SFTpower = powers[1], cor_method = "pearson",
+                   reportPDF=FALSE)
+gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
+                   SFTpower = powers[2], cor_method = "pearson",
+                   reportPDF=FALSE)
+explist <- exp_ortho
+ref_net <- gcn_osa
+test_net <- gcn_zma
+# 10 permutations for demonstration purposes
+pres <- module_preservation(explist, ref_net, test_net, nPerm=10)
+}
+
 }

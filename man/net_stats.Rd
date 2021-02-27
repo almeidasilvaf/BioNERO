@@ -35,6 +35,16 @@ A list containing the following elements: \itemize{
 \description{
 Calculate network statistics
 }
+\examples{
+\donttest{
+data(filt.se)
+set.seed(12)
+filt.se <- filter_by_variance(filt.se, n=100)
+gcn <- exp2gcn(filt.se, SFTpower = 19, cor_method = "pearson",
+               reportPDF = FALSE, net_type = "signed hybrid")
+stats <- net_stats(gcn$adjacency_matrix, net_type="gcn")
+}
+}
 \seealso{
 \code{\link[igraph]{graph_from_adjacency_matrix}},\code{\link[igraph]{cliques}},\code{\link[igraph]{diameter}},\code{\link[igraph]{estimate_betweenness}},\code{\link[igraph]{V}},\code{\link[igraph]{closeness}},\code{\link[igraph]{degree}},\code{\link[igraph]{transitivity}},\code{\link[igraph]{edge_density}},\code{\link[igraph]{centr_degree}}
  \code{\link[WGCNA]{fundamentalNetworkConcepts}}

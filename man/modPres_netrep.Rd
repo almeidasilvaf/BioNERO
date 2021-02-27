@@ -9,7 +9,7 @@ modPres_netrep(
   ref_net = NULL,
   test_net = NULL,
   nPerm = 1000,
-  nThreads = 2
+  nThreads = 1
 )
 }
 \arguments{
@@ -21,13 +21,39 @@ modPres_netrep(
 
 \item{nPerm}{Number of permutations. Default: 1000}
 
-\item{nThreads}{Number of threads to be used for parallel computing. Default: 2}
+\item{nThreads}{Number of threads to be used for parallel computing. Default: 1}
 }
 \value{
 Output list from \code{NetRep::modulePreservation} and a message in user's standard output stating which modules are preserved.
 }
 \description{
 Calculate module preservation between two expression data sets using NetRep's algorithm
+}
+\examples{
+\donttest{
+set.seed(1)
+data(og.zma.osa)
+data(zma.se)
+data(osa.se)
+og <- og.zma.osa
+exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+# Previously calculated SFT powers
+powers <- c(13, 15)
+gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+                   SFTpower = powers[1], cor_method = "pearson",
+                   reportPDF=FALSE)
+gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
+                   SFTpower = powers[2], cor_method = "pearson",
+                   reportPDF=FALSE)
+explist <- exp_ortho
+ref_net <- gcn_osa
+test_net <- gcn_zma
+# 10 permutations for demonstration purposes
+pres_netrep <- modPres_netrep(explist, ref_net, test_net,
+                              nPerm=10, nThreads = 2)
+}
+
 }
 \seealso{
 \code{\link[NetRep]{modulePreservation}}

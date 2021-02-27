@@ -26,6 +26,15 @@
 #' @export
 #' @importFrom igraph graph_from_adjacency_matrix cliques diameter betweenness V closeness degree transitivity edge_density centralization.degree
 #' @importFrom WGCNA fundamentalNetworkConcepts
+#' @examples
+#' \donttest{
+#' data(filt.se)
+#' set.seed(12)
+#' filt.se <- filter_by_variance(filt.se, n=100)
+#' gcn <- exp2gcn(filt.se, SFTpower = 19, cor_method = "pearson",
+#'                reportPDF = FALSE, net_type = "signed hybrid")
+#' stats <- net_stats(gcn$adjacency_matrix, net_type="gcn")
+#' }
 net_stats <- function(adj_matrix = NULL, net_type=c("gcn", "ppi", "grn"),
                       calculate_additional = FALSE) {
 
@@ -39,7 +48,7 @@ net_stats <- function(adj_matrix = NULL, net_type=c("gcn", "ppi", "grn"),
     stats$nCliques <- length(igraph::cliques(graph, min=3)) # number of cliques
     stats$diameter <- igraph::diameter(graph, directed=FALSE) # net diameter
 
-    if(calculate_additional == TRUE) {
+    if(calculate_additional) {
       # Calculate vertex betweenness
       betweenness <- igraph::betweenness(graph, directed = FALSE)
       names(betweenness) <- igraph::V(graph)

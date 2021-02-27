@@ -7,9 +7,9 @@
 modPres_WGCNA(
   explist,
   ref_net,
-  savePreservation = TRUE,
+  savePreservation = FALSE,
   plot_all_stats = FALSE,
-  calculateClusterCoeff = FALSE
+  nPerm = 200
 )
 }
 \arguments{
@@ -17,17 +17,37 @@ modPres_WGCNA(
 
 \item{ref_net}{Reference network object returned by the function \code{exp2net}.}
 
-\item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default is TRUE.}
+\item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default: FALSE.}
 
 \item{plot_all_stats}{Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default is FALSE.}
 
-\item{calculateClusterCoeff}{Logical indicating if clustering coefficient statistics should be calculated. Only valid if \code{plot_all_stats} is TRUE. As it may take a long time, default is FALSE.}
+\item{nPerm}{Number of permutations for the module preservation statistics. Default: 200.}
 }
 \value{
-A list object resulting from \code{WGCNA::modulePreservation} and .pdf files with plot statistics.
+A ggplot object with module preservation statistics.
 }
 \description{
 Calculate module preservation between two expression data sets using WGCNA's algorithm
+}
+\examples{
+\donttest{
+set.seed(1)
+data(og.zma.osa)
+data(zma.se)
+data(osa.se)
+og <- og.zma.osa
+exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
+exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
+# Previously calculated power
+powers <- c(13, 15)
+gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+                   SFTpower = powers[1], cor_method = "pearson",
+                   reportPDF=FALSE)
+explist <- exp_ortho
+ref_net <- gcn_osa
+# 5 permutations for demonstration purposes
+pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
+}
 }
 \seealso{
 \code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
