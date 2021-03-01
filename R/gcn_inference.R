@@ -354,7 +354,6 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 
     textMatrix <- paste(signif(modtraitcor, 2), modtraitsymbol, sep = "")
     dim(textMatrix) <- dim(modtraitcor)
-    par(mar = c(6, 8.5, 3, 3))
 
     if(transpose) {
         modtraitcor <- t(modtraitcor)
@@ -364,7 +363,9 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
         xSymbols <- names(MEs)
         ySymbols <- NULL
         xColorLabels <- TRUE
+        par(mar = c(5, 5, 1, 1))
     } else {
+        par(mar = c(6, 8.5, 3, 3))
         yLabels <- names(MEs)
         xLabels <- colnames(trait)
         xColorLabels <- FALSE

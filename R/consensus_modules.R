@@ -130,6 +130,7 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #'   \item{consMEs}{Consensus module eigengenes}
 #'   \item{exprSize}{Description of the multi-set object returned by the function \code{WGCNA::checkSets}}
 #'   \item{sampleInfo}{Metadata for each expression set}
+#'   \item{genes_cmodules}{Data frame of genes and consensus modules}
 #' }
 #'
 #' @seealso
@@ -250,6 +251,8 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     moduleLabels <- merge$colors
     moduleColors <- WGCNA::labels2colors(moduleLabels, colorSeq = palette)
+    genes_cmod <- data.frame(Genes = rownames(adj[[1]]),
+                             Cons_modules = moduleColors)
     consMEs <- merge$newMEs
 
     # Plot dendrogram with merged colors
@@ -265,7 +268,8 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
     result_list <- list(consModules = moduleColors,
                         consMEs = consMEs,
                         exprSize = expSize,
-                        sampleInfo = sampleinfo)
+                        sampleInfo = sampleinfo,
+                        genes_cmodules = genes_cmod)
     return(result_list)
 }
 
@@ -398,7 +402,6 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
     textMatrix <- paste(signif(cons_cor, 2), modtraitsymbol, sep = "")
     textMatrix[textMatrix == "NANA"] <- "-"
     dim(textMatrix) <- dim(moduleTraitCor[[set]])
-    par(mar = c(6, 8.5, 3, 3))
     if(transpose) {
         cons_cor <- t(cons_cor)
         textMatrix <- t(textMatrix)
@@ -407,7 +410,9 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
         xSymbols <- MEColorNames
         ySymbols <- NULL
         xColorLabels <- TRUE
+        par(mar = c(5, 5, 1, 1))
     } else {
+        par(mar = c(6, 8.5, 3, 3))
         xLabels <- names(sampleInfo[[set]])
         yLabels <- MEColorNames
         ySymbols <- MEColorNames

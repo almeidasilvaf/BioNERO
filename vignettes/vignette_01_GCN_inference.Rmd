@@ -50,7 +50,7 @@ set.seed(123) # for reproducibility
 
 # Data loading and preprocessing
 
-For this tutorial, we will use maize (*Zea mays*) gene expression data normalized in TPM. The data was obtained from @Shin2020 and was filtered for package size issues. For more information on the data set, see `?zma.se`. The data set is stored as a SummarizedExperiment object.[^1]
+For this tutorial, we will use maize (*Zea mays*) gene expression data normalized in TPM. The data were obtained from @Shin2020 and were filtered for package size issues. For more information on the data set, see `?zma.se`. The data set is stored as a SummarizedExperiment object.[^1]
 
 [^1]: **NOTE:** In case you have many tab-separated expression tables in a directory, `BioNERO` has a helper function named `dfs2one()` to load all these files and combine them into a single data frame.
 
@@ -90,7 +90,7 @@ exp_filt <- filter_by_variance(exp_filt, n=2000)
 dim(exp_filt)
 ```
 
-**Step 4:** Removing outlying samples. There are several methods to remove outliers. We have implemented the Z.K (standardized connectivity) method [@Oldham2012] in `ZKfiltering()`, which is a network-based approach to remove outlying samples. This method has proven to be more suitable for network analysis, since it can remove outliers that other methods (such as hierarchical clustering) cannot identify. By default, BioNERO considers all samples with ZK \< 2 as outliers, but this parameter is flexible if users want to change it.
+**Step 4:** Removing outlying samples. There are several methods to remove outliers. We have implemented the Z.K (standardized connectivity) method [@Oldham2012] in `ZKfiltering()`, which is a network-based approach to remove outliers. This method has proven to be more suitable for network analysis, since it can remove outliers that other methods (such as hierarchical clustering) cannot identify. By default, BioNERO considers all samples with ZK \< 2 as outliers, but this parameter is flexible if users want to change it.
 
 ```{r ZKfiltering}
 exp_filt <- ZKfiltering(exp_filt, cor_method = "pearson")
@@ -129,17 +129,14 @@ rm(exp_filt)
 **Plotting heatmaps:** the function `plot_heatmap()` plots heatmaps of correlations between samples or gene expression in a single line. Users can use their preferred RColorBrewer's palette, hide/show gene names, and activate/deactivate clustering for rows and/or columns.
 
 ```{r plot_heatmap, fig.wide=TRUE, fig.align='center', message=FALSE}
-# Simple heatmap of sample correlations
+# Heatmap of sample correlations
 plot_heatmap(final_exp, type = "samplecor")
 
-# Simple heatmap of gene expression
+# Heatmap of gene expression
 plot_heatmap(final_exp, type="expr")
 
 # Remove sample clustering
 plot_heatmap(final_exp, type="expr", cluster_cols=FALSE)
-
-# Remove gene clustering
-plot_heatmap(final_exp, type="expr", cluster_rows=FALSE)
 ```
 
 **Principal component analysis (PCA):** the function `plot_PCA()` performs a PCA and plots PC1 vs PC2 (by default), as well the percentage of variance explained by each PC. Users can also choose to plot PC1 vs PC3 or PC2 vs PC3.
@@ -151,7 +148,7 @@ plot_PCA(final_exp)
 
 # Gene coexpression network inference
 
-Now that we have our filtered and normalized expression data, we can reconstruct a gene coexpression network (GCN) with the WGCNA algorithm [@Langfelder2008]. First of all, we need to identify the most suitable $\beta$ power that makes the network satisfy the scale-free topology. We do that with the function `SFT_fit()`. Correlation values are raised to a power $\beta$ to amplify the distances between correlations and, hence, to make the module detection algorithm more powerful. The higher the value of $\beta$, the closer to the scale-free topology the network is. However, a very high $\beta$ power reduces mean connectivity, which is not desired. To solve this trade-off, we pick the lowest $\beta$ power above a certain threshold (by default in `SFT_fit()`, 0.8). This makes the network close to the scale-free topology without reducing dramatically the mean connectivity.
+Now that we have our filtered and normalized expression data, we can reconstruct a gene coexpression network (GCN) with the WGCNA algorithm [@Langfelder2008]. First of all, we need to identify the most suitable $\beta$ power that makes the network satisfy the scale-free topology. We do that with the function `SFT_fit()`. Correlation values are raised to a power $\beta$ to amplify their distances and, hence, to make the module detection algorithm more powerful. The higher the value of $\beta$, the closer to the scale-free topology the network is. However, a very high $\beta$ power reduces mean connectivity, which is not desired. To solve this trade-off, we pick the lowest $\beta$ power above a certain threshold (by default in `SFT_fit()`, 0.8). This makes the network close to the scale-free topology without reducing dramatically the mean connectivity.
 
 ```{r sft_fit}
 sft <- SFT_fit(final_exp, net_type="signed hybrid", cor_method="pearson")
@@ -167,14 +164,14 @@ As we can see, the optimal power is `r power`. However, we **strongly recommend*
 sft$plot
 ```
 
-Here comes the actual network inference! Now, we can use the power calculated by `SFT_fit()` to infer the GCN. The function `exp2gcn()` infers a GCN and outputs a list of 7 elements, each of which will be used by other functions in the analysis pipeline.
+Now, we can use the power calculated by `SFT_fit()` to infer the GCN. The function `exp2gcn()` infers a GCN and outputs a list of 7 elements, each of which will be used by other functions in the analysis pipeline.
 
 ```{r exp2net}
 net <- exp2gcn(final_exp, net_type="signed hybrid", SFTpower=power, cor_method="pearson")
 names(net)
 ```
 
-By default, `exp2gcn()` returns 2 PDF figures in the user's working directory. You can set `reportPDF = FALSE` if you do not want the figures. The figures display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.
+By default, `exp2gcn()` returns 2 PDF figures in the user's working directory. You can set `reportPDF = FALSE` if you do not want the figures. The figures are publication-ready and display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.
 
 ```{r echo=FALSE, out.width='700px', out.height='700px', fig.align='center'}
 date <- Sys.Date()
@@ -199,7 +196,7 @@ Now that we have our coexpression network, we can start exploring some of its pr
 
 ## Assessing module stability
 
-The function `module_stability()` allows users to check if the identified coexpression modules are stable (i.e., if they can resist removal of a particular sample). This function will sample the data set and rerun the module detection algorithm *n* times (default: 30) and return a PDF figure displaying a gene dendrogram and colors representing modules identified in each run. By looking at the figure, you can detect if a particular module is only found in a very small fraction of the runs, which suggests instability. Here, we will perform only 5 resampling runs for demonstration purposes.[^4]
+The function `module_stability()` allows users to check if the identified coexpression modules are stable (i.e., if they can resist removal of a particular sample). This function will resample the data set and rerun the module detection algorithm *n* times (default: 30) and return a PDF figure displaying a gene dendrogram and colors representing modules identified in each run. By looking at the figure, you can detect if a particular module is only found in a very small fraction of the runs, which suggests instability. Here, we will perform only 5 resampling runs for demonstration purposes.[^4]
 
 [^4]: **NOTE:** The calculations performed by this function may take a long time depending on the your network size. Use it only if you have some reason to suspect that the modules are highly dependent on a particular set of samples.
 
@@ -219,8 +216,7 @@ The function `module_trait_cor()` can be used to calculate module-trait correlat
 [^5]: **NOTE:** The function `gene_significance()` works just like `module_trait_cor()`, but it correlates individual genes (not the whole module) to traits. This function is very useful if you have a set of candidate genes and you want to find which of them are more associated with the trait of interest. See `?gene_significance()` for more details.
 
 ```{r moddtraitcor, fig.width=5, fig.height=5}
-MEtrait <- module_trait_cor(exp=final_exp, metadata=metadata, MEs=net$MEs, 
-                 cor_method="pearson")
+MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson")
 head(MEtrait)
 ```
 
@@ -228,14 +224,15 @@ The function `module_trait_cor()` also allows for plot customization. For instan
 
 ```{r modtraitcor_transpose, fig.width=9, fig.height=3}
 # Transpose the matrix
-MEtrait <- module_trait_cor(exp=final_exp, metadata=metadata, MEs=net$MEs, 
-                 cor_method="pearson", transpose = TRUE)
+MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson",
+                            transpose = TRUE, cex.text = 0.7,
+                            cex.lab.y = 0.7)
 ```
 
 ```{r mod_trait_cor_pal, fig.width=5, fig.height=5}
 # Change the palette (based on RColorBrewer's palette)
-MEtrait <- module_trait_cor(exp=final_exp, metadata=metadata, MEs=net$MEs,
-                 cor_method="pearson", palette="PRGn")
+MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson",
+                            palette="PRGn")
 ```
 
 ## Visualizing module expression profile
@@ -251,7 +248,7 @@ plot_expression_profile(exp=final_exp, net=net,
 
 After identifying modules that are inhibited or enhanced in particular tissues, users would likely want to find to which biological processes (e.g., GO biological process) or pathways (e.g., Reactome, KEGG, MapMan) these genes are related. This can be done with enrichment analyses, which can uncover terms that are found more than expected by chance in a module.
 
-The easiest way to accomplish this is to use the function `module_enrichment()`, which performs enrichment analysis for all modules at once. To illustrate it, we will scan coexpression modules for enriched protein domains using all genes in the network as background. The Interpro annotation was downloaded from the PLAZA 4.0 database [@VanBel2018].
+The easiest way to accomplish this is to use the function `module_enrichment()`, which performs enrichment analysis for all modules at once. To illustrate it, we will scan coexpression modules for enriched protein domains using all genes in the network as background. The Interpro annotation was downloaded from the PLAZA 4.0 Monocots database [@VanBel2018].
 
 ```{r echo=FALSE}
 BiocParallel::register(BiocParallel::SerialParam())
@@ -311,9 +308,6 @@ edges_filtered <- get_edge_list(net, module="midnightblue",
                                 filter=TRUE, method="min_cor",
                                 rcutoff = 0.7)
 dim(edges_filtered)
-
-# Check SFT fit
-check <- check_sft(edges_filtered, net_type = "gcn")
 ```
 
 ## Network visualization

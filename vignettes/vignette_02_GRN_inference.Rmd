@@ -1,5 +1,5 @@
 ---
-title: "Gene regulatory network inference with BioNERO"
+title: "Gene regulatory network inference"
 author: 
 - name: Fabricio Almeida-Silva
   affiliation: Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil
@@ -47,7 +47,7 @@ set.seed(123) # for reproducibility
 
 # Introduction and algorithm description
 
-In the previous vignette, we explored all the aspects of gene coexpression networks (GCNs), which are represented as **undirected weighted graphs**. It is **undirected** because, for a given link between *gene A* and *gene B*, we can only say that these genes are coexpressed, but we cannot know whether *gene A* controls *gene B* or otherwise. Further, **weighted** means that some coexpression relationships between gene pairs are stronger than others. In this vignette, we will demonstrate how to infer gene regulatory networks (GRNs) from expression data with BioNERO. GRNs display interactions between regulators (e.g., transcription factors or miRNAs) and their targets (e.g., genes), and they are represented as **directed unweighted graphs**. Graphically, GRNs are the opposite of GCNs: they can depict which node controls the other (**directed**) and are typically binary (**unweighted**). 
+In the previous vignette, we explored all aspects of gene coexpression networks (GCNs), which are represented as **undirected weighted graphs**. It is **undirected** because, for a given link between *gene A* and *gene B*, we can only say that these genes are coexpressed, but we cannot know whether *gene A* controls *gene B* or otherwise. Further, **weighted** means that some coexpression relationships between gene pairs are stronger than others. In this vignette, we will demonstrate how to infer gene regulatory networks (GRNs) from expression data with BioNERO. GRNs display interactions between regulators (e.g., transcription factors or miRNAs) and their targets (e.g., genes), and they are represented as **directed unweighted graphs**. Graphically, GRNs are the opposite of GCNs: they can depict which node controls the other (**directed**) and are typically binary (**unweighted**). 
 
 Numerous algorithms have been developed to infer GRNs from expression data. However, the algorithm performances are highly dependent on the benchmark data set. To solve this uncertainty, @Marbach2012 proposed the application of the *"wisdom of the crowds"* principle to GRN inference. This approach consists in inferring GRNs with different algorithms, ranking the interactions identified by each method, and calculating the average rank for each interaction across all algorithms used. This way, we can have consensus, high-confidence edges to be used in biological interpretations. For that, `BioNERO` implements three popular algorithms: GENIE3 [@Huynh-Thu2010], ARACNE [@Margolin2006] and CLR [@Faith2007].
 
@@ -78,8 +78,9 @@ head(zma.tfs)
 
 Inferring GRNs based on the *wisdom of the crowds* principle can be done with a single function: `exp2grn()`. This function will infer GRNs with GENIE3, ARACNE and CLR, calculate average ranks for each interaction and filter the resulting network based on the optimal scale-free topology (SFT) fit. In the filtering step, *n* different networks are created by subsetting the top *n* quantiles. For instance, if a network of 10,000 edges is given as input with `nsplit = 10`, 10 different networks will be created: the first with 1,000 edges, the second with 2,000 edges, and so on, with the last network being the original input network. Then, for each network, the function will calculate the SFT fit and select the best fit.
 
-```{r}
-grn <- exp2grn(exp = final_exp, regulators = zma.tfs$Gene)
+```{r exp2grn}
+# Using 10 trees for demonstration purposes. Use the default: 1000
+grn <- exp2grn(exp = final_exp, regulators = zma.tfs$Gene, nTrees=10)
 head(grn)
 ```
 
@@ -91,7 +92,7 @@ This section is directed to users who, for some reason (e.g., comparison, explor
 **GENIE3:** a regression-tree based algorithm that decomposes the prediction of GRNs for *n* genes into *n* regression problems. For each regression problem, the expression profile of a target gene is predicted from the expression profiles of all other genes using random forests (default) or extra-trees.
 
 ```{r genie3}
-# Using 10 trees for simplicity. Default: 1000.
+# Using 10 trees for demonstration purposes. Use the default: 1000
 genie3 <- grn_genie3(final_exp, regulators = zma.tfs$Gene, nTrees=10)
 head(genie3)
 dim(genie3)
