@@ -21,7 +21,7 @@ test_that("consensus_SFT_fit() calculates best SFT fit for all networks", {
 test_that("consensus_modules() identified consensus modules across sets", {
     cons_mod <- consensus_modules(list.sets, power = c(11, 13), cor_method = "pearson")
     expect_equal(class(cons_mod), "list")
-    expect_equal(length(cons_mod), 4)
+    expect_equal(length(cons_mod), 5)
 })
 
 test_that("consensus_trait_cor() correlates consensus mods to traits", {
