@@ -7,10 +7,12 @@
 grn_average_rank(list_edges)
 }
 \arguments{
-\item{list_edges}{List containing edge lists as returned by the function \code{grn_combined}.}
+\item{list_edges}{List containing edge lists as returned by
+the function \code{grn_combined}.}
 }
 \value{
-Edge list containing regulator, target and mean rank from all algorithms.
+Edge list containing regulator, target and mean rank from
+all algorithms.
 }
 \description{
 Rank edge weights for GRNs and calculate average across different methods

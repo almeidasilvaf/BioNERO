@@ -7,13 +7,16 @@
 SFT_fit(exp, net_type = "signed", rsquared = 0.8, cor_method = "spearman")
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{net_type}{Network type. One of 'signed', 'signed hybrid' or 'unsigned'. Default is signed.}
+\item{net_type}{Network type. One of 'signed', 'signed hybrid' or
+'unsigned'. Default is signed.}
 
 \item{rsquared}{R squared cutoff. Default is 0.8.}
 
-\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman".}
+\item{cor_method}{Correlation method. One of "pearson", "biweight"
+or "spearman". Default is "spearman".}
 }
 \value{
 A list containing: \itemize{

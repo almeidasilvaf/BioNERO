@@ -17,6 +17,9 @@ The orthogroups were downloaded from the PLAZA 4.0 Monocots database.
 data(og.zma.osa)
 }
 \references{
-Van Bel, M., Diels, T., Vancaester, E., Kreft, L., Botzki, A., Van de Peer, Y., ... & Vandepoele, K. (2018). PLAZA 4.0: an integrative resource for functional, evolutionary and comparative plant genomics. Nucleic acids research, 46(D1), D1190-D1196.
+Van Bel, M., Diels, T., Vancaester, E., Kreft, L., Botzki, A.,
+Van de Peer, Y., ... & Vandepoele, K. (2018). PLAZA 4.0: an integrative
+resource for functional, evolutionary and comparative plant
+genomics. Nucleic acids research, 46(D1), D1190-D1196.
 }
 \keyword{datasets}

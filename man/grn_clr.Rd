@@ -7,13 +7,19 @@
 grn_clr(exp, estimator_clr = "pearson", regulators = NULL, remove_zero = TRUE)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{estimator_clr}{Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
+\item{estimator_clr}{Entropy estimator to be used. One of "mi.empirical",
+"mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall".
+Default: "pearson".}
 
-\item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+\item{regulators}{A character vector of regulators
+(e.g., transcription factors or miRNAs). All regulators must be
+included in `exp`.}
 
-\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Default: TRUE}
+\item{remove_zero}{Logical indicating whether to remove edges whose weight
+is exactly zero. Default: TRUE}
 }
 \value{
 A gene regulatory network represented as an edge list.

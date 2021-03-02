@@ -2,8 +2,11 @@
 #' Calculate network statistics
 #'
 #' @param adj_matrix Adjacency matrix that represents the network.
-#' @param net_type One of "gcn" (gene coexpression network), "ppi" (protein-protein interaction), or "grn" (gene regulatory network).
-#' @param calculate_additional Logical indicating whether to calculate additional network statistics (betweenness and closeness). Default is FALSE, because it might be time-consuming.
+#' @param net_type One of "gcn" (gene coexpression network),
+#' "ppi" (protein-protein interaction), or "grn" (gene regulatory network).
+#' @param calculate_additional Logical indicating whether to calculate
+#' additional network statistics (betweenness and closeness).
+#' Default is FALSE.
 #'
 #' @return A list containing the following elements: \itemize{
 #'   \item Connectivity

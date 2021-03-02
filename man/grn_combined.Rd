@@ -15,22 +15,34 @@ grn_combined(
 )
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+\item{regulators}{A character vector of regulators
+(e.g., transcription factors or miRNAs). All regulators must be
+included in `exp`.}
 
-\item{eps}{Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.}
+\item{eps}{Numeric value indicating the threshold used when removing
+an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
+is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.}
 
-\item{estimator_aracne}{Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".}
+\item{estimator_aracne}{Entropy estimator to be used in ARACNE inference.
+One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+or "kendall". Default: "spearman".}
 
-\item{estimator_clr}{Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".}
+\item{estimator_clr}{Entropy estimator to be used in CLR inference.
+One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+or "kendall". Default: "pearson".}
 
-\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.}
+\item{remove_zero}{Logical indicating whether to remove edges
+whose weight is exactly zero. Zero values indicate edges that were
+removed by ARACNE. Default: TRUE.}
 
 \item{...}{Additional arguments passed to `GENIE3::GENIE3()`.}
 }
 \value{
-A list of data frames representing edge lists. Each list element is an edge list for a specific method.
+A list of data frames representing edge lists. Each list element
+is an edge list for a specific method.
 }
 \description{
 Infer gene regulatory network with multiple algorithms and combine results in a list

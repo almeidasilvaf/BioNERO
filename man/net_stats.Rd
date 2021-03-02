@@ -13,9 +13,12 @@ net_stats(
 \arguments{
 \item{adj_matrix}{Adjacency matrix that represents the network.}
 
-\item{net_type}{One of "gcn" (gene coexpression network), "ppi" (protein-protein interaction), or "grn" (gene regulatory network).}
+\item{net_type}{One of "gcn" (gene coexpression network),
+"ppi" (protein-protein interaction), or "grn" (gene regulatory network).}
 
-\item{calculate_additional}{Logical indicating whether to calculate additional network statistics (betweenness and closeness). Default is FALSE, because it might be time-consuming.}
+\item{calculate_additional}{Logical indicating whether to calculate
+additional network statistics (betweenness and closeness).
+Default is FALSE.}
 }
 \value{
 A list containing the following elements: \itemize{

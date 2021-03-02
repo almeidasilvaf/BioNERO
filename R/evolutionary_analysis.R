@@ -1,11 +1,11 @@
 
 #' Boolean expression to check if gene or gene set is singleton or not
 #'
-#' For a given gene or group of genes, this function returns logical values indicating whether they are singletons or not.
-#'
 #' @param genes Character containing gene or group of genes to be evaluated.
-#' @param og Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.
-#' @return Vector of logical values indicating if gene or group of genes is singleton or not.
+#' @param og Data frame of 3 columns corresponding to orthogroup, species ID,
+#' and gene ID, respectively.
+#' @return Vector of logical values indicating if gene or group of genes
+#' is singleton or not.
 #'
 #' @seealso \code{is_duplicated}
 #' @author Fabricio Almeida-Silva
@@ -27,12 +27,12 @@ is_singleton <- function(genes, og) {
 
 #' Boolean expression to check if gene or gene set is duplicated in the genome or not
 #'
-#' For a given gene or group of genes, this function returns logical values indicating whether they have copies in the genome or not.
-#'
 #' @param genes Character containing gene or group of genes to be evaluated.
-#' @param og Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.
+#' @param og Data frame of 3 columns corresponding to orthogroup, species ID,
+#' and gene ID, respectively.
 #'
-#' @return Vector of logical values indicating if gene or group of genes has copies in the genome or not.
+#' @return Vector of logical values indicating if gene or group of genes
+#' has copies in the genome or not.
 #'
 #' @seealso \code{is_singleton}
 #' @author Fabricio Almeida-Silva

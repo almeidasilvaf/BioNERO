@@ -1,24 +1,41 @@
 
 #' Plot heatmap of hierarchically clustered sample correlations or gene expression
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param col_metadata A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData. Default: NA.
-#' @param row_metadata A data frame containing gene IDs in row names and gene functional classification in the first column. Only one column is allowed to ensure legends can be visualized. Default: NA.
-#' @param cor_method Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.
-#' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default: 'samplecor'.
-#' @param palette RColorBrewer palette to use. Default is "Blues" for sample correlation heatmap and "YlOrRd" for gene expression heatmap.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
+#' @param col_metadata A data frame containing sample names in row names and
+#' sample annotation in the subsequent columns. The maximum number of columns
+#' is 2 to ensure legends can be visualized. Ignored if `exp` is
+#' a `SummarizedExperiment` object, since the function will extract colData.
+#' Default: NA.
+#' @param row_metadata A data frame containing gene IDs in row names and
+#' gene functional classification in the first column. Only one column
+#' is allowed to ensure legends can be visualized. Default: NA.
+#' @param cor_method Correlation method. One of 'spearman' or 'pearson'.
+#' Default is 'spearman'.
+#' @param type Type of heatmap to plot. One of 'samplecor' (sample correlations)
+#' or 'expr'. Default: 'samplecor'.
+#' @param palette RColorBrewer palette to use. Default is "Blues" for sample
+#' correlation heatmap and "YlOrRd" for gene expression heatmap.
 #' @param log_trans Logical indicating whether to log transform the expression data or not. Default: FALSE.
-#' @param cluster_rows Logical indicating whether to cluster rows or not. Default: TRUE.
-#' @param cluster_cols Logical indicating whether to cluster columns or not. Default: TRUE.
-#' @param show_rownames Logical indicating whether to show row names or not. Default: FALSE.
-#' @param show_colnames Logical indicating whether to show column names or not. Default is TRUE.
-#' @param scale Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.
+#' @param cluster_rows Logical indicating whether to cluster rows or not.
+#' Default: TRUE.
+#' @param cluster_cols Logical indicating whether to cluster columns or not.
+#' Default: TRUE.
+#' @param show_rownames Logical indicating whether to show row names or not.
+#' Default: FALSE.
+#' @param show_colnames Logical indicating whether to show column names or not.
+#' Default is TRUE.
+#' @param scale Character indicating if values should be centered and scaled in
+#' rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.
 #' @param fontsize Base font size for the plot.
-#' @param cutree_rows Number of clusters into which rows are divided. Default: NA (no division).
-#' @param cutree_cols Number of clusters into which columns are divided. Default: NA (no division).
+#' @param cutree_rows Number of clusters into which rows are divided.
+#' Default: NA (no division).
+#' @param cutree_cols Number of clusters into which columns are divided.
+#' Default: NA (no division).
 #' @param ... Additional arguments to be passed to \code{ComplexHeatmap::pheatmap()}.
 #'
-#' @return Heatmap of hierarchically clustered samples with metadata information (optional)
+#' @return A heatmap of sample correlations or gene expression.
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[RColorBrewer]{RColorBrewer}}
@@ -97,10 +114,15 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 
 #' Plot Principal Component Analysis (PCA) of samples
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param metadata A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.
-#' @param log_trans Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).
-#' @param PCs Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
+#' @param metadata A data frame containing sample names in row names
+#' and sample annotation in the first column. Ignored if `exp` is
+#' a `SummarizedExperiment` object, since the function will extract colData.
+#' @param log_trans Logical. If TRUE, the expression data frame will be log
+#' transformed with log2(exp+1).
+#' @param PCs Principal components to be plotted on the x-axis and y-axis,
+#' respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
 #' @param size Numeric indicating the point size. Default is 2.
 #'
 #' @return A ggplot object with the PCA plot.
@@ -161,10 +183,13 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
 
 #' Get housekeeping genes from global expression profile
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
 #'
-#' @details This function identifies housekeeping genes, which are broadly expressed genes with low variation in a global scale across samples.
-#' For some cases, users would want to remove these genes as they are not interesting for coexpression network analyses.
+#' @details This function identifies housekeeping genes, which are
+#' broadly expressed genes with low variation in a global scale across samples.
+#' For some cases, users would want to remove these genes as they are not
+#' interesting for coexpression network analyses.
 #' See references for more details.
 #'
 #' @return Character vector of housekeeping gene IDs.
@@ -172,7 +197,10 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
 #' @rdname get_HK
 #' @export
 #' @references
-#' Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K., Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020), Systematic analysis of 1298 RNA‐Seq samples and construction of a comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
+#' Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K.,
+#' Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020),
+#' Systematic analysis of 1298 RNA‐Seq samples and construction of a
+#' comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
 #' @examples
 #' data(zma.se)
 #' hk <- get_HK(zma.se)
@@ -197,14 +225,20 @@ get_HK <- function(exp) {
 
 #' Plot expression profile of given genes across samples
 #'
-#' @param genes Character vector containing a subset of genes from which edges will be extracted. It can be ignored if \code{plot_module} is TRUE.
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param metadata A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.
-#' @param plot_module Logical indicating whether to plot a whole module or not. If set to FALSE, \code{genes} must be specified.
+#' @param genes Character vector containing a subset of genes from which
+#' edges will be extracted. It can be ignored if \code{plot_module} is TRUE.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param metadata A data frame containing sample names in row names
+#' and sample annotation in the first column. Ignored if `exp`
+#' is a `SummarizedExperiment` object, since the function will extract colData.
+#' @param plot_module Logical indicating whether to plot a whole module or not.
+#' If set to FALSE, \code{genes} must be specified.
 #' @param net List object returned by \code{exp2net}.
 #' @param modulename Name of the module to plot.
 #'
-#' @return A ggplot object showing the expression profile of some genes across all samples.
+#' @return A ggplot object showing the expression profile of some genes
+#' across all samples.
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[reshape2]{melt}}

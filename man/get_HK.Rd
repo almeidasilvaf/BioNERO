@@ -7,7 +7,8 @@
 get_HK(exp)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 }
 \value{
 Character vector of housekeeping gene IDs.
@@ -16,8 +17,10 @@ Character vector of housekeeping gene IDs.
 Get housekeeping genes from global expression profile
 }
 \details{
-This function identifies housekeeping genes, which are broadly expressed genes with low variation in a global scale across samples.
-For some cases, users would want to remove these genes as they are not interesting for coexpression network analyses.
+This function identifies housekeeping genes, which are
+broadly expressed genes with low variation in a global scale across samples.
+For some cases, users would want to remove these genes as they are not
+interesting for coexpression network analyses.
 See references for more details.
 }
 \examples{
@@ -25,7 +28,10 @@ data(zma.se)
 hk <- get_HK(zma.se)
 }
 \references{
-Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K., Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020), Systematic analysis of 1298 RNA‐Seq samples and construction of a comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
+Machado, F.B., Moharana, K.C., Almeida‐Silva, F., Gazara, R.K.,
+Pedrosa‐Silva, F., Coelho, F.S., Grativol, C. and Venancio, T.M. (2020),
+Systematic analysis of 1298 RNA‐Seq samples and construction of a
+comprehensive soybean (Glycine max) expression atlas. Plant J, 103: 1894-1909.
 }
 \author{
 Fabricio Almeida-Silva

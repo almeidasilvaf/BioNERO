@@ -9,10 +9,12 @@ exp_genes2orthogroups(explist = NULL, og = NULL, summarize = "median")
 \arguments{
 \item{explist}{List of expression data frames or SummarizedExperiment objects.}
 
-\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.
+\item{og}{Data frame of 3 columns corresponding to orthogroup,
+species ID, and gene ID, respectively.
 Species IDs must be the same as the names of the expression list.}
 
-\item{summarize}{Centrality measure to summarize multiple paralogous genes in the same orthogroup.
+\item{summarize}{Centrality measure to summarize multiple paralogous genes
+in the same orthogroup.
 One of "median" or "mean". Default: "median".}
 }
 \value{

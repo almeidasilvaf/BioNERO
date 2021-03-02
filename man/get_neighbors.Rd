@@ -7,11 +7,14 @@
 get_neighbors(genes, net, cor_threshold = 0.7)
 }
 \arguments{
-\item{genes}{Character vector containing genes from which direct neighbors will be extracted.}
+\item{genes}{Character vector containing genes from which
+direct neighbors will be extracted.}
 
 \item{net}{List object returned by \code{exp2gcn}.}
 
-\item{cor_threshold}{Correlation threshold to filter connections. As a weighted network is a fully connected graph, a cutoff must be selected. Default is 0.7.}
+\item{cor_threshold}{Correlation threshold to filter connections.
+As a weighted network is a fully connected graph, a cutoff must be selected.
+Default is 0.7.}
 }
 \value{
 List containing 1st-order neighbors for each input gene.

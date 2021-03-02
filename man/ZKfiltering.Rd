@@ -2,29 +2,33 @@
 % Please edit documentation in R/data_preprocess.R
 \name{ZKfiltering}
 \alias{ZKfiltering}
-\title{Filter outlying samples based on standardized connectivity (Zk) method}
+\title{Filter outlying samples based on the standardized connectivity (Zk) method}
 \usage{
 ZKfiltering(exp, zk = -2, cor_method = "spearman")
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 
 \item{zk}{Standardized connectivity threshold. Default is -2.}
 
-\item{cor_method}{Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.}
+\item{cor_method}{Correlation method. One of "pearson", "biweight"
+or "spearman". Default is "spearman".}
 }
 \value{
 Filtered gene expression data frame or `SummarizedExperiment` object.
 }
 \description{
-Filter outlying samples based on standardized connectivity (Zk) method
+Filter outlying samples based on the standardized connectivity (Zk) method
 }
 \examples{
 data(zma.se)
 filt_exp <- ZKfiltering(zma.se)
 }
 \references{
-Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease. BMC systems biology, 6(1), 1-18.
+Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for
+describing sample relationships in genomic datasets: application to
+Huntington’s disease. BMC systems biology, 6(1), 1-18.
 }
 \seealso{
 \code{\link[WGCNA]{adjacency}}

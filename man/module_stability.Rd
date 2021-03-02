@@ -7,14 +7,16 @@
 module_stability(exp, net, nRuns = 20)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
 \item{net}{List object returned by \code{exp2gcn}.}
 
 \item{nRuns}{Number of times to resample. Default is 20.}
 }
 \value{
-A .pdf file in the current working directory representing the module stability across the resamplings.
+A .pdf file in the current working directory representing
+the module stability across the resamplings.
 }
 \description{
 Perform module stability analysis

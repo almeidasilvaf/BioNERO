@@ -2,20 +2,22 @@
 % Please edit documentation in R/gcn_inference.R
 \name{get_hubs_gcn}
 \alias{get_hubs_gcn}
-\title{Get hub genes in a given module or in all modules at once}
+\title{Get GCN hubs}
 \usage{
 get_hubs_gcn(exp, net)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
 \item{net}{List object returned by \code{exp2gcn}.}
 }
 \value{
-Data frame containing gene IDs, modules and intramodular connectivity of all hubs.
+Data frame containing gene IDs, modules and
+intramodular connectivity of all hubs.
 }
 \description{
-Get hub genes in a given module or in all modules at once
+Get GCN hubs
 }
 \examples{
 data(filt.se)

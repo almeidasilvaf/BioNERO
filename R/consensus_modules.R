@@ -2,15 +2,22 @@
 
 #' Pick power to fit networks to scale-free topology
 #'
-#' @param exp_list A list of expression data frames or SummarizedExperiment objects.
-#' If input is a list of data frames, row names must correspond to gene IDs and column names to samples.
+#' @param exp_list A list of expression data frames or
+#' SummarizedExperiment objects.
+#' If input is a list of data frames, row names must correspond to gene IDs
+#' and column names to samples.
 #' The list can be created with \code{list(exp1, exp2, ..., expn)}.
 #' @param setLabels Character vector containing labels for each expression set.
-#' @param metadata A data frame containing sample names in row names and sample annotation in the first column.
-#' Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since the function will extract colData.
-#' @param cor_method Correlation method used for network reconstruction. One of "spearman" (default), "biweight", or "pearson".
-#' @param net_type Network type. One of "signed hybrid" (default), "signed" or "unsigned".
-#' @param rsquared Minimum R squared to consider the network similar to a scale-free topology. Default is 0.8.
+#' @param metadata A data frame containing sample names in row names and
+#' sample annotation in the first column.
+#' Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since
+#' the function will extract colData.
+#' @param cor_method Correlation method used for network reconstruction.
+#' One of "spearman" (default), "biweight", or "pearson".
+#' @param net_type Network type. One of "signed hybrid" (default),
+#' "signed" or "unsigned".
+#' @param rsquared Minimum R squared to consider the network similar to
+#' a scale-free topology. Default is 0.8.
 #'
 #' @return A list of 2 elements: \describe{
 #'   \item{power}{Numeric vector of optimal beta powers to fit networks to SFT}
@@ -112,18 +119,25 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 }
 
 
-#' Identify consensus modules across multiple data sets
+#' Identify consensus modules across independent data sets
 #'
-#' This function identifies modules that are conserved across multiple data sets. It can be used for evolutionary analyses and for testing robustness of coexpression modules in data sets from different sources, for instance.
-#'
-#' @param exp_list A list containing the expression data frames. For each expression data frame, row names correspond to gene IDs and column names correspond to sample names. The list can be created by using \code{list(exp1, exp2, ..., expn)}.
-#' @param metadata A data frame containing sample names in row names and sample annotation in the first column.
-#' Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since the function will extract colData.
-#' @param power Numeric vector of beta power for each expression set as calculated by \code{consensus_SFT_fit}.
-#' @param cor_method Correlation method used for network reconstruction. One of "spearman" (default), "biweight", or "pearson".
-#' @param net_type Network type. One of "signed hybrid" (default), "signed" or "unsigned".
-#' @param module_merging_threshold Correlation threshold to merge similar modules into a single one. Default: 0.8.
-#' @param reportPDF Logical indicating whether to save a PDF figure with dendrogram and modules. Default: FALSE.
+#' @param exp_list A list containing the expression data frames with genes in
+#' row names and samples in column names or `SummarizedExperiment` objects.
+#' The list can be created by using \code{list(exp1, exp2, ..., expn)}.
+#' @param metadata A data frame containing sample names in row names and
+#' sample annotation in the first column.
+#' Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since
+#' the function will extract colData.
+#' @param power Numeric vector of beta power for each expression set
+#' as calculated by \code{consensus_SFT_fit}.
+#' @param cor_method Correlation method used for network reconstruction.
+#' One of "spearman" (default), "biweight", or "pearson".
+#' @param net_type Network type. One of "signed hybrid" (default),
+#' "signed" or "unsigned".
+#' @param module_merging_threshold Correlation threshold to merge
+#' similar modules into a single one. Default: 0.8.
+#' @param reportPDF Logical indicating whether to save a PDF figure with
+#' dendrogram and modules. Default: FALSE.
 #'
 #' @return A list containing 4 elements: \describe{
 #'   \item{consModules}{Consensus module assignments}
@@ -277,16 +291,21 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 #' Correlate set-specific modules and consensus modules to sample information
 #'
 #' @param consensus Consensus network returned by \code{consensus_modules}.
-#' @param cor_method Correlation method to be used. One of 'spearman' or 'pearson'. Default is 'spearman'.
-#' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
-#' @param palette RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.
+#' @param cor_method Correlation method to be used. One of 'spearman' or
+#' 'pearson'. Default is 'spearman'.
+#' @param continuous_trait Logical indicating if trait is a continuous variable.
+#' Default is FALSE.
+#' @param palette RColorBrewer's color palette to use. Default is "RdYlBu",
+#' a palette ranging from blue to red.
 #' @param cex.lab.x Font size for x axis labels. Default: 0.6.
 #' @param cex.lab.y Font size for y axis labels. Default: 0.6.
 #' @param cex.text Font size for numbers inside matrix. Default: 0.6.
-#' @param save_sets Logical indicating whether to save heatmaps of correlations between set-specific modules and traits as a PDF figure. Default: FALSE.
-#' @param transpose Logical indicating whether to transpose the heatmap of not. Default is FALSE.
+#' @param save_sets Logical indicating whether to save heatmaps of correlations
+#' between set-specific modules and traits as a PDF figure. Default: FALSE.
+#' @param transpose Logical indicating whether to transpose the heatmap of not.
+#' Default is FALSE.
 #'
-#' @return Heatmaps of relationships between consensus/set-specific modules and sample information (metadata) in a PDF file.
+#' @return Data frame of consensus module-trait correlations and p-values.
 #' @details Significance levels:
 #' 1 asterisk: significant at alpha = 0.05.
 #' 2 asterisks: significant at alpha = 0.01.

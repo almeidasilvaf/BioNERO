@@ -10,7 +10,7 @@ cormat_to_edgelist(matrix)
 \item{matrix}{Symmetrical correlation matrix.}
 }
 \value{
-A 2-column data frame containing node 1, node 2 and edge weight
+A 2-column data frame containing node 1, node 2 and edge weight.
 }
 \description{
 Transform a correlation matrix to an edge list

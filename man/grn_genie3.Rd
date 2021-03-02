@@ -7,11 +7,16 @@
 grn_genie3(exp, regulators = NULL, remove_zero = TRUE, ...)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{regulators}{A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.}
+\item{regulators}{A character vector of regulators
+(e.g., transcription factors or miRNAs). All regulators must be
+included in `exp`.}
 
-\item{remove_zero}{Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.}
+\item{remove_zero}{Logical indicating whether to remove edges whose weight
+is exactly zero. Zero values indicate edges that were removed by ARACNE.
+Default: TRUE.}
 
 \item{...}{Additional arguments passed to `GENIE3::GENIE3()`.}
 }
@@ -24,5 +29,6 @@ Infer gene regulatory network with GENIE3
 \examples{
 data(filt.se)
 tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
-genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2) # only 2 trees for demonstration purpose
+# only 2 trees for demonstration purposes
+genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2)
 }

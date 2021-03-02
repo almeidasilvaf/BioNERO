@@ -11,14 +11,18 @@ An object of class \code{SummarizedExperiment}
 zma.se
 }
 \description{
-Filtered expression data in transcripts per million (TPM) from Shin et al., 2021.
-Genes with TPM values <5 in more than 60% of the samples were removed to reduce package size.
-The expression data and associated sample metadata are stored in a SummarizedExperiment object.
+Filtered expression data in transcripts per million (TPM) from
+Shin et al., 2021. Genes with TPM values <5 in more than 60% of the samples
+were removed to reduce package size. The expression data and
+associated sample metadata are stored in a SummarizedExperiment object.
 }
 \examples{
 data(zma.se)
 }
 \references{
-Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman, D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies. Nucleic Acids Research, 49(1), e3-e3.
+Shin, J., Marx, H., Richards, A., Vaneechoutte, D., Jayaraman,
+D., Maeda, J., ... & Roy, S. (2021). A network-based comparative framework
+to study conservation and divergence of proteomes in plant
+phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 }
 \keyword{datasets}

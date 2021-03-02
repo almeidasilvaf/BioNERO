@@ -9,7 +9,8 @@ grn_filter(edgelist, nsplit = 10)
 \arguments{
 \item{edgelist}{A gene regulatory network represented as an edge list.}
 
-\item{nsplit}{Number of groups in which the edge list will be split. Default: 10.}
+\item{nsplit}{Number of groups in which the edge list will be split.
+Default: 10.}
 }
 \value{
 The edge list that best fits the scale-free topology.
@@ -18,8 +19,11 @@ The edge list that best fits the scale-free topology.
 Filter a gene regulatory network based on optimal scale-free topology fit
 }
 \details{
-The edge list will be split in n groups and the scale-free topology fit will be tested for each subset of the edge list.
-For instance, if an edge list of 10000 rows is used as input, the function will test SFT fit for the top 1000 edges, then top 2000 edges, an so on up to the whole edge list.
+The edge list will be split in n groups and the scale-free
+topology fit will be tested for each subset of the edge list.
+For instance, if an edge list of 10000 rows is used as input,
+the function will test SFT fit for the top 1000 edges, then top 2000 edges,
+and so on up to the whole edge list.
 }
 \examples{
 data(filt.se)

@@ -24,40 +24,57 @@ plot_heatmap(
 )
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 
-\item{col_metadata}{A data frame containing sample names in row names and sample annotation in the subsequent columns. The maximum number of columns is 2 to ensure legends can be visualized. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData. Default: NA.}
+\item{col_metadata}{A data frame containing sample names in row names and
+sample annotation in the subsequent columns. The maximum number of columns
+is 2 to ensure legends can be visualized. Ignored if `exp` is
+a `SummarizedExperiment` object, since the function will extract colData.
+Default: NA.}
 
-\item{row_metadata}{A data frame containing gene IDs in row names and gene functional classification in the first column. Only one column is allowed to ensure legends can be visualized. Default: NA.}
+\item{row_metadata}{A data frame containing gene IDs in row names and
+gene functional classification in the first column. Only one column
+is allowed to ensure legends can be visualized. Default: NA.}
 
-\item{cor_method}{Correlation method. One of 'spearman' or 'pearson'. Default is 'spearman'.}
+\item{cor_method}{Correlation method. One of 'spearman' or 'pearson'.
+Default is 'spearman'.}
 
-\item{type}{Type of heatmap to plot. One of 'samplecor' (sample correlations) or 'expr'. Default: 'samplecor'.}
+\item{type}{Type of heatmap to plot. One of 'samplecor' (sample correlations)
+or 'expr'. Default: 'samplecor'.}
 
-\item{palette}{RColorBrewer palette to use. Default is "Blues" for sample correlation heatmap and "YlOrRd" for gene expression heatmap.}
+\item{palette}{RColorBrewer palette to use. Default is "Blues" for sample
+correlation heatmap and "YlOrRd" for gene expression heatmap.}
 
 \item{log_trans}{Logical indicating whether to log transform the expression data or not. Default: FALSE.}
 
-\item{cluster_rows}{Logical indicating whether to cluster rows or not. Default: TRUE.}
+\item{cluster_rows}{Logical indicating whether to cluster rows or not.
+Default: TRUE.}
 
-\item{cluster_cols}{Logical indicating whether to cluster columns or not. Default: TRUE.}
+\item{cluster_cols}{Logical indicating whether to cluster columns or not.
+Default: TRUE.}
 
-\item{show_rownames}{Logical indicating whether to show row names or not. Default: FALSE.}
+\item{show_rownames}{Logical indicating whether to show row names or not.
+Default: FALSE.}
 
-\item{show_colnames}{Logical indicating whether to show column names or not. Default is TRUE.}
+\item{show_colnames}{Logical indicating whether to show column names or not.
+Default is TRUE.}
 
-\item{scale}{Character indicating if values should be centered and scaled in rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.}
+\item{scale}{Character indicating if values should be centered and scaled in
+rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.}
 
 \item{fontsize}{Base font size for the plot.}
 
-\item{cutree_rows}{Number of clusters into which rows are divided. Default: NA (no division).}
+\item{cutree_rows}{Number of clusters into which rows are divided.
+Default: NA (no division).}
 
-\item{cutree_cols}{Number of clusters into which columns are divided. Default: NA (no division).}
+\item{cutree_cols}{Number of clusters into which columns are divided.
+Default: NA (no division).}
 
 \item{...}{Additional arguments to be passed to \code{ComplexHeatmap::pheatmap()}.}
 }
 \value{
-Heatmap of hierarchically clustered samples with metadata information (optional)
+A heatmap of sample correlations or gene expression.
 }
 \description{
 Plot heatmap of hierarchically clustered sample correlations or gene expression

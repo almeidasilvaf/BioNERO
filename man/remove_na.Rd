@@ -7,12 +7,14 @@
 remove_na(exp, replaceby = 0)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
 \item{replaceby}{What to use instead of NAs. One of 0 or 'mean'. Default is 0.}
 }
 \value{
-Gene expression data frame or `SummarizedExperiment` object with all NAs replaced according to the argument 'replaceby'.
+Gene expression data frame or `SummarizedExperiment` object
+with all NAs replaced according to the argument 'replaceby'.
 }
 \description{
 Remove missing values in a gene expression data frame

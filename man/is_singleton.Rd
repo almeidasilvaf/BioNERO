@@ -9,13 +9,15 @@ is_singleton(genes, og)
 \arguments{
 \item{genes}{Character containing gene or group of genes to be evaluated.}
 
-\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.}
+\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID,
+and gene ID, respectively.}
 }
 \value{
-Vector of logical values indicating if gene or group of genes is singleton or not.
+Vector of logical values indicating if gene or group of genes
+is singleton or not.
 }
 \description{
-For a given gene or group of genes, this function returns logical values indicating whether they are singletons or not.
+Boolean expression to check if gene or gene set is singleton or not
 }
 \examples{
 data(og.zma.osa)

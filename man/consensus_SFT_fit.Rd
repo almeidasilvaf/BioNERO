@@ -14,20 +14,27 @@ consensus_SFT_fit(
 )
 }
 \arguments{
-\item{exp_list}{A list of expression data frames or SummarizedExperiment objects.
-If input is a list of data frames, row names must correspond to gene IDs and column names to samples.
+\item{exp_list}{A list of expression data frames or
+SummarizedExperiment objects.
+If input is a list of data frames, row names must correspond to gene IDs
+and column names to samples.
 The list can be created with \code{list(exp1, exp2, ..., expn)}.}
 
 \item{setLabels}{Character vector containing labels for each expression set.}
 
-\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column.
-Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since the function will extract colData.}
+\item{metadata}{A data frame containing sample names in row names and
+sample annotation in the first column.
+Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since
+the function will extract colData.}
 
-\item{cor_method}{Correlation method used for network reconstruction. One of "spearman" (default), "biweight", or "pearson".}
+\item{cor_method}{Correlation method used for network reconstruction.
+One of "spearman" (default), "biweight", or "pearson".}
 
-\item{net_type}{Network type. One of "signed hybrid" (default), "signed" or "unsigned".}
+\item{net_type}{Network type. One of "signed hybrid" (default),
+"signed" or "unsigned".}
 
-\item{rsquared}{Minimum R squared to consider the network similar to a scale-free topology. Default is 0.8.}
+\item{rsquared}{Minimum R squared to consider the network similar to
+a scale-free topology. Default is 0.8.}
 }
 \value{
 A list of 2 elements: \describe{

@@ -15,19 +15,27 @@ plot_grn(
 )
 }
 \arguments{
-\item{edgelist_grn}{Data frame containing the edge list for the GRN network. First column is the TF and second column is the target gene. All other columns are interpreted as edge attributes.}
+\item{edgelist_grn}{Data frame containing the edge list for the GRN network.
+First column is the TF and second column is the target gene.
+All other columns are interpreted as edge attributes.}
 
-\item{show_labels}{Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".}
+\item{show_labels}{Character indicating which nodes will be labeled.
+One of "all", "allhubs", "tophubs", or "none".}
 
-\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.}
+\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid
+if \code{show_labels} equals "tophubs". Default is 5.}
 
-\item{interactive}{Logical indicating whether the network should be interactive or not. Default is FALSE.}
+\item{interactive}{Logical indicating whether the network should be
+interactive or not. Default is FALSE.}
 
-\item{layout}{Network layout. One of "dh", "drl", "gem", "lgl", "fr", "graphopt", "kk" and "mds". Default is "kk".}
+\item{layout}{Network layout. One of "dh", "drl", "gem", "lgl", "fr",
+"graphopt", "kk" and "mds". Default is "kk".}
 
-\item{arrow.gap}{Numeric indicating the distance between nodes and arrows. Default is 0.2.}
+\item{arrow.gap}{Numeric indicating the distance between nodes and arrows.
+Default is 0.2.}
 
-\item{ranked}{Logical indicating whether to treat third column of the edgelist (edge weights) as ranked values. Default: TRUE.}
+\item{ranked}{Logical indicating whether to treat third column of
+the edge list (edge weights) as ranked values. Default: TRUE.}
 }
 \value{
 A ggplot object containing the network.

@@ -16,25 +16,35 @@ enrichment_analysis(
 \arguments{
 \item{genes}{Character vector containing genes for overrepresentation analysis.}
 
-\item{background_genes}{Character vector of genes to be used as background for the Fisher's Exact Test.}
+\item{background_genes}{Character vector of genes to be used as background
+for the Fisher's Exact Test.}
 
-\item{annotation}{Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.}
+\item{annotation}{Annotation data frame with genes in the first column and
+functional annotation in the other columns. This data frame can be exported
+from Biomart or similar databases.}
 
-\item{column}{Column or columns of \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.}
+\item{column}{Column or columns of \code{annotation} to be used for enrichment.
+Both character or numeric values with column indices can be used.
+If users want to supply more than one column, input a character or
+numeric vector. Default: all columns from \code{annotation}.}
 
-\item{correction}{Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".}
+\item{correction}{Multiple testing correction method. One of "holm",
+"hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none".
+Default is "BH".}
 
-\item{p}{P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.}
+\item{p}{P-value threshold. P-values below this threshold will be
+considered significant. Default is 0.05.}
 }
 \value{
-Data frame containing significant terms, p-values and associated genes
+Data frame containing significant terms, p-values and associated genes.
 }
 \description{
-Perform enrichment analysis for gene functional annotation given as input.
+Perform enrichment analysis for a set of genes
 }
 \details{
-The enrichment analysis is parallelized with BiocParallel, resulting in a dramatic increase in speed.
-However, if you try to run this function in a laptop with low memory, you might have problems with memory usage.
+The enrichment analysis is parallelized with BiocParallel, resulting in
+a dramatic increase in speed. However, if you try to run this function in
+a laptop with low memory, you might have problems with memory usage.
 If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
 }
 \examples{

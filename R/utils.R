@@ -20,7 +20,8 @@ is_SE <- function(object) {
 #'
 #' @param exp Expression data as a data frame or a SummarizedExperiment object
 #'
-#' @return If exp is a SummarizedExperiment object, it will return `assay(exp)`. Otherwhise, it will simply return exp as it is.
+#' @return If exp is a SummarizedExperiment object, it will return `assay(exp)`.
+#' Otherwhise, it will simply return exp as it is.
 #' @noRd
 #' @importFrom SummarizedExperiment assay
 handleSE <- function(exp) {
@@ -244,8 +245,10 @@ get_TOMtype <- function(net_type) {
 
 #' Wrapper to handle variable type for trait object
 #'
-#' @param metadata A data frame containing sample names in row names and sample annotation in the first column.
-#' @param continuous_trait Logical indicating if trait is a continuous variable. Default is FALSE.
+#' @param metadata A data frame containing sample names in row names and
+#' sample annotation in the first column.
+#' @param continuous_trait Logical indicating if trait is a continuous variable.
+#' Default is FALSE.
 #'
 #' @return Processed trait object.
 #' @noRd
@@ -271,7 +274,7 @@ handle_trait_type <- function(metadata, continuous_trait = FALSE) {
 #'
 #' @param matrix Symmetrical correlation matrix.
 #'
-#' @return A 2-column data frame containing node 1, node 2 and edge weight
+#' @return A 2-column data frame containing node 1, node 2 and edge weight.
 #' @export
 #' @rdname cormat_to_edgelist
 #' @examples
@@ -292,12 +295,22 @@ cormat_to_edgelist <- function(matrix) {
 
 #' Check scale-free topology fit for a given network
 #'
-#' @param edgelist Edge list as a 2-column data frame containing node 1, node 2 and edge weight.
-#' @param net_type Type of biological network. One of "gcn", "grn", or "ppi". Default: gcn.
+#' @param edgelist Edge list as a data frame containing node 1,
+#' node 2 and edge weight.
+#' @param net_type Type of biological network. One of "gcn", "grn", or "ppi".
+#' Default: gcn.
 #'
 #' @rdname check_sft
-#' @noRd
+#' @export
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
+#' @examples
+#' set.seed(1)
+#' exp <- t(matrix(rnorm(10000), ncol=1000, nrow=200))
+#' rownames(exp) <- paste0("Gene", 1:nrow(exp))
+#' colnames(exp) <- paste0("Sample", 1:ncol(exp))
+#' cormat <- cor(t(exp))
+#' edges <- cormat_to_edgelist(cormat)
+#' check_sft(edges)
 check_sft <- function(edgelist, net_type = "gcn") {
 
     # Calculate degree of the resulting graph

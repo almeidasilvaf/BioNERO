@@ -7,7 +7,8 @@
 q_normalize(exp)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names.}
 }
 \value{
 Expression matrix with normalized values

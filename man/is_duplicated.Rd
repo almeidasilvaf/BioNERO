@@ -9,13 +9,15 @@ is_duplicated(genes, og)
 \arguments{
 \item{genes}{Character containing gene or group of genes to be evaluated.}
 
-\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID, and gene ID, respectively.}
+\item{og}{Data frame of 3 columns corresponding to orthogroup, species ID,
+and gene ID, respectively.}
 }
 \value{
-Vector of logical values indicating if gene or group of genes has copies in the genome or not.
+Vector of logical values indicating if gene or group of genes
+has copies in the genome or not.
 }
 \description{
-For a given gene or group of genes, this function returns logical values indicating whether they have copies in the genome or not.
+Boolean expression to check if gene or gene set is duplicated in the genome or not
 }
 \examples{
 data(og.zma.osa)

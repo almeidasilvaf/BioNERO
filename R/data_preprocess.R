@@ -1,10 +1,16 @@
 #' Combine multiple expression tables (.tsv) into a single data frame
 #'
-#' This function reads multiple expression tables (.tsv files) in a directory and combine them into one single gene expression data frame.
+#' This function reads multiple expression tables (.tsv files) in a directory
+#' and combines them into a single gene expression data frame.
 #'
-#' @param mypath Path to directory containing .tsv files. Files must have the first column in common, e.g. "Gene_ID". Rows are gene IDs and columns are sample names.
-#' @param pattern Pattern contained in each expression file. Default is '.tsv$', which means that all files ending in '.tsv' in the specified directory will be considered expression files.
-#' @return Data frame with gene IDs as row names and their expression values in each sample (columns).
+#' @param mypath Path to directory containing .tsv files.
+#' Files must have the first column in common, e.g. "Gene_ID".
+#' Rows are gene IDs and columns are sample names.
+#' @param pattern Pattern contained in each expression file.
+#' Default is '.tsv$', which means that all files ending in '.tsv' in the
+#' specified directory will be considered expression files.
+#' @return Data frame with gene IDs as row names and their expression values in
+#' each sample (columns).
 #' @author Fabricio Almeida-Silva
 #' @rdname dfs2one
 #' @export
@@ -42,10 +48,12 @@ dfs2one <- function(mypath, pattern = ".tsv$"){
 
 #' Remove missing values in a gene expression data frame
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
 #' @param replaceby What to use instead of NAs. One of 0 or 'mean'. Default is 0.
 #'
-#' @return Gene expression data frame or `SummarizedExperiment` object with all NAs replaced according to the argument 'replaceby'.
+#' @return Gene expression data frame or `SummarizedExperiment` object
+#' with all NAs replaced according to the argument 'replaceby'.
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @rdname remove_na
@@ -78,10 +86,17 @@ remove_na <- function(exp, replaceby = 0) {
 
 #' Remove genes that are not expressed based on a user-defined threshold
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param method Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is "median".
-#' @param min_exp If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.
-#' @param min_percentage_samples In case the user chooses 'percentage' as method, expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
+#' @param method Criterion to filter non-expressed genes out.
+#' One of "mean", "median", "percentage", or "allsamples". Default is "median".
+#' @param min_exp If method is 'mean', 'median', or 'allsamples',
+#' the minimum value for a gene to be considered expressed.
+#' If method is 'percentage', the minimum value each gene must have in
+#' at least n percent of samples to be considered expressed.
+#' @param min_percentage_samples In case the user chooses 'percentage' as method,
+#' expressed genes must have expression >= min_exp in at least this percentage.
+#' Values must range from 0 to 1.
 #'
 #' @return Filtered gene expression data frame or `SummarizedExperiment` object.
 #' @author Fabricio Almeida-Silva
@@ -117,13 +132,18 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
     return(final_exp)
 }
 
-#' Filter expression data frame to keep only the most varying genes
+#' Keep only genes with the highest variances
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param n Number of most variable genes (e.g. n=5000 will keep the top 5000 most variable genes).
-#' @param percentile Percentile of most highly variable genes (e.g. percentile=0.1 will keep the top 10 percent most variable genes). Values must range from 0 to 1.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
+#' @param n Number of most variable genes (e.g., n=5000 will
+#' keep the top 5000 most variable genes).
+#' @param percentile Percentile of most highly variable genes
+#' (e.g., percentile=0.1 will keep the top 10 percent most variable genes).
+#' Values must range from 0 to 1.
 #'
-#' @return Gxpression data frame or `SummarizedExperiment` object with the most variable genes in row names and samples in column names.
+#' @return Expression data frame or `SummarizedExperiment` object with
+#' the most variable genes in row names and samples in column names.
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @rdname filter_by_variance
@@ -153,11 +173,13 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
     return(top_variant_exp)
 }
 
-#' Filter outlying samples based on standardized connectivity (Zk) method
+#' Filter outlying samples based on the standardized connectivity (Zk) method
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
 #' @param zk Standardized connectivity threshold. Default is -2.
-#' @param cor_method Correlation method. One of "pearson", "biweight" or "spearman". Default is "spearman", considering that the expression data does not follow a normal distribution.
+#' @param cor_method Correlation method. One of "pearson", "biweight"
+#' or "spearman". Default is "spearman".
 #'
 #' @return Filtered gene expression data frame or `SummarizedExperiment` object.
 #' @author Fabricio Almeida-Silva
@@ -170,7 +192,9 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
 #' data(zma.se)
 #' filt_exp <- ZKfiltering(zma.se)
 #' @references
-#' Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease. BMC systems biology, 6(1), 1-18.
+#' Oldham, M. C., Langfelder, P., & Horvath, S. (2012). Network methods for
+#' describing sample relationships in genomic datasets: application to
+#' Huntington’s disease. BMC systems biology, 6(1), 1-18.
 ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
     fexp <- handleSE(exp)
 
@@ -201,7 +225,8 @@ ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
 
 #' Quantile normalize the expression data
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names.
 #'
 #' @return Expression matrix with normalized values
 #' @rdname q_normalize
@@ -217,9 +242,10 @@ q_normalize <- function(exp) {
     qnorm(U)
 }
 
-#' Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks
+#' Apply Principal Component (PC)-based correction for confounding artifacts
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
 #'
 #' @return Corrected expression data frame or `SummarizedExperiment` object.
 #' @author Fabricio Almeida-Silva
@@ -233,7 +259,9 @@ q_normalize <- function(exp) {
 #' exp <- filter_by_variance(zma.se, n=500)
 #' exp <- PC_correction(exp)
 #' @references
-#' Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., & Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of gene co-expression networks. Genome biology, 20(1), 1-6.
+#' Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., &
+#' Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of
+#' gene co-expression networks. Genome biology, 20(1), 1-6.
 PC_correction <- function(exp) {
     fexp <- handleSE(exp)
 
@@ -263,23 +291,44 @@ PC_correction <- function(exp) {
 
 #' Preprocess expression data for network reconstruction
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param NA_rm Logical. It specifies whether to remove missing values from the expression data frame or not. Default = TRUE.
-#' @param replaceby If NA_rm is TRUE, what to use instead of NAs. One of 0 or 'mean'. Default is 0.
-#' @param Zk_filtering Logical. It specifies whether to filter outlying samples by Zk or not. Default: TRUE.
-#' @param zk If Zk_filtering is TRUE, the standardized connectivity threshold. Samples below this threshold will be considered outliers. Default is -2.
-#' @param cor_method If Zk_filtering is TRUE, the correlation method to use. One of 'spearman', 'bicor', or 'pearson'. Default is 'spearman'.
-#' @param remove_nonexpressed Logical. It specifies whether non-expressed genes should be removed or not. Default is TRUE.
-#' @param method If remove_nonexpressed is TRUE, the criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is 'median'.
-#' @param min_exp If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.
-#' @param min_percentage_samples If method is 'percentage', expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1. Default = 0.25.
-#' @param remove_confounders Logical. If TRUE, it removes principal components that add noise to the data.
-#' @param variance_filter Logical. If TRUE, it will filter genes by variance. Default is FALSE.
-#' @param n If variance_filter is TRUE, the number of the most variable genes to keep.
-#' @param percentile If variance_filter is TRUE, the percentage of the most variable genes to keep.
-#' @param vstransform Logical indicating if data should be variance stabilizing transformed. This parameter can only be set to TRUE if data is a matrix of raw read counts.
+#' @param exp A gene expression data frame with genes in row names
+#' and samples in column names or a `SummarizedExperiment` object.
+#' @param NA_rm Logical. It specifies whether to remove missing values
+#' from the expression data frame or not. Default = TRUE.
+#' @param replaceby If NA_rm is TRUE, what to use instead of NAs.
+#' One of 0 or 'mean'. Default is 0.
+#' @param Zk_filtering Logical. It specifies whether to filter outlying samples
+#' by Zk or not. Default: TRUE.
+#' @param zk If Zk_filtering is TRUE, the standardized connectivity threshold.
+#' Samples below this threshold will be considered outliers. Default is -2.
+#' @param cor_method If Zk_filtering is TRUE, the correlation method to use.
+#' One of 'spearman', 'bicor', or 'pearson'. Default is 'spearman'.
+#' @param remove_nonexpressed Logical. It specifies whether non-expressed genes
+#' should be removed or not. Default is TRUE.
+#' @param method If remove_nonexpressed is TRUE, the criterion to filter
+#' non-expressed genes out. One of "mean", "median", "percentage",
+#' or "allsamples". Default is 'median'.
+#' @param min_exp If method is 'mean', 'median', or 'allsamples',
+#' the minimum value for a gene to be considered expressed.
+#' If method is 'percentage', the minimum value each gene must have in at least
+#' n percent of samples to be considered expressed.
+#' @param min_percentage_samples If method is 'percentage', expressed genes
+#' must have expression >= min_exp in at least this percentage.
+#' Values must range from 0 to 1. Default = 0.25.
+#' @param remove_confounders Logical. If TRUE, it removes principal components
+#' that add noise to the data.
+#' @param variance_filter Logical. If TRUE, it will filter genes by variance.
+#' Default is FALSE.
+#' @param n If variance_filter is TRUE, the number of
+#' most variable genes to keep.
+#' @param percentile If variance_filter is TRUE, the percentage of
+#' most variable genes to keep.
+#' @param vstransform Logical indicating if data should be
+#' variance stabilizing transformed. This parameter can only be set to TRUE
+#' if data is a matrix of raw read counts.
 #'
-#' @return Processed gene expression data frame or `SummarizedExperiment` object with gene IDs in row names and sample names in column names.
+#' @return Processed gene expression data frame with gene IDs in row names
+#' and sample names in column names or `SummarizedExperiment` object.
 #' @author Fabricio Almeida-Silva
 #' @seealso
 #'  \code{\link[DESeq2]{varianceStabilizingTransformation}}
@@ -290,7 +339,9 @@ PC_correction <- function(exp) {
 #' data(zma.se)
 #' exp <- exp_preprocess(zma.se, variance_filter=TRUE, n=1000)
 #' @references
-#' Love, M. I., Huber, W., & Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome biology, 15(12), 1-21.
+#' Love, M. I., Huber, W., & Anders, S. (2014). Moderated estimation of
+#' fold change and dispersion for RNA-seq data with
+#' DESeq2. Genome biology, 15(12), 1-21.
 exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
                            Zk_filtering = TRUE, zk = -2,
                            cor_method = "spearman",

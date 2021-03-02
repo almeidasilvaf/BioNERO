@@ -1,9 +1,16 @@
 #' Detect communities in a network
 #'
-#' @param edgelist Data frame containing the network as an edge list. First column must be node 1 and second column must be node 2. Additional columns will be interpreted as edge attributes and will be modified by this function.
-#' @param method Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".
-#' @param directed Logical indicating whether the network is directed (GRN only) or not (GCN and PPI networks). Default: TRUE.
-#' @return A data frame containing node names in the first column, and communities to which nodes belong in the second column.
+#' @param edgelist Data frame containing the network as an edge list.
+#' First column must be node 1 and second column must be node 2.
+#' Additional columns will be interpreted as edge attributes and will
+#' be modified by this function.
+#' @param method Community detection algorithm to be used. Available methods
+#' are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass",
+#' "leading_eigen", "louvain", and "label_prop". Default is "infomap".
+#' @param directed Logical indicating whether the network is directed (GRN only)
+#' or not (GCN and PPI networks). Default: TRUE.
+#' @return A data frame containing node names in the first column, and
+#' communities to which nodes belong in the second column.
 #'
 #' @seealso
 #'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{simplify}},\code{\link[igraph]{cluster_infomap}},\code{\link[igraph]{cluster_edge_betweenness}},\code{\link[igraph]{cluster_fast_greedy}},\code{\link[igraph]{cluster_walktrap}},\code{\link[igraph]{cluster_spinglass}},\code{\link[igraph]{cluster_leading_eigen}},\code{\link[igraph]{cluster_louvain}},\code{\link[igraph]{cluster_label_prop}}
@@ -48,8 +55,10 @@ detect_communities <- function(edgelist, method = "infomap", directed=TRUE) {
 #' Create a ggnetwork data frame from an igraph object
 #'
 #' @param graph Object of class igraph.
-#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr", "graphopt", "kk" and "mds". Default is "kk".
-#' @param arrow.gap Numeric indicating the distance between nodes and arrows. Default is 0.2.
+#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr",
+#' "graphopt", "kk" and "mds". Default is "kk".
+#' @param arrow.gap Numeric indicating the distance between nodes and arrows.
+#' Default is 0.2.
 #' @seealso
 #'  \code{\link[ggnetwork]{ggnetwork}}
 #'  \code{\link[igraph]{layout_with_dh}},\code{\link[igraph]{layout_with_drl}},\code{\link[igraph]{layout_with_gem}},\code{\link[igraph]{layout_with_lgl}},\code{\link[igraph]{layout_with_fr}},\code{\link[igraph]{layout_with_graphopt}},\code{\link[igraph]{layout_with_kk}},\code{\link[igraph]{layout_with_mds}}
@@ -84,13 +93,25 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 
 #' Plot protein-protein interaction network from edge list
 #'
-#' @param edgelist_int Data frame containing the edge list for the PPI network. First column is the protein 1 and second column is the protein 2. All other columns are interpreted as edge attributes.
-#' @param color_by How should nodes be colored? It must be either "community" or a 2-column data frame containing proteins in the first column and a custom annotation in the second column. If "community", a clustering algorithm will be applied. Default: "community".
-#' @param clustering_method Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".
-#' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".
-#' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
-#' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
-#' @param add_color_legend Logical indicating whether to add a color legend for nodes. Default: TRUE.
+#' @param edgelist_int Data frame containing the edge list for the PPI network.
+#' First column is the protein 1 and second column is the protein 2.
+#' All other columns are interpreted as edge attributes.
+#' @param color_by How should nodes be colored? It must be either "community" or
+#' a 2-column data frame containing proteins in the first column and a
+#' custom annotation in the second column. If "community", a clustering
+#' algorithm will be applied. Default: "community".
+#' @param clustering_method Community detection algorithm to be used.
+#' Available methods are "infomap", "edge_betweenness", "fast_greedy",
+#' "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop".
+#' Default is "infomap".
+#' @param show_labels Character indicating which nodes will be labeled.
+#' One of "all", "allhubs", "tophubs", or "none".
+#' @param top_n_hubs Number of top hubs to be labeled. It is only valid
+#' if \code{show_labels} equals "tophubs". Default is 5.
+#' @param interactive Logical indicating whether the network should be
+#' interactive or not. Default is FALSE.
+#' @param add_color_legend Logical indicating whether to add a color legend
+#' for nodes. Default: TRUE.
 #'
 #' @return A ggplot object.
 #' @seealso
@@ -209,13 +230,21 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 
 #' Plot gene regulatory network from edge list
 #'
-#' @param edgelist_grn Data frame containing the edge list for the GRN network. First column is the TF and second column is the target gene. All other columns are interpreted as edge attributes.
-#' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".
-#' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
-#' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
-#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr", "graphopt", "kk" and "mds". Default is "kk".
-#' @param arrow.gap Numeric indicating the distance between nodes and arrows. Default is 0.2.
-#' @param ranked Logical indicating whether to treat third column of the edgelist (edge weights) as ranked values. Default: TRUE.
+#' @param edgelist_grn Data frame containing the edge list for the GRN network.
+#' First column is the TF and second column is the target gene.
+#' All other columns are interpreted as edge attributes.
+#' @param show_labels Character indicating which nodes will be labeled.
+#' One of "all", "allhubs", "tophubs", or "none".
+#' @param top_n_hubs Number of top hubs to be labeled. It is only valid
+#' if \code{show_labels} equals "tophubs". Default is 5.
+#' @param interactive Logical indicating whether the network should be
+#' interactive or not. Default is FALSE.
+#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr",
+#' "graphopt", "kk" and "mds". Default is "kk".
+#' @param arrow.gap Numeric indicating the distance between nodes and arrows.
+#' Default is 0.2.
+#' @param ranked Logical indicating whether to treat third column of
+#' the edge list (edge weights) as ranked values. Default: TRUE.
 #'
 #' @return A ggplot object containing the network.
 #' @seealso
@@ -320,13 +349,22 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 
 #' Plot gene coexpression network from edge list
 #'
-#' @param edgelist_gcn Data frame containing the edge list for the GCN. The edge list can be generated with \code{get_edge_list()}.
+#' @param edgelist_gcn Data frame containing the edge list for the GCN.
+#' The edge list can be generated with \code{get_edge_list()}.
 #' @param net List object returned by \code{exp2net}.
-#' @param color_by How should nodes be colored? It must be either "module" (nodes will have the colors of their modules) or a 2-column data frame containing genes in the first column and a custom gene annotation in the second column. Default: "module".
-#' @param hubs Data frame containing hub genes in the first column, their modules in the second column, and intramodular connectivity in the third column.
-#' @param show_labels Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none". Default: tophubs.
-#' @param top_n_hubs Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.
-#' @param interactive Logical indicating whether the network should be interactive or not. Default is FALSE.
+#' @param color_by How should nodes be colored? It must be either "module"
+#' (nodes will have the colors of their modules) or a 2-column data frame
+#' containing genes in the first column and a custom gene annotation
+#' in the second column. Default: "module".
+#' @param hubs Data frame containing hub genes in the first column,
+#' their modules in the second column, and intramodular connectivity in
+#' the third column.
+#' @param show_labels Character indicating which nodes will be labeled.
+#' One of "all", "allhubs", "tophubs", or "none". Default: tophubs.
+#' @param top_n_hubs Number of top hubs to be labeled. It is only valid
+#' if \code{show_labels} equals "tophubs". Default is 5.
+#' @param interactive Logical indicating whether the network should be
+#' interactive or not. Default is FALSE.
 #'
 #' @return A ggplot object.
 #' @seealso

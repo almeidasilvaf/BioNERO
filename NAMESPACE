@@ -3,6 +3,7 @@
 export(PC_correction)
 export(SFT_fit)
 export(ZKfiltering)
+export(check_sft)
 export(consensus_SFT_fit)
 export(consensus_modules)
 export(consensus_trait_cor)

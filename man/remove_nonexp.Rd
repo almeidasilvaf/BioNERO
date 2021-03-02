@@ -12,13 +12,20 @@ remove_nonexp(
 )
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 
-\item{method}{Criterion to filter non-expressed genes out. One of "mean", "median", "percentage", or "allsamples". Default is "median".}
+\item{method}{Criterion to filter non-expressed genes out.
+One of "mean", "median", "percentage", or "allsamples". Default is "median".}
 
-\item{min_exp}{If method is 'mean', 'median', or 'allsamples', the minimum value for a gene to be considered expressed. If method is 'percentage', the minimum value each gene must have in at least n percent of samples to be considered expressed.}
+\item{min_exp}{If method is 'mean', 'median', or 'allsamples',
+the minimum value for a gene to be considered expressed.
+If method is 'percentage', the minimum value each gene must have in
+at least n percent of samples to be considered expressed.}
 
-\item{min_percentage_samples}{In case the user chooses 'percentage' as method, expressed genes must have expression >= min_exp in at least this percentage. Values must range from 0 to 1.}
+\item{min_percentage_samples}{In case the user chooses 'percentage' as method,
+expressed genes must have expression >= min_exp in at least this percentage.
+Values must range from 0 to 1.}
 }
 \value{
 Filtered gene expression data frame or `SummarizedExperiment` object.

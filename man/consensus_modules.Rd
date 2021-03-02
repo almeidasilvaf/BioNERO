@@ -2,7 +2,7 @@
 % Please edit documentation in R/consensus_modules.R
 \name{consensus_modules}
 \alias{consensus_modules}
-\title{Identify consensus modules across multiple data sets}
+\title{Identify consensus modules across independent data sets}
 \usage{
 consensus_modules(
   exp_list,
@@ -15,20 +15,29 @@ consensus_modules(
 )
 }
 \arguments{
-\item{exp_list}{A list containing the expression data frames. For each expression data frame, row names correspond to gene IDs and column names correspond to sample names. The list can be created by using \code{list(exp1, exp2, ..., expn)}.}
+\item{exp_list}{A list containing the expression data frames with genes in
+row names and samples in column names or `SummarizedExperiment` objects.
+The list can be created by using \code{list(exp1, exp2, ..., expn)}.}
 
-\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column.
-Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since the function will extract colData.}
+\item{metadata}{A data frame containing sample names in row names and
+sample annotation in the first column.
+Ignored if `exp_list` is a list of `SummarizedExperiment` objects, since
+the function will extract colData.}
 
-\item{power}{Numeric vector of beta power for each expression set as calculated by \code{consensus_SFT_fit}.}
+\item{power}{Numeric vector of beta power for each expression set
+as calculated by \code{consensus_SFT_fit}.}
 
-\item{cor_method}{Correlation method used for network reconstruction. One of "spearman" (default), "biweight", or "pearson".}
+\item{cor_method}{Correlation method used for network reconstruction.
+One of "spearman" (default), "biweight", or "pearson".}
 
-\item{net_type}{Network type. One of "signed hybrid" (default), "signed" or "unsigned".}
+\item{net_type}{Network type. One of "signed hybrid" (default),
+"signed" or "unsigned".}
 
-\item{module_merging_threshold}{Correlation threshold to merge similar modules into a single one. Default: 0.8.}
+\item{module_merging_threshold}{Correlation threshold to merge
+similar modules into a single one. Default: 0.8.}
 
-\item{reportPDF}{Logical indicating whether to save a PDF figure with dendrogram and modules. Default: FALSE.}
+\item{reportPDF}{Logical indicating whether to save a PDF figure with
+dendrogram and modules. Default: FALSE.}
 }
 \value{
 A list containing 4 elements: \describe{
@@ -36,10 +45,11 @@ A list containing 4 elements: \describe{
   \item{consMEs}{Consensus module eigengenes}
   \item{exprSize}{Description of the multi-set object returned by the function \code{WGCNA::checkSets}}
   \item{sampleInfo}{Metadata for each expression set}
+  \item{genes_cmodules}{Data frame of genes and consensus modules}
 }
 }
 \description{
-This function identifies modules that are conserved across multiple data sets. It can be used for evolutionary analyses and for testing robustness of coexpression modules in data sets from different sources, for instance.
+Identify consensus modules across independent data sets
 }
 \examples{
 set.seed(12)

@@ -1,10 +1,16 @@
 
 #' Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param estimator_clr Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
-#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Default: TRUE
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param estimator_clr Entropy estimator to be used. One of "mi.empirical",
+#' "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall".
+#' Default: "pearson".
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param remove_zero Logical indicating whether to remove edges whose weight
+#' is exactly zero. Default: TRUE
 #'
 #' @return A gene regulatory network represented as an edge list.
 #' @export
@@ -45,11 +51,20 @@ grn_clr <- function(exp, estimator_clr = "pearson",
 
 #' Infer gene regulatory network with the ARACNE algorithm
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param estimator_aracne Entropy estimator to be used. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
-#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
-#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param estimator_aracne Entropy estimator to be used. One of "mi.empirical",
+#' "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall".
+#' Default: "spearman".
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param eps Numeric value indicating the threshold used when removing
+#' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
+#' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' @param remove_zero Logical indicating whether to remove edges whose weight
+#' is exactly zero. Zero values indicate edges that were removed by ARACNE.
+#' Default: TRUE.
 #'
 #' @return A gene regulatory network represented as an edge list.
 #' @export
@@ -90,9 +105,14 @@ grn_aracne <- function(exp, estimator_aracne = "spearman",
 
 #' Infer gene regulatory network with GENIE3
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param remove_zero Logical indicating whether to remove edges whose weight
+#' is exactly zero. Zero values indicate edges that were removed by ARACNE.
+#' Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
 #' @return A gene regulatory network represented as an edge list.
@@ -102,7 +122,8 @@ grn_aracne <- function(exp, estimator_aracne = "spearman",
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
-#' genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2) # only 2 trees for demonstration purpose
+#' # only 2 trees for demonstration purposes
+#' genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2)
 grn_genie3 <- function(exp, regulators = NULL,
                        remove_zero=TRUE, ...) {
     exp <- handleSE(exp)
@@ -132,15 +153,27 @@ grn_genie3 <- function(exp, regulators = NULL,
 
 #' Infer gene regulatory network with multiple algorithms and combine results in a list
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
-#' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
-#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
-#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param estimator_clr Entropy estimator to be used in CLR inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+#' or "kendall". Default: "pearson".
+#' @param estimator_aracne Entropy estimator to be used in ARACNE inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+#' or "kendall". Default: "spearman".
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param eps Numeric value indicating the threshold used when removing
+#' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
+#' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' @param remove_zero Logical indicating whether to remove edges
+#' whose weight is exactly zero. Zero values indicate edges that were
+#' removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #'
-#' @return A list of data frames representing edge lists. Each list element is an edge list for a specific method.
+#' @return A list of data frames representing edge lists. Each list element
+#' is an edge list for a specific method.
 #' @rdname grn_combined
 #' @export
 #' @examples
@@ -166,9 +199,11 @@ grn_combined <- function(exp, regulators = NULL,
 
 #' Rank edge weights for GRNs and calculate average across different methods
 #'
-#' @param list_edges List containing edge lists as returned by the function \code{grn_combined}.
+#' @param list_edges List containing edge lists as returned by
+#' the function \code{grn_combined}.
 #'
-#' @return Edge list containing regulator, target and mean rank from all algorithms.
+#' @return Edge list containing regulator, target and mean rank from
+#' all algorithms.
 #' @rdname grn_average_rank
 #' @export
 #' @examples
@@ -201,10 +236,14 @@ grn_average_rank <- function(list_edges) {
 #' Filter a gene regulatory network based on optimal scale-free topology fit
 #'
 #' @param edgelist A gene regulatory network represented as an edge list.
-#' @param nsplit Number of groups in which the edge list will be split. Default: 10.
+#' @param nsplit Number of groups in which the edge list will be split.
+#' Default: 10.
 #'
-#' @details The edge list will be split in n groups and the scale-free topology fit will be tested for each subset of the edge list.
-#' For instance, if an edge list of 10000 rows is used as input, the function will test SFT fit for the top 1000 edges, then top 2000 edges, an so on up to the whole edge list.
+#' @details The edge list will be split in n groups and the scale-free
+#' topology fit will be tested for each subset of the edge list.
+#' For instance, if an edge list of 10000 rows is used as input,
+#' the function will test SFT fit for the top 1000 edges, then top 2000 edges,
+#' and so on up to the whole edge list.
 #' @return The edge list that best fits the scale-free topology.
 #' @export
 #' @rdname grn_filter
@@ -259,21 +298,36 @@ grn_filter <- function(edgelist, nsplit=10) {
 
 #' Infer gene regulatory network from expression data
 #'
-#' @param exp A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.
-#' @param estimator_clr Entropy estimator to be used in CLR inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "pearson".
-#' @param estimator_aracne Entropy estimator to be used in ARACNE inference. One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall". Default: "spearman".
-#' @param regulators A character vector of regulators (e.g., transcription factors or miRNAs). All regulators must be included in `exp`.
-#' @param eps Numeric value indicating the threshold used when removing an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
-#' @param remove_zero Logical indicating whether to remove edges whose weight is exactly zero. Zero values indicate edges that were removed by ARACNE. Default: TRUE.
-#' @param nsplit Number of groups in which the edge list will be split. Default: 10.
+#' @param exp A gene expression data frame with genes in row names and
+#' samples in column names or a `SummarizedExperiment` object.
+#' @param estimator_clr Entropy estimator to be used in CLR inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson",
+#' "spearman", or "kendall". Default: "pearson".
+#' @param estimator_aracne Entropy estimator to be used in ARACNE inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+#' or "kendall". Default: "spearman".
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param eps Numeric value indicating the threshold used when
+#' removing an edge: for each triplet of nodes (i,j,k), the weakest edge,
+#' say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
+#' @param remove_zero Logical indicating whether to remove edges whose
+#' weight is exactly zero. Zero values indicate edges that were
+#' removed by ARACNE. Default: TRUE.
+#' @param nsplit Number of groups in which the edge list will be split.
+#' Default: 10.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
 #' @details
-#' This function infers GRNs with ARACNE, GENIE3 and CLR, ranks correlation weights for each GRN and calculates the average rank for each edge.
-#' Then, the resulting GRN is filtered to keep the top n edges that lead to the optimal scale-free topology fit.
+#' This function infers GRNs with ARACNE, GENIE3 and CLR, ranks correlation
+#' weights for each GRN and calculates the average rank for each edge.
+#' Then, the resulting GRN is filtered to keep the top n edges that lead
+#' to the optimal scale-free topology fit.
 #'
 #' @rdname exp2grn
 #' @export
-#' @return A filtered edge list with regulators in the first column and targets in the second column.
+#' @return A filtered edge list with regulators in the first column and
+#' targets in the second column.
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
@@ -300,11 +354,19 @@ exp2grn <- function(exp, regulators = NULL,
 #' Get hubs for gene regulatory network
 #'
 #' @param edgelist A gene regulatory network represented as an edge list.
-#' @param top_percentile Numeric from 0 to 1 indicating the percentage of genes with the highest degree to consider hubs. Default: 0.1.
-#' @param top_n Numeric indicating the number of genes with the highest degree to consider hubs.
-#' @param return_degree Logical indicating whether to return a data frame of degree for all genes. If TRUE, the function will return a list instead of a data frame. Default: FALSE.
-#' @param ranked Logical indicating whether to treat third column of the edge list (edge weights) as ranked values. Ignored if the edge list only contains 2 columns. Default: TRUE.
-#' @return A data frame with gene ID in the first column and out degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
+#' @param top_percentile Numeric from 0 to 1 indicating the percentage of genes
+#' with the highest degree to consider hubs. Default: 0.1.
+#' @param top_n Numeric indicating the number of genes with the highest degree
+#' to consider hubs.
+#' @param return_degree Logical indicating whether to return a data frame of
+#' degree for all genes. If TRUE, the function will return a list instead of
+#' a data frame. Default: FALSE.
+#' @param ranked Logical indicating whether to treat third column of the
+#' edge list (edge weights) as ranked values. Ignored if the edge list only
+#' contains 2 columns. Default: TRUE.
+#' @return A data frame with gene ID in the first column and out degree in
+#' the second column or a list of two data frames with hubs and degree for
+#' all genes, respectively.
 #' @export
 #' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree
@@ -350,11 +412,18 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
 
 #' Get hubs for protein-protein interaction network
 #'
-#' @param edgelist A protein-protein interaction network represented as an edge list.
-#' @param top_percentile Numeric from 0 to 1 indicating the percentage of proteins with the highest degree to consider hubs. Default: 0.1.
-#' @param top_n Numeric indicating the number of proteins with the highest degree to consider hubs.
-#' @param return_degree Logical indicating whether to return a data frame of degree for all proteins. If TRUE, the function will return a list instead of a data frame. Default: FALSE.
-#' @return A data frame with protein ID in the first column and degree in the second column or a list of two data frames with hubs and degree for all genes, respectively.
+#' @param edgelist A protein-protein interaction network represented
+#' as an edge list.
+#' @param top_percentile Numeric from 0 to 1 indicating the percentage of
+#' proteins with the highest degree to consider hubs. Default: 0.1.
+#' @param top_n Numeric indicating the number of proteins with the highest
+#' degree to consider hubs.
+#' @param return_degree Logical indicating whether to return a data frame
+#' of degree for all proteins. If TRUE, the function will return a list
+#' instead of a data frame. Default: FALSE.
+#' @return A data frame with protein ID in the first column and degree
+#' in the second column or a list of two data frames with hubs and degree
+#' for all genes, respectively.
 #' @export
 #' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree

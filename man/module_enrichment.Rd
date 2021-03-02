@@ -16,25 +16,36 @@ module_enrichment(
 \arguments{
 \item{net}{List object returned by \code{exp2gcn}.}
 
-\item{background_genes}{Character vector of genes to be used as background for the Fisher's Exact Test.}
+\item{background_genes}{Character vector of genes to be used as background
+for the Fisher's Exact Test.}
 
-\item{annotation}{Annotation data frame with genes in the first column and functional annotation in the other columns, which can be exported from Biomart or similar databases.}
+\item{annotation}{Annotation data frame with genes in the first column
+and functional annotation in the other columns. This data frame can
+be exported from Biomart or similar databases.}
 
-\item{column}{Column or columns of  \code{annotation} to be used for enrichment. Both character or numeric values with column indices can be used. If users want to supply more than one column, input a character or numeric vector. Default: all columns from \code{annotation}.}
+\item{column}{Column or columns of \code{annotation} to be used for enrichment.
+Both character or numeric values with column indices can be used.
+If users want to supply more than one column, input a character or
+numeric vector. Default: all columns from \code{annotation}.}
 
-\item{correction}{Multiple testing correction method. One of "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none". Default is "BH".}
+\item{correction}{Multiple testing correction method. One of "holm",
+"hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none".
+Default is "BH".}
 
-\item{p}{P-value threshold. P-values below this threshold will be considered significant. Default is 0.05.}
+\item{p}{P-value threshold. P-values below this threshold will be considered
+significant. Default is 0.05.}
 }
 \value{
-A data frame containing enriched terms, p-values, gene IDs and module names.
+A data frame containing enriched terms, p-values, gene IDs
+and module names.
 }
 \description{
-Perform functional enrichment analysis for all coexpression network modules.
+Perform enrichment analysis for coexpression network modules
 }
 \details{
-The enrichment analysis is parallelized with BiocParallel, resulting in a dramatic increase in speed.
-However, if you try to run this function in a laptop with low memory, you might have problems with memory usage.
+The enrichment analysis is parallelized with BiocParallel, resulting in
+a dramatic increase in speed. However, if you try to run this function in
+a laptop with low memory, you might have problems with memory usage.
 If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
 }
 \examples{

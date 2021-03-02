@@ -19,11 +19,14 @@ consensus_trait_cor(
 \arguments{
 \item{consensus}{Consensus network returned by \code{consensus_modules}.}
 
-\item{cor_method}{Correlation method to be used. One of 'spearman' or 'pearson'. Default is 'spearman'.}
+\item{cor_method}{Correlation method to be used. One of 'spearman' or
+'pearson'. Default is 'spearman'.}
 
-\item{continuous_trait}{Logical indicating if trait is a continuous variable. Default is FALSE.}
+\item{continuous_trait}{Logical indicating if trait is a continuous variable.
+Default is FALSE.}
 
-\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.}
+\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu",
+a palette ranging from blue to red.}
 
 \item{cex.lab.x}{Font size for x axis labels. Default: 0.6.}
 
@@ -31,12 +34,14 @@ consensus_trait_cor(
 
 \item{cex.text}{Font size for numbers inside matrix. Default: 0.6.}
 
-\item{save_sets}{Logical indicating whether to save heatmaps of correlations between set-specific modules and traits as a PDF figure. Default: FALSE.}
+\item{save_sets}{Logical indicating whether to save heatmaps of correlations
+between set-specific modules and traits as a PDF figure. Default: FALSE.}
 
-\item{transpose}{Logical indicating whether to transpose the heatmap of not. Default is FALSE.}
+\item{transpose}{Logical indicating whether to transpose the heatmap of not.
+Default is FALSE.}
 }
 \value{
-Heatmaps of relationships between consensus/set-specific modules and sample information (metadata) in a PDF file.
+Data frame of consensus module-trait correlations and p-values.
 }
 \description{
 Correlate set-specific modules and consensus modules to sample information

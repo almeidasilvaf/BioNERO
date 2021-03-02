@@ -15,19 +15,28 @@ plot_gcn(
 )
 }
 \arguments{
-\item{edgelist_gcn}{Data frame containing the edge list for the GCN. The edge list can be generated with \code{get_edge_list()}.}
+\item{edgelist_gcn}{Data frame containing the edge list for the GCN.
+The edge list can be generated with \code{get_edge_list()}.}
 
 \item{net}{List object returned by \code{exp2net}.}
 
-\item{color_by}{How should nodes be colored? It must be either "module" (nodes will have the colors of their modules) or a 2-column data frame containing genes in the first column and a custom gene annotation in the second column. Default: "module".}
+\item{color_by}{How should nodes be colored? It must be either "module"
+(nodes will have the colors of their modules) or a 2-column data frame
+containing genes in the first column and a custom gene annotation
+in the second column. Default: "module".}
 
-\item{hubs}{Data frame containing hub genes in the first column, their modules in the second column, and intramodular connectivity in the third column.}
+\item{hubs}{Data frame containing hub genes in the first column,
+their modules in the second column, and intramodular connectivity in
+the third column.}
 
-\item{show_labels}{Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none". Default: tophubs.}
+\item{show_labels}{Character indicating which nodes will be labeled.
+One of "all", "allhubs", "tophubs", or "none". Default: tophubs.}
 
-\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.}
+\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid
+if \code{show_labels} equals "tophubs". Default is 5.}
 
-\item{interactive}{Logical indicating whether the network should be interactive or not. Default is FALSE.}
+\item{interactive}{Logical indicating whether the network should be
+interactive or not. Default is FALSE.}
 }
 \value{
 A ggplot object.

@@ -14,20 +14,26 @@ plot_expression_profile(
 )
 }
 \arguments{
-\item{genes}{Character vector containing a subset of genes from which edges will be extracted. It can be ignored if \code{plot_module} is TRUE.}
+\item{genes}{Character vector containing a subset of genes from which
+edges will be extracted. It can be ignored if \code{plot_module} is TRUE.}
 
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
+\item{metadata}{A data frame containing sample names in row names
+and sample annotation in the first column. Ignored if `exp`
+is a `SummarizedExperiment` object, since the function will extract colData.}
 
-\item{plot_module}{Logical indicating whether to plot a whole module or not. If set to FALSE, \code{genes} must be specified.}
+\item{plot_module}{Logical indicating whether to plot a whole module or not.
+If set to FALSE, \code{genes} must be specified.}
 
 \item{net}{List object returned by \code{exp2net}.}
 
 \item{modulename}{Name of the module to plot.}
 }
 \value{
-A ggplot object showing the expression profile of some genes across all samples.
+A ggplot object showing the expression profile of some genes
+across all samples.
 }
 \description{
 Plot expression profile of given genes across samples

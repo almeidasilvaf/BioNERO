@@ -7,14 +7,21 @@
 detect_communities(edgelist, method = "infomap", directed = TRUE)
 }
 \arguments{
-\item{edgelist}{Data frame containing the network as an edge list. First column must be node 1 and second column must be node 2. Additional columns will be interpreted as edge attributes and will be modified by this function.}
+\item{edgelist}{Data frame containing the network as an edge list.
+First column must be node 1 and second column must be node 2.
+Additional columns will be interpreted as edge attributes and will
+be modified by this function.}
 
-\item{method}{Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".}
+\item{method}{Community detection algorithm to be used. Available methods
+are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass",
+"leading_eigen", "louvain", and "label_prop". Default is "infomap".}
 
-\item{directed}{Logical indicating whether the network is directed (GRN only) or not (GCN and PPI networks). Default: TRUE.}
+\item{directed}{Logical indicating whether the network is directed (GRN only)
+or not (GCN and PPI networks). Default: TRUE.}
 }
 \value{
-A data frame containing node names in the first column, and communities to which nodes belong in the second column.
+A data frame containing node names in the first column, and
+communities to which nodes belong in the second column.
 }
 \description{
 Detect communities in a network

@@ -15,19 +15,31 @@ plot_ppi(
 )
 }
 \arguments{
-\item{edgelist_int}{Data frame containing the edge list for the PPI network. First column is the protein 1 and second column is the protein 2. All other columns are interpreted as edge attributes.}
+\item{edgelist_int}{Data frame containing the edge list for the PPI network.
+First column is the protein 1 and second column is the protein 2.
+All other columns are interpreted as edge attributes.}
 
-\item{color_by}{How should nodes be colored? It must be either "community" or a 2-column data frame containing proteins in the first column and a custom annotation in the second column. If "community", a clustering algorithm will be applied. Default: "community".}
+\item{color_by}{How should nodes be colored? It must be either "community" or
+a 2-column data frame containing proteins in the first column and a
+custom annotation in the second column. If "community", a clustering
+algorithm will be applied. Default: "community".}
 
-\item{clustering_method}{Community detection algorithm to be used. Available methods are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop". Default is "infomap".}
+\item{clustering_method}{Community detection algorithm to be used.
+Available methods are "infomap", "edge_betweenness", "fast_greedy",
+"walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop".
+Default is "infomap".}
 
-\item{show_labels}{Character indicating which nodes will be labeled. One of "all", "allhubs", "tophubs", or "none".}
+\item{show_labels}{Character indicating which nodes will be labeled.
+One of "all", "allhubs", "tophubs", or "none".}
 
-\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid if \code{show_labels} equals "tophubs". Default is 5.}
+\item{top_n_hubs}{Number of top hubs to be labeled. It is only valid
+if \code{show_labels} equals "tophubs". Default is 5.}
 
-\item{interactive}{Logical indicating whether the network should be interactive or not. Default is FALSE.}
+\item{interactive}{Logical indicating whether the network should be
+interactive or not. Default is FALSE.}
 
-\item{add_color_legend}{Logical indicating whether to add a color legend for nodes. Default: TRUE.}
+\item{add_color_legend}{Logical indicating whether to add a color legend
+for nodes. Default: TRUE.}
 }
 \value{
 A ggplot object.

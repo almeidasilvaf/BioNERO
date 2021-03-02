@@ -2,22 +2,27 @@
 % Please edit documentation in R/data_preprocess.R
 \name{filter_by_variance}
 \alias{filter_by_variance}
-\title{Filter expression data frame to keep only the most varying genes}
+\title{Keep only genes with the highest variances}
 \usage{
 filter_by_variance(exp, n = NULL, percentile = NULL)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 
-\item{n}{Number of most variable genes (e.g. n=5000 will keep the top 5000 most variable genes).}
+\item{n}{Number of most variable genes (e.g., n=5000 will
+keep the top 5000 most variable genes).}
 
-\item{percentile}{Percentile of most highly variable genes (e.g. percentile=0.1 will keep the top 10 percent most variable genes). Values must range from 0 to 1.}
+\item{percentile}{Percentile of most highly variable genes
+(e.g., percentile=0.1 will keep the top 10 percent most variable genes).
+Values must range from 0 to 1.}
 }
 \value{
-Gxpression data frame or `SummarizedExperiment` object with the most variable genes in row names and samples in column names.
+Expression data frame or `SummarizedExperiment` object with
+the most variable genes in row names and samples in column names.
 }
 \description{
-Filter expression data frame to keep only the most varying genes
+Keep only genes with the highest variances
 }
 \examples{
 data(zma.se)

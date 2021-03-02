@@ -13,7 +13,7 @@ modPres_netrep(
 )
 }
 \arguments{
-\item{explist}{List of expression matrices with gene/probe names corresponding to column names and sample names corresponding to row names.}
+\item{explist}{List of expression data frames or SummarizedExperiment objects.}
 
 \item{ref_net}{Reference network object returned by the function \code{exp2net}.}
 
@@ -21,10 +21,12 @@ modPres_netrep(
 
 \item{nPerm}{Number of permutations. Default: 1000}
 
-\item{nThreads}{Number of threads to be used for parallel computing. Default: 1}
+\item{nThreads}{Number of threads to be used for parallel computing.
+Default: 1}
 }
 \value{
-Output list from \code{NetRep::modulePreservation} and a message in user's standard output stating which modules are preserved.
+Output list from \code{NetRep::modulePreservation} and a message in
+user's standard output stating which modules are preserved.
 }
 \description{
 Calculate module preservation between two expression data sets using NetRep's algorithm

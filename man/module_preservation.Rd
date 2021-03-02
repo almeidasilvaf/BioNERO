@@ -16,25 +16,35 @@ module_preservation(
 )
 }
 \arguments{
-\item{explist}{List of SummarizedExperiment objects or expression data frames with genes in row names and samples in column names.}
+\item{explist}{List of SummarizedExperiment objects or expression data frames
+with genes (or orthogroups) in row names and samples in column names.}
 
-\item{ref_net}{Reference network object returned by the function \code{exp2gcn}.}
+\item{ref_net}{Reference network object returned by
+the function \code{exp2gcn}.}
 
 \item{test_net}{Test network object returned by the function \code{exp2gcn}.}
 
-\item{algorithm}{Module preservation algorithm to be used. One of 'netrep' (default, permutation-based) or WGCNA.}
+\item{algorithm}{Module preservation algorithm to be used. One of 'netrep'
+(default, permutation-based) or WGCNA.}
 
 \item{nPerm}{Number of permutations. Default: 1000}
 
-\item{nThreads}{Number of threads to be used for parallel computing. Default: 1}
+\item{nThreads}{Number of threads to be used for parallel computing.
+Default: 1}
 
-\item{savePreservation}{Logical indicating whether to save module preservation into an R object or not. As the calculation of module preservation can take a long time, it is useful to save time in future analyses. Default: FALSE.}
+\item{savePreservation}{Logical indicating whether to save
+module preservation into an R object or not. As the calculation of
+module preservation can take a long time, it is useful to save time in
+future analyses. Default: FALSE.}
 
-\item{plot_all_stats}{Logical indicating whether to save all density and connectivity statistics in a PDF file or not. Default: FALSE.}
+\item{plot_all_stats}{Logical indicating whether to save all density and
+connectivity statistics in a PDF file or not. Default: FALSE.}
 }
 \value{
-A list containing the preservation statistics (netrep) or a ggplot object with preservation statistics.
-See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation} for more info.
+A list containing the preservation statistics (netrep) or a ggplot
+object with preservation statistics.
+See \code{WGCNA::modulePreservation} or \code{NetRep::modulePreservation}
+for more info.
 }
 \description{
 Calculate network preservation between two expression data sets

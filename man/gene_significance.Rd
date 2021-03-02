@@ -18,28 +18,41 @@ gene_significance(
 )
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names and
+samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
+\item{metadata}{A data frame containing sample names in row names and
+sample annotation in the first column. Ignored if `exp` is
+a `SummarizedExperiment` object, since the function will extract colData.}
 
-\item{genes}{Character vector of genes to be correlated with traits. If not given, all genes in `exp` will be considered.}
+\item{genes}{Character vector of genes to be correlated with traits.
+If not given, all genes in `exp` will be considered.}
 
 \item{alpha}{Significance level. Default is 0.05.}
 
 \item{min_cor}{Minimum correlation coefficient. Default is 0.2.}
 
-\item{use_abs}{Logical indicating whether to filter by correlation using absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all correlations above 0.4 and below -0.4. Default is TRUE.}
+\item{use_abs}{Logical indicating whether to filter by correlation using
+absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all
+correlations above 0.2 and below -0.2. Default is TRUE.}
 
-\item{savetofile}{Logical indicating whether to save the table to correlations and p-values to a tab-delimited file or not.}
+\item{savetofile}{Logical indicating whether to save the table of
+correlations and p-values to a tab-delimited file or not.}
 
-\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu", a palette ranging from blue to red.}
+\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu",
+a palette ranging from blue to red.}
 
-\item{show_rownames}{Logical indicating whether to show row names or not. Default is FALSE.}
+\item{show_rownames}{Logical indicating whether to show row names or not.
+Default is FALSE.}
 
-\item{continuous_trait}{Logical indicating if trait is a continuous variable. Default is FALSE.}
+\item{continuous_trait}{Logical indicating if trait is a continuous variable.
+Default is FALSE.}
 }
 \value{
-A heatmap of gene significance (GS) and a list containing filtered and raw GS.
+A heatmap of gene significance (GS) and a list containing: \itemize{
+  \item{filtered_corandp}{Filtered matrix of correlation and p-values}
+  \item{raw_GS}{Raw matrix of gene significances}
+}
 }
 \description{
 Calculate gene significance for a given group of genes

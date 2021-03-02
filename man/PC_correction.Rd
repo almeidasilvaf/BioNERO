@@ -2,18 +2,19 @@
 % Please edit documentation in R/data_preprocess.R
 \name{PC_correction}
 \alias{PC_correction}
-\title{Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks}
+\title{Apply Principal Component (PC)-based correction for confounding artifacts}
 \usage{
 PC_correction(exp)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 }
 \value{
 Corrected expression data frame or `SummarizedExperiment` object.
 }
 \description{
-Apply Principal Component (PC)-based correction for confounding artifacts in coexpression networks
+Apply Principal Component (PC)-based correction for confounding artifacts
 }
 \examples{
 data(zma.se)
@@ -21,7 +22,9 @@ exp <- filter_by_variance(zma.se, n=500)
 exp <- PC_correction(exp)
 }
 \references{
-Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., & Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of gene co-expression networks. Genome biology, 20(1), 1-6.
+Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., &
+Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of
+gene co-expression networks. Genome biology, 20(1), 1-6.
 }
 \seealso{
 \code{\link[sva]{num.sv}},\code{\link[sva]{sva_network}}

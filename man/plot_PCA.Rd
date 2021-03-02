@@ -7,13 +7,18 @@
 plot_PCA(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2)
 }
 \arguments{
-\item{exp}{A gene expression data frame with genes in row names and samples in column names or a `SummarizedExperiment` object.}
+\item{exp}{A gene expression data frame with genes in row names
+and samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A data frame containing sample names in row names and sample annotation in the first column. Ignored if `exp` is a `SummarizedExperiment` object, since the function will extract colData.}
+\item{metadata}{A data frame containing sample names in row names
+and sample annotation in the first column. Ignored if `exp` is
+a `SummarizedExperiment` object, since the function will extract colData.}
 
-\item{log_trans}{Logical. If TRUE, the expression data frame will be log transformed by log2(exp+1).}
+\item{log_trans}{Logical. If TRUE, the expression data frame will be log
+transformed with log2(exp+1).}
 
-\item{PCs}{Principal Components to be plotted on the x-axis and y-axis, respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".}
+\item{PCs}{Principal components to be plotted on the x-axis and y-axis,
+respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".}
 
 \item{size}{Numeric indicating the point size. Default is 2.}
 }
