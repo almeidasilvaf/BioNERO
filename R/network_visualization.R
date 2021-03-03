@@ -164,7 +164,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
-                                     Nodesize = 'Degree', height=900, width=1200,
+                                     Nodesize = 'Degree', height=600, width=600,
                                      opacity=0.8, zoom = TRUE, fontSize = 20)
 
     } else { #Static network
@@ -293,7 +293,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
                                      colourScale = my_color,
-                                     Nodesize = 'Degree', height=900, width=1200,
+                                     Nodesize = 'Degree', height=600, width=600,
                                      opacity=1, zoom = TRUE, fontSize = 20, legend=TRUE)
 
     } else { #Static network
@@ -421,7 +421,7 @@ plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
-                                     Nodesize = 'Degree', height=900, width=1200,
+                                     Nodesize = 'Degree', height=600, width=600,
                                      opacity=0.8, zoom = TRUE, fontSize = 13)
     } else {
         # Handle gene coloring based on number of annotation classes

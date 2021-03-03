@@ -24,8 +24,8 @@ knitr::opts_chunk$set(
   warning = FALSE,
   cache = FALSE,
   fig.align = 'center',
-  fig.width = 6,
-  fig.height = 5
+  fig.width = 5,
+  fig.height = 4
 )
 ```
 
@@ -57,12 +57,11 @@ For this tutorial, we will use maize (*Zea mays*) gene expression data normalize
 The input expression data in `BioNERO` can be both a SummarizedExperiment object or a gene expression matrix or data frame with genes in rows and samples in columns. However, we strongly recommend using SummarizedExperiment objects for easier interoperability with other Bioconductor packages.
 
 ```{r data_loading_soybean, message=FALSE}
-library(SummarizedExperiment)
 data(zma.se)
 
 # Take a quick look at the data
 zma.se
-colData(zma.se)
+SummarizedExperiment::colData(zma.se)
 ```
 
 ## Step-by-step data preprocessing
@@ -128,20 +127,17 @@ rm(exp_filt)
 
 **Plotting heatmaps:** the function `plot_heatmap()` plots heatmaps of correlations between samples or gene expression in a single line. Users can use their preferred RColorBrewer's palette, hide/show gene names, and activate/deactivate clustering for rows and/or columns.
 
-```{r plot_heatmap, fig.wide=TRUE, fig.align='center', message=FALSE}
+```{r plot_heatmap, fig.width=6, fig.height=4, message=FALSE}
 # Heatmap of sample correlations
 plot_heatmap(final_exp, type = "samplecor")
 
 # Heatmap of gene expression
 plot_heatmap(final_exp, type="expr")
-
-# Remove sample clustering
-plot_heatmap(final_exp, type="expr", cluster_cols=FALSE)
 ```
 
 **Principal component analysis (PCA):** the function `plot_PCA()` performs a PCA and plots PC1 vs PC2 (by default), as well the percentage of variance explained by each PC. Users can also choose to plot PC1 vs PC3 or PC2 vs PC3.
 
-```{r pcaplot, cache=FALSE}
+```{r pcaplot}
 plot_PCA(final_exp)
 ```
 
@@ -160,7 +156,7 @@ As we can see, the optimal power is `r power`. However, we **strongly recommend*
 
 [^3]: **PRO TIP:** If your $\beta$ power is too low (say below 6), look at the plot as a sanity check.
 
-```{r plot_sft}
+```{r plot_sft, fig.width=6}
 sft$plot
 ```
 
@@ -173,16 +169,15 @@ names(net)
 
 By default, `exp2gcn()` returns 2 PDF figures in the user's working directory. You can set `reportPDF = FALSE` if you do not want the figures. The figures are publication-ready and display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.
 
-```{r echo=FALSE, out.width='700px', out.height='700px', fig.align='center'}
+```{r echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path=paste0(date, "_dendrogram_and_colors.pdf"))
 ```
 
-```{r echo=FALSE, out.width='700px', out.height='700px', fig.align='center'}
+```{r echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path=paste0(date, "_eigengene_network.pdf"))
 ```
-
 
 Let's see the number of genes per module.
 
@@ -204,7 +199,7 @@ The function `module_stability()` allows users to check if the identified coexpr
 module_stability(final_exp, net, nRuns=5)
 ```
 
-```{r mod_stability_plot, echo=FALSE, out.width='700px', out.height='800px', fig.align='center'}
+```{r mod_stability_plot, echo=FALSE, out.width='500px', out.height='600px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path = paste0(date, "_module_stability.pdf") )
 ```
@@ -291,7 +286,7 @@ The function `get_edge_list()` returns a fully connected subgraph for the specif
 
 [^7]: **PRO TIP:** Generally, we advise you to filter by optimal scale-free topology fit (default). However, if you want to specify your own correlation filter for some reason (e.g., visualization), we **strongly recommend** using the function `check_sft()` to check if your resulting graph satisfies the scale-free topology. If it does not, then your graph does not resemble *real* biological networks and, hence, one cannot trust it for biological interpretations.
 
-```{r}
+```{r filter_edges, fig.width=4, fig.height=3}
 # Remove edges based on optimal scale-free topology fit
 edges_filtered <- get_edge_list(net, module="midnightblue",
                                 filter=TRUE)
@@ -331,7 +326,7 @@ plot_gcn(edgelist_gcn = edges_filtered,
 
 Networks can also be visualized interactively by setting `interactive = TRUE` in `plot_gcn`.
 
-```{r}
+```{r interactive_gcn}
 plot_gcn(edgelist_gcn = edges_filtered, 
          net = net,
          color_by="module",

@@ -13,6 +13,10 @@ node 2 and edge weight.}
 \item{net_type}{Type of biological network. One of "gcn", "grn", or "ppi".
 Default: gcn.}
 }
+\value{
+A list with SFT fit statistics and a message indicating if
+the network is scale-free.
+}
 \description{
 Check scale-free topology fit for a given network
 }

@@ -300,6 +300,8 @@ cormat_to_edgelist <- function(matrix) {
 #' @param net_type Type of biological network. One of "gcn", "grn", or "ppi".
 #' Default: gcn.
 #'
+#' @return A list with SFT fit statistics and a message indicating if
+#' the network is scale-free.
 #' @rdname check_sft
 #' @export
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law

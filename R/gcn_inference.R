@@ -203,7 +203,7 @@ exp2gcn <- function(exp, net_type="signed",
 
     if(reportPDF) {
         date <- Sys.Date()
-        pdf(file = paste0(date, "_eigengene_network.pdf"), width=9, height=9)
+        pdf(file = paste0(date, "_eigengene_network.pdf"), width=6, height=6)
         par(cex=0.8)
         WGCNA::plotEigengeneNetworks(new.MEs, "",
                                      marDendro=c(3,5,2,6),
@@ -211,7 +211,7 @@ exp2gcn <- function(exp, net_type="signed",
         dev.off()
 
         #See dendrogram with colors to analyze how old modules and merged modules differ
-        pdf(file=paste0(date, "_dendrogram_and_colors.pdf"), width=9, height=9)
+        pdf(file=paste0(date, "_dendrogram_and_colors.pdf"), width=6, height=6)
         WGCNA::plotDendroAndColors(geneTree,
                                    cbind(old.module_colors, new.module_colors),
                                    c("Unmerged", "Merged"),
@@ -290,17 +290,17 @@ module_stability <- function(exp, net, nRuns = 20) {
     labels <- cbind(labels[,1], labs)
 
     date <- Sys.Date()
-    pdf(file = paste0(date, "_module_stability.pdf"), width=8, height=9)
+    pdf(file = paste0(date, "_module_stability.pdf"), width=5, height=6)
     WGCNA::plotDendroAndColors(mods0[[1]]$mods$dendrograms[[1]],
                                labels,
                                c("Full data set", paste("Resampling", seq_len(nRuns))),
-                               main = "Gene dendrogram and module labels from resampled data sets",
+                               main = "Dendrogram and modules: resampled data",
                                autoColorHeight = FALSE, colorHeight = 0.65,
                                dendroLabels = FALSE, hang = 0.03,
                                guideHang = 0.05,
                                addGuide = TRUE, guideAll = FALSE,
-                               cex.main = 1.2, cex.lab = 0.9,
-                               cex.colorLabels = 0.8,
+                               cex.main = 1, cex.lab = 0.8,
+                               cex.colorLabels = 0.7,
                                marAll = c(0, 5, 3, 0))
     dev.off()
 }
@@ -401,7 +401,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
                                 textMatrix = textMatrix, setStdMargins = FALSE,
                                 cex.text = cex.text,
                                 cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
-                                zlim = c(-1,1),
+                                zlim = c(-1,1), cex.main=1,
                                 main = paste("Module-trait relationships"))
     return(combined_long)
 }

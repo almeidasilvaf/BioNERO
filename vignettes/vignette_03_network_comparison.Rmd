@@ -24,8 +24,8 @@ knitr::opts_chunk$set(
   warning = FALSE,
   cache = FALSE,
   fig.align = 'center',
-  fig.width = 6,
-  fig.height = 5
+  fig.width = 5,
+  fig.height = 4
 )
 ```
 
@@ -98,7 +98,7 @@ cons_sft <- consensus_SFT_fit(zma_list, setLabels = c("Maize 1", "Maize 2"),
 
 This function returns a list with the optimal \beta powers and a summary plot, exactly as `SFT_fit()` does.
 
-```{r sft_results}
+```{r sft_results, fig.width=6}
 powers <- cons_sft$power
 powers
 cons_sft$plot
