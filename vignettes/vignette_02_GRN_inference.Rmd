@@ -47,7 +47,7 @@ set.seed(123) # for reproducibility
 
 # Introduction and algorithm description
 
-In the previous vignette, we explored all aspects of gene coexpression networks (GCNs), which are represented as **undirected weighted graphs**. It is **undirected** because, for a given link between *gene A* and *gene B*, we can only say that these genes are coexpressed, but we cannot know whether *gene A* controls *gene B* or otherwise. Further, **weighted** means that some coexpression relationships between gene pairs are stronger than others. In this vignette, we will demonstrate how to infer gene regulatory networks (GRNs) from expression data with BioNERO. GRNs display interactions between regulators (e.g., transcription factors or miRNAs) and their targets (e.g., genes), and they are represented as **directed unweighted graphs**. Graphically, GRNs are the opposite of GCNs: they can depict which node controls the other (**directed**) and are typically binary (**unweighted**). 
+In the previous vignette, we explored all aspects of gene coexpression networks (GCNs), which are represented as **undirected weighted graphs**. It is **undirected** because, for a given link between *gene A* and *gene B*, we can only say that these genes are coexpressed, but we cannot know whether *gene A* controls *gene B* or otherwise. Further, **weighted** means that some coexpression relationships between gene pairs are stronger than others. In this vignette, we will demonstrate how to infer gene regulatory networks (GRNs) from expression data with BioNERO. GRNs display interactions between regulators (e.g., transcription factors or miRNAs) and their targets (e.g., genes). Hence, they are represented as **directed unweighted graphs**.
 
 Numerous algorithms have been developed to infer GRNs from expression data. However, the algorithm performances are highly dependent on the benchmark data set. To solve this uncertainty, @Marbach2012 proposed the application of the *"wisdom of the crowds"* principle to GRN inference. This approach consists in inferring GRNs with different algorithms, ranking the interactions identified by each method, and calculating the average rank for each interaction across all algorithms used. This way, we can have consensus, high-confidence edges to be used in biological interpretations. For that, `BioNERO` implements three popular algorithms: GENIE3 [@Huynh-Thu2010], ARACNE [@Margolin2006] and CLR [@Faith2007].
 
@@ -130,11 +130,11 @@ head(grn_list$clr)
 
 # Gene regulatory network analysis
 
-After inferring the GRN, `BioNERO` allows users to perform some common post-inference analyses.
+After inferring the GRN, `BioNERO` allows users to perform some common downstream analyses.
 
 ## Hub gene identification
 
-GRN hubs are defined as the top 10% most highly connected regulators, but this percentile is flexible.[^2] They can be identified with `get_hubs_grn()`. 
+GRN hubs are defined as the top 10% most highly connected regulators, but this percentile is flexible in `BioNERO`.[^2] They can be identified with `get_hubs_grn()`. 
 
 [^2]: **NOTE:** Remember: GRNs are represented as **directed** graphs. This implies that only regulators are taken into account when identifying hubs. The goal here is to identify regulators (e.g., transcription factors) that control the expression of several genes.
 
@@ -146,7 +146,7 @@ hubs
 ## Network visualization
 
 
-```{r plot_static}
+```{r plot_static, fig.height=4, fig.width=4}
 plot_grn(grn)
 ```
 

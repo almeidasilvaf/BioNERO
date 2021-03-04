@@ -447,7 +447,7 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
                                 textMatrix = textMatrix, setStdMargins = FALSE,
                                 cex.text = cex.text,
                                 cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
-                                zlim = c(-1,1),
+                                zlim = c(-1,1), cex.main=1,
                                 main = "Consensus module-trait relationships")
     return(combined_long)
 }

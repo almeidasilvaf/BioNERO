@@ -46,7 +46,7 @@ set.seed(12) # for reproducibility
 
 # Introduction
 
-As one might expect, coexpression networks inferred from different expression data sets are different from each other. Comparing networks to identify their commonalities and differences can reveal relevant biological patterns. For instance, seeking for **consensus modules** can identify coexpression modules that occur in all data sets regardless of natural variation and, hence, are core players of the phenotype studied. Additionally, **module preservation** within and across species can reveal patterns of conservation and divergence between transcriptomes that can contribute to important evolutionary insights. In this vignette, we will explore consensus modules and module preservation analyses with `BioNERO`. Although they seem similar, their goals are opposite: while consensus modules identification focuses on the commonalities, module preservation focuses on the divergences. 
+Comparing different coexpression networks can reveal relevant biological patterns. For instance, seeking for **consensus modules** can identify coexpression modules that occur in all data sets regardless of natural variation and, hence, are core players of the studied phenotype. Additionally, **module preservation** within and across species can reveal patterns of conservation and divergence between transcriptomes. In this vignette, we will explore consensus modules and module preservation analyses with `BioNERO`. Although they seem similar, their goals are opposite: while consensus modules identification focuses on the commonalities, module preservation focuses on the divergences. 
 
 
 # Data loading and description
@@ -123,10 +123,10 @@ head(consensus_trait)
 
 Users can also transpose the heatmap as in `module_trait_cor()`.
 
- 
+
 # Module preservation
 
-Module preservation is often used to study patterns of evolutionary conservation and divergence across transcriptomes, an approach named *phylotranscriptomics*. This way, one can investigate how evolution shaped the expression profiles for given gene families across taxa.
+Module preservation is often used to study patterns of evolutionary conservation and divergence across transcriptomes, an approach named *phylotranscriptomics*. This way, one can investigate how evolution shaped the expression profiles for particular gene families across taxa.
 
 ## Data preprocessing
 
@@ -181,7 +181,7 @@ gcns <- lapply(seq_along(power_ortho), function(n)
 length(gcns)
 ```
 
-Initially, module preservation analyses were performed with WGCNA's algorithm [@Langfelder2008]. However, the summary preservation statistics used by WGCNA rely on parametric assumptions that are often not met. The NetRep algorithm [@Ritchie2016] is more accurate than WGCNA because it uses non-parametric permutation analyses. Both algorithms are implemented in `BioNERO` for comparison purposes, but we **strongly recommend** using the NetRep algorithm for biological interpretations. Module preservation analysis can be performed with a single function: `module_preservation()`.
+Initially, module preservation analyses were performed with WGCNA's algorithm [@Langfelder2008]. However, the summary preservation statistics used by WGCNA rely on parametric assumptions that are often not met. For this purpose, the NetRep algorithm [@Ritchie2016] is more accurate than WGCNA, as it uses non-parametric permutation analyses. Both algorithms are implemented in `BioNERO` for comparison purposes, but we **strongly recommend** using the NetRep algorithm. Module preservation analysis can be performed with a single function: `module_preservation()`.
 
 ```{r preservation}
 # Using rice as reference and maize as test
@@ -203,7 +203,6 @@ genes <- sample(rownames(zma.se), size = 50)
 is_singleton(genes, og.zma.osa)
 is_duplicated(genes, og.zma.osa)
 ```
-
 
 
 # Session info {.unnumbered}

@@ -74,7 +74,8 @@ Imports:
     minet, 
     GENIE3,
     utils,
-    SummarizedExperiment
+    SummarizedExperiment,
+    Cairo
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

@@ -169,12 +169,12 @@ names(net)
 
 By default, `exp2gcn()` returns 2 PDF figures in the user's working directory. You can set `reportPDF = FALSE` if you do not want the figures. The figures are publication-ready and display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.
 
-```{r echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
+```{r echo=FALSE, out.width='500px', out.height='500px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path=paste0(date, "_dendrogram_and_colors.pdf"))
 ```
 
-```{r echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
+```{r echo=FALSE, out.width='500px', out.height='500px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path=paste0(date, "_eigengene_network.pdf"))
 ```
@@ -199,7 +199,7 @@ The function `module_stability()` allows users to check if the identified coexpr
 module_stability(final_exp, net, nRuns=5)
 ```
 
-```{r mod_stability_plot, echo=FALSE, out.width='500px', out.height='600px', fig.align='center'}
+```{r mod_stability_plot, echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
 date <- Sys.Date()
 knitr::include_graphics(path = paste0(date, "_module_stability.pdf") )
 ```
@@ -228,7 +228,7 @@ MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson",
 
 The heatmap above shows that genes in the *yellow* module are negatively correlated with endosperm samples. We can visually explore it with `plot_expression_profile()`.
 
-```{r}
+```{r exp_profile, fig.width=4, fig.height=3}
 plot_expression_profile(exp=final_exp, net=net, 
                         plot_module=TRUE, modulename="yellow")
 ```
@@ -303,7 +303,7 @@ dim(edges_filtered)
 
 As we now have an edge list for a module, let's visualize it with the function `plot_gcn()`. By default, this function only labels the top 5 hubs (or less if there are less than 5 hubs). However, this can be customized according to the user's preference (see `?plot_gcn` for more information).
 
-```{r plot_gcn}
+```{r plot_gcn, fig.width=4, fig.height=4}
 plot_gcn(edgelist_gcn = edges_filtered, 
          net = net,
          color_by = "module",

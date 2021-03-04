@@ -111,6 +111,7 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp qnorm qqplot quantile sd var
 #' @importFrom grDevices colorRampPalette dev.off pdf
 #' @importFrom graphics par
+#' @importFrom Cairo CairoPDF
 #' @examples
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
