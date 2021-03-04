@@ -69,11 +69,11 @@ Imports:
     stats,
     grDevices,
     graphics,
+    utils,
     methods,
     BiocParallel,
     minet, 
     GENIE3,
-    utils,
     SummarizedExperiment
 RoxygenNote: 7.1.1
 Suggests: 
