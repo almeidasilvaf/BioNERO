@@ -11,7 +11,8 @@ plot_ppi(
   show_labels = "tophubs",
   top_n_hubs = 5,
   interactive = FALSE,
-  add_color_legend = TRUE
+  add_color_legend = TRUE,
+  dim_interactive = c(600, 600)
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ interactive or not. Default is FALSE.}
 
 \item{add_color_legend}{Logical indicating whether to add a color legend
 for nodes. Default: TRUE.}
+
+\item{dim_interactive}{Numeric vector with width and height of window
+for interactive plotting. Default: c(600,600).}
 }
 \value{
 A ggplot object.

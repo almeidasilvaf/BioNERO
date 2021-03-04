@@ -11,7 +11,8 @@ plot_gcn(
   hubs = NULL,
   show_labels = "tophubs",
   top_n_hubs = 5,
-  interactive = FALSE
+  interactive = FALSE,
+  dim_interactive = c(600, 600)
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ if \code{show_labels} equals "tophubs". Default is 5.}
 
 \item{interactive}{Logical indicating whether the network should be
 interactive or not. Default is FALSE.}
+
+\item{dim_interactive}{Numeric vector with width and height of window
+for interactive plotting. Default: c(600,600).}
 }
 \value{
 A ggplot object.

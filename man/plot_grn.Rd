@@ -11,7 +11,8 @@ plot_grn(
   interactive = FALSE,
   layout = "kk",
   arrow.gap = 0.01,
-  ranked = TRUE
+  ranked = TRUE,
+  dim_interactive = c(600, 600)
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ Default is 0.2.}
 
 \item{ranked}{Logical indicating whether to treat third column of
 the edge list (edge weights) as ranked values. Default: TRUE.}
+
+\item{dim_interactive}{Numeric vector with width and height of window
+for interactive plotting. Default: c(600,600).}
 }
 \value{
 A ggplot object containing the network.
