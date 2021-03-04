@@ -78,7 +78,7 @@ head(zma.tfs)
 
 Inferring GRNs based on the *wisdom of the crowds* principle can be done with a single function: `exp2grn()`. This function will infer GRNs with GENIE3, ARACNE and CLR, calculate average ranks for each interaction and filter the resulting network based on the optimal scale-free topology (SFT) fit. In the filtering step, *n* different networks are created by subsetting the top *n* quantiles. For instance, if a network of 10,000 edges is given as input with `nsplit = 10`, 10 different networks will be created: the first with 1,000 edges, the second with 2,000 edges, and so on, with the last network being the original input network. Then, for each network, the function will calculate the SFT fit and select the best fit.
 
-```{r exp2grn}
+```{r exp2grn, fig.small=TRUE}
 # Using 10 trees for demonstration purposes. Use the default: 1000
 grn <- exp2grn(exp = final_exp, regulators = zma.tfs$Gene, nTrees=10)
 head(grn)
@@ -153,7 +153,7 @@ plot_grn(grn)
 GRNs can also be visualized interactively for exploratory purposes.
 
 ```{r plot_interactive}
-plot_grn(grn, interactive = TRUE)
+plot_grn(grn, interactive = TRUE, dim_interactive = c(500,500))
 ```
 
 Finally, `BioNERO` can also be used for visualization and hub identification in protein-protein (PPI) interaction networks. The functions `get_hubs_ppi()` and `plot_ppi()` work the same way as their equivalents for GRNs (`get_hubs_grn()` and `plot_grn()`).

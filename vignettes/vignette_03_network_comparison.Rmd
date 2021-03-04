@@ -123,11 +123,6 @@ head(consensus_trait)
 
 Users can also transpose the heatmap as in `module_trait_cor()`.
 
-```{r transposed_heatmap, fig.width=9, fig.height=3}
-consensus_trait <- consensus_trait_cor(consensus, cor_method = "pearson",
-                                       transpose = TRUE, cex.text = 0.7,
-                                       cex.lab.y = 0.7)
-```
  
 # Module preservation
 
@@ -155,8 +150,8 @@ zma_osa_list <- list(osa = osa.se, zma = zma.se)
 ortho_exp <- exp_genes2orthogroups(zma_osa_list, og.zma.osa, summarize = "mean")
 
 # Inspect new expression data
-head(ortho_exp$osa)
-head(ortho_exp$zma)
+ortho_exp$osa[1:5, 1:5]
+ortho_exp$zma[1:5, 1:5]
 ```
 
 Now, we will preprocess both expression sets and keep only the top 1000 orthogroups with the highest variances for demonstration purposes. 

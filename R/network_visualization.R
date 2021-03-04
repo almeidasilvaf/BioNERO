@@ -9,6 +9,7 @@
 #' "leading_eigen", "louvain", and "label_prop". Default is "infomap".
 #' @param directed Logical indicating whether the network is directed (GRN only)
 #' or not (GCN and PPI networks). Default: TRUE.
+#'
 #' @return A data frame containing node names in the first column, and
 #' communities to which nodes belong in the second column.
 #'
@@ -112,6 +113,8 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' interactive or not. Default is FALSE.
 #' @param add_color_legend Logical indicating whether to add a color legend
 #' for nodes. Default: TRUE.
+#' @param dim_interactive Numeric vector with width and height of window
+#' for interactive plotting. Default: c(600,600).
 #'
 #' @return A ggplot object.
 #' @seealso
@@ -132,7 +135,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
                      clustering_method = "infomap",
                      show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE,
-                     add_color_legend=TRUE) {
+                     add_color_legend=TRUE, dim_interactive = c(600,600)) {
     requireNamespace("intergraph", quietly=TRUE)
     # How should genes be colored?
     if(is.data.frame(color_by)) {
@@ -161,10 +164,11 @@ plot_ppi <- function(edgelist_int, color_by = "community",
         graph <- igraph::simplify(graph)
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$mem)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
+        d <- dim_interactive
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
-                                     Nodesize = 'Degree', height=600, width=600,
+                                     Nodesize = 'Degree', height=d[2], width=d[1],
                                      opacity=0.8, zoom = TRUE, fontSize = 20)
 
     } else { #Static network
@@ -245,6 +249,8 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' Default is 0.2.
 #' @param ranked Logical indicating whether to treat third column of
 #' the edge list (edge weights) as ranked values. Default: TRUE.
+#' @param dim_interactive Numeric vector with width and height of window
+#' for interactive plotting. Default: c(600,600).
 #'
 #' @return A ggplot object containing the network.
 #' @seealso
@@ -267,7 +273,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' p <- plot_grn(grn_edges, ranked=FALSE)
 plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
                      interactive = FALSE, layout = "kk", arrow.gap = 0.01,
-                     ranked = TRUE) {
+                     ranked = TRUE, dim_interactive = c(600,600)) {
     requireNamespace("intergraph", quietly=TRUE)
 
     # Get degree of nodes and find hubs
@@ -289,11 +295,12 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
         my_color <- 'd3.scaleOrdinal() .domain(["Regulator", "Target"]) .range(["forestgreen", "orange"])'
+        d <- dim_interactive
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
                                      colourScale = my_color,
-                                     Nodesize = 'Degree', height=600, width=600,
+                                     Nodesize = 'Degree', height=d[2], width=d[1],
                                      opacity=1, zoom = TRUE, fontSize = 20, legend=TRUE)
 
     } else { #Static network
@@ -365,6 +372,8 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' if \code{show_labels} equals "tophubs". Default is 5.
 #' @param interactive Logical indicating whether the network should be
 #' interactive or not. Default is FALSE.
+#' @param dim_interactive Numeric vector with width and height of window
+#' for interactive plotting. Default: c(600,600).
 #'
 #' @return A ggplot object.
 #' @seealso
@@ -390,7 +399,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' p <- plot_gcn(gcn_edges, gcn, hubs = hubs)
 plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
                      show_labels = "tophubs", top_n_hubs = 5,
-                     interactive = FALSE) {
+                     interactive = FALSE, dim_interactive = c(600,600)) {
     requireNamespace("intergraph", quietly=TRUE)
 
     if(is.null(hubs) | is.null(edgelist_gcn)) {
@@ -418,10 +427,11 @@ plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
         graph <- igraph::simplify(igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed=FALSE))
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
+        d <- dim_interactive
         p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
                                      Source = 'source', Target = 'target',
                                      NodeID = 'name', Group = 'group',
-                                     Nodesize = 'Degree', height=600, width=600,
+                                     Nodesize = 'Degree', height=d[2], width=d[1],
                                      opacity=0.8, zoom = TRUE, fontSize = 13)
     } else {
         # Handle gene coloring based on number of annotation classes
