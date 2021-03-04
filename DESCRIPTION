@@ -28,7 +28,7 @@ Description: BioNERO aims to integrate all aspects of biological network inferen
 Depends: R (>= 4.1)
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 URL: https://github.com/almeidasilvaf/BioNERO
 BugReports: https://github.com/almeidasilvaf/BioNERO/issues
 biocViews: 
@@ -74,8 +74,7 @@ Imports:
     minet, 
     GENIE3,
     utils,
-    SummarizedExperiment,
-    Cairo
+    SummarizedExperiment
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
