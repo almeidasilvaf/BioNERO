@@ -4,3 +4,5 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^vignettes/vignette_01_GCN_inference_cache$
+^\.github$

@@ -10,3 +10,4 @@ vignettes/*.pdf
 .DS_STORE
 inst/doc
 *_cache/
+*.Rproj
