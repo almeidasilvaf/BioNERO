@@ -1,7 +1,7 @@
 Package: BioNERO
 Type: Package
 Title: Biological Network Reconstruction Omnibus
-Version: 0.99.2
+Version: 0.99.3
 Authors@R: c(person("Fabricio", "Almeida-Silva", 
                     email="fabricio_almeidasilva@hotmail.com", 
                     role=c("cre", "aut"), 
