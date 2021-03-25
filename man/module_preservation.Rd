@@ -11,7 +11,6 @@ module_preservation(
   algorithm = "netrep",
   nPerm = 1000,
   nThreads = 1,
-  savePreservation = FALSE,
   plot_all_stats = FALSE
 )
 }
@@ -31,11 +30,6 @@ the function \code{exp2gcn}.}
 
 \item{nThreads}{Number of threads to be used for parallel computing.
 Default: 1}
-
-\item{savePreservation}{Logical indicating whether to save
-module preservation into an R object or not. As the calculation of
-module preservation can take a long time, it is useful to save time in
-future analyses. Default: FALSE.}
 
 \item{plot_all_stats}{Logical indicating whether to save all density and
 connectivity statistics in a PDF file or not. Default: FALSE.}
@@ -61,11 +55,9 @@ exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
 # Previously calculated SFT powers
 powers <- c(13, 15)
 gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-                   SFTpower = powers[1], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[1], cor_method = "pearson")
 gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
-                   SFTpower = powers[2], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[2], cor_method = "pearson")
 explist <- exp_ortho
 ref_net <- gcn_osa
 test_net <- gcn_zma

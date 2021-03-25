@@ -4,13 +4,16 @@
 \alias{grn_filter}
 \title{Filter a gene regulatory network based on optimal scale-free topology fit}
 \usage{
-grn_filter(edgelist, nsplit = 10)
+grn_filter(edgelist, nsplit = 10, bp_param = BiocParallel::SerialParam())
 }
 \arguments{
 \item{edgelist}{A gene regulatory network represented as an edge list.}
 
 \item{nsplit}{Number of groups in which the edge list will be split.
 Default: 10.}
+
+\item{bp_param}{BiocParallel back-end to be used.
+Default: BiocParallel::SerialParam()}
 }
 \value{
 The edge list that best fits the scale-free topology.

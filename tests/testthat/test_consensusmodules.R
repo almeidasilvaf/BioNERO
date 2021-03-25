@@ -21,7 +21,13 @@ test_that("consensus_SFT_fit() calculates best SFT fit for all networks", {
 test_that("consensus_modules() identified consensus modules across sets", {
     cons_mod <- consensus_modules(list.sets, power = c(11, 13), cor_method = "pearson")
     expect_equal(class(cons_mod), "list")
-    expect_equal(length(cons_mod), 5)
+    expect_equal(length(cons_mod), 6)
+})
+
+test_that("plot_dendro_and_cons_colors() plots dendro and colors", {
+    cons_mod <- consensus_modules(list.sets, power = c(11, 13), cor_method = "pearson")
+    p <- plot_dendro_and_cons_colors(cons_mod)
+    expect_equal(class(p), "list")
 })
 
 test_that("consensus_trait_cor() correlates consensus mods to traits", {
@@ -30,23 +36,4 @@ test_that("consensus_trait_cor() correlates consensus mods to traits", {
     expect_equal(class(consensus_trait), "data.frame")
     expect_equal(names(consensus_trait), c("ME", "trait", "cor", "pvalue"))
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

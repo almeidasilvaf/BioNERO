@@ -46,12 +46,22 @@ set.seed(12) # for reproducibility
 
 # Introduction
 
-Comparing different coexpression networks can reveal relevant biological patterns. For instance, seeking for **consensus modules** can identify coexpression modules that occur in all data sets regardless of natural variation and, hence, are core players of the studied phenotype. Additionally, **module preservation** within and across species can reveal patterns of conservation and divergence between transcriptomes. In this vignette, we will explore consensus modules and module preservation analyses with `BioNERO`. Although they seem similar, their goals are opposite: while consensus modules identification focuses on the commonalities, module preservation focuses on the divergences. 
+Comparing different coexpression networks can reveal relevant biological 
+patterns. For instance, seeking for **consensus modules** can identify 
+coexpression modules that occur in all data sets regardless of natural 
+variation and, hence, are core players of the studied phenotype. 
+Additionally, **module preservation** within and across species can reveal 
+patterns of conservation and divergence between transcriptomes. 
+In this vignette, we will explore consensus modules and module preservation 
+analyses with `BioNERO`. Although they seem similar, their goals are opposite:
+while consensus modules identification focuses on the commonalities, module 
+preservation focuses on the divergences. 
 
 
 # Data loading and description
 
-We will use RNA-seq data of maize (*Zea mays*) and rice (*Oryza sativa*) obtained from @Shin2020. 
+We will use RNA-seq data of maize (*Zea mays*) and rice (*Oryza sativa*) 
+obtained from @Shin2020. 
 
 ```{r inspect_data}
 data(zma.se)
@@ -61,16 +71,26 @@ data(osa.se)
 osa.se
 ```
 
-All `BioNERO`'s functions for consensus modules and module preservation analyses require the expression data to be in a **list**. Each element of the list can be a SummarizedExperiment object (recommended) or an expression data frame with genes in row names and samples in column names. 
+All `BioNERO`'s functions for consensus modules and module preservation 
+analyses require the expression data to be in a **list**. Each element of the 
+list can be a SummarizedExperiment object (recommended) or an expression data 
+frame with genes in row names and samples in column names. 
 
 
 # Consensus modules
 
-The most common objective in consensus modules identification is to find core modules across different tissues or treatments for the same species. For instance, one can infer GCNs for different types of cancer in human tissues (say prostate and liver) and identify modules that occur in all sets, which are likely core components of cancer biology. Likewise, one can also identify consensus modules across samples from different geographical origins to find modules that are not affected by population structure or kinship.
+The most common objective in consensus modules identification is to find core 
+modules across different tissues or treatments for the same species. 
+For instance, one can infer GCNs for different types of cancer in human 
+tissues (say prostate and liver) and identify modules that occur in all sets, 
+which are likely core components of cancer biology. Likewise, one can also 
+identify consensus modules across samples from different geographical origins 
+to find modules that are not affected by population structure or kinship.
 
 ## Data preprocessing
 
-Here, we will subset 22 random samples from the maize data twice and find consensus modules between the two sets.
+Here, we will subset 22 random samples from the maize data twice and find 
+consensus modules between the two sets.
 
 ```{r create_list_consensus}
 # Preprocess data and keep top 2000 genes with highest variances
@@ -89,14 +109,17 @@ length(zma_list)
 
 ## Identification of consensus modules
 
-As described in the first vignette, before inferring the GCNs, we need to identify the optimal \beta power that makes the network closer to a scale-free topology. We can do that with `consensus_SFT_fit()`.
+As described in the first vignette, before inferring the GCNs, we need to 
+identify the optimal $\beta$ power that makes the network closer to a scale-free 
+topology. We can do that with `consensus_SFT_fit()`.
 
 ```{r consensus_sft, message=FALSE}
 cons_sft <- consensus_SFT_fit(zma_list, setLabels = c("Maize 1", "Maize 2"),
                               cor_method = "pearson")
 ```
 
-This function returns a list with the optimal \beta powers and a summary plot, exactly as `SFT_fit()` does.
+This function returns a list with the optimal \beta powers and a summary plot, 
+exactly as `SFT_fit()` does.
 
 ```{r sft_results, fig.width=6}
 powers <- cons_sft$power
@@ -112,9 +135,13 @@ names(consensus)
 head(consensus$genes_cmodules)
 ```
 
-Finally, we can correlate consensus module eigengenes to sample metadata (here, plant tissues).[^1]
+Finally, we can correlate consensus module eigengenes to sample metadata 
+(here, plant tissues).[^1]
 
-[^1]: **NOTE:** Blank grey cells in the heatmap represent correlation values that have opposite sign in the expression sets. For each correlation pair, consensus correlations are calculated by selecting the minimum value across matrices of consensus module-trait correlations.
+[^1]: **NOTE:** Blank grey cells in the heatmap represent correlation 
+values that have opposite sign in the expression sets. For each correlation 
+pair, consensus correlations are calculated by selecting the minimum value 
+across matrices of consensus module-trait correlations.
 
 ```{r consensus_trait_cor, fig.width=5, fig.height=5}
 consensus_trait <- consensus_trait_cor(consensus, cor_method = "pearson")
@@ -126,20 +153,40 @@ Users can also transpose the heatmap as in `module_trait_cor()`.
 
 # Module preservation
 
-Module preservation is often used to study patterns of evolutionary conservation and divergence across transcriptomes, an approach named *phylotranscriptomics*. This way, one can investigate how evolution shaped the expression profiles for particular gene families across taxa.
+Module preservation is often used to study patterns of evolutionary 
+conservation and divergence across transcriptomes, an approach 
+named *phylotranscriptomics*. This way, one can investigate how evolution 
+shaped the expression profiles for particular gene families across taxa.
 
 ## Data preprocessing
 
-To calculate module preservation statistics, gene IDs must be shared by the expression sets. For intraspecies comparisons, this is an easy task, as gene IDs are the same. However, for interspecies comparisons, users need to identify orthogroups between the different species and collapse the gene-level expression values to orthogroup-level expression values. This way, all expression sets will have common row names. We recommend identifying orthogroups with **OrthoFinder** [@Emms2015], as it is simple to use and widely used.[^2] Here, we will compare maize and rice expression profiles. The orthogroups between these species were downloaded from the PLAZA 4.0 Monocots database [@VanBel2018].
+To calculate module preservation statistics, gene IDs must be shared by 
+the expression sets. For intraspecies comparisons, this is an easy task, 
+as gene IDs are the same. However, for interspecies comparisons, users need 
+to identify orthogroups between the different species and collapse the 
+gene-level expression values to orthogroup-level expression values. 
+This way, all expression sets will have common row names. We recommend 
+identifying orthogroups with **OrthoFinder** [@Emms2015], as it is simple 
+to use and widely used.[^2] Here, we will compare maize and rice expression 
+profiles. The orthogroups between these species were downloaded from the 
+PLAZA 4.0 Monocots database [@VanBel2018].
 
-[^2]: **PRO TIP:** If you identify orthogroups with **OrthoFinder**, `BioNERO` has a helper function named `parse_orthofinder()` that parses the *Orthogroups.tsv* file generated by OrthoFinder into a suitable data frame for module preservation analysis. See `?parse_orthofinder` for more details.
+[^2]: **PRO TIP:** If you identify orthogroups with **OrthoFinder**, 
+`BioNERO` has a helper function named `parse_orthofinder()` that parses 
+the *Orthogroups.tsv* file generated by OrthoFinder into a suitable data frame 
+for module preservation analysis. See `?parse_orthofinder` for more details.
 
 ```{r load_orthogroups}
 data(og.zma.osa)
 head(og.zma.osa)
 ```
 
-As you can see, the orthogroup object for `BioNERO` must be a data frame with orthogroups, species IDs and gene IDs, respectively. Let's collapse gene-level expression to orthogroup-level with `exp_genes2orthogroups()`. By default, if there is more than one gene in the same orthogroup for a given species, their expression levels are summarized to the median. Users can also summarize to the mean.
+As you can see, the orthogroup object for `BioNERO` must be a data frame with 
+orthogroups, species IDs and gene IDs, respectively. Let's collapse gene-level 
+expression to orthogroup-level with `exp_genes2orthogroups()`. By default, if 
+there is more than one gene in the same orthogroup for a given species, their 
+expression levels are summarized to the median. Users can also summarize 
+to the mean.
 
 
 ```{r genes2orthogorups}
@@ -154,7 +201,8 @@ ortho_exp$osa[1:5, 1:5]
 ortho_exp$zma[1:5, 1:5]
 ```
 
-Now, we will preprocess both expression sets and keep only the top 1000 orthogroups with the highest variances for demonstration purposes. 
+Now, we will preprocess both expression sets and keep only the top 1000 
+orthogroups with the highest variances for demonstration purposes. 
 
 ```{r create_list_preservation}
 # Preprocess data and keep top 1000 genes with highest variances
@@ -166,7 +214,8 @@ sapply(ortho_exp, nrow)
 
 ## Calculating module preservation statistics
 
-Now that row names are comparable, we can infer GCNs for each set. We will do that iteratively with lapply.
+Now that row names are comparable, we can infer GCNs for each set. We will 
+do that iteratively with lapply.
 
 ```{r gcn_inference}
 # Calculate SFT power
@@ -174,14 +223,22 @@ power_ortho <- lapply(ortho_exp, SFT_fit, cor_method="pearson")
 
 # Infer GCNs
 gcns <- lapply(seq_along(power_ortho), function(n) 
-  exp2gcn(ortho_exp[[n]], SFTpower = power_ortho[[n]]$power, cor_method = "pearson",
-          reportPDF = FALSE)
+  exp2gcn(ortho_exp[[n]], SFTpower = power_ortho[[n]]$power, 
+          cor_method = "pearson")
   )
 
 length(gcns)
 ```
 
-Initially, module preservation analyses were performed with WGCNA's algorithm [@Langfelder2008]. However, the summary preservation statistics used by WGCNA rely on parametric assumptions that are often not met. For this purpose, the NetRep algorithm [@Ritchie2016] is more accurate than WGCNA, as it uses non-parametric permutation analyses. Both algorithms are implemented in `BioNERO` for comparison purposes, but we **strongly recommend** using the NetRep algorithm. Module preservation analysis can be performed with a single function: `module_preservation()`.
+Initially, module preservation analyses were performed with WGCNA's 
+algorithm [@Langfelder2008]. However, the summary preservation statistics 
+used by WGCNA rely on parametric assumptions that are often not met. 
+For this purpose, the NetRep algorithm [@Ritchie2016] is more accurate 
+than WGCNA, as it uses non-parametric permutation analyses. 
+Both algorithms are implemented in `BioNERO` for comparison purposes, 
+but we **strongly recommend** using the NetRep algorithm. 
+Module preservation analysis can be performed with a 
+single function: `module_preservation()`.
 
 ```{r preservation}
 # Using rice as reference and maize as test
@@ -191,17 +248,22 @@ pres <- module_preservation(ortho_exp,
                             algorithm = "netrep")
 ```
 
-None of the modules in rice were preserved in maize. This can be either due to the small number of orthogroups we have chosen or to the natural biological variation between species and sampled tissues. You can (and should) include more orthogroups in your analyses for a better view of transcriptional conservation between species.
+None of the modules in rice were preserved in maize. This can be 
+either due to the small number of orthogroups we have chosen or to the 
+natural biological variation between species and sampled tissues. You can 
+(and should) include more orthogroups in your analyses for a better view of 
+transcriptional conservation between species.
 
 # Identifying singletons and duplicated genes
 
-Finally, `BioNERO` can identify singletons and duplicated genes with `is_singleton()` and `is_duplicated()`. These functions return logical vectors indicating if each of the input genes is a singleton/duplicate or not.
+Finally, `BioNERO` can identify singletons and duplicated genes 
+with `is_singleton()`. This function returns logical vectors indicating if 
+each of the input genes is a singleton or not.
 
-```{r singleton_duplicate}
+```{r singleton}
 # Sample 50 random genes
 genes <- sample(rownames(zma.se), size = 50)
 is_singleton(genes, og.zma.osa)
-is_duplicated(genes, og.zma.osa)
 ```
 
 

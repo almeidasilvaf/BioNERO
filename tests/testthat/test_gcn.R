@@ -12,8 +12,7 @@ data(zma.interpro)
 data(filt.se)
 
 # Infer GCN to avoid repetition many test chunks
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
-               reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 
 #----Start tests----
 test_that("SFT_fit() performs SFT fit test and returns a list with", {
@@ -26,20 +25,25 @@ test_that("SFT_fit() performs SFT fit test and returns a list with", {
 
 
 test_that("exp2gcn() infers GCN and returns as a list", {
-    gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
-                   reportPDF = FALSE)
+    gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
     expect_equal(class(gcn), "list")
-    expect_equal(length(gcn), 7)
+    expect_equal(length(gcn), 8)
 })
 
+test_that("plot_eigengene_network() plots eigengene networks", {
+    p <- plot_eigengene_network(gcn)
+    expect_equal(class(p), "NULL")
+})
+
+test_that("plot_dendro_and_colors() plots dendro and colors", {
+    p <- plot_dendro_and_colors(gcn)
+    expect_equal(class(p), "NULL")
+})
 
 test_that("module_stability() recomputes network with n resamplings", {
-    module_stability(exp = filt.se, net = gcn, nRuns = 1)
-    output_file <- paste0(Sys.Date(), "_module_stability.pdf")
-    expect_true(file.exists(output_file))
-    unlink(output_file)
+    p <- module_stability(exp = filt.se, net = gcn, nRuns = 1)
+    expect_equal(class(p), "NULL")
 })
-
 
 test_that("module_trait_cor() returns a heatmap of mod-trait correlations", {
     mod_trait <- module_trait_cor(filt.se, MEs=gcn$MEs)
@@ -48,7 +52,6 @@ test_that("module_trait_cor() returns a heatmap of mod-trait correlations", {
     expect_equal(class(mod_trait$ME), "character")
     expect_equal(class(mod_trait$trait), "character")
 })
-
 
 test_that("gene_significance() returns a list of GS matrices", {
     gs <- gene_significance(filt.se)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/evolutionary_analysis.R
 \name{is_singleton}
 \alias{is_singleton}
-\title{Boolean expression to check if gene or gene set is singleton or not}
+\title{Logical expression to check if gene or gene set is singleton or not}
 \usage{
 is_singleton(genes, og)
 }
@@ -17,7 +17,7 @@ Vector of logical values indicating if gene or group of genes
 is singleton or not.
 }
 \description{
-Boolean expression to check if gene or gene set is singleton or not
+Logical expression to check if gene or gene set is singleton or not
 }
 \examples{
 data(og.zma.osa)

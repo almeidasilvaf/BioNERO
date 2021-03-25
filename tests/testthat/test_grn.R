@@ -1,12 +1,13 @@
 
 #---Load data----
+set.seed(1)
 data(filt.se)
 tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 
 #----Infer GRNs----
-clr <- grn_clr(filt.se, regulators = tfs)
-aracne <- grn_aracne(filt.se, regulators = tfs)
-genie3 <- grn_genie3(filt.se, tfs, nTrees=2)
+clr <- grn_infer(filt.se, method = "clr", regulators=tfs)
+aracne <- grn_infer(filt.se, method = "aracne", regulators=tfs)
+genie3 <- grn_infer(filt.se, method = "genie3", regulators=tfs, nTrees=2)
 grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
 ranked_grn <- grn_average_rank(grn_list)
 
@@ -18,31 +19,21 @@ test_that("cormat_to_edgelist() converts correlation matrix to edge list", {
     expect_equal(colnames(edgelist), c("Node1", "Node2", "Weight"))
 })
 
-
-test_that("grn_clr() produces an edge list", {
+test_that("grn_infer() produces an edge list", {
     expect_equal(colnames(clr), c("Node1", "Node2", "Weight"))
     expect_equal(is.character(clr[,1]), TRUE)
     expect_equal(is.character(clr[,2]), TRUE)
     expect_equal(is.numeric(clr[,3]), TRUE)
-})
-
-
-test_that("grn_aracne() produces an edge list", {
     expect_equal(ncol(aracne), 3)
     expect_equal(colnames(aracne), c("Node1", "Node2", "Weight"))
     expect_equal(is.character(aracne[,1]), TRUE)
     expect_equal(is.character(aracne[,2]), TRUE)
     expect_equal(is.numeric(aracne[,3]), TRUE)
-})
-
-
-test_that("grn_genie3() produces an edge list", {
     expect_equal(ncol(genie3), 3)
     expect_equal(is.character(genie3[,1]), TRUE)
     expect_equal(is.character(genie3[,2]), TRUE)
     expect_equal(is.numeric(genie3[,3]), TRUE)
 })
-
 
 test_that("grn_combined() produces a list of edge lists", {
     nrow1 <- nrow(grn_list[[1]])
@@ -52,7 +43,8 @@ test_that("grn_combined() produces a list of edge lists", {
     expect_equal(length(grn_list), 3)
 })
 
-test_that("all inference algorithms return regulators in the first column and target in the second column", {
+test_that("all inference algorithms return regulators in the first column
+          and target in the second column", {
     edge_structure <- function(grn, tfs) {
         x <- nrow(grn[grn[,2] %in% tfs, ])
         y <- nrow(grn[grn[,1] %in% tfs, ])
@@ -72,8 +64,8 @@ test_that("grn_average_rank() ranks GRN weights and calculate the average across
 })
 
 
-test_that("check_sft() checks SFT fit for different network types", {
-    check <- check_sft(clr, net_type = "grn")
+test_that("check_SFT() checks SFT fit for different network types", {
+    check <- check_SFT(clr, net_type = "grn")
     expect_equal(class(check), "list")
 })
 

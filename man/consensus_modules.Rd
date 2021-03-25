@@ -11,7 +11,7 @@ consensus_modules(
   cor_method = "spearman",
   net_type = "signed hybrid",
   module_merging_threshold = 0.8,
-  reportPDF = FALSE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -36,8 +36,8 @@ One of "spearman" (default), "biweight", or "pearson".}
 \item{module_merging_threshold}{Correlation threshold to merge
 similar modules into a single one. Default: 0.8.}
 
-\item{reportPDF}{Logical indicating whether to save a PDF figure with
-dendrogram and modules. Default: FALSE.}
+\item{verbose}{Logical indicating whether to display progress
+messages or not. Default: FALSE.}
 }
 \value{
 A list containing 4 elements: \describe{
@@ -46,6 +46,7 @@ A list containing 4 elements: \describe{
   \item{exprSize}{Description of the multi-set object returned by the function \code{WGCNA::checkSets}}
   \item{sampleInfo}{Metadata for each expression set}
   \item{genes_cmodules}{Data frame of genes and consensus modules}
+  \item{dendro_plot_objects}{Objects to be used in dendrogram plotting}
 }
 }
 \description{

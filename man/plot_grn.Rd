@@ -9,7 +9,7 @@ plot_grn(
   show_labels = "tophubs",
   top_n_hubs = 5,
   interactive = FALSE,
-  layout = "kk",
+  layout = igraph::with_kk,
   arrow.gap = 0.01,
   ranked = TRUE,
   dim_interactive = c(600, 600)
@@ -29,8 +29,9 @@ if \code{show_labels} equals "tophubs". Default is 5.}
 \item{interactive}{Logical indicating whether the network should be
 interactive or not. Default is FALSE.}
 
-\item{layout}{Network layout. One of "dh", "drl", "gem", "lgl", "fr",
-"graphopt", "kk" and "mds". Default is "kk".}
+\item{layout}{igraph function for the network layout. One of
+with_dh, with_drl, with_gem, with_lgl, with_fr, with_graphopt,
+with_kk and with_mds. Default is with_kk.}
 
 \item{arrow.gap}{Numeric indicating the distance between nodes and arrows.
 Default is 0.2.}
@@ -50,12 +51,15 @@ Plot gene regulatory network from edge list
 \examples{
 data(filt.se)
 tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
-grn_edges <- grn_clr(filt.se, regulators = tfs)
+grn_edges <- grn_infer(filt.se, method ="clr", regulators = tfs)
 p <- plot_grn(grn_edges, ranked=FALSE)
 }
 \seealso{
-\code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+\code{\link[networkD3]{igraph_to_networkD3}},
+ \code{\link[networkD3]{forceNetwork}}
+ \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},
+ \code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},
+ \code{\link[ggnetwork]{geom_nodetext_repel}}
  \code{\link[ggnewscale]{new_scale}}
 }
 \author{

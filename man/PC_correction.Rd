@@ -4,11 +4,14 @@
 \alias{PC_correction}
 \title{Apply Principal Component (PC)-based correction for confounding artifacts}
 \usage{
-PC_correction(exp)
+PC_correction(exp, verbose = FALSE)
 }
 \arguments{
 \item{exp}{A gene expression data frame with genes in row names
 and samples in column names or a `SummarizedExperiment` object.}
+
+\item{verbose}{Logical indicating whether to display progress
+messages or not. Default: FALSE.}
 }
 \value{
 Corrected expression data frame or `SummarizedExperiment` object.

@@ -10,11 +10,9 @@ explist <- lapply(explist, filter_by_variance, n=2000)
 exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
 powers <- c(15, 13)
 gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-                   SFTpower = powers[1], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[1], cor_method = "pearson")
 gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
-                   SFTpower = powers[2], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[2], cor_method = "pearson")
 
 
 #----Start tests----

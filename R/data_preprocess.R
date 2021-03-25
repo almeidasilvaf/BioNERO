@@ -56,15 +56,15 @@ dfs2one <- function(mypath, pattern = ".tsv$"){
 #' with all NAs replaced according to the argument 'replaceby'.
 #' @author Fabricio Almeida-Silva
 #' @export
-#' @rdname remove_na
+#' @rdname replace_na
 #' @examples
 #' data(zma.se)
-#' exp <- remove_na(zma.se)
+#' exp <- replace_na(zma.se)
 #' sum(is.na(exp))
-remove_na <- function(exp, replaceby = 0) {
+replace_na <- function(exp, replaceby = 0) {
     fexp <- handleSE(exp)
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         fexp <- SummarizedExperiment::assay(exp)
     } else {
         fexp <- exp
@@ -77,7 +77,7 @@ remove_na <- function(exp, replaceby = 0) {
         fexp[indices] <- rowMeans(fexp, na.rm = TRUE)[indices[,1]]
     }
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         fexp <- exp2SE(fexp, exp)
     }
 
@@ -125,7 +125,7 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
         print("No method specified. Please, choose a filtering method - mean, median or percentage")
     }
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         final_exp <- exp2SE(final_exp, exp)
     }
 
@@ -166,7 +166,7 @@ filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
     }
     top_variant_exp <- fexp[rownames(fexp) %in% top_var, ]
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         top_variant_exp <- exp2SE(top_variant_exp, exp)
     }
 
@@ -216,7 +216,7 @@ ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
     fexp <- fexp[, !remove.samples]
     message("Number of removed samples: ", sum(remove.samples))
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         fexp <- exp2SE(fexp, exp)
     }
     return(fexp)
@@ -246,6 +246,8 @@ q_normalize <- function(exp) {
 #'
 #' @param exp A gene expression data frame with genes in row names
 #' and samples in column names or a `SummarizedExperiment` object.
+#' @param verbose Logical indicating whether to display progress
+#' messages or not. Default: FALSE.
 #'
 #' @return Corrected expression data frame or `SummarizedExperiment` object.
 #' @author Fabricio Almeida-Silva
@@ -262,7 +264,7 @@ q_normalize <- function(exp) {
 #' Parsana, P., Ruberman, C., Jaffe, A. E., Schatz, M. C., Battle, A., &
 #' Leek, J. T. (2019). Addressing confounding artifacts in reconstruction of
 #' gene co-expression networks. Genome biology, 20(1), 1-6.
-PC_correction <- function(exp) {
+PC_correction <- function(exp, verbose = FALSE) {
     fexp <- handleSE(exp)
 
     texp <- t(fexp) # transpose data frame
@@ -270,19 +272,19 @@ PC_correction <- function(exp) {
     mod <- matrix(1, nrow = nrow(texp), ncol = 1)
     colnames(mod) <- "Intercept"
 
-    message("Calculating number of PCs to be removed...")
+    if(verbose){ message("Calculating number of PCs to be removed...") }
     nsv <- sva::num.sv(t(texp), mod, method = "be")
 
-    message("Number of PCs estimated to be removed: ", nsv)
+    if(verbose){ message("Number of PCs estimated to be removed: ", nsv) }
 
     # PC residualization of gene expression data using sva_network
-    message("Removing PCs that contribute to noise...")
+    if(verbose){ message("Removing PCs that contribute to noise...") }
     exprs_corrected <- sva::sva_network(texp, nsv)
     exprs_corrected_norm <- q_normalize(exprs_corrected)
     final.exp.corrected <- as.data.frame(exprs_corrected_norm)
     final.exp.corrected <- t(final.exp.corrected)
 
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         final.exp.corrected <- exp2SE(final.exp.corrected, exp)
     }
     return(final.exp.corrected)
@@ -352,7 +354,7 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
                            vstransform = FALSE) {
     # Remove missing values
     if(NA_rm) {
-        exp <- remove_na(exp, replaceby = replaceby)
+        exp <- replace_na(exp, replaceby = replaceby)
     }
     # Remove non-expressed genes
     if(remove_nonexpressed) {
@@ -364,7 +366,7 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
     if(vstransform) {
         fexp <- handleSE(exp)
         fexp <- as.data.frame(DESeq2::varianceStabilizingTransformation(fexp))
-        if(is_SE(exp)) {
+        if(is(exp, "SummarizedExperiment")) {
             fexp <- exp2SE(fexp, exp)
         }
         exp <- fexp

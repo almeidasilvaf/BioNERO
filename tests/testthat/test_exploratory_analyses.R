@@ -49,8 +49,7 @@ test_that("plot_expression_profile() plots expression in a line plot", {
 
 
 test_that("plot_ngenes_per_module() returns a barplot of genes per module", {
-    gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson",
-                   reportPDF = FALSE)
+    gcn <- exp2gcn(filt.se, SFTpower = 16, cor_method = "pearson")
     p <- plot_ngenes_per_module(gcn)
     expect_equal(class(p), c("gg", "ggplot"))
 })

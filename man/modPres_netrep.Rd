@@ -43,11 +43,9 @@ exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
 # Previously calculated SFT powers
 powers <- c(13, 15)
 gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-                   SFTpower = powers[1], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[1], cor_method = "pearson")
 gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
-                   SFTpower = powers[2], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[2], cor_method = "pearson")
 explist <- exp_ortho
 ref_net <- gcn_osa
 test_net <- gcn_zma

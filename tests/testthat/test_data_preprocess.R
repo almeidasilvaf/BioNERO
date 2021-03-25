@@ -31,9 +31,9 @@ test_that("dfs2one reads in multiple tables and binds them into a data frame", {
 })
 
 
-test_that("remove_na() removes NAs for both SE and expression data frame", {
-    expinput <- remove_na(exp)
-    seinput <- remove_na(zma.se)
+test_that("replace_na() removes NAs for both SE and expression data frame", {
+    expinput <- replace_na(exp)
+    seinput <- replace_na(zma.se)
     expect_equal(sum(is.na(expinput)), 0)
     expect_equal(sum(is.na(seinput)), 0)
     expect_equal(dim(expinput), dim(exp))

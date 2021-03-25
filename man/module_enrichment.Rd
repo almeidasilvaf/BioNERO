@@ -10,7 +10,8 @@ module_enrichment(
   annotation,
   column = NULL,
   correction = "BH",
-  p = 0.05
+  p = 0.05,
+  bp_param = BiocParallel::SerialParam()
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ Default is "BH".}
 
 \item{p}{P-value threshold. P-values below this threshold will be considered
 significant. Default is 0.05.}
+
+\item{bp_param}{BiocParallel back-end to be used.
+Default: BiocParallel::SerialParam()}
 }
 \value{
 A data frame containing enriched terms, p-values, gene IDs
@@ -53,7 +57,7 @@ If that happens, run the following: \code{BiocParallel::register(BiocParallel::S
 data(filt.se)
 data(soybean_interpro)
 background <- rownames(filt.se)
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
 }
 }

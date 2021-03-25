@@ -15,7 +15,8 @@ get_edge_list(
   pvalue_cutoff = 0.05,
   rcutoff = 0.7,
   nSamples = NULL,
-  check_SFT = FALSE
+  check_SFT = FALSE,
+  bp_param = BiocParallel::SerialParam()
 )
 }
 \arguments{
@@ -52,7 +53,10 @@ the correlation matrix was calculated. Only required
 if \code{method} equals "pvalue".}
 
 \item{check_SFT}{Logical indicating whether to test if the resulting network
-is close to a scale-free topology or not. Default: FALSE}
+is close to a scale-free topology or not. Default: FALSE.}
+
+\item{bp_param}{BiocParallel back-end to be used.
+Default: BiocParallel::SerialParam()}
 }
 \value{
 Data frame with edge list for the input genes.
@@ -77,7 +81,7 @@ threshold specified in \code{rcutoff}.
 }
 \examples{
 data(filt.se)
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 genes <- rownames(filt.se)[1:50]
 edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
 }

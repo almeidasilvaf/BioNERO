@@ -15,8 +15,7 @@ samples in column names or a `SummarizedExperiment` object.}
 \item{nRuns}{Number of times to resample. Default is 20.}
 }
 \value{
-A .pdf file in the current working directory representing
-the module stability across the resamplings.
+A base plot with the module stability results.
 }
 \description{
 Perform module stability analysis
@@ -25,7 +24,7 @@ Perform module stability analysis
 \donttest{
 data(filt.se)
 # The SFT fit was previously calculated and the optimal power was 16
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 # For simplicity, only 2 runs
 module_stability(exp = filt.se, net = gcn, nRuns = 2)
 }

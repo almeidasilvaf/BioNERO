@@ -10,7 +10,7 @@ exp2gcn(
   module_merging_threshold = 0.8,
   SFTpower = NULL,
   cor_method = "spearman",
-  reportPDF = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,9 +28,8 @@ modules into a single one. Default: 0.8.}
 \item{cor_method}{Correlation method. One of "pearson", "biweight" or
 "spearman". Default is "spearman".}
 
-\item{reportPDF}{Logical indicating whether to save 2 PDF figures with
-heatmap of eigengene networks and dendrogram with modules, respectively.
-Default: TRUE.}
+\item{verbose}{Logical indicating whether to display progress
+messages or not. Default: FALSE.}
 }
 \value{
 List containing: \itemize{
@@ -41,6 +40,7 @@ List containing: \itemize{
   \item Vector of module assignment
   \item Correlation matrix
   \item Parameters used for network reconstruction
+  \item Objects to plot the dendrogram in \code{plot_dendro_and_colors}.
 }
 }
 \description{
@@ -49,7 +49,7 @@ Reconstruct gene coexpression network from gene expression
 \examples{
 data(filt.se)
 # The SFT fit was previously calculated and the optimal power was 16
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 }
 \seealso{
 \code{\link[WGCNA]{adjacency.fromSimilarity}},\code{\link[WGCNA]{TOMsimilarity}},\code{\link[WGCNA]{standardColors}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{moduleEigengenes}},\code{\link[WGCNA]{plotEigengeneNetworks}},\code{\link[WGCNA]{mergeCloseModules}},\code{\link[WGCNA]{plotDendroAndColors}},\code{\link[WGCNA]{intramodularConnectivity}}

@@ -1,139 +1,65 @@
 
-#' Infer gene regulatory network with the Context Likelihood of Relatedness (CLR) algorithm
+
+#' Infer gene regulatory network with one of three algorithms
+#'
+#' The available algorithms are Context Likelihood of Relatedness (CLR),
+#' ARACNE, or GENIE3.
 #'
 #' @param exp A gene expression data frame with genes in row names and
 #' samples in column names or a `SummarizedExperiment` object.
+#' @param regulators A character vector of regulators
+#' (e.g., transcription factors or miRNAs). All regulators must be
+#' included in `exp`.
+#' @param method GRN inference algorithm to be used. One of "clr", "aracne",
+#' or "genie3".
 #' @param estimator_clr Entropy estimator to be used. One of "mi.empirical",
 #' "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall".
 #' Default: "pearson".
-#' @param regulators A character vector of regulators
-#' (e.g., transcription factors or miRNAs). All regulators must be
-#' included in `exp`.
-#' @param remove_zero Logical indicating whether to remove edges whose weight
-#' is exactly zero. Default: TRUE
-#'
-#' @return A gene regulatory network represented as an edge list.
-#' @export
-#' @rdname grn_clr
-#' @importFrom minet build.mim clr
-#' @examples
-#' data(filt.se)
-#' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
-#' clr <- grn_clr(filt.se, regulators=tfs)
-grn_clr <- function(exp, estimator_clr = "pearson",
-                    regulators=NULL,
-                    remove_zero=TRUE) {
-    exp <- handleSE(exp)
-    if(is.null(regulators)) {
-        stop("Please, input a character vector of IDs of regulators.")
-    }
-    regulators <- regulators[regulators %in% rownames(exp)]
-
-    # Build Mutual Information matrix and infer GRN
-    mi_mat <- minet::build.mim(t(exp), estimator = estimator_clr)
-    grn <- minet::clr(mi_mat)
-
-    # Keep only interactions between regulators and targets
-    grn <- grn[regulators, !(colnames(grn) %in% regulators)]
-    grn_edges <- cormat_to_edgelist(grn)
-
-    # Should we remove edges whose weight is zero?
-    if(remove_zero) {
-        grn_edges <- grn_edges[grn_edges$Weight != 0, ]
-    }
-
-    # Sort weights in decreasing order
-    grn_edges <- grn_edges[order(-grn_edges$Weight), ]
-
-    return(grn_edges)
-}
-
-
-#' Infer gene regulatory network with the ARACNE algorithm
-#'
-#' @param exp A gene expression data frame with genes in row names and
-#' samples in column names or a `SummarizedExperiment` object.
 #' @param estimator_aracne Entropy estimator to be used. One of "mi.empirical",
 #' "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman", or "kendall".
 #' Default: "spearman".
-#' @param regulators A character vector of regulators
-#' (e.g., transcription factors or miRNAs). All regulators must be
-#' included in `exp`.
 #' @param eps Numeric value indicating the threshold used when removing
 #' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
 #' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
 #' @param remove_zero Logical indicating whether to remove edges whose weight
-#' is exactly zero. Zero values indicate edges that were removed by ARACNE.
-#' Default: TRUE.
-#'
-#' @return A gene regulatory network represented as an edge list.
-#' @export
-#' @rdname grn_aracne
-#' @importFrom minet aracne
-#' @examples
-#' data(filt.se)
-#' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
-#' aracne <- grn_aracne(filt.se, regulators=tfs)
-grn_aracne <- function(exp, estimator_aracne = "spearman",
-                       regulators=NULL, eps=0.1,
-                       remove_zero=TRUE) {
-    exp <- handleSE(exp)
-    if(is.null(regulators)) {
-        stop("Please, input a character vector of IDs of regulators.")
-    }
-    regulators <- regulators[regulators %in% rownames(exp)]
-
-    # Build Mutual Information matrix and infer GRN
-    mi_mat <- minet::build.mim(t(exp), estimator = estimator_aracne)
-    grn <- minet::aracne(mi_mat, eps = eps)
-
-    # Keep only interactions between regulators and targets
-    grn <- grn[regulators, !(colnames(grn) %in% regulators)]
-    grn_edges <- cormat_to_edgelist(grn)
-
-    # Should we remove edges that were removed by ARACNE?
-    if(remove_zero) {
-        grn_edges <- grn_edges[grn_edges$Weight != 0, ]
-    }
-
-    # Sort weights in decreasing order
-    grn_edges <- grn_edges[order(-grn_edges$Weight), ]
-
-    return(grn_edges)
-}
-
-
-#' Infer gene regulatory network with GENIE3
-#'
-#' @param exp A gene expression data frame with genes in row names and
-#' samples in column names or a `SummarizedExperiment` object.
-#' @param regulators A character vector of regulators
-#' (e.g., transcription factors or miRNAs). All regulators must be
-#' included in `exp`.
-#' @param remove_zero Logical indicating whether to remove edges whose weight
-#' is exactly zero. Zero values indicate edges that were removed by ARACNE.
-#' Default: TRUE.
+#' is exactly zero. Default: TRUE
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
-#'
 #' @return A gene regulatory network represented as an edge list.
-#' @importFrom GENIE3 GENIE3
-#' @rdname grn_genie3
+#' @rdname grn_infer
 #' @export
+#' @importFrom minet build.mim clr aracne
+#' @importFrom GENIE3 GENIE3
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=20, replace=FALSE)
+#' clr <- grn_infer(filt.se, method = "clr", regulators=tfs)
+#' aracne <- grn_infer(filt.se, method = "aracne", regulators=tfs)
 #' # only 2 trees for demonstration purposes
-#' genie3 <- grn_genie3(filt.se, regulators=tfs, nTrees=2)
-grn_genie3 <- function(exp, regulators = NULL,
-                       remove_zero=TRUE, ...) {
+#' genie3 <- grn_infer(filt.se, method = "genie3", regulators=tfs, nTrees=2)
+grn_infer <- function(exp, regulators=NULL,
+                      method = c("clr", "aracne", "genie3"),
+                      estimator_clr = "pearson",
+                      estimator_aracne = "spearman",
+                      eps = 0.1,
+                      remove_zero = TRUE, ...) {
     exp <- handleSE(exp)
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
     }
     regulators <- regulators[regulators %in% rownames(exp)]
 
-    # Infer GRN
-    grn <- GENIE3::GENIE3(as.matrix(exp), regulators = regulators, ...)
+    if(method == "clr") {
+        mi_mat <- minet::build.mim(t(exp), estimator = estimator_clr)
+        grn <- minet::clr(mi_mat)
+    } else if(method == "aracne") {
+        # Build Mutual Information matrix and infer GRN
+        mi_mat <- minet::build.mim(t(exp), estimator = estimator_aracne)
+        grn <- minet::aracne(mi_mat, eps = eps)
+    } else if(method == "genie3") {
+        grn <- GENIE3::GENIE3(as.matrix(exp), regulators = regulators, ...)
+    } else {
+        stop("Method must be one of 'clr', 'aracne', or 'genie3'.")
+    }
 
     # Keep only interactions between regulators and targets
     grn <- grn[regulators, !(colnames(grn) %in% regulators)]
@@ -146,7 +72,6 @@ grn_genie3 <- function(exp, regulators = NULL,
 
     # Sort weights in decreasing order
     grn_edges <- grn_edges[order(-grn_edges$Weight), ]
-
     return(grn_edges)
 }
 
@@ -155,23 +80,22 @@ grn_genie3 <- function(exp, regulators = NULL,
 #'
 #' @param exp A gene expression data frame with genes in row names and
 #' samples in column names or a `SummarizedExperiment` object.
-#' @param estimator_clr Entropy estimator to be used in CLR inference.
-#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
-#' or "kendall". Default: "pearson".
-#' @param estimator_aracne Entropy estimator to be used in ARACNE inference.
-#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
-#' or "kendall". Default: "spearman".
 #' @param regulators A character vector of regulators
 #' (e.g., transcription factors or miRNAs). All regulators must be
 #' included in `exp`.
 #' @param eps Numeric value indicating the threshold used when removing
 #' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
 #' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' @param estimator_clr Entropy estimator to be used in CLR inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+#' or "kendall". Default: "pearson".
+#' @param estimator_aracne Entropy estimator to be used in ARACNE inference.
+#' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
+#' or "kendall". Default: "spearman".
 #' @param remove_zero Logical indicating whether to remove edges
 #' whose weight is exactly zero. Zero values indicate edges that were
 #' removed by ARACNE. Default: TRUE.
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
-#'
 #' @return A list of data frames representing edge lists. Each list element
 #' is an edge list for a specific method.
 #' @rdname grn_combined
@@ -181,20 +105,21 @@ grn_genie3 <- function(exp, regulators = NULL,
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 #' grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
 grn_combined <- function(exp, regulators = NULL,
-                         eps=0.1,
+                         eps = 0.1,
                          estimator_aracne = "spearman",
                          estimator_clr = "pearson",
-                         remove_zero=TRUE, ...) {
+                         remove_zero = TRUE, ...) {
     regulators <- regulators[regulators %in% rownames(exp)]
-    genie3 <- grn_genie3(exp, regulators, remove_zero=remove_zero, ...)
-
-    aracne <- grn_aracne(exp, regulators = regulators, eps=eps,
-                         estimator_aracne = estimator_aracne, remove_zero=remove_zero)
-
-    clr <- grn_clr(exp, regulators = regulators,
-                   estimator_clr = estimator_clr, remove_zero=remove_zero)
-
-    res_list <- list(genie3=genie3, aracne=aracne, clr=clr)
+    methods <- c("genie3", "aracne", "clr")
+    res_list <- lapply(methods, function(x) {
+        grns <- grn_infer(exp, regulators = regulators, method = x,
+                          estimator_aracne = estimator_aracne,
+                          estimator_clr = estimator_clr,
+                          remove_zero = remove_zero, ...)
+        return(grns)
+    })
+    names(res_list) <- methods
+    return(res_list)
 }
 
 #' Rank edge weights for GRNs and calculate average across different methods
@@ -238,6 +163,8 @@ grn_average_rank <- function(list_edges) {
 #' @param edgelist A gene regulatory network represented as an edge list.
 #' @param nsplit Number of groups in which the edge list will be split.
 #' Default: 10.
+#' @param bp_param BiocParallel back-end to be used.
+#' Default: BiocParallel::SerialParam()
 #'
 #' @details The edge list will be split in n groups and the scale-free
 #' topology fit will be tested for each subset of the edge list.
@@ -248,7 +175,7 @@ grn_average_rank <- function(list_edges) {
 #' @export
 #' @rdname grn_filter
 #' @importFrom igraph graph_from_data_frame degree
-#' @importFrom BiocParallel bplapply
+#' @importFrom BiocParallel bplapply SerialParam
 #' @importFrom WGCNA scaleFreeFitIndex
 #' @importFrom ggpubr ggline
 #' @importFrom ggplot2 theme element_text
@@ -259,7 +186,8 @@ grn_average_rank <- function(list_edges) {
 #' ranked_grn <- grn_average_rank(grn_list)
 #' # split in only 2 groups for demonstration purposes
 #' filtered_edges <- grn_filter(ranked_grn, nsplit=2)
-grn_filter <- function(edgelist, nsplit=10) {
+grn_filter <- function(edgelist, nsplit=10,
+                       bp_param = BiocParallel::SerialParam()) {
 
     # Split edge list into n data frames and calculate degree
     n_edges <- seq_len(nrow(edgelist))
@@ -269,12 +197,12 @@ grn_filter <- function(edgelist, nsplit=10) {
         filt_edges <- edgelist[seq_len(x), c(1,2)]
         graph <- igraph::graph_from_data_frame(filt_edges, directed=TRUE)
         degree <- igraph::degree(graph, mode = "out")
-    })
+    }, BPPARAM = bp_param)
 
     # Calculate scale-free topology fit for the degree list
     sft.rsquared <- unlist(BiocParallel::bplapply(list_degree, function(x) {
         return(WGCNA::scaleFreeFitIndex(x)$Rsquared.SFT)
-        }))
+    }, BPPARAM = bp_param))
     max.index <- which.max(sft.rsquared)
 
     # Plot scale-free topology fit for r values

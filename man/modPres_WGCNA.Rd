@@ -4,23 +4,12 @@
 \alias{modPres_WGCNA}
 \title{Calculate module preservation between two expression data sets using WGCNA's algorithm}
 \usage{
-modPres_WGCNA(
-  explist,
-  ref_net,
-  savePreservation = FALSE,
-  plot_all_stats = FALSE,
-  nPerm = 200
-)
+modPres_WGCNA(explist, ref_net, plot_all_stats = FALSE, nPerm = 200)
 }
 \arguments{
 \item{explist}{List of expression data frames or SummarizedExperiment objects.}
 
 \item{ref_net}{Reference network object returned by the function \code{exp2net}.}
-
-\item{savePreservation}{Logical indicating whether to save
-module preservation into an R object or not. As the calculation of
-module preservation can take a long time, it is useful to save time in
-future analyses. Default: FALSE.}
 
 \item{plot_all_stats}{Logical indicating whether to save all density and
 connectivity statistics in a PDF file or not. Default is FALSE.}
@@ -46,16 +35,10 @@ exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
 # Previously calculated power
 powers <- c(13, 15)
 gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-                   SFTpower = powers[1], cor_method = "pearson",
-                   reportPDF=FALSE)
+                   SFTpower = powers[1], cor_method = "pearson")
 explist <- exp_ortho
 ref_net <- gcn_osa
 # 5 permutations for demonstration purposes
 pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
 }
-}
-\seealso{
-\code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
- \code{\link[ggpubr]{ggscatter}},\code{\link[ggpubr]{ggarrange}},\code{\link[ggpubr]{ggexport}}
- \code{\link[ggplot2]{theme}},\code{\link[ggplot2]{margin}},\code{\link[ggplot2]{geom_abline}}
 }

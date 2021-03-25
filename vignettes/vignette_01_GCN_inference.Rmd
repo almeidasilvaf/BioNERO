@@ -31,7 +31,20 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-To date, several packages have been developed to infer gene coexpression networks from expression data, such as WGCNA [@Langfelder2008], CEMiTool [@Russo2018] and petal [@Petereit2016]. However, network inference and analysis is a non-trivial task that requires solid statistical background, especially for data preprocessing and proper interpretation of results. Because of that, inexperienced researchers often struggle to choose the most suitable algorithms for their projects. Besides, different packages are required for each step of a standard network analysis, and their distinct syntaxes can hinder interoperability between packages, particularly for non-advanced R users. Here, we have developed an all-in-one R package that uses state-of-the-art algorithms to facilitate the workflow of biological network analysis, from data acquisition to analysis and interpretation. This will likely accelerate network analysis pipelines and advance systems biology research.
+To date, several packages have been developed to infer gene coexpression 
+networks from expression data, such as WGCNA [@Langfelder2008], 
+CEMiTool [@Russo2018] and petal [@Petereit2016]. However, network inference 
+and analysis is a non-trivial task that requires solid statistical background, 
+especially for data preprocessing and proper interpretation of results. 
+Because of that, inexperienced researchers often struggle to choose the most 
+suitable algorithms for their projects. Besides, different packages are 
+required for each step of a standard network analysis, and their distinct 
+syntaxes can hinder interoperability between packages, particularly for 
+non-advanced R users. Here, we have developed an all-in-one R package that 
+uses state-of-the-art algorithms to facilitate the workflow of biological 
+network analysis, from data acquisition to analysis and interpretation. 
+This will likely accelerate network analysis pipelines and advance 
+systems biology research.
 
 # Installation
 
@@ -50,11 +63,19 @@ set.seed(123) # for reproducibility
 
 # Data loading and preprocessing
 
-For this tutorial, we will use maize (*Zea mays*) gene expression data normalized in TPM. The data were obtained from @Shin2020 and were filtered for package size issues. For more information on the data set, see `?zma.se`. The data set is stored as a SummarizedExperiment object.[^1]
+For this tutorial, we will use maize (*Zea mays*) gene expression data 
+normalized in TPM. The data were obtained from @Shin2020 and were filtered 
+for package size issues. For more information on the data set, see `?zma.se`. 
+The data set is stored as a SummarizedExperiment object.[^1]
 
-[^1]: **NOTE:** In case you have many tab-separated expression tables in a directory, `BioNERO` has a helper function named `dfs2one()` to load all these files and combine them into a single data frame.
+[^1]: **NOTE:** In case you have many tab-separated expression tables in a 
+directory, `BioNERO` has a helper function named `dfs2one()` to load all these 
+files and combine them into a single data frame.
 
-The input expression data in `BioNERO` can be both a SummarizedExperiment object or a gene expression matrix or data frame with genes in rows and samples in columns. However, we strongly recommend using SummarizedExperiment objects for easier interoperability with other Bioconductor packages.
+The input expression data in `BioNERO` can be both a SummarizedExperiment 
+object or a gene expression matrix or data frame with genes in rows and samples 
+in columns. However, we strongly recommend using SummarizedExperiment objects 
+for easier interoperability with other Bioconductor packages.
 
 ```{r data_loading_soybean, message=FALSE}
 data(zma.se)
@@ -66,37 +87,61 @@ SummarizedExperiment::colData(zma.se)
 
 ## Step-by-step data preprocessing
 
-This section is suitable for users who want to have more control of their data analysis, as they can inspect the data set after each preprocessing step and analyze how different options to the arguments would affect the expression data. If you want a quick start, you can skip to the next section (*Automatic, one-step data preprocessing*).
+This section is suitable for users who want to have more control of their data 
+analysis, as they can inspect the data set after each preprocessing step and 
+analyze how different options to the arguments would affect the expression data. 
+If you want a quick start, you can skip to the next 
+section (*Automatic, one-step data preprocessing*).
 
-**Step 1:** Removing missing values. By default, `remove_na()` will replace NAs with 0. Users can also replace NAs with the mean of each row (generally not advisable, but it can be useful in very specific cases).
+**Step 1:** Replacing missing values. By default, `replace_na()` will replace 
+NAs with 0. Users can also replace NAs with the mean of each row 
+(generally not advisable, but it can be useful in very specific cases).
 
 ```{r remove_na}
-exp_filt <- remove_na(zma.se)
+exp_filt <- replace_na(zma.se)
 sum(is.na(zma.se))
 ```
 
-**Step 2:** Removing non-expressed genes. Here, for faster network reconstruction, we will remove every gene whose median value is below 10. The function's default for `min_exp` is 1. For other options, see `?remove_nonexp`.
+**Step 2:** Removing non-expressed genes. Here, for faster network 
+reconstruction, we will remove every gene whose median value is below 10. 
+The function's default for `min_exp` is 1. 
+For other options, see `?remove_nonexp`.
 
 ```{r remove_nonexp}
 exp_filt <- remove_nonexp(exp_filt, method="median", min_exp = 10)
 dim(exp_filt)
 ```
 
-**Step 3 (optional):** Filtering genes by variance. It is reasonable to remove genes whose expression values do not vary much across samples, since we often want to find genes that are more or less expressed in particular conditions. Here, we will keep only the top 2000 most variable genes. Users can also filter by percentile (e.g., the top 10% most variable genes).
+**Step 3 (optional):** Filtering genes by variance. It is reasonable to remove 
+genes whose expression values do not vary much across samples, since we often 
+want to find genes that are more or less expressed in particular conditions. 
+Here, we will keep only the top 2000 most variable genes. Users can also filter 
+by percentile (e.g., the top 10% most variable genes).
 
 ```{r filter_by_variance}
 exp_filt <- filter_by_variance(exp_filt, n=2000)
 dim(exp_filt)
 ```
 
-**Step 4:** Removing outlying samples. There are several methods to remove outliers. We have implemented the Z.K (standardized connectivity) method [@Oldham2012] in `ZKfiltering()`, which is a network-based approach to remove outliers. This method has proven to be more suitable for network analysis, since it can remove outliers that other methods (such as hierarchical clustering) cannot identify. By default, BioNERO considers all samples with ZK \< 2 as outliers, but this parameter is flexible if users want to change it.
+**Step 4:** Removing outlying samples. There are several methods to remove 
+outliers. We have implemented the Z.K (standardized connectivity) 
+method [@Oldham2012] in `ZKfiltering()`, which is a network-based approach to 
+remove outliers. This method has proven to be more suitable for network 
+analysis, since it can remove outliers that other methods 
+(such as hierarchical clustering) cannot identify. By default, BioNERO 
+considers all samples with ZK \< 2 as outliers, but this parameter 
+is flexible if users want to change it.
 
 ```{r ZKfiltering}
 exp_filt <- ZKfiltering(exp_filt, cor_method = "pearson")
 dim(exp_filt)
 ```
 
-**Step 5:** Adjusting for confounding artifacts. This is an important step to avoid spurious correlations resulting from confounders. The method was described by @Parsana2019, who developed a principal component (PC)-based correction for confounders. After correction, the expression data are quantile normalized, so every gene follows an approximate normal distribution.
+**Step 5:** Adjusting for confounding artifacts. This is an important step 
+to avoid spurious correlations resulting from confounders. The method was 
+described by @Parsana2019, who developed a principal component (PC)-based 
+correction for confounders. After correction, the expression data are quantile 
+normalized, so every gene follows an approximate normal distribution.
 
 ```{r PC_correction}
 exp_filt <- PC_correction(exp_filt)
@@ -104,9 +149,16 @@ exp_filt <- PC_correction(exp_filt)
 
 ## Automatic, one-step data preprocessing
 
-Alternatively, users can preprocess their data with a single function. The function `exp_preprocess()` is a wrapper for the functions `remove_na()`, `remove_nonexp()`, `filter_by_variance()`, `ZKfiltering()` and `PC_correction()`. The arguments passed to `exp_preprocess()` will be used by each of these functions to generate a filtered expression data frame in a single step.[^2]
+Alternatively, users can preprocess their data with a single function. 
+The function `exp_preprocess()` is a wrapper for the functions `replace_na()`, 
+`remove_nonexp()`, `filter_by_variance()`, `ZKfiltering()` and `PC_correction()`. 
+The arguments passed to `exp_preprocess()` will be used by each of these 
+functions to generate a filtered expression data frame in a single step.[^2]
 
-[^2]: **NOTE:** Here, we are using TPM-normalized data. If you have expression data as raw read counts, set the argument `vstransform = TRUE` in `exp_preprocess()`. This will apply DESeq2's variance stabilizing transformation [@Love2014] to your count data.
+[^2]: **NOTE:** Here, we are using TPM-normalized data. If you have expression 
+data as raw read counts, set the argument `vstransform = TRUE` 
+in `exp_preprocess()`. This will apply DESeq2's variance stabilizing 
+transformation [@Love2014] to your count data.
 
 ```{r exp_preprocess}
 final_exp <- exp_preprocess(zma.se, min_exp = 10, variance_filter = TRUE, n=2000)
@@ -123,9 +175,15 @@ rm(exp_filt)
 
 # Exploratory data analysis
 
-`BioNERO` includes some functions for easy data exploration. These functions were created to avoid having to type code chunks that, although small, will be used many times. The idea here is to make the user experience with biological network analysis as easy and simple as possible.
+`BioNERO` includes some functions for easy data exploration. These functions 
+were created to avoid having to type code chunks that, although small, will be 
+used many times. The idea here is to make the user experience with biological 
+network analysis as easy and simple as possible.
 
-**Plotting heatmaps:** the function `plot_heatmap()` plots heatmaps of correlations between samples or gene expression in a single line. Users can use their preferred RColorBrewer's palette, hide/show gene names, and activate/deactivate clustering for rows and/or columns.
+**Plotting heatmaps:** the function `plot_heatmap()` plots heatmaps of 
+correlations between samples or gene expression in a single line. 
+Users can use their preferred RColorBrewer's palette, hide/show gene names, 
+and activate/deactivate clustering for rows and/or columns.
 
 ```{r plot_heatmap, fig.width=6, fig.height=4, message=FALSE}
 # Heatmap of sample correlations
@@ -135,16 +193,29 @@ plot_heatmap(final_exp, type = "samplecor")
 plot_heatmap(final_exp, type="expr")
 ```
 
-**Principal component analysis (PCA):** the function `plot_PCA()` performs a PCA and plots PC1 vs PC2 (by default), as well the percentage of variance explained by each PC. Users can also choose to plot PC1 vs PC3 or PC2 vs PC3.
+**Principal component analysis (PCA):** the function `plot_PCA()` performs a 
+PCA and plots PC1 vs PC2 (by default), as well the percentage of 
+variance explained by each PC. Users can also choose to plot PC1 vs PC3 
+or PC2 vs PC3.
 
 ```{r pcaplot, fig.small=TRUE}
 plot_PCA(final_exp)
 ```
 
-
 # Gene coexpression network inference
 
-Now that we have our filtered and normalized expression data, we can reconstruct a gene coexpression network (GCN) with the WGCNA algorithm [@Langfelder2008]. First of all, we need to identify the most suitable $\beta$ power that makes the network satisfy the scale-free topology. We do that with the function `SFT_fit()`. Correlation values are raised to a power $\beta$ to amplify their distances and, hence, to make the module detection algorithm more powerful. The higher the value of $\beta$, the closer to the scale-free topology the network is. However, a very high $\beta$ power reduces mean connectivity, which is not desired. To solve this trade-off, we pick the lowest $\beta$ power above a certain threshold (by default in `SFT_fit()`, 0.8). This makes the network close to the scale-free topology without dramatically reducing the mean connectivity.
+Now that we have our filtered and normalized expression data, we can 
+reconstruct a gene coexpression network (GCN) with the 
+WGCNA algorithm [@Langfelder2008]. First of all, we need to identify the 
+most suitable $\beta$ power that makes the network satisfy the scale-free 
+topology. We do that with the function `SFT_fit()`. Correlation values are 
+raised to a power $\beta$ to amplify their distances and, hence, to make the 
+module detection algorithm more powerful. The higher the value of $\beta$, the 
+closer to the scale-free topology the network is. However, a very high $\beta$ 
+power reduces mean connectivity, which is not desired. To solve this trade-off, 
+we pick the lowest $\beta$ power above a certain threshold (by default 
+in `SFT_fit()`, 0.8). This makes the network close to the scale-free topology 
+without dramatically reducing the mean connectivity.
 
 ```{r sft_fit}
 sft <- SFT_fit(final_exp, net_type="signed hybrid", cor_method="pearson")
@@ -152,7 +223,12 @@ sft$power
 power <- sft$power
 ```
 
-As we can see, the optimal power is `r power`. However, we **strongly recommend** a visual inspection of the simulation of different $\beta$ powers, as WGCNA can fail to return the most appropriate $\beta$ power in some cases.[^3] The function `SFT_fit()` automatically saves a ggplot object in the second element of the resulting list. To visualize it, you simply have to access the plot.
+As we can see, the optimal power is `r power`. However, 
+we **strongly recommend** a visual inspection of the simulation of 
+different $\beta$ powers, as WGCNA can fail to return the most 
+appropriate $\beta$ power in some cases.[^3] The function `SFT_fit()` 
+automatically saves a ggplot object in the second element of the resulting 
+list. To visualize it, you simply have to access the plot.
 
 [^3]: **PRO TIP:** If your $\beta$ power is too low (say below 6), look at the plot as a sanity check.
 
@@ -160,62 +236,86 @@ As we can see, the optimal power is `r power`. However, we **strongly recommend*
 sft$plot
 ```
 
-Now, we can use the power calculated by `SFT_fit()` to infer the GCN. The function `exp2gcn()` infers a GCN and outputs a list of 7 elements, each of which will be used by other functions in the analysis pipeline.
+Now, we can use the power calculated by `SFT_fit()` to infer the GCN. 
+The function `exp2gcn()` infers a GCN and outputs a list of 7 elements, each of 
+which will be used by other functions in the analysis pipeline.
 
 ```{r exp2net}
-net <- exp2gcn(final_exp, net_type="signed hybrid", SFTpower=power, cor_method="pearson")
+net <- exp2gcn(final_exp, net_type="signed hybrid", 
+               SFTpower=power, cor_method="pearson")
 names(net)
 ```
 
-By default, `exp2gcn()` returns 2 PDF figures in the user's working directory. You can set `reportPDF = FALSE` if you do not want the figures. The figures are publication-ready and display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.
+The function `exp2gcn()` saves objects in the last element of the resulting 
+list that can be subsequently used to plot common figures in GCN papers. 
+The figures are publication-ready and display i. a dendrogram of genes and 
+modules; ii. heatmap of pairwise correlations between module eigengenes.
 
-```{r echo=FALSE, out.width='500px', out.height='500px', fig.align='center'}
-date <- Sys.Date()
-knitr::include_graphics(path=paste0(date, "_dendrogram_and_colors.pdf"))
+```{r dendro}
+# Dendro and colors
+plot_dendro_and_colors(net)
 ```
 
-```{r echo=FALSE, out.width='500px', out.height='500px', fig.align='center'}
-date <- Sys.Date()
-knitr::include_graphics(path=paste0(date, "_eigengene_network.pdf"))
+```{r eigengene_net, fig.height=6}
+# Eigengene networks
+plot_eigengene_network(net)
 ```
 
 Let's see the number of genes per module.
 
-```{r genes_per_module}
+```{r genes_per_module, fig.wide=TRUE}
 plot_ngenes_per_module(net)
 ```
 
 # Gene coexpression network analysis
 
-Now that we have our coexpression network, we can start exploring some of its properties.
+Now that we have our coexpression network, we can start exploring some 
+of its properties.
 
 ## Assessing module stability
 
-The function `module_stability()` allows users to check if the identified coexpression modules are stable (i.e., if they can resist removal of a particular sample). This function will resample the data set and rerun the module detection algorithm *n* times (default: 30) and return a PDF figure displaying a gene dendrogram and colors representing modules identified in each run. By looking at the figure, you can detect if a particular module is only found in a very small fraction of the runs, which suggests instability. Here, we will perform only 5 resampling runs for demonstration purposes.[^4]
+The function `module_stability()` allows users to check if the identified 
+coexpression modules are stable (i.e., if they can resist removal of a 
+particular sample). This function will resample the data set and rerun the 
+module detection algorithm *n* times (default: 30) and return a PDF figure 
+displaying a gene dendrogram and colors representing modules identified in 
+each run. By looking at the figure, you can detect if a particular module is 
+only found in a very small fraction of the runs, which suggests instability. 
+Here, we will perform only 5 resampling runs for demonstration purposes.[^4]
 
-[^4]: **NOTE:** The calculations performed by this function may take a long time depending on the your network size. Use it only if you have some reason to suspect that the modules are highly dependent on a particular set of samples.
+[^4]: **NOTE:** The calculations performed by this function may take a 
+long time depending on the your network size. Use it only if you have 
+some reason to suspect that the modules are highly dependent on a particular 
+set of samples.
 
 ```{r module_stability}
 module_stability(final_exp, net, nRuns=5)
 ```
 
-```{r mod_stability_plot, echo=FALSE, out.width='600px', out.height='600px', fig.align='center'}
-date <- Sys.Date()
-knitr::include_graphics(path = paste0(date, "_module_stability.pdf") )
-```
-
 ## Module-trait associations
 
-The function `module_trait_cor()` can be used to calculate module-trait correlations. This analysis is useful to identify modules that are positively or negatively correlated with particular traits, which means that their gene expression levels go up or down in these conditions. Here, tissues will be considered traits, so we want to identify groups of genes whose expression levels are inhibited or induced in particular tissues. Alternatively, one can use continuous variables (e.g., metabolite content, protein concentration, height) or discrete variables (e.g., disease index) as traits.[^5]
+The function `module_trait_cor()` can be used to calculate module-trait 
+correlations. This analysis is useful to identify modules that are positively 
+or negatively correlated with particular traits, which means that their gene 
+expression levels go up or down in these conditions. Here, tissues will be 
+considered traits, so we want to identify groups of genes whose expression 
+levels are inhibited or induced in particular tissues. Alternatively, one can 
+use continuous variables (e.g., metabolite content, protein concentration, 
+height) or discrete variables (e.g., disease index) as traits.[^5]
 
-[^5]: **NOTE:** The function `gene_significance()` works just like `module_trait_cor()`, but it correlates individual genes (not the whole module) to traits. This function is very useful if you have a set of candidate genes and you want to find which of them are more associated with the trait of interest. See `?gene_significance()` for more details.
+[^5]: **NOTE:** The function `gene_significance()` works just 
+like `module_trait_cor()`, but it correlates individual genes (not the 
+whole module) to traits. This function is very useful if you have a set of 
+candidate genes and you want to find which of them are more associated with 
+the trait of interest. See `?gene_significance()` for more details.
 
 ```{r moddtraitcor, fig.width=5, fig.height=5}
 MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson")
 head(MEtrait)
 ```
 
-The function `module_trait_cor()` also allows for plot customization. For instance:
+The function `module_trait_cor()` also allows for plot customization. 
+For instance:
 
 ```{r modtraitcor_transpose, fig.width=9, fig.height=3}
 # Transpose the matrix and change palette (RColorBrewer palette)
@@ -226,7 +326,9 @@ MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson",
 
 ## Visualizing module expression profile
 
-The heatmap above shows that genes in the *yellow* module are negatively correlated with endosperm samples. We can visually explore it with `plot_expression_profile()`.
+The heatmap above shows that genes in the *yellow* module are negatively 
+correlated with endosperm samples. We can visually explore it 
+with `plot_expression_profile()`.
 
 ```{r exp_profile, fig.width=4, fig.height=3}
 plot_expression_profile(exp=final_exp, net=net, 
@@ -235,13 +337,18 @@ plot_expression_profile(exp=final_exp, net=net,
 
 ## Enrichment analysis
 
-After identifying modules that are inhibited or enhanced in particular tissues, users would likely want to find to which biological processes (e.g., GO biological process) or pathways (e.g., Reactome, KEGG, MapMan) these genes are related. This can be done with enrichment analyses, which can uncover terms that are found more than expected by chance in a module.
+After identifying modules that are inhibited or enhanced in particular 
+tissues, users would likely want to find to which biological processes 
+(e.g., GO biological process) or pathways (e.g., Reactome, KEGG, MapMan) 
+these genes are related. This can be done with enrichment analyses, which 
+can uncover terms that are found more than expected by chance in a module.
 
-The easiest way to accomplish this is to use the function `module_enrichment()`, which performs enrichment analysis for all modules at once. To illustrate it, we will scan coexpression modules for enriched protein domains using all genes in the network as background. The Interpro annotation was downloaded from the PLAZA 4.0 Monocots database [@VanBel2018].
-
-```{r echo=FALSE}
-BiocParallel::register(BiocParallel::SerialParam())
-```
+The easiest way to accomplish this is to use the 
+function `module_enrichment()`, which performs enrichment analysis for 
+all modules at once. To illustrate it, we will scan coexpression modules 
+for enriched protein domains using all genes in the network as background. 
+The Interpro annotation was downloaded from 
+the PLAZA 4.0 Monocots database [@VanBel2018].
 
 ```{r module_enrichment}
 # Enrichment analysis for conserved protein domains (Interpro)
@@ -254,13 +361,26 @@ interpro_enrichment <- module_enrichment(net = net,
 interpro_enrichment[, -6]
 ```
 
-As we can see, two modules are enriched in genes with particular protein domains. We could get the same result with the function `enrichment_analysis()`, which performs enrichment analysis for a user-defined gene set instead of all modules. [^6]
+As we can see, two modules are enriched in genes with particular protein 
+domains. We could get the same result with the 
+function `enrichment_analysis()`, which performs enrichment analysis for 
+a user-defined gene set instead of all modules. [^6]
 
-[^6]: **NOTE:** The functions `module_enrichment()` and `enrichment_analysis()` are parallelized with `BiocParallel` to increase speed. However, if you have a large data set and low available memory, parallelizing can be painful, as the data set will be replicated for each parallel process. If that is your case, you can run `BiocParallel::register(BiocParallel::SerialParam())`. This will ensure that your computer only uses one core.
+[^6]: **NOTE:** The functions `module_enrichment()` 
+and `enrichment_analysis()` can be parallelized with `BiocParallel` to 
+increase speed. The default parallel back-end is *SerialParam()*, but this can 
+be modified in the argument `bp_param`.
 
 ## Hub gene identification
 
-Hub genes are often identified using two different metrics: **module membership (MM)** (i.e., correlation of a gene to its module eigengene) and **degree** (i.e., sum of connection weights of a gene to all other genes in the module). Some researchers consider the top 10% genes with the highest degree as hubs, while others consider those with MM \> 0.8. To avoid false positives, `BioNERO`'s algorithm combines both metrics and defines hub genes as the top 10% genes with highest degree that have MM \> 0.8. Hubs can be identified with the function `get_hubs_gcn()`.
+Hub genes are often identified using two different 
+metrics: **module membership (MM)** (i.e., correlation of a gene to its 
+module eigengene) and **degree** (i.e., sum of connection weights of a 
+gene to all other genes in the module). Some researchers consider the 
+top 10% genes with the highest degree as hubs, while others consider those 
+with MM \> 0.8. To avoid false positives, `BioNERO`'s algorithm combines 
+both metrics and defines hub genes as the top 10% genes with highest degree 
+that have MM \> 0.8. Hubs can be identified with the function `get_hubs_gcn()`.
 
 ```{r}
 hubs <- get_hubs_gcn(final_exp, net)
@@ -269,16 +389,30 @@ head(hubs)
 
 ## Extracting subgraphs
 
-Subgraph extraction can be particularly useful to visualize specific modules, and it can be done with the function `get_edge_list()`. The function returns the subgraph as an edge list. Users can also extract an edge list for a particular gene set instead of a module.
+Subgraph extraction can be particularly useful to visualize specific 
+modules, and it can be done with the function `get_edge_list()`. The 
+function returns the subgraph as an edge list. Users can also extract an 
+edge list for a particular gene set instead of a module.
 
 ```{r}
 edges <- get_edge_list(net, module="midnightblue")
 head(edges)
 ```
 
-The function `get_edge_list()` returns a fully connected subgraph for the specified module or gene set. However, filtering weak correlations is desirable and can be accomplished by setting the argument `filter = TRUE`, which will remove edges based on one of optimal scale-free topology fit (default), p-value, Z-score, or an arbitrary minimum correlation coefficient. [^7] For more details details, check `?get_edge_list()`.
+The function `get_edge_list()` returns a fully connected subgraph for 
+the specified module or gene set. However, filtering weak correlations is 
+desirable and can be accomplished by setting the argument `filter = TRUE`, 
+which will remove edges based on one of optimal scale-free topology 
+fit (default), p-value, Z-score, or an arbitrary minimum correlation 
+coefficient. [^7] For more details details, check `?get_edge_list()`.
 
-[^7]: **PRO TIP:** Generally, we advise you to filter by optimal scale-free topology fit (default). However, if you want to specify your own correlation filter for some reason (e.g., visualization), we **strongly recommend** using the function `check_sft()` to check if your resulting graph satisfies the scale-free topology. If it does not, then your graph does not resemble *real* biological networks and, hence, one cannot trust it for biological interpretations.
+[^7]: **PRO TIP:** Generally, we advise you to filter by optimal scale-free 
+topology fit (default). However, if you want to specify your own correlation 
+filter for some reason (e.g., visualization), we **strongly recommend** using 
+the function `check_SFT()` to check if your resulting graph satisfies the
+scale-free topology. If it does not, then your graph does not resemble *real* 
+biological networks and, hence, one cannot trust it for 
+biological interpretations.
 
 ```{r filter_edges, fig.small=TRUE}
 # Remove edges based on optimal scale-free topology fit
@@ -301,7 +435,10 @@ dim(edges_filtered)
 
 ## Network visualization
 
-As we now have an edge list for a module, let's visualize it with the function `plot_gcn()`. By default, this function only labels the top 5 hubs (or less if there are less than 5 hubs). However, this can be customized according to the user's preference (see `?plot_gcn` for more information).
+As we now have an edge list for a module, let's visualize it with the 
+function `plot_gcn()`. By default, this function only labels the top 5 hubs 
+(or less if there are less than 5 hubs). However, this can be customized 
+according to the user's preference (see `?plot_gcn` for more information).
 
 ```{r plot_gcn, fig.width=4, fig.height=4}
 plot_gcn(edgelist_gcn = edges_filtered, 
@@ -310,7 +447,8 @@ plot_gcn(edgelist_gcn = edges_filtered,
          hubs = hubs)
 ```
 
-Networks can also be visualized interactively by setting `interactive = TRUE` in `plot_gcn`.
+Networks can also be visualized interactively by 
+setting `interactive = TRUE` in `plot_gcn`.
 
 ```{r interactive_gcn}
 plot_gcn(edgelist_gcn = edges_filtered, 
@@ -323,9 +461,15 @@ plot_gcn(edgelist_gcn = edges_filtered,
 
 ## Network statistics
 
-Finally, the function `net_stats()` can be used to calculate the main network statistics (or properties, or indices), namely: *connectivity*, *scaled connectivity*, *clustering coefficient*, *maximum adjacency ratio*, *density*, *centralization*, *heterogeneity*, *number of cliques*, *diameter*, *betweenness* (optional), and *closeness* (optional).
+Finally, the function `net_stats()` can be used to calculate the main 
+network statistics (or properties, or indices), namely: *connectivity*,
+*scaled connectivity*, *clustering coefficient*, *maximum adjacency ratio*, 
+*density*, *centralization*, *heterogeneity*, *number of cliques*, *diameter*, 
+*betweenness* (optional), and *closeness* (optional).
 
-Depending on your system capacities and network size, this may take a very long time. Hence, if you are willing to calculate network statistics for your data set, grab a cup of coffee, because the waiting may be long.
+Depending on your system capacities and network size, this may take 
+a very long time. Hence, if you are willing to calculate network statistics 
+for your data set, grab a cup of coffee, because the waiting may be long.
 
 # Session information {.unnumbered}
 

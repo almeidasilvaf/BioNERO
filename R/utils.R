@@ -1,21 +1,4 @@
 
-#' Check if object is a SummarizedExperiment object
-#'
-#' @param object Object to test class.
-#'
-#' @return Logical indicating whether object is SummarizedExperiment or not.
-#' @noRd
-#' @importFrom methods is
-is_SE <- function(object) {
-    if(is(object, "SummarizedExperiment")) {
-        x <- TRUE
-    } else {
-        x <- FALSE
-    }
-    return(x)
-}
-
-
 #' Helper to handle SummarizedExperiment or expression data frame as input
 #'
 #' @param exp Expression data as a data frame or a SummarizedExperiment object
@@ -25,7 +8,7 @@ is_SE <- function(object) {
 #' @noRd
 #' @importFrom SummarizedExperiment assay
 handleSE <- function(exp) {
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         fexp <- SummarizedExperiment::assay(exp)
     } else {
         fexp <- exp
@@ -302,7 +285,7 @@ cormat_to_edgelist <- function(matrix) {
 #'
 #' @return A list with SFT fit statistics and a message indicating if
 #' the network is scale-free.
-#' @rdname check_sft
+#' @rdname check_SFT
 #' @export
 #' @importFrom igraph graph_from_data_frame as_adjacency_matrix fit_power_law
 #' @examples
@@ -312,8 +295,8 @@ cormat_to_edgelist <- function(matrix) {
 #' colnames(exp) <- paste0("Sample", 1:ncol(exp))
 #' cormat <- cor(t(exp))
 #' edges <- cormat_to_edgelist(cormat)
-#' check_sft(edges)
-check_sft <- function(edgelist, net_type = "gcn") {
+#' check_SFT(edges)
+check_SFT <- function(edgelist, net_type = "gcn") {
 
     # Calculate degree of the resulting graph
     if(net_type == "gcn") {
@@ -352,7 +335,7 @@ check_sft <- function(edgelist, net_type = "gcn") {
 #' @noRd
 #' @importFrom SummarizedExperiment assay
 handleSElist <- function(exp) {
-    if(is_SE(exp[[1]])) {
+    if(is(exp[[1]], "SummarizedExperiment")) {
         list <- lapply(exp, handleSE)
     } else {
         list <- exp
@@ -369,7 +352,7 @@ handleSElist <- function(exp) {
 #' @noRd
 #' @importFrom SummarizedExperiment colData
 handle_metadata <- function(exp, metadata) {
-    if(is_SE(exp[[1]])) {
+    if(is(exp[[1]], "SummarizedExperiment")) {
         metadata <- Reduce(rbind, lapply(exp, function(x) {
             meta <- as.data.frame(SummarizedExperiment::colData(x))
             return(meta)

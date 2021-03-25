@@ -43,6 +43,7 @@
 #' @export
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom ComplexHeatmap pheatmap
+#' @importFrom methods is
 #' @examples
 #' \donttest{
 #' data(filt.se)
@@ -56,7 +57,7 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
                          scale = "none", fontsize = 9,
                          cutree_rows = NA, cutree_cols = NA, ...) {
     fexp <- handleSE(exp)
-    if(is_SE(exp)) {
+    if(methods::is(exp, "SummarizedExperiment")) {
         col_metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
 
@@ -138,7 +139,7 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 #' plot_PCA(zma.se, log_trans = TRUE)
 plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
     fexp <- handleSE(exp)
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
 
@@ -254,7 +255,7 @@ get_HK <- function(exp) {
 #' plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
                                     net, modulename) {
-    if(is_SE(exp)) {
+    if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
     exp <- handleSE(exp)
@@ -311,7 +312,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 #' @importFrom ggplot2 theme element_text
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson", reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' plot_ngenes_per_module(gcn)
 plot_ngenes_per_module <- function(net = NULL) {
     genes_and_modules <- net$genes_and_modules

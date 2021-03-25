@@ -81,20 +81,12 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #'
 #' @param explist List of expression data frames or SummarizedExperiment objects.
 #' @param ref_net Reference network object returned by the function \code{exp2net}.
-#' @param savePreservation Logical indicating whether to save
-#' module preservation into an R object or not. As the calculation of
-#' module preservation can take a long time, it is useful to save time in
-#' future analyses. Default: FALSE.
 #' @param plot_all_stats Logical indicating whether to save all density and
 #' connectivity statistics in a PDF file or not. Default is FALSE.
 #' @param nPerm Number of permutations for the module preservation statistics.
 #' Default: 200.
 #'
 #' @return A ggplot object with module preservation statistics.
-#' @seealso
-#'  \code{\link[WGCNA]{modulePreservation}},\code{\link[WGCNA]{standardColors}}
-#'  \code{\link[ggpubr]{ggscatter}},\code{\link[ggpubr]{ggarrange}},\code{\link[ggpubr]{ggexport}}
-#'  \code{\link[ggplot2]{theme}},\code{\link[ggplot2]{margin}},\code{\link[ggplot2]{geom_abline}}
 #' @rdname modPres_WGCNA
 #' @export
 #' @importFrom WGCNA standardColors
@@ -112,15 +104,13 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #' # Previously calculated power
 #' powers <- c(13, 15)
 #' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-#'                    SFTpower = powers[1], cor_method = "pearson",
-#'                    reportPDF=FALSE)
+#'                    SFTpower = powers[1], cor_method = "pearson")
 #' explist <- exp_ortho
 #' ref_net <- gcn_osa
 #' # 5 permutations for demonstration purposes
 #' pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
 #' }
 modPres_WGCNA <- function(explist, ref_net,
-                          savePreservation = FALSE,
                           plot_all_stats = FALSE,
                           nPerm = 200) {
     explist <- handleSElist(explist)
@@ -163,12 +153,6 @@ modPres_WGCNA <- function(explist, ref_net,
                                       verbose = 0, networkType = net_type,
                                       savePermutedStatistics = FALSE,
                                       plotInterpolation = FALSE)
-
-    if(savePreservation) {
-      date <- Sys.Date()
-      save(pres, file = paste0(date, "_modulePreservation.rda"), compress="xz")
-    }
-
     # Isolate the observed statistics and their Z-scores
     ref <- 1
     test <- 2
@@ -289,11 +273,9 @@ modPres_WGCNA <- function(explist, ref_net,
 #' # Previously calculated SFT powers
 #' powers <- c(13, 15)
 #' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-#'                    SFTpower = powers[1], cor_method = "pearson",
-#'                    reportPDF=FALSE)
+#'                    SFTpower = powers[1], cor_method = "pearson")
 #' gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
-#'                    SFTpower = powers[2], cor_method = "pearson",
-#'                    reportPDF=FALSE)
+#'                    SFTpower = powers[2], cor_method = "pearson")
 #' explist <- exp_ortho
 #' ref_net <- gcn_osa
 #' test_net <- gcn_zma
@@ -371,10 +353,6 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 #' @param nPerm Number of permutations. Default: 1000
 #' @param nThreads Number of threads to be used for parallel computing.
 #' Default: 1
-#' @param savePreservation Logical indicating whether to save
-#' module preservation into an R object or not. As the calculation of
-#' module preservation can take a long time, it is useful to save time in
-#' future analyses. Default: FALSE.
 #' @param plot_all_stats Logical indicating whether to save all density and
 #' connectivity statistics in a PDF file or not. Default: FALSE.
 #'
@@ -396,11 +374,9 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 #' # Previously calculated SFT powers
 #' powers <- c(13, 15)
 #' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
-#'                    SFTpower = powers[1], cor_method = "pearson",
-#'                    reportPDF=FALSE)
+#'                    SFTpower = powers[1], cor_method = "pearson")
 #' gcn_zma <- exp2gcn(exp_ortho$zma, net_type = "signed hybrid",
-#'                    SFTpower = powers[2], cor_method = "pearson",
-#'                    reportPDF=FALSE)
+#'                    SFTpower = powers[2], cor_method = "pearson")
 #' explist <- exp_ortho
 #' ref_net <- gcn_osa
 #' test_net <- gcn_zma
@@ -411,7 +387,6 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
                                 algorithm = "netrep",
                                 nPerm = 1000, nThreads = 1,
-                                savePreservation = FALSE,
                                 plot_all_stats = FALSE) {
 
     if(algorithm == "netrep") {
@@ -423,7 +398,6 @@ module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
     } else if(algorithm == "WGCNA") {
         pres <- modPres_WGCNA(explist = explist,
                               ref_net = ref_net,
-                              savePreservation = savePreservation,
                               plot_all_stats = plot_all_stats,
                               nPerm = nPerm)
     } else {

@@ -7,7 +7,7 @@
 plot_ppi(
   edgelist_int,
   color_by = "community",
-  clustering_method = "infomap",
+  clustering_method = igraph::cluster_infomap,
   show_labels = "tophubs",
   top_n_hubs = 5,
   interactive = FALSE,
@@ -25,10 +25,11 @@ a 2-column data frame containing proteins in the first column and a
 custom annotation in the second column. If "community", a clustering
 algorithm will be applied. Default: "community".}
 
-\item{clustering_method}{Community detection algorithm to be used.
-Available methods are "infomap", "edge_betweenness", "fast_greedy",
-"walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop".
-Default is "infomap".}
+\item{clustering_method}{igraph function to be used for community detection.
+Available functions are cluster_infomap, cluster_edge_betweenness,
+cluster_fast_greedy, cluster_walktrap, cluster_spinglass,
+cluster_leading_eigen, cluster_louvain, and cluster_label_prop.
+Default is cluster_infomap.}
 
 \item{show_labels}{Character indicating which nodes will be labeled.
 One of "all", "allhubs", "tophubs", or "none".}

@@ -4,17 +4,24 @@
 #' First column must be node 1 and second column must be node 2.
 #' Additional columns will be interpreted as edge attributes and will
 #' be modified by this function.
-#' @param method Community detection algorithm to be used. Available methods
-#' are "infomap", "edge_betweenness", "fast_greedy", "walktrap", "spinglass",
-#' "leading_eigen", "louvain", and "label_prop". Default is "infomap".
+#' @param method igraph function to be used for community detection.
+#' Available functions are cluster_infomap, cluster_edge_betweenness,
+#' cluster_fast_greedy, cluster_walktrap, cluster_spinglass,
+#' cluster_leading_eigen, cluster_louvain, and cluster_label_prop.
+#' Default is cluster_infomap.
 #' @param directed Logical indicating whether the network is directed (GRN only)
 #' or not (GCN and PPI networks). Default: TRUE.
-#'
 #' @return A data frame containing node names in the first column, and
 #' communities to which nodes belong in the second column.
-#'
 #' @seealso
-#'  \code{\link[igraph]{as_data_frame}},\code{\link[igraph]{simplify}},\code{\link[igraph]{cluster_infomap}},\code{\link[igraph]{cluster_edge_betweenness}},\code{\link[igraph]{cluster_fast_greedy}},\code{\link[igraph]{cluster_walktrap}},\code{\link[igraph]{cluster_spinglass}},\code{\link[igraph]{cluster_leading_eigen}},\code{\link[igraph]{cluster_louvain}},\code{\link[igraph]{cluster_label_prop}}
+#'  \code{\link[igraph]{cluster_infomap}},
+#'  \code{\link[igraph]{cluster_edge_betweenness}},
+#'  \code{\link[igraph]{cluster_fast_greedy}},
+#'  \code{\link[igraph]{cluster_walktrap}},
+#'  \code{\link[igraph]{cluster_spinglass}},
+#'  \code{\link[igraph]{cluster_leading_eigen}},
+#'  \code{\link[igraph]{cluster_louvain}},
+#'  \code{\link[igraph]{cluster_label_prop}}
 #' @rdname detect_communities
 #' @author Fabricio Almeida-Silva
 #' @export
@@ -22,73 +29,16 @@
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
-#' grn_edges <- grn_clr(filt.se, regulators = tfs)
+#' grn_edges <- grn_infer(filt.se, method = "clr", regulators = tfs)
 #' com <- detect_communities(grn_edges, directed=TRUE)
-detect_communities <- function(edgelist, method = "infomap", directed=TRUE) {
+detect_communities <- function(edgelist,
+                               method = igraph::cluster_infomap,
+                               directed = TRUE) {
     graph <- igraph::graph.data.frame(edgelist, directed = directed)
     graph <- igraph::simplify(graph)
-
-    if(method == "infomap") {
-        com <- igraph::cluster_infomap(graph, modularity = FALSE)
-    } else if(method == "edge_betweenness") {
-        com <- igraph::cluster_edge_betweenness(graph, modularity = FALSE)
-    } else if(method == "fast_greedy") {
-        com <- igraph::cluster_fast_greedy(graph, modularity = FALSE)
-    } else if(method == "walktrap") {
-        com <- igraph::cluster_walktrap(graph, modularity = FALSE)
-    } else if(method == "spinglass") {
-        com <- igraph::cluster_spinglass(graph, modularity = FALSE)
-    } else if(method == "leading_eigen") {
-        com <- igraph::cluster_leading_eigen(graph, modularity = FALSE)
-    } else if(method == "louvain") {
-        com <- igraph::cluster_louvain(graph, modularity = FALSE)
-    } else if(method == "label_prop") {
-        com <- igraph::cluster_label_prop(graph, modularity = FALSE)
-    } else {
-        stop("Please, specify a valid community detection algorithm.")
-    }
-
+    com <- method(graph, modularity = FALSE)
     df_com <- as.data.frame(list(names = com$names, mem = com$membership))
     return(df_com)
-}
-
-
-#' Create a ggnetwork data frame from an igraph object
-#'
-#' @param graph Object of class igraph.
-#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr",
-#' "graphopt", "kk" and "mds". Default is "kk".
-#' @param arrow.gap Numeric indicating the distance between nodes and arrows.
-#' Default is 0.2.
-#' @seealso
-#'  \code{\link[ggnetwork]{ggnetwork}}
-#'  \code{\link[igraph]{layout_with_dh}},\code{\link[igraph]{layout_with_drl}},\code{\link[igraph]{layout_with_gem}},\code{\link[igraph]{layout_with_lgl}},\code{\link[igraph]{layout_with_fr}},\code{\link[igraph]{layout_with_graphopt}},\code{\link[igraph]{layout_with_kk}},\code{\link[igraph]{layout_with_mds}}
-#' @rdname igraph2ggnetwork
-#' @noRd
-#' @author Fabricio Almeida-Silva
-#' @importFrom ggnetwork ggnetwork
-#' @importFrom igraph with_dh with_drl with_gem with_lgl with_fr with_graphopt with_kk with_mds
-igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
-    if(layout == "dh") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_dh(),  arrow.gap = arrow.gap)
-    } else if(layout == "drl") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_drl(), arrow.gap = arrow.gap)
-    } else if(layout == "gem") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_gem(), arrow.gap = arrow.gap)
-    } else if(layout == "lgl") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_lgl(), arrow.gap = arrow.gap)
-    } else if(layout == "fr") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_fr(), arrow.gap = arrow.gap)
-    } else if(layout == "graphopt") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_graphopt(), arrow.gap = arrow.gap)
-    } else if(layout == "kk") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_kk(), arrow.gap = arrow.gap)
-    } else if(layout == "mds") {
-        ggnet <- ggnetwork::ggnetwork(graph, layout = igraph::with_mds(), arrow.gap = arrow.gap)
-    } else {
-        stop("Please, specify a valid layout.")
-    }
-    return(ggnet)
 }
 
 
@@ -101,10 +51,11 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' a 2-column data frame containing proteins in the first column and a
 #' custom annotation in the second column. If "community", a clustering
 #' algorithm will be applied. Default: "community".
-#' @param clustering_method Community detection algorithm to be used.
-#' Available methods are "infomap", "edge_betweenness", "fast_greedy",
-#' "walktrap", "spinglass", "leading_eigen", "louvain", and "label_prop".
-#' Default is "infomap".
+#' @param clustering_method igraph function to be used for community detection.
+#' Available functions are cluster_infomap, cluster_edge_betweenness,
+#' cluster_fast_greedy, cluster_walktrap, cluster_spinglass,
+#' cluster_leading_eigen, cluster_louvain, and cluster_label_prop.
+#' Default is cluster_infomap.
 #' @param show_labels Character indicating which nodes will be labeled.
 #' One of "all", "allhubs", "tophubs", or "none".
 #' @param top_n_hubs Number of top hubs to be labeled. It is only valid
@@ -132,7 +83,7 @@ igraph2ggnetwork <- function(graph, layout = "kk", arrow.gap = 0.2) {
 #' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
 #' p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
 plot_ppi <- function(edgelist_int, color_by = "community",
-                     clustering_method = "infomap",
+                     clustering_method = igraph::cluster_infomap,
                      show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE,
                      add_color_legend=TRUE, dim_interactive = c(600,600)) {
@@ -216,7 +167,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
         # Create graph object
         graph <- igraph::simplify(igraph::graph_from_data_frame(d=edgelist_int,
                                                vertices=nod_at, directed=FALSE))
-        n <- igraph2ggnetwork(graph, arrow.gap=0)
+        n <- ggnetwork::ggnetwork(graph, arrow.gap = 0)
 
         # Plot graph
         p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +
@@ -243,8 +194,9 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' if \code{show_labels} equals "tophubs". Default is 5.
 #' @param interactive Logical indicating whether the network should be
 #' interactive or not. Default is FALSE.
-#' @param layout Network layout. One of "dh", "drl", "gem", "lgl", "fr",
-#' "graphopt", "kk" and "mds". Default is "kk".
+#' @param layout igraph function for the network layout. One of
+#' with_dh, with_drl, with_gem, with_lgl, with_fr, with_graphopt,
+#' with_kk and with_mds. Default is with_kk.
 #' @param arrow.gap Numeric indicating the distance between nodes and arrows.
 #' Default is 0.2.
 #' @param ranked Logical indicating whether to treat third column of
@@ -254,8 +206,11 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #'
 #' @return A ggplot object containing the network.
 #' @seealso
-#'  \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
-#'  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
+#'  \code{\link[networkD3]{igraph_to_networkD3}},
+#'  \code{\link[networkD3]{forceNetwork}}
+#'  \code{\link[ggnetwork]{geom_edges}}, \code{\link[ggnetwork]{geom_nodes}},
+#'  \code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},
+#'  \code{\link[ggnetwork]{geom_nodetext_repel}}
 #'  \code{\link[ggnewscale]{new_scale}}
 #' @rdname plot_grn
 #' @author Fabricio Almeida-Silva
@@ -269,10 +224,11 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
-#' grn_edges <- grn_clr(filt.se, regulators = tfs)
+#' grn_edges <- grn_infer(filt.se, method ="clr", regulators = tfs)
 #' p <- plot_grn(grn_edges, ranked=FALSE)
 plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
-                     interactive = FALSE, layout = "kk", arrow.gap = 0.01,
+                     interactive = FALSE,
+                     layout = igraph::with_kk, arrow.gap = 0.01,
                      ranked = TRUE, dim_interactive = c(600,600)) {
     requireNamespace("intergraph", quietly=TRUE)
 
@@ -338,7 +294,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
         graph <- igraph::graph_from_data_frame(d=edgelist_grn,
                                                vertices=nod_at, directed=TRUE)
         graph <- igraph::simplify(graph)
-        n <- igraph2ggnetwork(graph, layout = layout, arrow.gap = arrow.gap)
+        n <- ggnetwork::ggnetwork(graph, layout = layout(), arrow.gap = arrow.gap)
         n$Class <- factor(n$Class, levels=c("Target", "Regulator"))
 
         # Plot graph
@@ -391,8 +347,7 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' @import intergraph
 #' @examples
 #' data(filt.se)
-#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
-#'                reportPDF = FALSE)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' gcn_edges <- get_edge_list(gcn, module="brown", filter=TRUE,
 #'                            method="min_cor")
 #' hubs <- get_hubs_gcn(filt.se, gcn)
@@ -479,7 +434,7 @@ plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
 
         # Create graph object
         graph <- igraph::graph_from_data_frame(d=edgelist_gcn, vertices=nod_at, directed=FALSE)
-        n <- igraph2ggnetwork(graph, arrow.gap=0)
+        n <- ggnetwork::ggnetwork(graph, arrow.gap=0)
 
         # Plot graph
         p <- ggplot2::ggplot(n, ggplot2::aes_(x = ~x, y = ~y, xend = ~xend, yend = ~yend)) +

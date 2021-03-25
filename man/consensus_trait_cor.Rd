@@ -12,7 +12,6 @@ consensus_trait_cor(
   cex.lab.x = 0.6,
   cex.lab.y = 0.6,
   cex.text = 0.6,
-  save_sets = FALSE,
   transpose = FALSE
 )
 }
@@ -33,9 +32,6 @@ a palette ranging from blue to red.}
 \item{cex.lab.y}{Font size for y axis labels. Default: 0.6.}
 
 \item{cex.text}{Font size for numbers inside matrix. Default: 0.6.}
-
-\item{save_sets}{Logical indicating whether to save heatmaps of correlations
-between set-specific modules and traits as a PDF figure. Default: FALSE.}
 
 \item{transpose}{Logical indicating whether to transpose the heatmap of not.
 Default is FALSE.}

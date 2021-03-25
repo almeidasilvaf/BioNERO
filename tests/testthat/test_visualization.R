@@ -6,9 +6,8 @@ tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 #---Infer networks to be used----
 set.seed(123)
 ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
-grn_edges <- grn_clr(filt.se, regulators = tfs)
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
-                              reportPDF = FALSE)
+grn_edges <- grn_infer(filt.se, method = "clr", regulators = tfs)
+gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 gcn_edges <- get_edge_list(gcn, module="brown", filter=TRUE, method="min_cor")
 
 
@@ -35,8 +34,7 @@ test_that("plot_grn() plots a GRN", {
 
 
 test_that("plot_gcn() plots a GCN", {
-    gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson",
-                   reportPDF = FALSE)
+    gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
     gcn_edges <- get_edge_list(gcn, module="brown", filter=TRUE,
                                method="min_cor")
     hubs <- get_hubs_gcn(filt.se, gcn)
