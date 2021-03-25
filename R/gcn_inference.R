@@ -452,8 +452,6 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @param use_abs Logical indicating whether to filter by correlation using
 #' absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all
 #' correlations above 0.2 and below -0.2. Default is TRUE.
-#' @param savetofile Logical indicating whether to save the table of
-#' correlations and p-values to a tab-delimited file or not.
 #' @param palette RColorBrewer's color palette to use. Default is "RdYlBu",
 #' a palette ranging from blue to red.
 #' @param show_rownames Logical indicating whether to show row names or not.
@@ -480,7 +478,7 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' gs <- gene_significance(filt.se)
 gene_significance <- function(exp, metadata, genes=NULL,
                               alpha = 0.05, min_cor = 0.2,
-                              use_abs = TRUE, savetofile = FALSE,
+                              use_abs = TRUE,
                               palette="RdYlBu", show_rownames=FALSE,
                               continuous_trait=FALSE) {
     if(is(exp, "SummarizedExperiment")) {
@@ -512,15 +510,9 @@ gene_significance <- function(exp, metadata, genes=NULL,
     } else {
         corandp <- corandp[corandp$pvalue < alpha & corandp$cor > min_cor, ]
     }
-
-    if(savetofile) {
-        date <- Sys.Date()
-        write.table(corandp, file = paste0(date, "gene_significance.txt"),
-                    sep = "\t", row.names = FALSE, quote = FALSE)
-    }
-
+    cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
     p <- ComplexHeatmap::pheatmap(as.matrix(GS), border_color = NA,
-                             color=colorRampPalette(RColorBrewer::brewer.pal(10, palette))(100),
+                             color=cols,
                              show_rownames=show_rownames,
                              main="Gene-trait correlations")
     print(p)

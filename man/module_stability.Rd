@@ -21,13 +21,11 @@ A base plot with the module stability results.
 Perform module stability analysis
 }
 \examples{
-\donttest{
 data(filt.se)
 # The SFT fit was previously calculated and the optimal power was 16
 gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 # For simplicity, only 2 runs
 module_stability(exp = filt.se, net = gcn, nRuns = 2)
-}
 }
 \seealso{
 \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
