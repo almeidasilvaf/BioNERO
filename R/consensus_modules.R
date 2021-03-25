@@ -289,6 +289,7 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 #'
 #' @return A base plot with the gene dendrogram and modules.
 #' @importFrom WGCNA plotDendroAndColors
+#' @importFrom graphics par layout
 #' @export
 #' @rdname plot_dendro_and_cons_colors
 #' @examples
@@ -303,7 +304,7 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 #'                               cor_method = "pearson")
 #' plot_dendro_and_cons_colors(cons_mod)
 plot_dendro_and_cons_colors <- function(consensus) {
-    on.exit(layout(1))
+    on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
     WGCNA::plotDendroAndColors(consensus$dendro_plot_objects$tree,
@@ -346,7 +347,7 @@ plot_dendro_and_cons_colors <- function(consensus) {
 #' @importFrom WGCNA corPvalueFisher labels2colors labeledHeatmap
 #' @importFrom reshape2 melt
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom graphics par
+#' @importFrom graphics par layout
 #' @examples
 #' set.seed(12)
 #' data(zma.se)
@@ -441,7 +442,7 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
         xSymbols <- NULL
         xColorLabels <- FALSE
     }
-    on.exit(layout(1))
+    on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
     hm <- WGCNA::labeledHeatmap(Matrix = cons_cor,

@@ -225,7 +225,7 @@ exp2gcn <- function(exp, net_type="signed",
 #'
 #' @return A base plot with the eigengene network
 #' @importFrom WGCNA plotEigengeneNetworks
-#' @importFrom graphics par
+#' @importFrom graphics par layout
 #' @export
 #' @rdname plot_eigengene_network
 #' @examples
@@ -233,7 +233,7 @@ exp2gcn <- function(exp, net_type="signed",
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' plot_eigengene_network(gcn)
 plot_eigengene_network <- function(gcn) {
-    on.exit(layout(1))
+    on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
     p <- WGCNA::plotEigengeneNetworks(gcn$MEs, "",
@@ -248,6 +248,7 @@ plot_eigengene_network <- function(gcn) {
 #'
 #' @return A base plot with the gene dendrogram and modules.
 #' @importFrom WGCNA plotDendroAndColors
+#' @importFrom graphics layout par
 #' @export
 #' @rdname plot_dendro_and_colors
 #' @examples
@@ -255,7 +256,7 @@ plot_eigengene_network <- function(gcn) {
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' plot_dendro_and_colors(gcn)
 plot_dendro_and_colors <- function(gcn) {
-    on.exit(layout(1))
+    on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
     p <- WGCNA::plotDendroAndColors(gcn$dendro_plot_objects$tree,
@@ -282,14 +283,13 @@ plot_dendro_and_colors <- function(gcn) {
 #' @rdname module_stability
 #' @export
 #' @importFrom WGCNA sampledBlockwiseModules matchLabels plotDendroAndColors
+#' @importFrom graphics par layout
 #' @examples
-#' \donttest{
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' # For simplicity, only 2 runs
 #' module_stability(exp = filt.se, net = gcn, nRuns = 2)
-#' }
 module_stability <- function(exp, net, nRuns = 20) {
     norm.exp <- handleSE(exp)
     expr <- as.matrix(t(norm.exp))
@@ -319,7 +319,7 @@ module_stability <- function(exp, net, nRuns = 20) {
     }))
     labels <- cbind(labels[,1], labs)
 
-    on.exit(layout(1))
+    on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
     p <- WGCNA::plotDendroAndColors(mods0[[1]]$mods$dendrograms[[1]],
