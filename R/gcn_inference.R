@@ -46,9 +46,9 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
     }
 
     # Create data frame with indices to plot
-    sft_df <- data.frame(power = sft$fitIndices[,1],
-                         fit = -sign(sft$fitIndices[,3]) * sft$fitIndices[,2],
-                         meank = sft$fitIndices[,5])
+    sft_df <- data.frame(power = sft$fitIndices$Power,
+                         fit = -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq,
+                         meank = sft$fitIndices$mean.k.)
     # Plot 1
     p1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
                             xlab="Soft threshold (power)",
@@ -128,8 +128,8 @@ exp2gcn <- function(exp, net_type="signed",
     if(is.null(SFTpower)) { stop("Please, specify the SFT power.") }
 
     if(verbose) { message("Calculating adjacency matrix...") }
-    cor_matrix <- calculate_cor_adj(cor_method, norm.exp, SFTpower, net_type)[[1]]
-    adj_matrix <- calculate_cor_adj(cor_method, norm.exp, SFTpower, net_type)[[2]]
+    cor_matrix <- calculate_cor_adj(cor_method, norm.exp, SFTpower, net_type)$cor
+    adj_matrix <- calculate_cor_adj(cor_method, norm.exp, SFTpower, net_type)$adj
 
     #Convert to matrix
     gene_ids <- rownames(adj_matrix)

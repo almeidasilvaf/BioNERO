@@ -202,8 +202,8 @@ calculate_cor_adj <- function(cor_method, norm.exp, SFTpower,
     } else {
         stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
     }
-    results <- list(cor_matrix = cor_matrix,
-                    adj_matrix = adj_matrix)
+    results <- list(cor = cor_matrix,
+                    adj = adj_matrix)
     return(results)
 }
 

@@ -35,17 +35,9 @@ biocViews:
     Software,
     GeneExpression, 
     GeneRegulation,
-    GeneSetEnrichment,
-    NetworkEnrichment,
-    NetworkInference,
     SystemsBiology,
-    Transcriptomics,
-    ComparativeGenomics,
     GraphAndNetwork,
-    Clustering,
-    Sequencing,
     Preprocessing,
-    Normalization,
     Network
 Imports: 
     WGCNA,

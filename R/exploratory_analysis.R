@@ -62,14 +62,16 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
     }
 
     # Rename and reorder columns based on annotation and handle colors
-    col_metadata <- sample_cols_heatmap(col_metadata, fexp)[[1]]
-    fexp <- sample_cols_heatmap(col_metadata, fexp)[[2]]
-    annotation_color <- sample_cols_heatmap(col_metadata, fexp)[[3]]
+    col_metadata <- sample_cols_heatmap(col_metadata, fexp)$col_metadata
+    fexp <- sample_cols_heatmap(col_metadata, fexp)$fexp
+    annotation_color <- sample_cols_heatmap(col_metadata, fexp)$annotation_colors
 
     # Rename and reorder rows based on annotation and handle colors
-    row_metadata <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[1]]
-    fexp <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[2]]
-    annotation_color <- gene_cols_heatmap(row_metadata, fexp, annotation_color)[[3]]
+    row_metadata <- gene_cols_heatmap(row_metadata, fexp,
+                                      annotation_color)$row_metadata
+    fexp <- gene_cols_heatmap(row_metadata, fexp, annotation_color)$fexp
+    annotation_color <- gene_cols_heatmap(row_metadata, fexp,
+                                          annotation_color)$annotation_color
 
     if(log_trans) {
         fexp <- log2(fexp+1)
@@ -125,7 +127,6 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 #' @param PCs Principal components to be plotted on the x-axis and y-axis,
 #' respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".
 #' @param size Numeric indicating the point size. Default is 2.
-#'
 #' @return A ggplot object with the PCA plot.
 #' @author Fabricio Almeida-Silva
 #' @seealso
@@ -142,7 +143,7 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
     if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
-
+    if(ncol(metadata) > 1) { stop("Sample metadata must contain one column.") }
     if(log_trans) {
         pca <- prcomp(t(log2(fexp+1)))
     } else {
@@ -263,7 +264,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
     title <- "Expression profile"
     if(plot_module) {
         genes_modules <- net$genes_and_modules
-        genes <- genes_modules[genes_modules[,2] == modulename, 1]
+        genes <- genes_modules[genes_modules$Modules == modulename, "Genes"]
         title <- paste("Expression profile for module", modulename)
     }
     fexp <- as.data.frame(exp[rownames(exp) %in% genes, ])
@@ -275,9 +276,9 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
     metadata <- metadata[colnames(fexp)[-ncol(fexp)], , drop=FALSE]
     metadata$Sample <- rownames(metadata)
     colnames(metadata) <- c("Sample group", "Sample")
-    metadata <- metadata[order(metadata[,1]), ]
-    metadata[,2] <- factor(metadata[,2], levels = metadata[,2])
-    melt_exp[, "Samples"] <- factor(melt_exp[, "Samples"], levels = metadata[,2])
+    metadata <- metadata[order(metadata$`Sample group`), ]
+    metadata$Sample <- factor(metadata$Sample, levels = metadata$Sample)
+    melt_exp[, "Samples"] <- factor(melt_exp[, "Samples"], levels = metadata$Sample)
 
     # Background tiles
     background <- mean(melt_exp[, "Expression"])
@@ -316,7 +317,7 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 #' plot_ngenes_per_module(gcn)
 plot_ngenes_per_module <- function(net = NULL) {
     genes_and_modules <- net$genes_and_modules
-    frequency_df <- as.data.frame(table(genes_and_modules[,2]),
+    frequency_df <- as.data.frame(table(genes_and_modules$Modules),
                                   stringsAsFactors=FALSE)
     names(frequency_df) <- c("Module", "Frequency")
     frequency_df <- frequency_df[order(frequency_df$Frequency, decreasing = TRUE), ]
