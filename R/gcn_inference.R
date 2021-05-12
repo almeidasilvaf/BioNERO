@@ -646,11 +646,8 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
 #' Default is "BH".
 #' @param p P-value threshold. P-values below this threshold will be
 #' considered significant. Default is 0.05.
-#' @details
-#' The enrichment analysis is parallelized with BiocParallel, resulting in
-#' a dramatic increase in speed. However, if you try to run this function in
-#' a laptop with low memory, you might have problems with memory usage.
-#' If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
+#' @param bp_param BiocParallel back-end to be used.
+#' Default: BiocParallel::SerialParam()
 #' @return Data frame containing significant terms, p-values and associated genes.
 #' @author Fabricio Almeida-Silva
 #' @rdname enrichment_analysis
@@ -659,16 +656,17 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
 #' @examples
 #' \donttest{
 #' data(filt.se)
-#' data(soybean_interpro)
+#' data(zma.interpro)
 #' genes <- rownames(filt.se)[1:50]
 #' background_genes <- rownames(filt.se)
-#' annotation <- soybean_interpro
+#' annotation <- zma.interpro
 #' # Using p = 1 to show all results
 #' enrich <- enrichment_analysis(genes, background_genes, annotation, p = 1)
 #' }
 enrichment_analysis <- function(genes, background_genes, annotation,
                                 column = NULL,
-                                correction = "BH", p = 0.05) {
+                                correction = "BH", p = 0.05,
+                                bp_param = BiocParallel::SerialParam()) {
 
     ## Get a dataframe of expressed genes and their annotations
     gene_column <- colnames(annotation)[1]
@@ -725,7 +723,7 @@ enrichment_analysis <- function(genes, background_genes, annotation,
             sig_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ],
                                         stringsAsFactors=FALSE)
             return(sig_enrich)
-        })
+        }, BPPARAM = bp_param)
 
         # Remove empty data frames from list
         signif_enrich <- signif_enrich[vapply(signif_enrich, nrow, numeric(1)) > 0]
@@ -785,11 +783,6 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 #' significant. Default is 0.05.
 #' @param bp_param BiocParallel back-end to be used.
 #' Default: BiocParallel::SerialParam()
-#' @details
-#' The enrichment analysis is parallelized with BiocParallel, resulting in
-#' a dramatic increase in speed. However, if you try to run this function in
-#' a laptop with low memory, you might have problems with memory usage.
-#' If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
 #' @return A data frame containing enriched terms, p-values, gene IDs
 #' and module names.
 #' @author Fabricio Almeida-Silva
@@ -799,10 +792,10 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 #' @examples
 #' \donttest{
 #' data(filt.se)
-#' data(soybean_interpro)
+#' data(zma.interpro)
 #' background <- rownames(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
-#' mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
+#' mod_enrich <- module_enrichment(gcn, background, zma.interpro, p=1)
 #' }
 module_enrichment <- function(net=NULL, background_genes, annotation, column = NULL,
                               correction = "BH", p = 0.05,

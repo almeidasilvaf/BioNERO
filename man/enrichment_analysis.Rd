@@ -10,7 +10,8 @@ enrichment_analysis(
   annotation,
   column = NULL,
   correction = "BH",
-  p = 0.05
+  p = 0.05,
+  bp_param = BiocParallel::SerialParam()
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ Default is "BH".}
 
 \item{p}{P-value threshold. P-values below this threshold will be
 considered significant. Default is 0.05.}
+
+\item{bp_param}{BiocParallel back-end to be used.
+Default: BiocParallel::SerialParam()}
 }
 \value{
 Data frame containing significant terms, p-values and associated genes.
@@ -41,19 +45,13 @@ Data frame containing significant terms, p-values and associated genes.
 \description{
 Perform enrichment analysis for a set of genes
 }
-\details{
-The enrichment analysis is parallelized with BiocParallel, resulting in
-a dramatic increase in speed. However, if you try to run this function in
-a laptop with low memory, you might have problems with memory usage.
-If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
-}
 \examples{
 \donttest{
 data(filt.se)
-data(soybean_interpro)
+data(zma.interpro)
 genes <- rownames(filt.se)[1:50]
 background_genes <- rownames(filt.se)
-annotation <- soybean_interpro
+annotation <- zma.interpro
 # Using p = 1 to show all results
 enrich <- enrichment_analysis(genes, background_genes, annotation, p = 1)
 }

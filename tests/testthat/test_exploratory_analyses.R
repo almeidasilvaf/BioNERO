@@ -20,7 +20,7 @@ test_that("plot_heatmap() correctly handles row and col annotation", {
     p <- plot_heatmap(exp, col_metadata = metadata2, row_metadata = row_annot,
                  cluster_cols=FALSE, cluster_rows=FALSE, type="expr",
                  log_trans=TRUE)
-    expect_true(class(p) == "Heatmap")
+    expect_true(class(p) == "HeatmapList")
 })
 
 

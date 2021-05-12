@@ -46,19 +46,13 @@ and module names.
 \description{
 Perform enrichment analysis for coexpression network modules
 }
-\details{
-The enrichment analysis is parallelized with BiocParallel, resulting in
-a dramatic increase in speed. However, if you try to run this function in
-a laptop with low memory, you might have problems with memory usage.
-If that happens, run the following: \code{BiocParallel::register(BiocParallel::SerialParam())}.
-}
 \examples{
 \donttest{
 data(filt.se)
-data(soybean_interpro)
+data(zma.interpro)
 background <- rownames(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
-mod_enrich <- module_enrichment(gcn, background, soybean_interpro, p=1)
+mod_enrich <- module_enrichment(gcn, background, zma.interpro, p=1)
 }
 }
 \author{

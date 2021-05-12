@@ -364,7 +364,7 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
     }
     # Apply VST for count data
     if(vstransform) {
-        fexp <- handleSE(exp)
+        fexp <- as.matrix(handleSE(exp))
         fexp <- as.data.frame(DESeq2::varianceStabilizingTransformation(fexp))
         if(is(exp, "SummarizedExperiment")) {
             fexp <- exp2SE(fexp, exp)
