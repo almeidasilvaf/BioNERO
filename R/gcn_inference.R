@@ -515,7 +515,6 @@ gene_significance <- function(exp, metadata, genes=NULL,
                              color=cols,
                              show_rownames=show_rownames,
                              main="Gene-trait correlations")
-    print(p)
 
     resultlist <- list(filtered_corandp = corandp, raw_GS = GS)
     return(resultlist)
