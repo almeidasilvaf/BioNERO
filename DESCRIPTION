@@ -1,7 +1,7 @@
 Package: BioNERO
 Type: Package
 Title: Biological Network Reconstruction Omnibus
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(person("Fabricio", "Almeida-Silva", 
                     email="fabricio_almeidasilva@hotmail.com", 
                     role=c("cre", "aut"), 
@@ -70,6 +70,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    BiocStyle
+    BiocStyle,
+    covr
 VignetteBuilder: knitr
 Config/testthat/edition: 3

@@ -7,6 +7,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R-CMD-check-bioc](https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/almeidasilvaf/BioNERO/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg)](https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master)
 <!-- badges: end -->
 
 ## Installation
