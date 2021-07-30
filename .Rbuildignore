@@ -6,3 +6,4 @@
 ^pkgdown$
 ^vignettes/vignette_01_GCN_inference_cache$
 ^\.github$
+^codecov\.yml$
