@@ -186,10 +186,10 @@ and activate/deactivate clustering for rows and/or columns.
 
 ```{r plot_heatmap, fig.width=6, fig.height=4, message=FALSE}
 # Heatmap of sample correlations
-plot_heatmap(final_exp, type = "samplecor")
+p <- plot_heatmap(final_exp, type = "samplecor")
 
 # Heatmap of gene expression
-plot_heatmap(final_exp, type="expr")
+p <- plot_heatmap(final_exp, type="expr")
 ```
 
 **Principal component analysis (PCA):** the function `plot_PCA()` performs a 
