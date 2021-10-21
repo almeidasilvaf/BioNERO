@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
 
       
 
-      </header><script src="vignette_01_GCN_inference_files/header-attrs-2.10/header-attrs.js"></script><script src="vignette_01_GCN_inference_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="vignette_01_GCN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_01_GCN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
+      </header><script src="vignette_01_GCN_inference_files/header-attrs-2.11/header-attrs.js"></script><script src="vignette_01_GCN_inference_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="vignette_01_GCN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_01_GCN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Gene coexpression network inference</h1>
@@ -476,9 +476,9 @@
 <p>This vignette was created under the following conditions:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">## R version 4.1.0 (2021-05-18)</span>
+<span class="co">## R version 4.1.1 (2021-08-10)</span>
 <span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.2 LTS</span>
+<span class="co">## Running under: Ubuntu 20.04.3 LTS</span>
 <span class="co">## </span>
 <span class="co">## Matrix products: default</span>
 <span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
@@ -495,31 +495,31 @@
 <span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">## </span>
 <span class="co">## other attached packages:</span>
-<span class="co">## [1] BioNERO_1.1.4    BiocStyle_2.20.2</span>
+<span class="co">## [1] BioNERO_1.1.7    BiocStyle_2.20.2</span>
 <span class="co">## </span>
 <span class="co">## loaded via a namespace (and not attached):</span>
 <span class="co">##   [1] readxl_1.3.1                backports_1.2.1            </span>
-<span class="co">##   [3] circlize_0.4.13             Hmisc_4.5-0                </span>
-<span class="co">##   [5] systemfonts_1.0.2           plyr_1.8.6                 </span>
-<span class="co">##   [7] igraph_1.2.6                splines_4.1.0              </span>
+<span class="co">##   [3] circlize_0.4.13             Hmisc_4.6-0                </span>
+<span class="co">##   [5] systemfonts_1.0.3           plyr_1.8.6                 </span>
+<span class="co">##   [7] igraph_1.2.7                splines_4.1.1              </span>
 <span class="co">##   [9] GENIE3_1.14.0               BiocParallel_1.26.2        </span>
-<span class="co">##  [11] GenomeInfoDb_1.28.1         ggnetwork_0.5.10           </span>
+<span class="co">##  [11] GenomeInfoDb_1.28.4         ggnetwork_0.5.10           </span>
 <span class="co">##  [13] ggplot2_3.3.5               sva_3.40.0                 </span>
-<span class="co">##  [15] digest_0.6.27               foreach_1.5.1              </span>
-<span class="co">##  [17] htmltools_0.5.1.1           GO.db_3.13.0               </span>
+<span class="co">##  [15] digest_0.6.28               foreach_1.5.1              </span>
+<span class="co">##  [17] htmltools_0.5.2             GO.db_3.13.0               </span>
 <span class="co">##  [19] fansi_0.5.0                 magrittr_2.0.1             </span>
 <span class="co">##  [21] checkmate_2.0.0             memoise_2.0.0              </span>
 <span class="co">##  [23] cluster_2.1.2               doParallel_1.0.16          </span>
 <span class="co">##  [25] limma_3.48.3                openxlsx_4.2.4             </span>
 <span class="co">##  [27] ComplexHeatmap_2.8.0        fastcluster_1.2.3          </span>
 <span class="co">##  [29] Biostrings_2.60.2           annotate_1.70.0            </span>
-<span class="co">##  [31] matrixStats_0.60.1          pkgdown_1.6.1              </span>
+<span class="co">##  [31] matrixStats_0.61.0          pkgdown_1.6.1              </span>
 <span class="co">##  [33] jpeg_0.1-9                  colorspace_2.0-2           </span>
 <span class="co">##  [35] ggrepel_0.9.1               blob_1.2.2                 </span>
-<span class="co">##  [37] haven_2.4.3                 textshaping_0.3.5          </span>
-<span class="co">##  [39] xfun_0.25                   dplyr_1.0.7                </span>
+<span class="co">##  [37] haven_2.4.3                 textshaping_0.3.6          </span>
+<span class="co">##  [39] xfun_0.27                   dplyr_1.0.7                </span>
 <span class="co">##  [41] jsonlite_1.7.2              crayon_1.4.1               </span>
-<span class="co">##  [43] RCurl_1.98-1.4              genefilter_1.74.0          </span>
+<span class="co">##  [43] RCurl_1.98-1.5              genefilter_1.74.1          </span>
 <span class="co">##  [45] impute_1.66.0               survival_3.2-13            </span>
 <span class="co">##  [47] iterators_1.0.13            glue_1.4.2                 </span>
 <span class="co">##  [49] gtable_0.3.0                zlibbioc_1.38.0            </span>
@@ -527,59 +527,60 @@
 <span class="co">##  [53] DelayedArray_0.18.0         car_3.0-11                 </span>
 <span class="co">##  [55] shape_1.4.6                 BiocGenerics_0.38.0        </span>
 <span class="co">##  [57] abind_1.4-5                 scales_1.1.1               </span>
-<span class="co">##  [59] edgeR_3.34.0                DBI_1.1.1                  </span>
+<span class="co">##  [59] edgeR_3.34.1                DBI_1.1.1                  </span>
 <span class="co">##  [61] rstatix_0.7.0               Rcpp_1.0.7                 </span>
-<span class="co">##  [63] xtable_1.8-4                htmlTable_2.2.1            </span>
-<span class="co">##  [65] clue_0.3-59                 foreign_0.8-81             </span>
+<span class="co">##  [63] xtable_1.8-4                htmlTable_2.3.0            </span>
+<span class="co">##  [65] clue_0.3-60                 foreign_0.8-81             </span>
 <span class="co">##  [67] bit_4.0.4                   preprocessCore_1.54.0      </span>
-<span class="co">##  [69] Formula_1.2-4               stats4_4.1.0               </span>
-<span class="co">##  [71] htmlwidgets_1.5.3           httr_1.4.2                 </span>
+<span class="co">##  [69] Formula_1.2-4               stats4_4.1.1               </span>
+<span class="co">##  [71] htmlwidgets_1.5.4           httr_1.4.2                 </span>
 <span class="co">##  [73] RColorBrewer_1.1-2          ellipsis_0.3.2             </span>
 <span class="co">##  [75] farver_2.1.0                pkgconfig_2.0.3            </span>
-<span class="co">##  [77] XML_3.99-0.7                nnet_7.3-16                </span>
+<span class="co">##  [77] XML_3.99-0.8                nnet_7.3-16                </span>
 <span class="co">##  [79] locfit_1.5-9.4              utf8_1.2.2                 </span>
 <span class="co">##  [81] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
 <span class="co">##  [83] reshape2_1.4.4              tidyselect_1.1.1           </span>
-<span class="co">##  [85] rlang_0.4.11                AnnotationDbi_1.54.1       </span>
+<span class="co">##  [85] rlang_0.4.12                AnnotationDbi_1.54.1       </span>
 <span class="co">##  [87] cellranger_1.1.0            munsell_0.5.0              </span>
-<span class="co">##  [89] tools_4.1.0                 cachem_1.0.6               </span>
+<span class="co">##  [89] tools_4.1.1                 cachem_1.0.6               </span>
 <span class="co">##  [91] generics_0.1.0              RSQLite_2.2.8              </span>
 <span class="co">##  [93] statnet.common_4.5.0        broom_0.7.9                </span>
 <span class="co">##  [95] evaluate_0.14               stringr_1.4.0              </span>
 <span class="co">##  [97] fastmap_1.1.0               yaml_2.2.1                 </span>
-<span class="co">##  [99] ragg_1.1.3                  RhpcBLASctl_0.20-137       </span>
-<span class="co">## [101] knitr_1.33                  bit64_4.0.5                </span>
+<span class="co">##  [99] ragg_1.1.3                  RhpcBLASctl_0.21-247       </span>
+<span class="co">## [101] knitr_1.36                  bit64_4.0.5                </span>
 <span class="co">## [103] fs_1.5.0                    zip_2.2.0                  </span>
 <span class="co">## [105] purrr_0.3.4                 KEGGREST_1.32.0            </span>
-<span class="co">## [107] nlme_3.1-152                compiler_4.1.0             </span>
+<span class="co">## [107] nlme_3.1-153                compiler_4.1.1             </span>
 <span class="co">## [109] rstudioapi_0.13             curl_4.3.2                 </span>
-<span class="co">## [111] png_0.1-7                   ggsignif_0.6.2             </span>
-<span class="co">## [113] minet_3.50.0                tibble_3.1.3               </span>
+<span class="co">## [111] png_0.1-7                   ggsignif_0.6.3             </span>
+<span class="co">## [113] minet_3.50.0                tibble_3.1.5               </span>
 <span class="co">## [115] statmod_1.4.36              geneplotter_1.70.0         </span>
-<span class="co">## [117] stringi_1.7.3               highr_0.9                  </span>
-<span class="co">## [119] desc_1.3.0                  forcats_0.5.1              </span>
-<span class="co">## [121] lattice_0.20-44             Matrix_1.3-4               </span>
+<span class="co">## [117] stringi_1.7.5               highr_0.9                  </span>
+<span class="co">## [119] desc_1.4.0                  forcats_0.5.1              </span>
+<span class="co">## [121] lattice_0.20-45             Matrix_1.3-4               </span>
 <span class="co">## [123] vctrs_0.3.8                 networkD3_0.4              </span>
-<span class="co">## [125] pillar_1.6.2                lifecycle_1.0.0            </span>
-<span class="co">## [127] BiocManager_1.30.16         GlobalOptions_0.1.2        </span>
-<span class="co">## [129] cowplot_1.1.1               data.table_1.14.0          </span>
-<span class="co">## [131] bitops_1.0-7                GenomicRanges_1.44.0       </span>
-<span class="co">## [133] R6_2.5.1                    latticeExtra_0.6-29        </span>
-<span class="co">## [135] bookdown_0.23               network_1.17.1             </span>
-<span class="co">## [137] rio_0.5.27                  gridExtra_2.3              </span>
-<span class="co">## [139] IRanges_2.26.0              codetools_0.2-18           </span>
-<span class="co">## [141] SummarizedExperiment_1.22.0 DESeq2_1.32.0              </span>
-<span class="co">## [143] rprojroot_2.0.2             rjson_0.2.20               </span>
-<span class="co">## [145] S4Vectors_0.30.0            GenomeInfoDbData_1.2.6     </span>
-<span class="co">## [147] intergraph_2.0-2            mgcv_1.8-36                </span>
-<span class="co">## [149] hms_1.1.0                   parallel_4.1.0             </span>
-<span class="co">## [151] grid_4.1.0                  rpart_4.1-15               </span>
-<span class="co">## [153] tidyr_1.1.3                 NetRep_1.2.4               </span>
-<span class="co">## [155] coda_0.19-4                 rmarkdown_2.10             </span>
-<span class="co">## [157] carData_3.0-4               MatrixGenerics_1.4.2       </span>
-<span class="co">## [159] Cairo_1.5-12.2              ggpubr_0.4.0               </span>
-<span class="co">## [161] ggnewscale_0.4.5            Biobase_2.52.0             </span>
-<span class="co">## [163] WGCNA_1.70-3                base64enc_0.1-3</span></code></pre></div>
+<span class="co">## [125] pillar_1.6.4                lifecycle_1.0.1            </span>
+<span class="co">## [127] BiocManager_1.30.16         jquerylib_0.1.4            </span>
+<span class="co">## [129] GlobalOptions_0.1.2         cowplot_1.1.1              </span>
+<span class="co">## [131] data.table_1.14.2           bitops_1.0-7               </span>
+<span class="co">## [133] GenomicRanges_1.44.0        R6_2.5.1                   </span>
+<span class="co">## [135] latticeExtra_0.6-29         bookdown_0.24              </span>
+<span class="co">## [137] network_1.17.1              rio_0.5.27                 </span>
+<span class="co">## [139] gridExtra_2.3               IRanges_2.26.0             </span>
+<span class="co">## [141] codetools_0.2-18            SummarizedExperiment_1.22.0</span>
+<span class="co">## [143] DESeq2_1.32.0               rprojroot_2.0.2            </span>
+<span class="co">## [145] rjson_0.2.20                S4Vectors_0.30.2           </span>
+<span class="co">## [147] GenomeInfoDbData_1.2.6      intergraph_2.0-2           </span>
+<span class="co">## [149] mgcv_1.8-38                 hms_1.1.1                  </span>
+<span class="co">## [151] parallel_4.1.1              grid_4.1.1                 </span>
+<span class="co">## [153] rpart_4.1-15                tidyr_1.1.4                </span>
+<span class="co">## [155] NetRep_1.2.4                coda_0.19-4                </span>
+<span class="co">## [157] rmarkdown_2.11              carData_3.0-4              </span>
+<span class="co">## [159] MatrixGenerics_1.4.3        Cairo_1.5-12.2             </span>
+<span class="co">## [161] ggpubr_0.4.0                ggnewscale_0.4.5           </span>
+<span class="co">## [163] Biobase_2.52.0              WGCNA_1.70-3               </span>
+<span class="co">## [165] base64enc_0.1-3</span></code></pre></div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
