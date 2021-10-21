@@ -27,5 +27,6 @@ rownames(exp) <- paste0("Gene", 1:nrow(exp))
 colnames(exp) <- paste0("Sample", 1:ncol(exp))
 cormat <- cor(t(exp))
 edges <- cormat_to_edgelist(cormat)
+edges <- edges[abs(edges$Weight) > 0.10, ]
 check_SFT(edges)
 }
