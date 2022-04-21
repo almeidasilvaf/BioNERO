@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,23 +40,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -77,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/">
+  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -92,15 +88,19 @@
 
       
 
-      </header><script src="vignette_01_GCN_inference_files/header-attrs-2.11/header-attrs.js"></script><script src="vignette_01_GCN_inference_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="vignette_01_GCN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_01_GCN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
+      </header><script src="vignette_01_GCN_inference_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="vignette_01_GCN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_01_GCN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Gene coexpression network inference</h1>
-                        <h4 class="author">Fabricio Almeida-Silva</h4>
+                        <h4 data-toc-skip class="author">Fabricio
+Almeida-Silva</h4>
             <address class="author_afil">
-      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil<br><h4 class="author">Thiago Motta Venancio</h4>
+      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
+Brazil<br><h4 data-toc-skip class="author">Thiago
+Motta Venancio</h4>
             <address class="author_afil">
-      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/master/vignettes/vignette_01_GCN_inference.Rmd"><code>vignettes/vignette_01_GCN_inference.Rmd</code></a></small>
+      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
+Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/HEAD/vignettes/vignette_01_GCN_inference.Rmd" class="external-link"><code>vignettes/vignette_01_GCN_inference.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_01_GCN_inference.Rmd</code></div>
 
     </address>
@@ -109,32 +109,53 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>To date, several packages have been developed to infer gene coexpression networks from expression data, such as WGCNA <span class="citation">(Langfelder and Horvath 2008)</span>, CEMiTool <span class="citation">(Russo et al. 2018)</span> and petal <span class="citation">(Petereit et al. 2016)</span>. However, network inference and analysis is a non-trivial task that requires solid statistical background, especially for data preprocessing and proper interpretation of results. Because of that, inexperienced researchers often struggle to choose the most suitable algorithms for their projects. Besides, different packages are required for each step of a standard network analysis, and their distinct syntaxes can hinder interoperability between packages, particularly for non-advanced R users. Here, we have developed an all-in-one R package that uses state-of-the-art algorithms to facilitate the workflow of biological network analysis, from data acquisition to analysis and interpretation. This will likely accelerate network analysis pipelines and advance systems biology research.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>To date, several packages have been developed to infer gene
+coexpression networks from expression data, such as WGCNA <span class="citation">(Langfelder and Horvath 2008)</span>, CEMiTool <span class="citation">(Russo et al. 2018)</span> and petal <span class="citation">(Petereit et al. 2016)</span>. However, network
+inference and analysis is a non-trivial task that requires solid
+statistical background, especially for data preprocessing and proper
+interpretation of results. Because of that, inexperienced researchers
+often struggle to choose the most suitable algorithms for their
+projects. Besides, different packages are required for each step of a
+standard network analysis, and their distinct syntaxes can hinder
+interoperability between packages, particularly for non-advanced R
+users. Here, we have developed an all-in-one R package that uses
+state-of-the-art algorithms to facilitate the workflow of biological
+network analysis, from data acquisition to analysis and interpretation.
+This will likely accelerate network analysis pipelines and advance
+systems biology research.</p>
 </div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
 
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load package after installation</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO">BioNERO</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span>
 <span class="co">## </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
 </div>
-<div id="data-loading-and-preprocessing" class="section level1">
-<h1 class="hasAnchor">
-<a href="#data-loading-and-preprocessing" class="anchor"></a>Data loading and preprocessing</h1>
-<p>For this tutorial, we will use maize (<em>Zea mays</em>) gene expression data normalized in TPM. The data were obtained from <span class="citation">Shin et al. (2020)</span> and were filtered for package size issues. For more information on the data set, see <code><a href="../reference/zma.se.html">?zma.se</a></code>. The data set is stored as a SummarizedExperiment object.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
-<p>The input expression data in <code>BioNERO</code> can be both a SummarizedExperiment object or a gene expression matrix or data frame with genes in rows and samples in columns. However, we strongly recommend using SummarizedExperiment objects for easier interoperability with other Bioconductor packages.</p>
+<div class="section level2">
+<h2 id="data-loading-and-preprocessing">Data loading and preprocessing<a class="anchor" aria-label="anchor" href="#data-loading-and-preprocessing"></a>
+</h2>
+<p>For this tutorial, we will use maize (<em>Zea mays</em>) gene
+expression data normalized in TPM. The data were obtained from <span class="citation">Shin et al. (2020)</span> and were filtered for package
+size issues. For more information on the data set, see
+<code><a href="../reference/zma.se.html">?zma.se</a></code>. The data set is stored as a SummarizedExperiment
+object.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>The input expression data in <code>BioNERO</code> can be both a
+SummarizedExperiment object or a gene expression matrix or data frame
+with genes in rows and samples in columns. However, we strongly
+recommend using SummarizedExperiment objects for easier interoperability
+with other Bioconductor packages.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
 
 <span class="co"># Take a quick look at the data</span>
 <span class="va">zma.se</span>
@@ -146,7 +167,7 @@
 <span class="co">## rowData names(0):</span>
 <span class="co">## colnames(28): SRX339756 SRX339757 ... SRX2792103 SRX2792104</span>
 <span class="co">## colData names(1): Tissue</span>
-<span class="fu">SummarizedExperiment</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">colData</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
+<span class="fu">SummarizedExperiment</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
 <span class="co">## DataFrame with 28 rows and 1 column</span>
 <span class="co">##                    Tissue</span>
 <span class="co">##               &lt;character&gt;</span>
@@ -161,43 +182,79 @@
 <span class="co">## SRX2792102 whole_seedling</span>
 <span class="co">## SRX2792103 whole_seedling</span>
 <span class="co">## SRX2792104 whole_seedling</span></code></pre></div>
-<div id="step-by-step-data-preprocessing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#step-by-step-data-preprocessing" class="anchor"></a>Step-by-step data preprocessing</h2>
-<p>This section is suitable for users who want to have more control of their data analysis, as they can inspect the data set after each preprocessing step and analyze how different options to the arguments would affect the expression data. If you want a quick start, you can skip to the next section (<em>Automatic, one-step data preprocessing</em>).</p>
-<p><strong>Step 1:</strong> Replacing missing values. By default, <code><a href="../reference/replace_na.html">replace_na()</a></code> will replace NAs with 0. Users can also replace NAs with the mean of each row (generally not advisable, but it can be useful in very specific cases).</p>
+<div class="section level3">
+<h3 id="step-by-step-data-preprocessing">Step-by-step data preprocessing<a class="anchor" aria-label="anchor" href="#step-by-step-data-preprocessing"></a>
+</h3>
+<p>This section is suitable for users who want to have more control of
+their data analysis, as they can inspect the data set after each
+preprocessing step and analyze how different options to the arguments
+would affect the expression data. If you want a quick start, you can
+skip to the next section (<em>Automatic, one-step data
+preprocessing</em>).</p>
+<p><strong>Step 1:</strong> Replacing missing values. By default,
+<code><a href="../reference/replace_na.html">replace_na()</a></code> will replace NAs with 0. Users can also
+replace NAs with the mean of each row (generally not advisable, but it
+can be useful in very specific cases).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/replace_na.html">replace_na</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## [1] 0</span></code></pre></div>
-<p><strong>Step 2:</strong> Removing non-expressed genes. Here, for faster network reconstruction, we will remove every gene whose median value is below 10. The function’s default for <code>min_exp</code> is 1. For other options, see <code><a href="../reference/remove_nonexp.html">?remove_nonexp</a></code>.</p>
+<p><strong>Step 2:</strong> Removing non-expressed genes. Here, for
+faster network reconstruction, we will remove every gene whose median
+value is below 10. The function’s default for <code>min_exp</code> is 1.
+For other options, see <code><a href="../reference/remove_nonexp.html">?remove_nonexp</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_nonexp.html">remove_nonexp</a></span><span class="op">(</span><span class="va">exp_filt</span>, method<span class="op">=</span><span class="st">"median"</span>, min_exp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
 <span class="co">## [1] 8529   28</span></code></pre></div>
-<p><strong>Step 3 (optional):</strong> Filtering genes by variance. It is reasonable to remove genes whose expression values do not vary much across samples, since we often want to find genes that are more or less expressed in particular conditions. Here, we will keep only the top 2000 most variable genes. Users can also filter by percentile (e.g., the top 10% most variable genes).</p>
+<p><strong>Step 3 (optional):</strong> Filtering genes by variance. It
+is reasonable to remove genes whose expression values do not vary much
+across samples, since we often want to find genes that are more or less
+expressed in particular conditions. Here, we will keep only the top 2000
+most variable genes. Users can also filter by percentile (e.g., the top
+10% most variable genes).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_by_variance.html">filter_by_variance</a></span><span class="op">(</span><span class="va">exp_filt</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
 <span class="co">## [1] 2000   28</span></code></pre></div>
-<p><strong>Step 4:</strong> Removing outlying samples. There are several methods to remove outliers. We have implemented the Z.K (standardized connectivity) method <span class="citation">(Oldham, Langfelder, and Horvath 2012)</span> in <code><a href="../reference/ZKfiltering.html">ZKfiltering()</a></code>, which is a network-based approach to remove outliers. This method has proven to be more suitable for network analysis, since it can remove outliers that other methods (such as hierarchical clustering) cannot identify. By default, BioNERO considers all samples with ZK &lt; 2 as outliers, but this parameter is flexible if users want to change it.</p>
+<p><strong>Step 4:</strong> Removing outlying samples. There are several
+methods to remove outliers. We have implemented the Z.K (standardized
+connectivity) method <span class="citation">(Oldham, Langfelder, and
+Horvath 2012)</span> in <code><a href="../reference/ZKfiltering.html">ZKfiltering()</a></code>, which is a
+network-based approach to remove outliers. This method has proven to be
+more suitable for network analysis, since it can remove outliers that
+other methods (such as hierarchical clustering) cannot identify. By
+default, BioNERO considers all samples with ZK &lt; 2 as outliers, but
+this parameter is flexible if users want to change it.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ZKfiltering.html">ZKfiltering</a></span><span class="op">(</span><span class="va">exp_filt</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">## Number of removed samples: 1</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>
 <span class="co">## [1] 2000   27</span></code></pre></div>
-<p><strong>Step 5:</strong> Adjusting for confounding artifacts. This is an important step to avoid spurious correlations resulting from confounders. The method was described by <span class="citation">Parsana et al. (2019)</span>, who developed a principal component (PC)-based correction for confounders. After correction, the expression data are quantile normalized, so every gene follows an approximate normal distribution.</p>
+<p><strong>Step 5:</strong> Adjusting for confounding artifacts. This is
+an important step to avoid spurious correlations resulting from
+confounders. The method was described by <span class="citation">Parsana
+et al. (2019)</span>, who developed a principal component (PC)-based
+correction for confounders. After correction, the expression data are
+quantile normalized, so every gene follows an approximate normal
+distribution.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/PC_correction.html">PC_correction</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="automatic-one-step-data-preprocessing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#automatic-one-step-data-preprocessing" class="anchor"></a>Automatic, one-step data preprocessing</h2>
-<p>Alternatively, users can preprocess their data with a single function. The function <code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code> is a wrapper for the functions <code><a href="../reference/replace_na.html">replace_na()</a></code>, <code><a href="../reference/remove_nonexp.html">remove_nonexp()</a></code>, <code><a href="../reference/filter_by_variance.html">filter_by_variance()</a></code>, <code><a href="../reference/ZKfiltering.html">ZKfiltering()</a></code> and <code><a href="../reference/PC_correction.html">PC_correction()</a></code>. The arguments passed to <code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code> will be used by each of these functions to generate a filtered expression data frame in a single step.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<div class="section level3">
+<h3 id="automatic-one-step-data-preprocessing">Automatic, one-step data preprocessing<a class="anchor" aria-label="anchor" href="#automatic-one-step-data-preprocessing"></a>
+</h3>
+<p>Alternatively, users can preprocess their data with a single
+function. The function <code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code> is a wrapper for
+the functions <code><a href="../reference/replace_na.html">replace_na()</a></code>, <code><a href="../reference/remove_nonexp.html">remove_nonexp()</a></code>,
+<code><a href="../reference/filter_by_variance.html">filter_by_variance()</a></code>, <code><a href="../reference/ZKfiltering.html">ZKfiltering()</a></code> and
+<code><a href="../reference/PC_correction.html">PC_correction()</a></code>. The arguments passed to
+<code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code> will be used by each of these functions to
+generate a filtered expression data frame in a single step.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span>
 <span class="co">## Number of removed samples: 1</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>
 <span class="co">## [1] TRUE TRUE</span>
 
 <span class="co"># Take a look at the final data</span>
@@ -212,30 +269,50 @@
 <span class="co">## colData names(1): Tissue</span></code></pre></div>
 </div>
 </div>
-<div id="exploratory-data-analysis" class="section level1">
-<h1 class="hasAnchor">
-<a href="#exploratory-data-analysis" class="anchor"></a>Exploratory data analysis</h1>
-<p><code>BioNERO</code> includes some functions for easy data exploration. These functions were created to avoid having to type code chunks that, although small, will be used many times. The idea here is to make the user experience with biological network analysis as easy and simple as possible.</p>
-<p><strong>Plotting heatmaps:</strong> the function <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> plots heatmaps of correlations between samples or gene expression in a single line. Users can use their preferred RColorBrewer’s palette, hide/show gene names, and activate/deactivate clustering for rows and/or columns.</p>
+<div class="section level2">
+<h2 id="exploratory-data-analysis">Exploratory data analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a>
+</h2>
+<p><code>BioNERO</code> includes some functions for easy data
+exploration. These functions were created to avoid having to type code
+chunks that, although small, will be used many times. The idea here is
+to make the user experience with biological network analysis as easy and
+simple as possible.</p>
+<p><strong>Plotting heatmaps:</strong> the function
+<code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> plots heatmaps of correlations between
+samples or gene expression in a single line. Users can use their
+preferred RColorBrewer’s palette, hide/show gene names, and
+activate/deactivate clustering for rows and/or columns.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Heatmap of sample correlations</span>
-<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type <span class="op">=</span> <span class="st">"samplecor"</span><span class="op">)</span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/plot_heatmap-1.png" width="576" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type <span class="op">=</span> <span class="st">"samplecor"</span><span class="op">)</span>
+
 <span class="co"># Heatmap of gene expression</span>
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type<span class="op">=</span><span class="st">"expr"</span><span class="op">)</span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/plot_heatmap-2.png" width="576" style="display: block; margin: auto;"></p>
-<p><strong>Principal component analysis (PCA):</strong> the function <code><a href="../reference/plot_PCA.html">plot_PCA()</a></code> performs a PCA and plots PC1 vs PC2 (by default), as well the percentage of variance explained by each PC. Users can also choose to plot PC1 vs PC3 or PC2 vs PC3.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><strong>Principal component analysis (PCA):</strong> the function
+<code><a href="../reference/plot_PCA.html">plot_PCA()</a></code> performs a PCA and plots PC1 vs PC2 (by
+default), as well the percentage of variance explained by each PC. Users
+can also choose to plot PC1 vs PC3 or PC2 vs PC3.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/pcaplot-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="gene-coexpression-network-inference" class="section level1">
-<h1 class="hasAnchor">
-<a href="#gene-coexpression-network-inference" class="anchor"></a>Gene coexpression network inference</h1>
-<p>Now that we have our filtered and normalized expression data, we can reconstruct a gene coexpression network (GCN) with the WGCNA algorithm <span class="citation">(Langfelder and Horvath 2008)</span>. First of all, we need to identify the most suitable <span class="math inline">\(\beta\)</span> power that makes the network satisfy the scale-free topology. We do that with the function <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code>. Correlation values are raised to a power <span class="math inline">\(\beta\)</span> to amplify their distances and, hence, to make the module detection algorithm more powerful. The higher the value of <span class="math inline">\(\beta\)</span>, the closer to the scale-free topology the network is. However, a very high <span class="math inline">\(\beta\)</span> power reduces mean connectivity, which is not desired. To solve this trade-off, we pick the lowest <span class="math inline">\(\beta\)</span> power above a certain threshold (by default in <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code>, 0.8). This makes the network close to the scale-free topology without dramatically reducing the mean connectivity.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="section level2">
+<h2 id="gene-coexpression-network-inference">Gene coexpression network inference<a class="anchor" aria-label="anchor" href="#gene-coexpression-network-inference"></a>
+</h2>
+<p>Now that we have our filtered and normalized expression data, we can
+reconstruct a gene coexpression network (GCN) with the WGCNA algorithm
+<span class="citation">(Langfelder and Horvath 2008)</span>. First of
+all, we need to identify the most suitable <span class="math inline">\(\beta\)</span> power that makes the network
+satisfy the scale-free topology. We do that with the function
+<code><a href="../reference/SFT_fit.html">SFT_fit()</a></code>. Correlation values are raised to a power <span class="math inline">\(\beta\)</span> to amplify their distances and,
+hence, to make the module detection algorithm more powerful. The higher
+the value of <span class="math inline">\(\beta\)</span>, the closer to
+the scale-free topology the network is. However, a very high <span class="math inline">\(\beta\)</span> power reduces mean connectivity,
+which is not desired. To solve this trade-off, we pick the lowest <span class="math inline">\(\beta\)</span> power above a certain threshold (by
+default in <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code>, 0.8). This makes the network close to
+the scale-free topology without dramatically reducing the mean
+connectivity.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SFT_fit.html">SFT_fit</a></span><span class="op">(</span><span class="va">final_exp</span>, net_type<span class="op">=</span><span class="st">"signed hybrid"</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
 <span class="co">## 1      3    0.220 -0.218          0.178   278.0    303.00  598.0</span>
@@ -259,47 +336,69 @@
 <span class="va">sft</span><span class="op">$</span><span class="va">power</span>
 <span class="co">## [1] 9</span>
 <span class="va">power</span> <span class="op">&lt;-</span> <span class="va">sft</span><span class="op">$</span><span class="va">power</span></code></pre></div>
-<p>As we can see, the optimal power is 9. However, we <strong>strongly recommend</strong> a visual inspection of the simulation of different <span class="math inline">\(\beta\)</span> powers, as WGCNA can fail to return the most appropriate <span class="math inline">\(\beta\)</span> power in some cases.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> The function <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> automatically saves a ggplot object in the second element of the resulting list. To visualize it, you simply have to access the plot.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>As we can see, the optimal power is 9. However, we <strong>strongly
+recommend</strong> a visual inspection of the simulation of different
+<span class="math inline">\(\beta\)</span> powers, as WGCNA can fail to
+return the most appropriate <span class="math inline">\(\beta\)</span>
+power in some cases.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> The function <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code>
+automatically saves a ggplot object in the second element of the
+resulting list. To visualize it, you simply have to access the plot.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sft</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/plot_sft-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>Now, we can use the power calculated by <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> to infer the GCN. The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> infers a GCN and outputs a list of 7 elements, each of which will be used by other functions in the analysis pipeline.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>Now, we can use the power calculated by <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> to
+infer the GCN. The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> infers a GCN and
+outputs a list of 7 elements, each of which will be used by other
+functions in the analysis pipeline.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span><span class="va">final_exp</span>, net_type<span class="op">=</span><span class="st">"signed hybrid"</span>, 
                SFTpower<span class="op">=</span><span class="va">power</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">## ..connectivity..</span>
 <span class="co">## ..matrix multiplication (system BLAS)..</span>
 <span class="co">## ..normalization..</span>
 <span class="co">## ..done.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span>
 <span class="co">## [1] "adjacency_matrix"    "MEs"                 "genes_and_modules"  </span>
 <span class="co">## [4] "kIN"                 "moduleColors"        "correlation_matrix" </span>
 <span class="co">## [7] "params"              "dendro_plot_objects"</span></code></pre></div>
-<p>The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> saves objects in the last element of the resulting list that can be subsequently used to plot common figures in GCN papers. The figures are publication-ready and display i. a dendrogram of genes and modules; ii. heatmap of pairwise correlations between module eigengenes.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> saves objects in the last element
+of the resulting list that can be subsequently used to plot common
+figures in GCN papers. The figures are publication-ready and display i.
+a dendrogram of genes and modules; ii. heatmap of pairwise correlations
+between module eigengenes.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Dendro and colors</span>
 <span class="fu"><a href="../reference/plot_dendro_and_colors.html">plot_dendro_and_colors</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/dendro-1.png" width="480" style="display: block; margin: auto;"></p>
-<pre><code>## NULL</code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<pre><code><span class="co">## NULL</span></code></pre>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Eigengene networks</span>
 <span class="fu"><a href="../reference/plot_eigengene_network.html">plot_eigengene_network</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/eigengene_net-1.png" width="480" style="display: block; margin: auto;"></p>
-<pre><code>## NULL</code></pre>
+<pre><code><span class="co">## NULL</span></code></pre>
 <p>Let’s see the number of genes per module.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_ngenes_per_module.html">plot_ngenes_per_module</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/genes_per_module-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div id="gene-coexpression-network-analysis" class="section level1">
-<h1 class="hasAnchor">
-<a href="#gene-coexpression-network-analysis" class="anchor"></a>Gene coexpression network analysis</h1>
-<p>Now that we have our coexpression network, we can start exploring some of its properties.</p>
-<div id="assessing-module-stability" class="section level2">
-<h2 class="hasAnchor">
-<a href="#assessing-module-stability" class="anchor"></a>Assessing module stability</h2>
-<p>The function <code><a href="../reference/module_stability.html">module_stability()</a></code> allows users to check if the identified coexpression modules are stable (i.e., if they can resist removal of a particular sample). This function will resample the data set and rerun the module detection algorithm <em>n</em> times (default: 30) and return a PDF figure displaying a gene dendrogram and colors representing modules identified in each run. By looking at the figure, you can detect if a particular module is only found in a very small fraction of the runs, which suggests instability. Here, we will perform only 5 resampling runs for demonstration purposes.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="section level2">
+<h2 id="gene-coexpression-network-analysis">Gene coexpression network analysis<a class="anchor" aria-label="anchor" href="#gene-coexpression-network-analysis"></a>
+</h2>
+<p>Now that we have our coexpression network, we can start exploring
+some of its properties.</p>
+<div class="section level3">
+<h3 id="assessing-module-stability">Assessing module stability<a class="anchor" aria-label="anchor" href="#assessing-module-stability"></a>
+</h3>
+<p>The function <code><a href="../reference/module_stability.html">module_stability()</a></code> allows users to check if
+the identified coexpression modules are stable (i.e., if they can resist
+removal of a particular sample). This function will resample the data
+set and rerun the module detection algorithm <em>n</em> times (default:
+30) and return a PDF figure displaying a gene dendrogram and colors
+representing modules identified in each run. By looking at the figure,
+you can detect if a particular module is only found in a very small
+fraction of the runs, which suggests instability. Here, we will perform
+only 5 resampling runs for demonstration purposes.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/module_stability.html">module_stability</a></span><span class="op">(</span><span class="va">final_exp</span>, <span class="va">net</span>, nRuns<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">##  ...working on run 1 ..</span>
 <span class="co">##  ...working on run 2 ..</span>
@@ -307,17 +406,25 @@
 <span class="co">##  ...working on run 4 ..</span>
 <span class="co">##  ...working on run 5 ..</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/module_stability-1.png" width="480" style="display: block; margin: auto;"></p>
-<pre><code>## NULL</code></pre>
+<pre><code><span class="co">## NULL</span></code></pre>
 </div>
-<div id="module-trait-associations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#module-trait-associations" class="anchor"></a>Module-trait associations</h2>
-<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> can be used to calculate module-trait correlations. This analysis is useful to identify modules that are positively or negatively correlated with particular traits, which means that their gene expression levels go up or down in these conditions. Here, tissues will be considered traits, so we want to identify groups of genes whose expression levels are inhibited or induced in particular tissues. Alternatively, one can use continuous variables (e.g., metabolite content, protein concentration, height) or discrete variables (e.g., disease index) as traits.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="module-trait-associations">Module-trait associations<a class="anchor" aria-label="anchor" href="#module-trait-associations"></a>
+</h3>
+<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> can be used to calculate
+module-trait correlations. This analysis is useful to identify modules
+that are positively or negatively correlated with particular traits,
+which means that their gene expression levels go up or down in these
+conditions. Here, tissues will be considered traits, so we want to
+identify groups of genes whose expression levels are inhibited or
+induced in particular tissues. Alternatively, one can use continuous
+variables (e.g., metabolite content, protein concentration, height) or
+discrete variables (e.g., disease index) as traits.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, MEs<span class="op">=</span><span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/moddtraitcor-1.png" width="480" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span>
 <span class="co">##        ME          trait         cor    pvalue</span>
 <span class="co">## 1 MEblack      endosperm  0.12925374 0.5205188</span>
 <span class="co">## 2 MEblack         pollen  0.11154977 0.5796226</span>
@@ -325,33 +432,47 @@
 <span class="co">## 4 MEbrown      endosperm -0.02538113 0.8999982</span>
 <span class="co">## 5 MEbrown         pollen  0.06199200 0.7587116</span>
 <span class="co">## 6 MEbrown whole_seedling -0.02607732 0.8972693</span></code></pre></div>
-<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> also allows for plot customization. For instance:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> also allows for plot
+customization. For instance:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Transpose the matrix and change palette (RColorBrewer palette)</span>
 <span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, MEs<span class="op">=</span><span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span>,
                             transpose <span class="op">=</span> <span class="cn">TRUE</span>, palette<span class="op">=</span><span class="st">"PRGn"</span>, cex.text <span class="op">=</span> <span class="fl">0.7</span>,
                             cex.lab.y <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/modtraitcor_transpose-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
-<div id="visualizing-module-expression-profile" class="section level2">
-<h2 class="hasAnchor">
-<a href="#visualizing-module-expression-profile" class="anchor"></a>Visualizing module expression profile</h2>
-<p>The heatmap above shows that genes in the <em>yellow</em> module are negatively correlated with endosperm samples. We can visually explore it with <code><a href="../reference/plot_expression_profile.html">plot_expression_profile()</a></code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="visualizing-module-expression-profile">Visualizing module expression profile<a class="anchor" aria-label="anchor" href="#visualizing-module-expression-profile"></a>
+</h3>
+<p>The heatmap above shows that genes in the <em>yellow</em> module are
+negatively correlated with endosperm samples. We can visually explore it
+with <code><a href="../reference/plot_expression_profile.html">plot_expression_profile()</a></code>.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_expression_profile.html">plot_expression_profile</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, net<span class="op">=</span><span class="va">net</span>, 
                         plot_module<span class="op">=</span><span class="cn">TRUE</span>, modulename<span class="op">=</span><span class="st">"yellow"</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/exp_profile-1.png" width="384" style="display: block; margin: auto;"></p>
 </div>
-<div id="enrichment-analysis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#enrichment-analysis" class="anchor"></a>Enrichment analysis</h2>
-<p>After identifying modules that are inhibited or enhanced in particular tissues, users would likely want to find to which biological processes (e.g., GO biological process) or pathways (e.g., Reactome, KEGG, MapMan) these genes are related. This can be done with enrichment analyses, which can uncover terms that are found more than expected by chance in a module.</p>
-<p>The easiest way to accomplish this is to use the function <code><a href="../reference/module_enrichment.html">module_enrichment()</a></code>, which performs enrichment analysis for all modules at once. To illustrate it, we will scan coexpression modules for enriched protein domains using all genes in the network as background. The Interpro annotation was downloaded from the PLAZA 4.0 Monocots database <span class="citation">(Van Bel et al. 2018)</span>.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="enrichment-analysis">Enrichment analysis<a class="anchor" aria-label="anchor" href="#enrichment-analysis"></a>
+</h3>
+<p>After identifying modules that are inhibited or enhanced in
+particular tissues, users would likely want to find to which biological
+processes (e.g., GO biological process) or pathways (e.g., Reactome,
+KEGG, MapMan) these genes are related. This can be done with enrichment
+analyses, which can uncover terms that are found more than expected by
+chance in a module.</p>
+<p>The easiest way to accomplish this is to use the function
+<code><a href="../reference/module_enrichment.html">module_enrichment()</a></code>, which performs enrichment analysis for
+all modules at once. To illustrate it, we will scan coexpression modules
+for enriched protein domains using all genes in the network as
+background. The Interpro annotation was downloaded from the PLAZA 4.0
+Monocots database <span class="citation">(Van Bel et al.
+2018)</span>.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Enrichment analysis for conserved protein domains (Interpro)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">zma.interpro</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.interpro</span><span class="op">)</span>
 <span class="va">interpro_enrichment</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_enrichment.html">module_enrichment</a></span><span class="op">(</span>net <span class="op">=</span> <span class="va">net</span>, 
-                                         background_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>,
+                                         background_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>,
                                          annotation <span class="op">=</span> <span class="va">zma.interpro</span><span class="op">)</span>
 <span class="co">## Enrichment analysis for module black...</span>
 <span class="co">## Enrichment analysis for module brown...</span>
@@ -386,15 +507,27 @@
 <span class="co">## 187  4.848528e-02 midnightblue</span>
 <span class="co">## 906  4.848528e-02 midnightblue</span>
 <span class="co">## 907  4.848528e-02 midnightblue</span></code></pre></div>
-<p>As we can see, two modules are enriched in genes with particular protein domains. We could get the same result with the function <code><a href="../reference/enrichment_analysis.html">enrichment_analysis()</a></code>, which performs enrichment analysis for a user-defined gene set instead of all modules.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>As we can see, two modules are enriched in genes with particular
+protein domains. We could get the same result with the function
+<code><a href="../reference/enrichment_analysis.html">enrichment_analysis()</a></code>, which performs enrichment analysis
+for a user-defined gene set instead of all modules. <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 </div>
-<div id="hub-gene-identification" class="section level2">
-<h2 class="hasAnchor">
-<a href="#hub-gene-identification" class="anchor"></a>Hub gene identification</h2>
-<p>Hub genes are often identified using two different metrics: <strong>module membership (MM)</strong> (i.e., correlation of a gene to its module eigengene) and <strong>degree</strong> (i.e., sum of connection weights of a gene to all other genes in the module). Some researchers consider the top 10% genes with the highest degree as hubs, while others consider those with MM &gt; 0.8. To avoid false positives, <code>BioNERO</code>’s algorithm combines both metrics and defines hub genes as the top 10% genes with highest degree that have MM &gt; 0.8. Hubs can be identified with the function <code><a href="../reference/get_hubs_gcn.html">get_hubs_gcn()</a></code>.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="hub-gene-identification">Hub gene identification<a class="anchor" aria-label="anchor" href="#hub-gene-identification"></a>
+</h3>
+<p>Hub genes are often identified using two different metrics:
+<strong>module membership (MM)</strong> (i.e., correlation of a gene to
+its module eigengene) and <strong>degree</strong> (i.e., sum of
+connection weights of a gene to all other genes in the module). Some
+researchers consider the top 10% genes with the highest degree as hubs,
+while others consider those with MM &gt; 0.8. To avoid false positives,
+<code>BioNERO</code>’s algorithm combines both metrics and defines hub
+genes as the top 10% genes with highest degree that have MM &gt; 0.8.
+Hubs can be identified with the function
+<code><a href="../reference/get_hubs_gcn.html">get_hubs_gcn()</a></code>.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hubs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_hubs_gcn.html">get_hubs_gcn</a></span><span class="op">(</span><span class="va">final_exp</span>, <span class="va">net</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">hubs</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hubs</span><span class="op">)</span>
 <span class="co">##             Gene Module  kWithin</span>
 <span class="co">## 1 Zm00001d033147  black 188.3864</span>
 <span class="co">## 2 Zm00001d049790  black 181.4522</span>
@@ -403,13 +536,17 @@
 <span class="co">## 5 Zm00001d008203  black 178.7147</span>
 <span class="co">## 6 Zm00001d023340  black 177.7553</span></code></pre></div>
 </div>
-<div id="extracting-subgraphs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#extracting-subgraphs" class="anchor"></a>Extracting subgraphs</h2>
-<p>Subgraph extraction can be particularly useful to visualize specific modules, and it can be done with the function <code><a href="../reference/get_edge_list.html">get_edge_list()</a></code>. The function returns the subgraph as an edge list. Users can also extract an edge list for a particular gene set instead of a module.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="extracting-subgraphs">Extracting subgraphs<a class="anchor" aria-label="anchor" href="#extracting-subgraphs"></a>
+</h3>
+<p>Subgraph extraction can be particularly useful to visualize specific
+modules, and it can be done with the function
+<code><a href="../reference/get_edge_list.html">get_edge_list()</a></code>. The function returns the subgraph as an
+edge list. Users can also extract an edge list for a particular gene set
+instead of a module.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">edges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">edges</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">edges</span><span class="op">)</span>
 <span class="co">##              Gene1          Gene2    Weight</span>
 <span class="co">## 45  Zm00001d001857 Zm00001d002384 0.9401886</span>
 <span class="co">## 89  Zm00001d001857 Zm00001d002690 0.9675345</span>
@@ -417,68 +554,88 @@
 <span class="co">## 133 Zm00001d001857 Zm00001d003962 0.7178340</span>
 <span class="co">## 134 Zm00001d002384 Zm00001d003962 0.6534956</span>
 <span class="co">## 135 Zm00001d002690 Zm00001d003962 0.6840004</span></code></pre></div>
-<p>The function <code><a href="../reference/get_edge_list.html">get_edge_list()</a></code> returns a fully connected subgraph for the specified module or gene set. However, filtering weak correlations is desirable and can be accomplished by setting the argument <code>filter = TRUE</code>, which will remove edges based on one of optimal scale-free topology fit (default), p-value, Z-score, or an arbitrary minimum correlation coefficient.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> For more details details, check <code>?get_edge_list()</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p>The function <code><a href="../reference/get_edge_list.html">get_edge_list()</a></code> returns a fully connected
+subgraph for the specified module or gene set. However, filtering weak
+correlations is desirable and can be accomplished by setting the
+argument <code>filter = TRUE</code>, which will remove edges based on
+one of optimal scale-free topology fit (default), p-value, Z-score, or
+an arbitrary minimum correlation coefficient. <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> For more details
+details, check <code>?get_edge_list()</code>.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Remove edges based on optimal scale-free topology fit</span>
 <span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,
                                 filter<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">## The correlation threshold that best fits the scale-free topology is 0.7</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/filter_edges-1.png" width="480" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
 <span class="co">## [1] 588   3</span>
 
 <span class="co"># Remove edges based on p-value</span>
 <span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,
                                 filter<span class="op">=</span><span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"pvalue"</span>,
-                                nSamples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
+                                nSamples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
 <span class="co">## [1] 921   3</span>
 
 <span class="co"># Remove edges based on minimum correlation</span>
 <span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,
                                 filter<span class="op">=</span><span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"min_cor"</span>,
                                 rcutoff <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span>
 <span class="co">## [1] 588   3</span></code></pre></div>
 </div>
-<div id="network-visualization" class="section level2">
-<h2 class="hasAnchor">
-<a href="#network-visualization" class="anchor"></a>Network visualization</h2>
-<p>As we now have an edge list for a module, let’s visualize it with the function <code><a href="../reference/plot_gcn.html">plot_gcn()</a></code>. By default, this function only labels the top 5 hubs (or less if there are less than 5 hubs). However, this can be customized according to the user’s preference (see <code><a href="../reference/plot_gcn.html">?plot_gcn</a></code> for more information).</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="network-visualization">Network visualization<a class="anchor" aria-label="anchor" href="#network-visualization"></a>
+</h3>
+<p>As we now have an edge list for a module, let’s visualize it with the
+function <code><a href="../reference/plot_gcn.html">plot_gcn()</a></code>. By default, this function only labels
+the top 5 hubs (or less if there are less than 5 hubs). However, this
+can be customized according to the user’s preference (see
+<code><a href="../reference/plot_gcn.html">?plot_gcn</a></code> for more information).</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span>edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, 
          net <span class="op">=</span> <span class="va">net</span>,
          color_by <span class="op">=</span> <span class="st">"module"</span>,
          hubs <span class="op">=</span> <span class="va">hubs</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/plot_gcn-1.png" width="384" style="display: block; margin: auto;"></p>
-<p>Networks can also be visualized interactively by setting <code>interactive = TRUE</code> in <code>plot_gcn</code>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p>Networks can also be visualized interactively by setting
+<code>interactive = TRUE</code> in <code>plot_gcn</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span>edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, 
          net <span class="op">=</span> <span class="va">net</span>,
          color_by<span class="op">=</span><span class="st">"module"</span>,
          hubs <span class="op">=</span> <span class="va">hubs</span>,
          interactive <span class="op">=</span> <span class="cn">TRUE</span>,
-         dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+         dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div id="htmlwidget-4c3cc5ef36d163ce2865" style="width:500px;height:500px;" class="forceNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4c3cc5ef36d163ce2865">{"x":{"links":{"source":[3,2,4,1,0,3,6,8,2,12,4,7,5,1,10,0,9,6,1,2,5,7,4,3,0,23,1,3,10,2,5,7,30,12,33,0,14,20,11,17,15,25,28,25,20,10,9,23,8,1,12,2,17,4,5,7,0,15,26,3,8,5,19,15,10,20,23,6,0,12,25,9,1,7,13,4,14,17,2,3,24,5,6,1,2,3,0,4,8,7,5,15,8,10,12,0,3,4,1,20,11,6,9,7,2,23,17,13,14,5,12,15,9,37,30,39,19,33,11,29,27,41,22,4,20,3,35,1,38,32,7,25,8,18,40,14,6,17,10,23,21,28,24,26,34,0,2,13,5,4,0,2,1,3,2,13,7,14,0,6,4,12,1,3,17,8,5,9,10,10,7,3,12,39,38,11,20,4,1,35,32,0,33,9,25,28,2,17,13,3,29,15,27,23,14,10,22,7,8,26,5,19,34,16,19,9,5,20,14,15,21,8,18,10,17,12,1,2,4,0,3,7,6,13,4,10,6,15,1,12,17,0,5,7,25,3,26,21,14,13,1,23,20,10,13,9,2,12,28,15,4,0,17,26,5,25,3,8,19,12,6,5,30,9,8,3,15,4,23,0,24,14,34,7,13,18,1,17,2,7,15,9,3,37,35,4,13,6,22,5,1,16,7,24,8,19,12,32,18,14,36,20,2,17,10,21,0,13,14,24,32,7,22,21,2,0,1,24,14,21,35,22,36,31,32,7,3,13,1,2,7,11,6,9,5,12,0,4,8,10,1,5,7,3,2,6,9,0,4,8,1,2,5,6,4,3,8,9,0,7,10,5,2,6,0,3,1,4,9,5,14,16,18,19,20,2,8,21,3,10,0,15,7,13,17,4,12,1,6,33,0,10,2,9,15,14,20,28,7,3,12,22,25,32,16,4,1,1,28,10,15,2,7,29,9,25,35,12,0,3,4,20,21,7,15,23,19,17,2,18,6,24,8,14,0,12,1,3,5,13,2,3,0,1,2,4,1,0,3,8,12,17,18,10,13,14,9,15,7,6,5,0,2,7,14,3,12,13,5,4,8,1,6,10,15,9,2,7,4,14,3,0,12,6,13,5,10,11,1,9,8,0,2,13,8,16,14,10,0,19,4,3,5,7,12,1,15,9,6,17,5,19,3,2,8,1,20,0,4,9,17,14,13,12,18,15,10,6,7,21,8,7,5,4,2,18,15,19,12,23,10,1,3,0,6,9,13,14,17,20,22,15,21,2,14,6,0,3,9,12,7,22,4,5,13,26,24,1,36,38,22,37,0,3,30,15,10,14,25,20,7,12,6,1,11,4,0,1],"target":[5,5,5,5,5,13,13,13,13,13,13,13,13,13,13,13,13,8,8,8,8,8,8,8,8,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,9,9,9,9,9,9,9,9,9,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,6,6,6,6,6,6,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,11,11,11,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,16,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,36,36,36,36,36,36,36,3,3,3,37,37,37,37,37,37,37,37,37,14,14,14,14,14,14,14,14,14,14,14,14,14,14,10,10,10,10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,7,7,7,7,7,7,7,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,4,4,4,4,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,43,43,43,43,33,33,33,33,33,33,33,33,33,33,33,33,33,33,2,2],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d034368","Zm00001d042976","Zm00001d051362","Zm00001d028375","Zm00001d038136","Zm00001d001857","Zm00001d011081","Zm00001d033707","Zm00001d002690","Zm00001d007234","Zm00001d031569","Zm00001d015399","Zm00001d033038","Zm00001d002384","Zm00001d029378","Zm00001d042372","Zm00001d022464","Zm00001d040803","Zm00001d014781","Zm00001d038218","Zm00001d043299","Zm00001d043998","Zm00001d034828","Zm00001d016733","Zm00001d047204","Zm00001d008305","Zm00001d006458","Zm00001d019553","Zm00001d005421","Zm00001d019563","Zm00001d037018","Zm00001d008600","Zm00001d048693","Zm00001d049691","Zm00001d003962","Zm00001d036162","Zm00001d025892","Zm00001d028630","Zm00001d023559","Zm00001d036547","Zm00001d015918","Zm00001d021813","Zm00001d011034","Zm00001d048802"],"group":["midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue"],"nodesize":[10.5817658089403,10.2457134175312,10.1012265821005,9.20536757438946,9.09708978527968,9.02890397173426,8.90902323921577,8.8960519819567,8.83398655496156,8.17926469128355,8.07960378246698,7.95166881927189,7.48687403118163,7.46018171904601,7.39303782719813,7.29407548122694,7.20544171499372,6.71003994604486,5.56968360957348,5.2513403679063,5.22106943556366,5.21776630620915,4.99594484674438,4.77413047577239,4.77324261059502,4.39060194558006,4.10510591167904,3.79870217969408,3.74610910181984,3.47086972584609,3.35860606173085,3.31743803885518,3.26312724068693,3.21699033303724,2.70939551612667,2.56173369044579,1.90480419574236,1.58878210422147,1.56723036367367,1.47677712893716,1.38039516028772,1.00125948426605,0.485854283155314,0.364633092930587]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":13,"fontFamily":"serif","clickTextSize":32.5,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":0.8,"zoom":true,"legend":false,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-4c3cc5ef36d163ce2865">{"x":{"links":{"source":[2,3,0,4,1,11,12,7,5,6,8,0,3,4,1,10,9,2,3,1,7,4,5,0,2,6,25,14,20,2,0,16,7,3,5,30,17,29,6,23,12,1,10,28,33,15,10,16,7,4,5,3,0,1,12,9,20,23,25,15,2,26,8,6,17,27,5,4,24,1,15,10,14,0,23,19,3,12,25,16,6,7,20,8,11,9,13,17,2,4,5,0,2,3,1,6,7,8,5,1,14,0,12,15,6,10,7,16,8,11,4,9,3,17,13,20,23,2,37,5,4,1,3,2,0,6,2,8,3,0,1,4,5,10,9,7,5,14,1,13,16,3,9,11,0,8,12,2,7,10,17,6,4,23,6,7,15,34,14,10,25,33,3,0,5,14,16,20,13,7,6,1,8,22,10,15,19,9,3,2,17,4,12,5,4,1,7,15,0,13,9,14,12,10,6,11,8,2,3,5,6,14,17,12,13,23,26,4,7,0,10,11,21,3,1,15,25,26,12,16,25,10,5,0,13,23,15,20,9,8,17,3,6,1,4,2,3,13,17,5,24,16,9,15,14,2,12,4,7,19,18,1,8,0,6,11,22,35,23,7,20,31,24,10,14,8,9,22,13,15,7,3,19,21,12,1,17,23,5,0,11,6,4,2,20,18,22,32,7,24,31,13,21,14,0,2,1,6,14,21,31,24,36,22,32,7,35,5,8,0,11,1,4,12,6,7,13,3,9,2,10,6,0,8,3,1,2,4,7,9,5,8,11,3,6,0,4,7,9,2,5,10,1,4,6,3,5,1,2,0,3,9,0,7,10,5,12,8,4,21,14,20,18,17,6,2,11,15,1,13,19,2,14,9,3,15,0,23,28,7,20,32,1,25,10,22,33,31,12,6,4,9,4,1,2,6,3,35,27,12,23,25,7,10,20,28,15,0,24,3,14,13,12,15,19,2,1,8,5,21,17,29,7,6,18,16,11,0,2,0,1,3,7,13,16,3,2,5,0,15,12,9,14,10,6,11,4,17,1,8,18,16,0,15,12,7,9,5,3,8,11,1,14,10,13,6,4,2,7,14,0,11,4,5,12,13,6,1,10,9,8,2,3,0,5,16,7,0,10,1,15,8,13,14,3,6,17,9,12,11,4,19,2,16,3,10,5,15,0,7,9,14,12,8,17,2,20,6,4,1,13,11,18,19,0,22,5,14,3,15,13,4,7,10,18,19,20,8,2,6,9,11,12,1,17,16,21,14,11,7,1,6,5,3,13,4,22,2,26,0,23,24,9,15,12,21,31,31,37,22,36,15,3,4,23,10,20,0,7,1,30,25,12,6,14,11,1,0],"target":[5,5,5,5,5,13,13,13,13,13,13,13,13,13,13,13,13,13,8,8,8,8,8,8,8,8,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,9,9,9,9,9,9,9,9,9,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,42,6,6,6,6,6,6,11,11,11,11,11,11,11,11,11,11,11,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,40,40,40,40,40,40,40,40,40,40,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,41,41,41,41,41,41,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,36,36,36,36,36,36,36,36,3,3,3,37,37,37,37,37,37,37,37,37,37,14,14,14,14,14,14,14,14,14,14,14,14,14,14,10,10,10,10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,7,7,7,7,7,7,7,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,4,4,4,4,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,43,43,43,43,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,2,2],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d034368","Zm00001d042976","Zm00001d051362","Zm00001d028375","Zm00001d038136","Zm00001d001857","Zm00001d011034","Zm00001d033707","Zm00001d002690","Zm00001d007234","Zm00001d031569","Zm00001d011081","Zm00001d033038","Zm00001d002384","Zm00001d029378","Zm00001d042372","Zm00001d016733","Zm00001d040803","Zm00001d014781","Zm00001d038218","Zm00001d043299","Zm00001d043998","Zm00001d034828","Zm00001d015918","Zm00001d047204","Zm00001d008305","Zm00001d006458","Zm00001d019563","Zm00001d005421","Zm00001d021813","Zm00001d037018","Zm00001d023559","Zm00001d048693","Zm00001d049691","Zm00001d003962","Zm00001d036162","Zm00001d025892","Zm00001d028630","Zm00001d019553","Zm00001d036547","Zm00001d015399","Zm00001d022464","Zm00001d008600","Zm00001d048802"],"group":["midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue"],"nodesize":[10.5817658089403,10.2457134175312,10.1012265821005,9.20536757438946,9.09708978527968,9.02890397173426,8.90902323921577,8.8960519819567,8.83398655496156,8.17926469128355,8.07960378246698,7.95166881927189,7.48687403118163,7.46018171904601,7.39303782719813,7.29407548122694,7.20544171499372,6.71003994604486,5.56968360957348,5.2513403679063,5.22106943556366,5.21776630620915,4.99594484674438,4.77413047577239,4.77324261059502,4.39060194558006,4.10510591167904,3.79870217969408,3.74610910181984,3.47086972584609,3.35860606173085,3.31743803885518,3.26312724068693,3.21699033303724,2.70939551612667,2.56173369044579,1.90480419574236,1.58878210422147,1.56723036367367,1.47677712893716,1.38039516028772,1.00125948426605,0.485854283155314,0.364633092930587]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":13,"fontFamily":"serif","clickTextSize":32.5,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":0.8,"zoom":true,"legend":false,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="network-statistics" class="section level2">
-<h2 class="hasAnchor">
-<a href="#network-statistics" class="anchor"></a>Network statistics</h2>
-<p>Finally, the function <code><a href="../reference/net_stats.html">net_stats()</a></code> can be used to calculate the main network statistics (or properties, or indices), namely: <em>connectivity</em>, <em>scaled connectivity</em>, <em>clustering coefficient</em>, <em>maximum adjacency ratio</em>, <em>density</em>, <em>centralization</em>, <em>heterogeneity</em>, <em>number of cliques</em>, <em>diameter</em>, <em>betweenness</em> (optional), and <em>closeness</em> (optional).</p>
-<p>Depending on your system capacities and network size, this may take a very long time. Hence, if you are willing to calculate network statistics for your data set, grab a cup of coffee, because the waiting may be long.</p>
+<div class="section level3">
+<h3 id="network-statistics">Network statistics<a class="anchor" aria-label="anchor" href="#network-statistics"></a>
+</h3>
+<p>Finally, the function <code><a href="../reference/net_stats.html">net_stats()</a></code> can be used to
+calculate the main network statistics (or properties, or indices),
+namely: <em>connectivity</em>, <em>scaled connectivity</em>,
+<em>clustering coefficient</em>, <em>maximum adjacency ratio</em>,
+<em>density</em>, <em>centralization</em>, <em>heterogeneity</em>,
+<em>number of cliques</em>, <em>diameter</em>, <em>betweenness</em>
+(optional), and <em>closeness</em> (optional).</p>
+<p>Depending on your system capacities and network size, this may take a
+very long time. Hence, if you are willing to calculate network
+statistics for your data set, grab a cup of coffee, because the waiting
+may be long.</p>
 </div>
 </div>
-<div id="session-information" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#session-information" class="anchor"></a>Session information</h1>
+<div class="section level2">
+<h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
+</h2>
 <p>This vignette was created under the following conditions:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">## R version 4.1.1 (2021-08-10)</span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## R version 4.1.3 (2022-03-10)</span>
 <span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.3 LTS</span>
+<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
 <span class="co">## </span>
 <span class="co">## Matrix products: default</span>
 <span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
@@ -486,7 +643,7 @@
 <span class="co">## locale:</span>
 <span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
 <span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
 <span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
 <span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
 <span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
@@ -495,133 +652,182 @@
 <span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">## </span>
 <span class="co">## other attached packages:</span>
-<span class="co">## [1] BioNERO_1.1.7    BiocStyle_2.20.2</span>
+<span class="co">## [1] BioNERO_1.3.1    BiocStyle_2.22.0</span>
 <span class="co">## </span>
 <span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##   [1] readxl_1.3.1                backports_1.2.1            </span>
-<span class="co">##   [3] circlize_0.4.13             Hmisc_4.6-0                </span>
-<span class="co">##   [5] systemfonts_1.0.3           plyr_1.8.6                 </span>
-<span class="co">##   [7] igraph_1.2.7                splines_4.1.1              </span>
-<span class="co">##   [9] GENIE3_1.14.0               BiocParallel_1.26.2        </span>
-<span class="co">##  [11] GenomeInfoDb_1.28.4         ggnetwork_0.5.10           </span>
-<span class="co">##  [13] ggplot2_3.3.5               sva_3.40.0                 </span>
-<span class="co">##  [15] digest_0.6.28               foreach_1.5.1              </span>
-<span class="co">##  [17] htmltools_0.5.2             GO.db_3.13.0               </span>
-<span class="co">##  [19] fansi_0.5.0                 magrittr_2.0.1             </span>
-<span class="co">##  [21] checkmate_2.0.0             memoise_2.0.0              </span>
-<span class="co">##  [23] cluster_2.1.2               doParallel_1.0.16          </span>
-<span class="co">##  [25] limma_3.48.3                openxlsx_4.2.4             </span>
-<span class="co">##  [27] ComplexHeatmap_2.8.0        fastcluster_1.2.3          </span>
-<span class="co">##  [29] Biostrings_2.60.2           annotate_1.70.0            </span>
-<span class="co">##  [31] matrixStats_0.61.0          pkgdown_1.6.1              </span>
-<span class="co">##  [33] jpeg_0.1-9                  colorspace_2.0-2           </span>
-<span class="co">##  [35] ggrepel_0.9.1               blob_1.2.2                 </span>
-<span class="co">##  [37] haven_2.4.3                 textshaping_0.3.6          </span>
-<span class="co">##  [39] xfun_0.27                   dplyr_1.0.7                </span>
-<span class="co">##  [41] jsonlite_1.7.2              crayon_1.4.1               </span>
-<span class="co">##  [43] RCurl_1.98-1.5              genefilter_1.74.1          </span>
-<span class="co">##  [45] impute_1.66.0               survival_3.2-13            </span>
-<span class="co">##  [47] iterators_1.0.13            glue_1.4.2                 </span>
-<span class="co">##  [49] gtable_0.3.0                zlibbioc_1.38.0            </span>
-<span class="co">##  [51] XVector_0.32.0              GetoptLong_1.0.5           </span>
-<span class="co">##  [53] DelayedArray_0.18.0         car_3.0-11                 </span>
-<span class="co">##  [55] shape_1.4.6                 BiocGenerics_0.38.0        </span>
-<span class="co">##  [57] abind_1.4-5                 scales_1.1.1               </span>
-<span class="co">##  [59] edgeR_3.34.1                DBI_1.1.1                  </span>
-<span class="co">##  [61] rstatix_0.7.0               Rcpp_1.0.7                 </span>
-<span class="co">##  [63] xtable_1.8-4                htmlTable_2.3.0            </span>
-<span class="co">##  [65] clue_0.3-60                 foreign_0.8-81             </span>
-<span class="co">##  [67] bit_4.0.4                   preprocessCore_1.54.0      </span>
-<span class="co">##  [69] Formula_1.2-4               stats4_4.1.1               </span>
-<span class="co">##  [71] htmlwidgets_1.5.4           httr_1.4.2                 </span>
-<span class="co">##  [73] RColorBrewer_1.1-2          ellipsis_0.3.2             </span>
-<span class="co">##  [75] farver_2.1.0                pkgconfig_2.0.3            </span>
-<span class="co">##  [77] XML_3.99-0.8                nnet_7.3-16                </span>
-<span class="co">##  [79] locfit_1.5-9.4              utf8_1.2.2                 </span>
-<span class="co">##  [81] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
-<span class="co">##  [83] reshape2_1.4.4              tidyselect_1.1.1           </span>
-<span class="co">##  [85] rlang_0.4.12                AnnotationDbi_1.54.1       </span>
-<span class="co">##  [87] cellranger_1.1.0            munsell_0.5.0              </span>
-<span class="co">##  [89] tools_4.1.1                 cachem_1.0.6               </span>
-<span class="co">##  [91] generics_0.1.0              RSQLite_2.2.8              </span>
-<span class="co">##  [93] statnet.common_4.5.0        broom_0.7.9                </span>
-<span class="co">##  [95] evaluate_0.14               stringr_1.4.0              </span>
-<span class="co">##  [97] fastmap_1.1.0               yaml_2.2.1                 </span>
-<span class="co">##  [99] ragg_1.1.3                  RhpcBLASctl_0.21-247       </span>
-<span class="co">## [101] knitr_1.36                  bit64_4.0.5                </span>
-<span class="co">## [103] fs_1.5.0                    zip_2.2.0                  </span>
-<span class="co">## [105] purrr_0.3.4                 KEGGREST_1.32.0            </span>
-<span class="co">## [107] nlme_3.1-153                compiler_4.1.1             </span>
-<span class="co">## [109] rstudioapi_0.13             curl_4.3.2                 </span>
-<span class="co">## [111] png_0.1-7                   ggsignif_0.6.3             </span>
-<span class="co">## [113] minet_3.50.0                tibble_3.1.5               </span>
-<span class="co">## [115] statmod_1.4.36              geneplotter_1.70.0         </span>
-<span class="co">## [117] stringi_1.7.5               highr_0.9                  </span>
-<span class="co">## [119] desc_1.4.0                  forcats_0.5.1              </span>
-<span class="co">## [121] lattice_0.20-45             Matrix_1.3-4               </span>
-<span class="co">## [123] vctrs_0.3.8                 networkD3_0.4              </span>
-<span class="co">## [125] pillar_1.6.4                lifecycle_1.0.1            </span>
-<span class="co">## [127] BiocManager_1.30.16         jquerylib_0.1.4            </span>
-<span class="co">## [129] GlobalOptions_0.1.2         cowplot_1.1.1              </span>
-<span class="co">## [131] data.table_1.14.2           bitops_1.0-7               </span>
-<span class="co">## [133] GenomicRanges_1.44.0        R6_2.5.1                   </span>
-<span class="co">## [135] latticeExtra_0.6-29         bookdown_0.24              </span>
-<span class="co">## [137] network_1.17.1              rio_0.5.27                 </span>
-<span class="co">## [139] gridExtra_2.3               IRanges_2.26.0             </span>
-<span class="co">## [141] codetools_0.2-18            SummarizedExperiment_1.22.0</span>
-<span class="co">## [143] DESeq2_1.32.0               rprojroot_2.0.2            </span>
-<span class="co">## [145] rjson_0.2.20                S4Vectors_0.30.2           </span>
-<span class="co">## [147] GenomeInfoDbData_1.2.6      intergraph_2.0-2           </span>
-<span class="co">## [149] mgcv_1.8-38                 hms_1.1.1                  </span>
-<span class="co">## [151] parallel_4.1.1              grid_4.1.1                 </span>
-<span class="co">## [153] rpart_4.1-15                tidyr_1.1.4                </span>
-<span class="co">## [155] NetRep_1.2.4                coda_0.19-4                </span>
-<span class="co">## [157] rmarkdown_2.11              carData_3.0-4              </span>
-<span class="co">## [159] MatrixGenerics_1.4.3        Cairo_1.5-12.2             </span>
-<span class="co">## [161] ggpubr_0.4.0                ggnewscale_0.4.5           </span>
-<span class="co">## [163] Biobase_2.52.0              WGCNA_1.70-3               </span>
-<span class="co">## [165] base64enc_0.1-3</span></code></pre></div>
+<span class="co">##   [1] backports_1.4.1             circlize_0.4.14            </span>
+<span class="co">##   [3] Hmisc_4.7-0                 systemfonts_1.0.4          </span>
+<span class="co">##   [5] plyr_1.8.7                  igraph_1.3.0               </span>
+<span class="co">##   [7] splines_4.1.3               GENIE3_1.16.0              </span>
+<span class="co">##   [9] BiocParallel_1.28.3         ggnetwork_0.5.10           </span>
+<span class="co">##  [11] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
+<span class="co">##  [13] sva_3.42.0                  digest_0.6.29              </span>
+<span class="co">##  [15] foreach_1.5.2               htmltools_0.5.2            </span>
+<span class="co">##  [17] GO.db_3.14.0                fansi_1.0.3                </span>
+<span class="co">##  [19] magrittr_2.0.3              checkmate_2.0.0            </span>
+<span class="co">##  [21] memoise_2.0.1               cluster_2.1.3              </span>
+<span class="co">##  [23] doParallel_1.0.17           limma_3.50.3               </span>
+<span class="co">##  [25] ComplexHeatmap_2.10.0       fastcluster_1.2.3          </span>
+<span class="co">##  [27] Biostrings_2.62.0           annotate_1.72.0            </span>
+<span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.2              </span>
+<span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span>
+<span class="co">##  [33] ggrepel_0.9.1               blob_1.2.3                 </span>
+<span class="co">##  [35] textshaping_0.3.6           xfun_0.30                  </span>
+<span class="co">##  [37] dplyr_1.0.8                 crayon_1.5.1               </span>
+<span class="co">##  [39] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
+<span class="co">##  [41] genefilter_1.76.0           impute_1.68.0              </span>
+<span class="co">##  [43] survival_3.3-1              iterators_1.0.14           </span>
+<span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span>
+<span class="co">##  [47] zlibbioc_1.40.0             XVector_0.34.0             </span>
+<span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.20.0        </span>
+<span class="co">##  [51] car_3.0-12                  shape_1.4.6                </span>
+<span class="co">##  [53] BiocGenerics_0.40.0         abind_1.4-5                </span>
+<span class="co">##  [55] scales_1.2.0                edgeR_3.36.0               </span>
+<span class="co">##  [57] DBI_1.1.2                   rstatix_0.7.0              </span>
+<span class="co">##  [59] Rcpp_1.0.8.3                xtable_1.8-4               </span>
+<span class="co">##  [61] htmlTable_2.4.0             clue_0.3-60                </span>
+<span class="co">##  [63] foreign_0.8-82              bit_4.0.4                  </span>
+<span class="co">##  [65] preprocessCore_1.56.0       Formula_1.2-4              </span>
+<span class="co">##  [67] stats4_4.1.3                htmlwidgets_1.5.4          </span>
+<span class="co">##  [69] httr_1.4.2                  RColorBrewer_1.1-3         </span>
+<span class="co">##  [71] ellipsis_0.3.2              farver_2.1.0               </span>
+<span class="co">##  [73] pkgconfig_2.0.3             XML_3.99-0.9               </span>
+<span class="co">##  [75] nnet_7.3-17                 sass_0.4.1                 </span>
+<span class="co">##  [77] locfit_1.5-9.5              utf8_1.2.2                 </span>
+<span class="co">##  [79] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
+<span class="co">##  [81] reshape2_1.4.4              tidyselect_1.1.2           </span>
+<span class="co">##  [83] rlang_1.0.2                 AnnotationDbi_1.56.2       </span>
+<span class="co">##  [85] munsell_0.5.0               tools_4.1.3                </span>
+<span class="co">##  [87] cachem_1.0.6                cli_3.2.0                  </span>
+<span class="co">##  [89] generics_0.1.2              RSQLite_2.2.12             </span>
+<span class="co">##  [91] statnet.common_4.5.0        broom_0.8.0                </span>
+<span class="co">##  [93] evaluate_0.15               stringr_1.4.0              </span>
+<span class="co">##  [95] fastmap_1.1.0               yaml_2.3.5                 </span>
+<span class="co">##  [97] ragg_1.2.2                  RhpcBLASctl_0.21-247.1     </span>
+<span class="co">##  [99] knitr_1.38                  bit64_4.0.5                </span>
+<span class="co">## [101] fs_1.5.2                    purrr_0.3.4                </span>
+<span class="co">## [103] KEGGREST_1.34.0             nlme_3.1-157               </span>
+<span class="co">## [105] compiler_4.1.3              rstudioapi_0.13            </span>
+<span class="co">## [107] png_0.1-7                   ggsignif_0.6.3             </span>
+<span class="co">## [109] minet_3.52.0                tibble_3.1.6               </span>
+<span class="co">## [111] statmod_1.4.36              geneplotter_1.72.0         </span>
+<span class="co">## [113] bslib_0.3.1                 stringi_1.7.6              </span>
+<span class="co">## [115] highr_0.9                   desc_1.4.1                 </span>
+<span class="co">## [117] lattice_0.20-45             Matrix_1.4-1               </span>
+<span class="co">## [119] vctrs_0.4.1                 networkD3_0.4              </span>
+<span class="co">## [121] pillar_1.7.0                lifecycle_1.0.1            </span>
+<span class="co">## [123] BiocManager_1.30.16         jquerylib_0.1.4            </span>
+<span class="co">## [125] GlobalOptions_0.1.2         cowplot_1.1.1              </span>
+<span class="co">## [127] data.table_1.14.2           bitops_1.0-7               </span>
+<span class="co">## [129] GenomicRanges_1.46.1        R6_2.5.1                   </span>
+<span class="co">## [131] latticeExtra_0.6-29         bookdown_0.26              </span>
+<span class="co">## [133] network_1.17.1              gridExtra_2.3              </span>
+<span class="co">## [135] IRanges_2.28.0              codetools_0.2-18           </span>
+<span class="co">## [137] SummarizedExperiment_1.24.0 DESeq2_1.34.0              </span>
+<span class="co">## [139] rprojroot_2.0.3             rjson_0.2.21               </span>
+<span class="co">## [141] S4Vectors_0.32.4            GenomeInfoDbData_1.2.7     </span>
+<span class="co">## [143] intergraph_2.0-2            mgcv_1.8-40                </span>
+<span class="co">## [145] parallel_4.1.3              grid_4.1.3                 </span>
+<span class="co">## [147] rpart_4.1.16                tidyr_1.2.0                </span>
+<span class="co">## [149] NetRep_1.2.4                coda_0.19-4                </span>
+<span class="co">## [151] rmarkdown_2.13              carData_3.0-5              </span>
+<span class="co">## [153] MatrixGenerics_1.6.0        ggpubr_0.4.0               </span>
+<span class="co">## [155] ggnewscale_0.4.7            Biobase_2.54.0             </span>
+<span class="co">## [157] WGCNA_1.70-3                base64enc_0.1-3</span></code></pre></div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Langfelder2008" class="csl-entry">
-Langfelder, Peter, and Steve Horvath. 2008. <span>“<span class="nocase">WGCNA: an R package for weighted correlation network analysis</span>.”</span> <em>BMC Bioinformatics</em> 9 (1): 559. <a href="https://doi.org/10.1186/1471-2105-9-559">https://doi.org/10.1186/1471-2105-9-559</a>.
+Langfelder, Peter, and Steve Horvath. 2008. <span>“<span class="nocase">WGCNA: an R package for weighted correlation network
+analysis</span>.”</span> <em>BMC Bioinformatics</em> 9 (1): 559. <a href="https://doi.org/10.1186/1471-2105-9-559" class="external-link">https://doi.org/10.1186/1471-2105-9-559</a>.
 </div>
 <div id="ref-Love2014" class="csl-entry">
-Love, Michael I., Wolfgang Huber, and Simon Anders. 2014. <span>“<span class="nocase">Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2</span>.”</span> <em>Genome Biology</em> 15 (12): 1–21. <a href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>.
+Love, Michael I., Wolfgang Huber, and Simon Anders. 2014. <span>“<span class="nocase">Moderated estimation of fold change and dispersion for
+RNA-seq data with DESeq2</span>.”</span> <em>Genome Biology</em> 15
+(12): 1–21. <a href="https://doi.org/10.1186/s13059-014-0550-8" class="external-link">https://doi.org/10.1186/s13059-014-0550-8</a>.
 </div>
 <div id="ref-Oldham2012" class="csl-entry">
-Oldham, Michael C., Peter Langfelder, and Steve Horvath. 2012. <span>“<span class="nocase">Network methods for describing sample relationships in genomic datasets: application to Huntington’s disease</span>.”</span> <em>BMC Systems Biology</em> 6 (1): 1. <a href="https://doi.org/10.1186/1752-0509-6-63">https://doi.org/10.1186/1752-0509-6-63</a>.
+Oldham, Michael C., Peter Langfelder, and Steve Horvath. 2012.
+<span>“<span class="nocase">Network methods for describing sample
+relationships in genomic datasets: application to Huntington’s
+disease</span>.”</span> <em>BMC Systems Biology</em> 6 (1): 1. <a href="https://doi.org/10.1186/1752-0509-6-63" class="external-link">https://doi.org/10.1186/1752-0509-6-63</a>.
 </div>
 <div id="ref-Parsana2019" class="csl-entry">
-Parsana, Princy, Claire Ruberman, Andrew E. Jaffe, Michael C. Schatz, Alexis Battle, and Jeffrey T. Leek. 2019. <span>“<span class="nocase">Addressing confounding artifacts in reconstruction of gene co-expression networks</span>.”</span> <em>Genome Biology</em> 20 (1): 94. <a href="https://doi.org/10.1186/s13059-019-1700-9">https://doi.org/10.1186/s13059-019-1700-9</a>.
+Parsana, Princy, Claire Ruberman, Andrew E. Jaffe, Michael C. Schatz,
+Alexis Battle, and Jeffrey T. Leek. 2019. <span>“<span class="nocase">Addressing confounding artifacts in reconstruction of
+gene co-expression networks</span>.”</span> <em>Genome Biology</em> 20
+(1): 94. <a href="https://doi.org/10.1186/s13059-019-1700-9" class="external-link">https://doi.org/10.1186/s13059-019-1700-9</a>.
 </div>
 <div id="ref-Petereit2016" class="csl-entry">
-Petereit, Juli, Sebastian Smith, Frederick C. Harris, and Karen A. Schlauch. 2016. <span>“<span class="nocase">petal: Co-expression network modelling in R</span>.”</span> <em>BMC Systems Biology</em> 10 (S2): 51. <a href="https://doi.org/10.1186/s12918-016-0298-8">https://doi.org/10.1186/s12918-016-0298-8</a>.
+Petereit, Juli, Sebastian Smith, Frederick C. Harris, and Karen A.
+Schlauch. 2016. <span>“<span class="nocase">petal: Co-expression network
+modelling in R</span>.”</span> <em>BMC Systems Biology</em> 10 (S2): 51.
+<a href="https://doi.org/10.1186/s12918-016-0298-8" class="external-link">https://doi.org/10.1186/s12918-016-0298-8</a>.
 </div>
 <div id="ref-Russo2018" class="csl-entry">
-Russo, Pedro S. T., Gustavo R. Ferreira, Lucas E. Cardozo, Matheus C. Bürger, Raul Arias-Carrasco, Sandra R. Maruyama, Thiago D. C. Hirata, et al. 2018. <span>“<span class="nocase">CEMiTool: a Bioconductor package for performing comprehensive modular co-expression analyses</span>.”</span> <em>BMC Bioinformatics</em> 19 (1): 56. <a href="https://doi.org/10.1186/s12859-018-2053-1">https://doi.org/10.1186/s12859-018-2053-1</a>.
+Russo, Pedro S. T., Gustavo R. Ferreira, Lucas E. Cardozo, Matheus C.
+Bürger, Raul Arias-Carrasco, Sandra R. Maruyama, Thiago D. C. Hirata, et
+al. 2018. <span>“<span class="nocase">CEMiTool: a Bioconductor package
+for performing comprehensive modular co-expression
+analyses</span>.”</span> <em>BMC Bioinformatics</em> 19 (1): 56. <a href="https://doi.org/10.1186/s12859-018-2053-1" class="external-link">https://doi.org/10.1186/s12859-018-2053-1</a>.
 </div>
 <div id="ref-Shin2020" class="csl-entry">
-Shin, Junha, Harald Marx, Alicia Richards, Dries Vaneechoutte, Dhileepkumar Jayaraman, Junko Maeda, Sanhita Chakraborty, et al. 2020. <span>“<span class="nocase">A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies</span>.”</span> <em>Nucleic Acids Research</em>, 1–23. <a href="https://doi.org/10.1093/nar/gkaa1041">https://doi.org/10.1093/nar/gkaa1041</a>.
+Shin, Junha, Harald Marx, Alicia Richards, Dries Vaneechoutte,
+Dhileepkumar Jayaraman, Junko Maeda, Sanhita Chakraborty, et al. 2020.
+<span>“<span class="nocase">A network-based comparative framework to
+study conservation and divergence of proteomes in plant
+phylogenies</span>.”</span> <em>Nucleic Acids Research</em>, 1–23. <a href="https://doi.org/10.1093/nar/gkaa1041" class="external-link">https://doi.org/10.1093/nar/gkaa1041</a>.
 </div>
 <div id="ref-VanBel2018" class="csl-entry">
-Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki, Yves Van De Peer, Frederik Coppens, and Klaas Vandepoele. 2018. <span>“<span class="nocase">PLAZA 4.0: An integrative resource for functional, evolutionary and comparative plant genomics</span>.”</span> <em>Nucleic Acids Research</em> 46 (D1): D1190–96. <a href="https://doi.org/10.1093/nar/gkx1002">https://doi.org/10.1093/nar/gkx1002</a>.
+Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft,
+Alexander Botzki, Yves Van De Peer, Frederik Coppens, and Klaas
+Vandepoele. 2018. <span>“<span class="nocase">PLAZA 4.0: An integrative
+resource for functional, evolutionary and comparative plant
+genomics</span>.”</span> <em>Nucleic Acids Research</em> 46 (D1):
+D1190–96. <a href="https://doi.org/10.1093/nar/gkx1002" class="external-link">https://doi.org/10.1093/nar/gkx1002</a>.
 </div>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p><strong>NOTE:</strong> In case you have many tab-separated expression tables in a directory, <code>BioNERO</code> has a helper function named <code><a href="../reference/dfs2one.html">dfs2one()</a></code> to load all these files and combine them into a single data frame.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><strong>NOTE:</strong> Here, we are using TPM-normalized data. If you have expression data as raw read counts, set the argument <code>vstransform = TRUE</code> in <code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code>. This will apply DESeq2’s variance stabilizing transformation <span class="citation">(Love, Huber, and Anders 2014)</span> to your count data.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p><strong>PRO TIP:</strong> If your <span class="math inline">\(\beta\)</span> power is too low (say below 6), look at the plot as a sanity check.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p><strong>NOTE:</strong> The calculations performed by this function may take a long time depending on the your network size. Use it only if you have some reason to suspect that the modules are highly dependent on a particular set of samples.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p><strong>NOTE:</strong> The function <code><a href="../reference/gene_significance.html">gene_significance()</a></code> works just like <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code>, but it correlates individual genes (not the whole module) to traits. This function is very useful if you have a set of candidate genes and you want to find which of them are more associated with the trait of interest. See <code>?gene_significance()</code> for more details.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
-<li id="fn6"><p><strong>NOTE:</strong> The functions <code><a href="../reference/module_enrichment.html">module_enrichment()</a></code> and <code><a href="../reference/enrichment_analysis.html">enrichment_analysis()</a></code> can be parallelized with <code>BiocParallel</code> to increase speed. The default parallel back-end is <em>SerialParam()</em>, but this can be modified in the argument <code>bp_param</code>.<a href="#fnref6" class="footnote-back">↩︎</a></p></li>
-<li id="fn7"><p><strong>PRO TIP:</strong> Generally, we advise you to filter by optimal scale-free topology fit (default). However, if you want to specify your own correlation filter for some reason (e.g., visualization), we <strong>strongly recommend</strong> using the function <code><a href="../reference/check_SFT.html">check_SFT()</a></code> to check if your resulting graph satisfies the scale-free topology. If it does not, then your graph does not resemble <em>real</em> biological networks and, hence, one cannot trust it for biological interpretations.<a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p><strong>NOTE:</strong> In case you have many
+tab-separated expression tables in a directory, <code>BioNERO</code> has
+a helper function named <code><a href="../reference/dfs2one.html">dfs2one()</a></code> to load all these files
+and combine them into a single data frame.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><strong>NOTE:</strong> Here, we are using TPM-normalized
+data. If you have expression data as raw read counts, set the argument
+<code>vstransform = TRUE</code> in <code><a href="../reference/exp_preprocess.html">exp_preprocess()</a></code>. This
+will apply DESeq2’s variance stabilizing transformation <span class="citation">(Love, Huber, and Anders 2014)</span> to your count
+data.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><strong>PRO TIP:</strong> If your <span class="math inline">\(\beta\)</span> power is too low (say below 6),
+look at the plot as a sanity check.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><strong>NOTE:</strong> The calculations performed by
+this function may take a long time depending on the your network size.
+Use it only if you have some reason to suspect that the modules are
+highly dependent on a particular set of samples.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><strong>NOTE:</strong> The function
+<code><a href="../reference/gene_significance.html">gene_significance()</a></code> works just like
+<code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code>, but it correlates individual genes (not
+the whole module) to traits. This function is very useful if you have a
+set of candidate genes and you want to find which of them are more
+associated with the trait of interest. See
+<code>?gene_significance()</code> for more details.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><strong>NOTE:</strong> The functions
+<code><a href="../reference/module_enrichment.html">module_enrichment()</a></code> and <code><a href="../reference/enrichment_analysis.html">enrichment_analysis()</a></code>
+can be parallelized with <code>BiocParallel</code> to increase speed.
+The default parallel back-end is <em>SerialParam()</em>, but this can be
+modified in the argument <code>bp_param</code>.<a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><strong>PRO TIP:</strong> Generally, we advise you to
+filter by optimal scale-free topology fit (default). However, if you
+want to specify your own correlation filter for some reason (e.g.,
+visualization), we <strong>strongly recommend</strong> using the
+function <code><a href="../reference/check_SFT.html">check_SFT()</a></code> to check if your resulting graph
+satisfies the scale-free topology. If it does not, then your graph does
+not resemble <em>real</em> biological networks and, hence, one cannot
+trust it for biological interpretations.<a href="#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -637,11 +843,14 @@ Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
+  <p></p>
+<p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
@@ -649,6 +858,8 @@ Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki
 
   
 
+
+  
 
   </body>
 </html>

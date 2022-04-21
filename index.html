@@ -41,6 +41,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -53,23 +55,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -92,7 +88,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/">
+  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -109,72 +105,98 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="bionero-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#bionero-" class="anchor"></a>BioNERO <img src="reference/figures/logo.png" align="right" height="139">
+<div class="section level1">
+<div class="page-header"><h1 id="bionero-">BioNERO
+<img src="reference/figures/logo.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#bionero-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can download the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can download the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"almeidasilvaf/BioNERO"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"almeidasilvaf/BioNERO"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
-<p>BioNERO aims to integrate all aspects of biological network inference in a single package, including data preprocessing, exploratory analyses, network inference, and analyses for biological interpretations. BioNERO can be used to infer gene coexpression networks (GCNs) and gene regulatory networks (GRNs) from gene expression data. Additionally, it can be used to explore topological properties of protein-protein interaction (PPI) networks. GCN inference relies on the popular WGCNA algorithm. GRN inference is based on the “wisdom of the crowds” principle, which consists in inferring GRNs with multiple algorithms (here, CLR, GENIE3 and ARACNE) and calculating the average rank for each interaction pair. As all steps of network analyses are included in this package, BioNERO makes users avoid having to learn the syntaxes of several packages and how to communicate between them. Finally, users can also identify consensus modules across independent expression sets and calculate intra and interspecies module preservation statistics between different networks.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>BioNERO aims to integrate all aspects of biological network inference
+in a single package, including data preprocessing, exploratory analyses,
+network inference, and analyses for biological interpretations. BioNERO
+can be used to infer gene coexpression networks (GCNs) and gene
+regulatory networks (GRNs) from gene expression data. Additionally, it
+can be used to explore topological properties of protein-protein
+interaction (PPI) networks. GCN inference relies on the popular WGCNA
+algorithm. GRN inference is based on the “wisdom of the crowds”
+principle, which consists in inferring GRNs with multiple algorithms
+(here, CLR, GENIE3 and ARACNE) and calculating the average rank for each
+interaction pair. As all steps of network analyses are included in this
+package, BioNERO makes users avoid having to learn the syntaxes of
+several packages and how to communicate between them. Finally, users can
+also identify consensus modules across independent expression sets and
+calculate intra and interspecies module preservation statistics between
+different networks.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/BioNERO">https://​www.bioconductor.org/​packages/​BioNERO</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/almeidasilvaf/BioNERO/">https://​github.com/​almeidasilvaf/​BioNERO/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/almeidasilvaf/BioNERO/issues">https://​github.com/​almeidasilvaf/​BioNERO/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Fabricio Almeida-Silva <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-5314-2964" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Thiago Venancio <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2215-8082" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="https://www.bioconductor.org/packages/BioNERO" class="external-link">View on Bioconductor</a></li>
+<li><a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/almeidasilvaf/BioNERO/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://github.com/almeidasilvaf/BioNERO/actions"><img src="https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg" alt="R-CMD-check-bioc"></a></li>
-<li><a href="https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master"><img src="https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing BioNERO</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Fabricio Almeida-Silva <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-5314-2964" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Thiago Venancio <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2215-8082" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/almeidasilvaf/BioNERO/actions" class="external-link"><img src="https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg" alt="R-CMD-check-bioc"></a></li>
+<li><a href="https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master" class="external-link"><img src="https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
+  <p></p>
+<p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
@@ -182,6 +204,8 @@
 
   
 
+
+  
 
   </body>
 </html>

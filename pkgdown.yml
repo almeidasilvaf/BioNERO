@@ -1,9 +1,9 @@
-pandoc: 2.11.4
-pkgdown: 1.6.1
+pandoc: 2.17.1.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   vignette_01_GCN_inference: vignette_01_GCN_inference.html
   vignette_02_GRN_inference: vignette_02_GRN_inference.html
   vignette_03_network_comparison: vignette_03_network_comparison.html
-last_built: 2021-10-21T02:15Z
+last_built: 2022-04-21T09:46Z
 

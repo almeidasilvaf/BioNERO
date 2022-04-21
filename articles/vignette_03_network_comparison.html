@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,23 +40,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -77,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/">
+  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -92,15 +88,20 @@
 
       
 
-      </header><script src="vignette_03_network_comparison_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Network comparison: consensus modules and module preservation</h1>
-                        <h4 class="author">Fabricio Almeida-Silva</h4>
+      <h1 data-toc-skip>Network comparison: consensus modules and module
+preservation</h1>
+                        <h4 data-toc-skip class="author">Fabricio
+Almeida-Silva</h4>
             <address class="author_afil">
-      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil<br><h4 class="author">Thiago Motta Venancio</h4>
+      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
+Brazil<br><h4 data-toc-skip class="author">Thiago
+Motta Venancio</h4>
             <address class="author_afil">
-      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ, Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/master/vignettes/vignette_03_network_comparison.Rmd"><code>vignettes/vignette_03_network_comparison.Rmd</code></a></small>
+      Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
+Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/HEAD/vignettes/vignette_03_network_comparison.Rmd" class="external-link"><code>vignettes/vignette_03_network_comparison.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_03_network_comparison.Rmd</code></div>
 
     </address>
@@ -109,31 +110,43 @@
 
     
     
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
 
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load package after installation</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO">BioNERO</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span>
 <span class="co">## </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
 </div>
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Comparing different coexpression networks can reveal relevant biological patterns. For instance, seeking for <strong>consensus modules</strong> can identify coexpression modules that occur in all data sets regardless of natural variation and, hence, are core players of the studied phenotype. Additionally, <strong>module preservation</strong> within and across species can reveal patterns of conservation and divergence between transcriptomes. In this vignette, we will explore consensus modules and module preservation analyses with <code>BioNERO</code>. Although they seem similar, their goals are opposite: while consensus modules identification focuses on the commonalities, module preservation focuses on the divergences.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Comparing different coexpression networks can reveal relevant
+biological patterns. For instance, seeking for <strong>consensus
+modules</strong> can identify coexpression modules that occur in all
+data sets regardless of natural variation and, hence, are core players
+of the studied phenotype. Additionally, <strong>module
+preservation</strong> within and across species can reveal patterns of
+conservation and divergence between transcriptomes. In this vignette, we
+will explore consensus modules and module preservation analyses with
+<code>BioNERO</code>. Although they seem similar, their goals are
+opposite: while consensus modules identification focuses on the
+commonalities, module preservation focuses on the divergences.</p>
 </div>
-<div id="data-loading-and-description" class="section level1">
-<h1 class="hasAnchor">
-<a href="#data-loading-and-description" class="anchor"></a>Data loading and description</h1>
-<p>We will use RNA-seq data of maize (<em>Zea mays</em>) and rice (<em>Oryza sativa</em>) obtained from <span class="citation">Shin et al. (2020)</span>.</p>
+<div class="section level2">
+<h2 id="data-loading-and-description">Data loading and description<a class="anchor" aria-label="anchor" href="#data-loading-and-description"></a>
+</h2>
+<p>We will use RNA-seq data of maize (<em>Zea mays</em>) and rice
+(<em>Oryza sativa</em>) obtained from <span class="citation">Shin et al.
+(2020)</span>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
 <span class="va">zma.se</span>
 <span class="co">## class: SummarizedExperiment </span>
 <span class="co">## dim: 10802 28 </span>
@@ -144,7 +157,7 @@
 <span class="co">## colnames(28): SRX339756 SRX339757 ... SRX2792103 SRX2792104</span>
 <span class="co">## colData names(1): Tissue</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">osa.se</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">osa.se</span><span class="op">)</span>
 <span class="va">osa.se</span>
 <span class="co">## class: SummarizedExperiment </span>
 <span class="co">## dim: 7647 27 </span>
@@ -154,31 +167,43 @@
 <span class="co">## rowData names(0):</span>
 <span class="co">## colnames(27): SRX831140 SRX831141 ... SRX263041 SRX1544234</span>
 <span class="co">## colData names(1): Tissue</span></code></pre></div>
-<p>All <code>BioNERO</code>’s functions for consensus modules and module preservation analyses require the expression data to be in a <strong>list</strong>. Each element of the list can be a SummarizedExperiment object (recommended) or an expression data frame with genes in row names and samples in column names.</p>
+<p>All <code>BioNERO</code>’s functions for consensus modules and module
+preservation analyses require the expression data to be in a
+<strong>list</strong>. Each element of the list can be a
+SummarizedExperiment object (recommended) or an expression data frame
+with genes in row names and samples in column names.</p>
 </div>
-<div id="consensus-modules" class="section level1">
-<h1 class="hasAnchor">
-<a href="#consensus-modules" class="anchor"></a>Consensus modules</h1>
-<p>The most common objective in consensus modules identification is to find core modules across different tissues or treatments for the same species. For instance, one can infer GCNs for different types of cancer in human tissues (say prostate and liver) and identify modules that occur in all sets, which are likely core components of cancer biology. Likewise, one can also identify consensus modules across samples from different geographical origins to find modules that are not affected by population structure or kinship.</p>
-<div id="data-preprocessing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-preprocessing" class="anchor"></a>Data preprocessing</h2>
-<p>Here, we will subset 22 random samples from the maize data twice and find consensus modules between the two sets.</p>
+<div class="section level2">
+<h2 id="consensus-modules">Consensus modules<a class="anchor" aria-label="anchor" href="#consensus-modules"></a>
+</h2>
+<p>The most common objective in consensus modules identification is to
+find core modules across different tissues or treatments for the same
+species. For instance, one can infer GCNs for different types of cancer
+in human tissues (say prostate and liver) and identify modules that
+occur in all sets, which are likely core components of cancer biology.
+Likewise, one can also identify consensus modules across samples from
+different geographical origins to find modules that are not affected by
+population structure or kinship.</p>
+<div class="section level3">
+<h3 id="data-preprocessing">Data preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a>
+</h3>
+<p>Here, we will subset 22 random samples from the maize data twice and
+find consensus modules between the two sets.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Preprocess data and keep top 2000 genes with highest variances</span>
 <span class="va">filt_zma</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>
 <span class="co">## Number of removed samples: 1</span>
 
 <span class="co"># Create different subsets by resampling data</span>
-<span class="va">zma_set1</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
-<span class="va">zma_set2</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">zma_set1</span><span class="op">)</span>
+<span class="va">zma_set1</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
+<span class="va">zma_set2</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set1</span><span class="op">)</span>
 <span class="co">##  [1] "SRX3804716" "SRX2792102" "SRX2527287" "SRX2792108" "SRX3804723"</span>
 <span class="co">##  [6] "SRX2792107" "SRX2792103" "SRX2792104" "SRX3804715" "SRX339808" </span>
 <span class="co">## [11] "SRX339758"  "SRX339756"  "SRX339809"  "SRX2792105" "SRX339757" </span>
 <span class="co">## [16] "SRX2641029" "SRX339762"  "SRX2792110" "SRX339807"  "SRX3804718"</span>
 <span class="co">## [21] "ERX2154032" "SRX339764"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">zma_set2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set2</span><span class="op">)</span>
 <span class="co">##  [1] "SRX2792111" "SRX339756"  "SRX3804715" "SRX2792108" "SRX2792103"</span>
 <span class="co">##  [6] "SRX339762"  "SRX339807"  "ERX2154030" "SRX2792105" "SRX2792107"</span>
 <span class="co">## [11] "SRX2527287" "ERX2154032" "SRX2792104" "SRX2527288" "SRX339809" </span>
@@ -186,16 +211,19 @@
 <span class="co">## [21] "SRX339808"  "SRX339758"</span>
 
 <span class="co"># Create list</span>
-<span class="va">zma_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>set1 <span class="op">=</span> <span class="va">zma_set1</span>, set2 <span class="op">=</span> <span class="va">zma_set2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">zma_list</span><span class="op">)</span>
+<span class="va">zma_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>set1 <span class="op">=</span> <span class="va">zma_set1</span>, set2 <span class="op">=</span> <span class="va">zma_set2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">zma_list</span><span class="op">)</span>
 <span class="co">## [1] 2</span></code></pre></div>
 </div>
-<div id="identification-of-consensus-modules" class="section level2">
-<h2 class="hasAnchor">
-<a href="#identification-of-consensus-modules" class="anchor"></a>Identification of consensus modules</h2>
-<p>As described in the first vignette, before inferring the GCNs, we need to identify the optimal <span class="math inline">\(\beta\)</span> power that makes the network closer to a scale-free topology. We can do that with <code><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit()</a></code>.</p>
+<div class="section level3">
+<h3 id="identification-of-consensus-modules">Identification of consensus modules<a class="anchor" aria-label="anchor" href="#identification-of-consensus-modules"></a>
+</h3>
+<p>As described in the first vignette, before inferring the GCNs, we
+need to identify the optimal <span class="math inline">\(\beta\)</span>
+power that makes the network closer to a scale-free topology. We can do
+that with <code><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cons_sft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit</a></span><span class="op">(</span><span class="va">zma_list</span>, setLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Maize 1"</span>, <span class="st">"Maize 2"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">cons_sft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit</a></span><span class="op">(</span><span class="va">zma_list</span>, setLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maize 1"</span>, <span class="st">"Maize 2"</span><span class="op">)</span>,
                               cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
 <span class="co">## 1      5    0.658 -0.650          0.656  107.00     90.50  304.0</span>
@@ -231,7 +259,8 @@
 <span class="co">## 14    18    0.827 -1.240          0.954    7.11      3.92   37.8</span>
 <span class="co">## 15    19    0.833 -1.260          0.964    6.23      3.42   34.3</span>
 <span class="co">## 16    20    0.831 -1.280          0.965    5.49      2.99   31.2</span></code></pre></div>
-<p>This function returns a list with the optimal powers and a summary plot, exactly as <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> does.</p>
+<p>This function returns a list with the optimal powers and a summary
+plot, exactly as <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> does.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">powers</span> <span class="op">&lt;-</span> <span class="va">cons_sft</span><span class="op">$</span><span class="va">power</span>
 <span class="va">powers</span>
@@ -239,7 +268,8 @@
 <span class="co">##    7    8</span>
 <span class="va">cons_sft</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
 <p><img src="vignette_03_network_comparison_files/figure-html/sft_results-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>Now, we can infer GCNs and identify consensus modules across data sets.</p>
+<p>Now, we can infer GCNs and identify consensus modules across data
+sets.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_modules.html">consensus_modules</a></span><span class="op">(</span><span class="va">zma_list</span>, power <span class="op">=</span> <span class="va">powers</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">## ..connectivity..</span>
@@ -254,10 +284,10 @@
 <span class="co">##  multiSetMEs: Calculating module MEs.</span>
 <span class="co">##    Working on set 1 ...</span>
 <span class="co">##    Working on set 2 ...</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">)</span>
 <span class="co">## [1] "consModules"         "consMEs"             "exprSize"           </span>
 <span class="co">## [4] "sampleInfo"          "genes_cmodules"      "dendro_plot_objects"</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">$</span><span class="va">genes_cmodules</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">$</span><span class="va">genes_cmodules</span><span class="op">)</span>
 <span class="co">##       Genes Cons_modules</span>
 <span class="co">## 1 ZeamMp030    royalblue</span>
 <span class="co">## 2 ZeamMp044      darkred</span>
@@ -265,12 +295,13 @@
 <span class="co">## 4 ZeamMp108  saddlebrown</span>
 <span class="co">## 5 ZeamMp116      darkred</span>
 <span class="co">## 6 ZeamMp158  saddlebrown</span></code></pre></div>
-<p>Finally, we can correlate consensus module eigengenes to sample metadata (here, plant tissues).<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Finally, we can correlate consensus module eigengenes to sample
+metadata (here, plant tissues).<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">consensus_trait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_trait_cor.html">consensus_trait_cor</a></span><span class="op">(</span><span class="va">consensus</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></code></pre></div>
 <p><img src="vignette_03_network_comparison_files/figure-html/consensus_trait_cor-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">consensus_trait</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus_trait</span><span class="op">)</span>
 <span class="co">##        ME          trait          cor    pvalue</span>
 <span class="co">## 1 MEblack      endosperm -0.297224435 0.1815879</span>
 <span class="co">## 2 MEblack         pollen  0.284525339 0.2021641</span>
@@ -278,20 +309,35 @@
 <span class="co">## 4  MEblue      endosperm -0.164695363 0.4687656</span>
 <span class="co">## 5  MEblue         pollen  0.295979347 0.1835410</span>
 <span class="co">## 6  MEblue whole_seedling -0.016437184 0.9428769</span></code></pre></div>
-<p>Users can also transpose the heatmap as in <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code>.</p>
+<p>Users can also transpose the heatmap as in
+<code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code>.</p>
 </div>
 </div>
-<div id="module-preservation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#module-preservation" class="anchor"></a>Module preservation</h1>
-<p>Module preservation is often used to study patterns of evolutionary conservation and divergence across transcriptomes, an approach named <em>phylotranscriptomics</em>. This way, one can investigate how evolution shaped the expression profiles for particular gene families across taxa.</p>
-<div id="data-preprocessing-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-preprocessing-1" class="anchor"></a>Data preprocessing</h2>
-<p>To calculate module preservation statistics, gene IDs must be shared by the expression sets. For intraspecies comparisons, this is an easy task, as gene IDs are the same. However, for interspecies comparisons, users need to identify orthogroups between the different species and collapse the gene-level expression values to orthogroup-level expression values. This way, all expression sets will have common row names. We recommend identifying orthogroups with <strong>OrthoFinder</strong> <span class="citation">(Emms and Kelly 2015)</span>, as it is simple to use and widely used.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Here, we will compare maize and rice expression profiles. The orthogroups between these species were downloaded from the PLAZA 4.0 Monocots database <span class="citation">(Van Bel et al. 2018)</span>.</p>
+<div class="section level2">
+<h2 id="module-preservation">Module preservation<a class="anchor" aria-label="anchor" href="#module-preservation"></a>
+</h2>
+<p>Module preservation is often used to study patterns of evolutionary
+conservation and divergence across transcriptomes, an approach named
+<em>phylotranscriptomics</em>. This way, one can investigate how
+evolution shaped the expression profiles for particular gene families
+across taxa.</p>
+<div class="section level3">
+<h3 id="data-preprocessing-1">Data preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing-1"></a>
+</h3>
+<p>To calculate module preservation statistics, gene IDs must be shared
+by the expression sets. For intraspecies comparisons, this is an easy
+task, as gene IDs are the same. However, for interspecies comparisons,
+users need to identify orthogroups between the different species and
+collapse the gene-level expression values to orthogroup-level expression
+values. This way, all expression sets will have common row names. We
+recommend identifying orthogroups with <strong>OrthoFinder</strong>
+<span class="citation">(Emms and Kelly 2015)</span>, as it is simple to
+use and widely used.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Here, we will compare maize and rice
+expression profiles. The orthogroups between these species were
+downloaded from the PLAZA 4.0 Monocots database <span class="citation">(Van Bel et al. 2018)</span>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
 <span class="co">##              Family Species           Gene</span>
 <span class="co">## 1548 ORTHO04M000001     osa   Os01g0100700</span>
 <span class="co">## 1549 ORTHO04M000001     osa   Os01g0100900</span>
@@ -299,10 +345,16 @@
 <span class="co">## 4854 ORTHO04M000001     zma Zm00001d020834</span>
 <span class="co">## 4874 ORTHO04M000001     zma Zm00001d026672</span>
 <span class="co">## 4921 ORTHO04M000001     zma Zm00001d039873</span></code></pre></div>
-<p>As you can see, the orthogroup object for <code>BioNERO</code> must be a data frame with orthogroups, species IDs and gene IDs, respectively. Let’s collapse gene-level expression to orthogroup-level with <code><a href="../reference/exp_genes2orthogroups.html">exp_genes2orthogroups()</a></code>. By default, if there is more than one gene in the same orthogroup for a given species, their expression levels are summarized to the median. Users can also summarize to the mean.</p>
+<p>As you can see, the orthogroup object for <code>BioNERO</code> must
+be a data frame with orthogroups, species IDs and gene IDs,
+respectively. Let’s collapse gene-level expression to orthogroup-level
+with <code><a href="../reference/exp_genes2orthogroups.html">exp_genes2orthogroups()</a></code>. By default, if there is more
+than one gene in the same orthogroup for a given species, their
+expression levels are summarized to the median. Users can also summarize
+to the mean.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Store SummarizedExperiment objects in a list</span>
-<span class="va">zma_osa_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>osa <span class="op">=</span> <span class="va">osa.se</span>, zma <span class="op">=</span> <span class="va">zma.se</span><span class="op">)</span>
+<span class="va">zma_osa_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>osa <span class="op">=</span> <span class="va">osa.se</span>, zma <span class="op">=</span> <span class="va">zma.se</span><span class="op">)</span>
 
 <span class="co"># Collapse gene-level expression to orthogroup-level</span>
 <span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_genes2orthogroups.html">exp_genes2orthogroups</a></span><span class="op">(</span><span class="va">zma_osa_list</span>, <span class="va">og.zma.osa</span>, summarize <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>
@@ -322,25 +374,28 @@
 <span class="co">## ORTHO04M000003  45.17294  48.63796  54.22404  42.12135 10.779117</span>
 <span class="co">## ORTHO04M000004  28.05475  38.53734  39.48070  27.13272  2.978207</span>
 <span class="co">## ORTHO04M000005  67.58868  34.87009  21.46280  12.79565  7.452068</span></code></pre></div>
-<p>Now, we will preprocess both expression sets and keep only the top 1000 orthogroups with the highest variances for demonstration purposes.</p>
+<p>Now, we will preprocess both expression sets and keep only the top
+1000 orthogroups with the highest variances for demonstration
+purposes.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Preprocess data and keep top 1000 genes with highest variances</span>
-<span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">exp_preprocess</span>, variance_filter<span class="op">=</span><span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span>
+<span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">exp_preprocess</span>, variance_filter<span class="op">=</span><span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span>
 <span class="co">## Number of removed samples: 2</span>
 <span class="co">## Number of removed samples: 2</span>
 
 <span class="co"># Check orthogroup number</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">nrow</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">nrow</span><span class="op">)</span>
 <span class="co">##  osa  zma </span>
 <span class="co">## 1000 1000</span></code></pre></div>
 </div>
-<div id="calculating-module-preservation-statistics" class="section level2">
-<h2 class="hasAnchor">
-<a href="#calculating-module-preservation-statistics" class="anchor"></a>Calculating module preservation statistics</h2>
-<p>Now that row names are comparable, we can infer GCNs for each set. We will do that iteratively with lapply.</p>
+<div class="section level3">
+<h3 id="calculating-module-preservation-statistics">Calculating module preservation statistics<a class="anchor" aria-label="anchor" href="#calculating-module-preservation-statistics"></a>
+</h3>
+<p>Now that row names are comparable, we can infer GCNs for each set. We
+will do that iteratively with lapply.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Calculate SFT power</span>
-<span class="va">power_ortho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">SFT_fit</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span>
+<span class="va">power_ortho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">SFT_fit</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span>
 <span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
 <span class="co">## 1      3  0.00503 -0.174          0.792  196.00    196.00  277.0</span>
 <span class="co">## 2      4  0.10300 -0.767          0.874  133.00    131.00  210.0</span>
@@ -381,7 +436,7 @@
 <span class="co">## 18    20   0.8810 -0.8120         0.9240    16.6      12.3   56.6</span>
 
 <span class="co"># Infer GCNs</span>
-<span class="va">gcns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">power_ortho</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> 
+<span class="va">gcns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">power_ortho</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> 
   <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span><span class="va">ortho_exp</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span>, SFTpower <span class="op">=</span> <span class="va">power_ortho</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">power</span>, 
           cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
   <span class="op">)</span>
@@ -394,43 +449,58 @@
 <span class="co">## ..normalization..</span>
 <span class="co">## ..done.</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">gcns</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gcns</span><span class="op">)</span>
 <span class="co">## [1] 2</span></code></pre></div>
-<p>Initially, module preservation analyses were performed with WGCNA’s algorithm <span class="citation">(Langfelder and Horvath 2008)</span>. However, the summary preservation statistics used by WGCNA rely on parametric assumptions that are often not met. For this purpose, the NetRep algorithm <span class="citation">(Ritchie et al. 2016)</span> is more accurate than WGCNA, as it uses non-parametric permutation analyses. Both algorithms are implemented in <code>BioNERO</code> for comparison purposes, but we <strong>strongly recommend</strong> using the NetRep algorithm. Module preservation analysis can be performed with a single function: <code><a href="../reference/module_preservation.html">module_preservation()</a></code>.</p>
+<p>Initially, module preservation analyses were performed with WGCNA’s
+algorithm <span class="citation">(Langfelder and Horvath 2008)</span>.
+However, the summary preservation statistics used by WGCNA rely on
+parametric assumptions that are often not met. For this purpose, the
+NetRep algorithm <span class="citation">(Ritchie et al. 2016)</span> is
+more accurate than WGCNA, as it uses non-parametric permutation
+analyses. Both algorithms are implemented in <code>BioNERO</code> for
+comparison purposes, but we <strong>strongly recommend</strong> using
+the NetRep algorithm. Module preservation analysis can be performed with
+a single function: <code><a href="../reference/module_preservation.html">module_preservation()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using rice as reference and maize as test</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pres <span class="ot">&lt;-</span> <span class="fu">module_preservation</span>(ortho_exp, </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ref_net =</span> gcns[[<span class="dv">1</span>]], </span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">test_net =</span> gcns[[<span class="dv">2</span>]], </span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">algorithm =</span> <span class="st">"netrep"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:23 UTC] Validating user input...</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:23 UTC]   Checking matrices for problems...</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:23 UTC] Input ok!</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:23 UTC] Calculating preservation of network subsets from</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:42 UTC] Validating user input...</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:42 UTC]   Checking matrices for problems...</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:43 UTC] Input ok!</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:43 UTC] Calculating preservation of network subsets from</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##                           dataset "osa" in dataset "zma".</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:23 UTC]   Pre-computing network properties in dataset</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:43 UTC]   Pre-computing network properties in dataset</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                             "osa"...</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:24 UTC]   Calculating observed test statistics...</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:24 UTC]   Generating null distributions from 1000</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:44 UTC]   Calculating observed test statistics...</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:44 UTC]   Generating null distributions from 1000</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                             permutations using 1 thread...</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>% completed.</span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span>% completed.</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:25 UTC]   Calculating P-values...</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:25 UTC]   Collating results...</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2021-10-21 02:23:27 UTC] Done!</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:45 UTC]   Calculating P-values...</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:45 UTC]   Collating results...</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 09:51:47 UTC] Done!</span></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="do">## None of the modules in osa were preserved in zma.</span></span></code></pre></div>
-<p>None of the modules in rice were preserved in maize. This can be either due to the small number of orthogroups we have chosen or to the natural biological variation between species and sampled tissues. You can (and should) include more orthogroups in your analyses for a better view of transcriptional conservation between species.</p>
+<p>None of the modules in rice were preserved in maize. This can be
+either due to the small number of orthogroups we have chosen or to the
+natural biological variation between species and sampled tissues. You
+can (and should) include more orthogroups in your analyses for a better
+view of transcriptional conservation between species.</p>
 </div>
 </div>
-<div id="identifying-singletons-and-duplicated-genes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#identifying-singletons-and-duplicated-genes" class="anchor"></a>Identifying singletons and duplicated genes</h1>
-<p>Finally, <code>BioNERO</code> can identify singletons and duplicated genes with <code><a href="../reference/is_singleton.html">is_singleton()</a></code>. This function returns logical vectors indicating if each of the input genes is a singleton or not.</p>
+<div class="section level2">
+<h2 id="identifying-singletons-and-duplicated-genes">Identifying singletons and duplicated genes<a class="anchor" aria-label="anchor" href="#identifying-singletons-and-duplicated-genes"></a>
+</h2>
+<p>Finally, <code>BioNERO</code> can identify singletons and duplicated
+genes with <code><a href="../reference/is_singleton.html">is_singleton()</a></code>. This function returns logical
+vectors indicating if each of the input genes is a singleton or not.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Sample 50 random genes</span>
-<span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
+<span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
 <span class="fu"><a href="../reference/is_singleton.html">is_singleton</a></span><span class="op">(</span><span class="va">genes</span>, <span class="va">og.zma.osa</span><span class="op">)</span>
 <span class="co">## Zm00001d000240 Zm00001d006084 Zm00001d007075 Zm00001d007888 Zm00001d008982 </span>
 <span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
@@ -453,141 +523,163 @@
 <span class="co">## Zm00001d046937 Zm00001d047187 Zm00001d048627 Zm00001d049325 Zm00001d050347 </span>
 <span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE</span></code></pre></div>
 </div>
-<div id="session-info" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h1>
+<div class="section level2">
+<h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
 <p>This vignette was created under the following conditions:</p>
-<pre><code>## R version 4.1.1 (2021-08-10)
-## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.3 LTS
-## 
-## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
-## 
-## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
-##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-## [1] BioNERO_1.1.7    BiocStyle_2.20.2
-## 
-## loaded via a namespace (and not attached):
-##   [1] readxl_1.3.1                backports_1.2.1            
-##   [3] circlize_0.4.13             Hmisc_4.6-0                
-##   [5] systemfonts_1.0.3           plyr_1.8.6                 
-##   [7] igraph_1.2.7                splines_4.1.1              
-##   [9] GENIE3_1.14.0               BiocParallel_1.26.2        
-##  [11] GenomeInfoDb_1.28.4         ggnetwork_0.5.10           
-##  [13] ggplot2_3.3.5               sva_3.40.0                 
-##  [15] digest_0.6.28               foreach_1.5.1              
-##  [17] htmltools_0.5.2             GO.db_3.13.0               
-##  [19] fansi_0.5.0                 magrittr_2.0.1             
-##  [21] checkmate_2.0.0             memoise_2.0.0              
-##  [23] cluster_2.1.2               doParallel_1.0.16          
-##  [25] limma_3.48.3                openxlsx_4.2.4             
-##  [27] ComplexHeatmap_2.8.0        fastcluster_1.2.3          
-##  [29] Biostrings_2.60.2           annotate_1.70.0            
-##  [31] matrixStats_0.61.0          pkgdown_1.6.1              
-##  [33] jpeg_0.1-9                  colorspace_2.0-2           
-##  [35] ggrepel_0.9.1               blob_1.2.2                 
-##  [37] haven_2.4.3                 textshaping_0.3.6          
-##  [39] xfun_0.27                   dplyr_1.0.7                
-##  [41] crayon_1.4.1                RCurl_1.98-1.5             
-##  [43] genefilter_1.74.1           impute_1.66.0              
-##  [45] survival_3.2-13             iterators_1.0.13           
-##  [47] glue_1.4.2                  gtable_0.3.0               
-##  [49] zlibbioc_1.38.0             XVector_0.32.0             
-##  [51] GetoptLong_1.0.5            DelayedArray_0.18.0        
-##  [53] car_3.0-11                  shape_1.4.6                
-##  [55] BiocGenerics_0.38.0         abind_1.4-5                
-##  [57] scales_1.1.1                edgeR_3.34.1               
-##  [59] DBI_1.1.1                   rstatix_0.7.0              
-##  [61] Rcpp_1.0.7                  xtable_1.8-4               
-##  [63] htmlTable_2.3.0             clue_0.3-60                
-##  [65] foreign_0.8-81              bit_4.0.4                  
-##  [67] preprocessCore_1.54.0       Formula_1.2-4              
-##  [69] stats4_4.1.1                htmlwidgets_1.5.4          
-##  [71] httr_1.4.2                  RColorBrewer_1.1-2         
-##  [73] ellipsis_0.3.2              farver_2.1.0               
-##  [75] pkgconfig_2.0.3             XML_3.99-0.8               
-##  [77] nnet_7.3-16                 locfit_1.5-9.4             
-##  [79] utf8_1.2.2                  dynamicTreeCut_1.63-1      
-##  [81] labeling_0.4.2              reshape2_1.4.4             
-##  [83] tidyselect_1.1.1            rlang_0.4.12               
-##  [85] AnnotationDbi_1.54.1        cellranger_1.1.0           
-##  [87] munsell_0.5.0               tools_4.1.1                
-##  [89] cachem_1.0.6                generics_0.1.0             
-##  [91] RSQLite_2.2.8               statnet.common_4.5.0       
-##  [93] broom_0.7.9                 evaluate_0.14              
-##  [95] stringr_1.4.0               fastmap_1.1.0              
-##  [97] yaml_2.2.1                  ragg_1.1.3                 
-##  [99] RhpcBLASctl_0.21-247        knitr_1.36                 
-## [101] bit64_4.0.5                 fs_1.5.0                   
-## [103] zip_2.2.0                   purrr_0.3.4                
-## [105] KEGGREST_1.32.0             nlme_3.1-153               
-## [107] compiler_4.1.1              rstudioapi_0.13            
-## [109] curl_4.3.2                  png_0.1-7                  
-## [111] ggsignif_0.6.3              minet_3.50.0               
-## [113] tibble_3.1.5                statmod_1.4.36             
-## [115] geneplotter_1.70.0          stringi_1.7.5              
-## [117] highr_0.9                   desc_1.4.0                 
-## [119] forcats_0.5.1               lattice_0.20-45            
-## [121] Matrix_1.3-4                vctrs_0.3.8                
-## [123] networkD3_0.4               pillar_1.6.4               
-## [125] lifecycle_1.0.1             BiocManager_1.30.16        
-## [127] jquerylib_0.1.4             GlobalOptions_0.1.2        
-## [129] cowplot_1.1.1               data.table_1.14.2          
-## [131] bitops_1.0-7                GenomicRanges_1.44.0       
-## [133] R6_2.5.1                    latticeExtra_0.6-29        
-## [135] bookdown_0.24               network_1.17.1             
-## [137] rio_0.5.27                  gridExtra_2.3              
-## [139] IRanges_2.26.0              codetools_0.2-18           
-## [141] SummarizedExperiment_1.22.0 DESeq2_1.32.0              
-## [143] rprojroot_2.0.2             rjson_0.2.20               
-## [145] S4Vectors_0.30.2            GenomeInfoDbData_1.2.6     
-## [147] intergraph_2.0-2            mgcv_1.8-38                
-## [149] hms_1.1.1                   parallel_4.1.1             
-## [151] grid_4.1.1                  rpart_4.1-15               
-## [153] tidyr_1.1.4                 NetRep_1.2.4               
-## [155] coda_0.19-4                 rmarkdown_2.11             
-## [157] carData_3.0-4               MatrixGenerics_1.4.3       
-## [159] Cairo_1.5-12.2              ggpubr_0.4.0               
-## [161] ggnewscale_0.4.5            Biobase_2.52.0             
-## [163] WGCNA_1.70-3                base64enc_0.1-3</code></pre>
+<pre><code><span class="co">## R version 4.1.3 (2022-03-10)</span>
+<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
+<span class="co">## </span>
+<span class="co">## Matrix products: default</span>
+<span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
+<span class="co">## </span>
+<span class="co">## locale:</span>
+<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
+<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">## </span>
+<span class="co">## attached base packages:</span>
+<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">## </span>
+<span class="co">## other attached packages:</span>
+<span class="co">## [1] BioNERO_1.3.1    BiocStyle_2.22.0</span>
+<span class="co">## </span>
+<span class="co">## loaded via a namespace (and not attached):</span>
+<span class="co">##   [1] backports_1.4.1             circlize_0.4.14            </span>
+<span class="co">##   [3] Hmisc_4.7-0                 systemfonts_1.0.4          </span>
+<span class="co">##   [5] plyr_1.8.7                  igraph_1.3.0               </span>
+<span class="co">##   [7] splines_4.1.3               GENIE3_1.16.0              </span>
+<span class="co">##   [9] BiocParallel_1.28.3         ggnetwork_0.5.10           </span>
+<span class="co">##  [11] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
+<span class="co">##  [13] sva_3.42.0                  digest_0.6.29              </span>
+<span class="co">##  [15] foreach_1.5.2               htmltools_0.5.2            </span>
+<span class="co">##  [17] GO.db_3.14.0                fansi_1.0.3                </span>
+<span class="co">##  [19] magrittr_2.0.3              checkmate_2.0.0            </span>
+<span class="co">##  [21] memoise_2.0.1               cluster_2.1.3              </span>
+<span class="co">##  [23] doParallel_1.0.17           limma_3.50.3               </span>
+<span class="co">##  [25] ComplexHeatmap_2.10.0       fastcluster_1.2.3          </span>
+<span class="co">##  [27] Biostrings_2.62.0           annotate_1.72.0            </span>
+<span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.2              </span>
+<span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span>
+<span class="co">##  [33] ggrepel_0.9.1               blob_1.2.3                 </span>
+<span class="co">##  [35] textshaping_0.3.6           xfun_0.30                  </span>
+<span class="co">##  [37] dplyr_1.0.8                 crayon_1.5.1               </span>
+<span class="co">##  [39] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
+<span class="co">##  [41] genefilter_1.76.0           impute_1.68.0              </span>
+<span class="co">##  [43] survival_3.3-1              iterators_1.0.14           </span>
+<span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span>
+<span class="co">##  [47] zlibbioc_1.40.0             XVector_0.34.0             </span>
+<span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.20.0        </span>
+<span class="co">##  [51] car_3.0-12                  shape_1.4.6                </span>
+<span class="co">##  [53] BiocGenerics_0.40.0         abind_1.4-5                </span>
+<span class="co">##  [55] scales_1.2.0                edgeR_3.36.0               </span>
+<span class="co">##  [57] DBI_1.1.2                   rstatix_0.7.0              </span>
+<span class="co">##  [59] Rcpp_1.0.8.3                xtable_1.8-4               </span>
+<span class="co">##  [61] htmlTable_2.4.0             clue_0.3-60                </span>
+<span class="co">##  [63] foreign_0.8-82              bit_4.0.4                  </span>
+<span class="co">##  [65] preprocessCore_1.56.0       Formula_1.2-4              </span>
+<span class="co">##  [67] stats4_4.1.3                htmlwidgets_1.5.4          </span>
+<span class="co">##  [69] httr_1.4.2                  RColorBrewer_1.1-3         </span>
+<span class="co">##  [71] ellipsis_0.3.2              farver_2.1.0               </span>
+<span class="co">##  [73] pkgconfig_2.0.3             XML_3.99-0.9               </span>
+<span class="co">##  [75] nnet_7.3-17                 sass_0.4.1                 </span>
+<span class="co">##  [77] locfit_1.5-9.5              utf8_1.2.2                 </span>
+<span class="co">##  [79] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
+<span class="co">##  [81] reshape2_1.4.4              tidyselect_1.1.2           </span>
+<span class="co">##  [83] rlang_1.0.2                 AnnotationDbi_1.56.2       </span>
+<span class="co">##  [85] munsell_0.5.0               tools_4.1.3                </span>
+<span class="co">##  [87] cachem_1.0.6                cli_3.2.0                  </span>
+<span class="co">##  [89] generics_0.1.2              RSQLite_2.2.12             </span>
+<span class="co">##  [91] statnet.common_4.5.0        broom_0.8.0                </span>
+<span class="co">##  [93] evaluate_0.15               stringr_1.4.0              </span>
+<span class="co">##  [95] fastmap_1.1.0               yaml_2.3.5                 </span>
+<span class="co">##  [97] ragg_1.2.2                  RhpcBLASctl_0.21-247.1     </span>
+<span class="co">##  [99] knitr_1.38                  bit64_4.0.5                </span>
+<span class="co">## [101] fs_1.5.2                    purrr_0.3.4                </span>
+<span class="co">## [103] KEGGREST_1.34.0             nlme_3.1-157               </span>
+<span class="co">## [105] compiler_4.1.3              rstudioapi_0.13            </span>
+<span class="co">## [107] png_0.1-7                   ggsignif_0.6.3             </span>
+<span class="co">## [109] minet_3.52.0                tibble_3.1.6               </span>
+<span class="co">## [111] statmod_1.4.36              geneplotter_1.72.0         </span>
+<span class="co">## [113] bslib_0.3.1                 stringi_1.7.6              </span>
+<span class="co">## [115] highr_0.9                   desc_1.4.1                 </span>
+<span class="co">## [117] lattice_0.20-45             Matrix_1.4-1               </span>
+<span class="co">## [119] vctrs_0.4.1                 networkD3_0.4              </span>
+<span class="co">## [121] pillar_1.7.0                lifecycle_1.0.1            </span>
+<span class="co">## [123] BiocManager_1.30.16         jquerylib_0.1.4            </span>
+<span class="co">## [125] GlobalOptions_0.1.2         cowplot_1.1.1              </span>
+<span class="co">## [127] data.table_1.14.2           bitops_1.0-7               </span>
+<span class="co">## [129] GenomicRanges_1.46.1        R6_2.5.1                   </span>
+<span class="co">## [131] latticeExtra_0.6-29         bookdown_0.26              </span>
+<span class="co">## [133] network_1.17.1              gridExtra_2.3              </span>
+<span class="co">## [135] IRanges_2.28.0              codetools_0.2-18           </span>
+<span class="co">## [137] SummarizedExperiment_1.24.0 DESeq2_1.34.0              </span>
+<span class="co">## [139] rprojroot_2.0.3             rjson_0.2.21               </span>
+<span class="co">## [141] S4Vectors_0.32.4            GenomeInfoDbData_1.2.7     </span>
+<span class="co">## [143] intergraph_2.0-2            mgcv_1.8-40                </span>
+<span class="co">## [145] parallel_4.1.3              grid_4.1.3                 </span>
+<span class="co">## [147] rpart_4.1.16                tidyr_1.2.0                </span>
+<span class="co">## [149] NetRep_1.2.4                coda_0.19-4                </span>
+<span class="co">## [151] rmarkdown_2.13              carData_3.0-5              </span>
+<span class="co">## [153] MatrixGenerics_1.6.0        ggpubr_0.4.0               </span>
+<span class="co">## [155] ggnewscale_0.4.7            Biobase_2.54.0             </span>
+<span class="co">## [157] WGCNA_1.70-3                base64enc_0.1-3</span></code></pre>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Emms2015" class="csl-entry">
-Emms, David M., and Steven Kelly. 2015. <span>“<span class="nocase">OrthoFinder: solving fundamental biases in whole genome comparisons dramatically improves orthogroup inference accuracy</span>.”</span> <em>Genome Biology</em> 16 (1): 1–14. <a href="https://doi.org/10.1186/s13059-015-0721-2">https://doi.org/10.1186/s13059-015-0721-2</a>.
+Emms, David M., and Steven Kelly. 2015. <span>“<span class="nocase">OrthoFinder: solving fundamental biases in whole genome
+comparisons dramatically improves orthogroup inference
+accuracy</span>.”</span> <em>Genome Biology</em> 16 (1): 1–14. <a href="https://doi.org/10.1186/s13059-015-0721-2" class="external-link">https://doi.org/10.1186/s13059-015-0721-2</a>.
 </div>
 <div id="ref-Langfelder2008" class="csl-entry">
-Langfelder, Peter, and Steve Horvath. 2008. <span>“<span class="nocase">WGCNA: an R package for weighted correlation network analysis</span>.”</span> <em>BMC Bioinformatics</em> 9 (1): 559. <a href="https://doi.org/10.1186/1471-2105-9-559">https://doi.org/10.1186/1471-2105-9-559</a>.
+Langfelder, Peter, and Steve Horvath. 2008. <span>“<span class="nocase">WGCNA: an R package for weighted correlation network
+analysis</span>.”</span> <em>BMC Bioinformatics</em> 9 (1): 559. <a href="https://doi.org/10.1186/1471-2105-9-559" class="external-link">https://doi.org/10.1186/1471-2105-9-559</a>.
 </div>
 <div id="ref-Ritchie2016" class="csl-entry">
-Ritchie, Scott C., Stephen Watts, Liam G. Fearnley, Kathryn E. Holt, Gad Abraham, and Michael Inouye. 2016. <span>“<span class="nocase">A Scalable Permutation Approach Reveals Replication and Preservation Patterns of Network Modules in Large Datasets</span>.”</span> <em>Cell Systems</em> 3 (1): 71–82. <a href="https://doi.org/10.1016/j.cels.2016.06.012">https://doi.org/10.1016/j.cels.2016.06.012</a>.
+Ritchie, Scott C., Stephen Watts, Liam G. Fearnley, Kathryn E. Holt, Gad
+Abraham, and Michael Inouye. 2016. <span>“<span class="nocase">A
+Scalable Permutation Approach Reveals Replication and Preservation
+Patterns of Network Modules in Large Datasets</span>.”</span> <em>Cell
+Systems</em> 3 (1): 71–82. <a href="https://doi.org/10.1016/j.cels.2016.06.012" class="external-link">https://doi.org/10.1016/j.cels.2016.06.012</a>.
 </div>
 <div id="ref-Shin2020" class="csl-entry">
-Shin, Junha, Harald Marx, Alicia Richards, Dries Vaneechoutte, Dhileepkumar Jayaraman, Junko Maeda, Sanhita Chakraborty, et al. 2020. <span>“<span class="nocase">A network-based comparative framework to study conservation and divergence of proteomes in plant phylogenies</span>.”</span> <em>Nucleic Acids Research</em>, 1–23. <a href="https://doi.org/10.1093/nar/gkaa1041">https://doi.org/10.1093/nar/gkaa1041</a>.
+Shin, Junha, Harald Marx, Alicia Richards, Dries Vaneechoutte,
+Dhileepkumar Jayaraman, Junko Maeda, Sanhita Chakraborty, et al. 2020.
+<span>“<span class="nocase">A network-based comparative framework to
+study conservation and divergence of proteomes in plant
+phylogenies</span>.”</span> <em>Nucleic Acids Research</em>, 1–23. <a href="https://doi.org/10.1093/nar/gkaa1041" class="external-link">https://doi.org/10.1093/nar/gkaa1041</a>.
 </div>
 <div id="ref-VanBel2018" class="csl-entry">
-Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki, Yves Van De Peer, Frederik Coppens, and Klaas Vandepoele. 2018. <span>“<span class="nocase">PLAZA 4.0: An integrative resource for functional, evolutionary and comparative plant genomics</span>.”</span> <em>Nucleic Acids Research</em> 46 (D1): D1190–96. <a href="https://doi.org/10.1093/nar/gkx1002">https://doi.org/10.1093/nar/gkx1002</a>.
+Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft,
+Alexander Botzki, Yves Van De Peer, Frederik Coppens, and Klaas
+Vandepoele. 2018. <span>“<span class="nocase">PLAZA 4.0: An integrative
+resource for functional, evolutionary and comparative plant
+genomics</span>.”</span> <em>Nucleic Acids Research</em> 46 (D1):
+D1190–96. <a href="https://doi.org/10.1093/nar/gkx1002" class="external-link">https://doi.org/10.1093/nar/gkx1002</a>.
 </div>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p><strong>NOTE:</strong> Blank grey cells in the heatmap represent correlation values that have opposite sign in the expression sets. For each correlation pair, consensus correlations are calculated by selecting the minimum value across matrices of consensus module-trait correlations.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><strong>PRO TIP:</strong> If you identify orthogroups with <strong>OrthoFinder</strong>, <code>BioNERO</code> has a helper function named <code><a href="../reference/parse_orthofinder.html">parse_orthofinder()</a></code> that parses the <em>Orthogroups.tsv</em> file generated by OrthoFinder into a suitable data frame for module preservation analysis. See <code><a href="../reference/parse_orthofinder.html">?parse_orthofinder</a></code> for more details.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p><strong>NOTE:</strong> Blank grey cells in the heatmap
+represent correlation values that have opposite sign in the expression
+sets. For each correlation pair, consensus correlations are calculated
+by selecting the minimum value across matrices of consensus module-trait
+correlations.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><strong>PRO TIP:</strong> If you identify orthogroups
+with <strong>OrthoFinder</strong>, <code>BioNERO</code> has a helper
+function named <code><a href="../reference/parse_orthofinder.html">parse_orthofinder()</a></code> that parses the
+<em>Orthogroups.tsv</em> file generated by OrthoFinder into a suitable
+data frame for module preservation analysis. See
+<code><a href="../reference/parse_orthofinder.html">?parse_orthofinder</a></code> for more details.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -603,11 +695,14 @@ Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki
 
 
       <footer><div class="copyright">
-  <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
+  <p></p>
+<p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
@@ -615,6 +710,8 @@ Van Bel, Michiel, Tim Diels, Emmelien Vancaester, Lukasz Kreft, Alexander Botzki
 
   
 
+
+  
 
   </body>
 </html>
