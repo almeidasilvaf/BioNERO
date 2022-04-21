@@ -372,7 +372,9 @@ plot_gcn <- function(edgelist_gcn, net, color_by="module", hubs = NULL,
     # Create a data frame of nodes and node attributes
     geneIDs <- unique(c(as.character(edgelist_gcn[,1]), as.character(edgelist_gcn[,2])))
     nod_at <- data.frame(Gene = geneIDs, stringsAsFactors = FALSE)
-    nod_at$Class <- as.factor(gene_annotation[gene_annotation[,1] %in% nod_at$Gene, 2])
+    nod_at <- merge(nod_at, gene_annotation, by = 1)
+    names(nod_at)[2] <- "Class"
+    nod_at$Class <- as.factor(nod_at$Class)
     nod_at$Degree <- kIN$kWithin[rownames(kIN) %in% nod_at$Gene]
     nod_at$isHub <- ifelse(nod_at$Gene %in% hubs[,1], TRUE, FALSE)
     nod_at <- nod_at[order(nod_at$Class, -nod_at$Degree), ]
