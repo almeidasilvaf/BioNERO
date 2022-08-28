@@ -336,7 +336,6 @@ PC_correction <- function(exp, verbose = FALSE) {
 #'  \code{\link[DESeq2]{varianceStabilizingTransformation}}
 #' @rdname exp_preprocess
 #' @export
-#' @importFrom DESeq2 varianceStabilizingTransformation
 #' @examples
 #' data(zma.se)
 #' exp <- exp_preprocess(zma.se, variance_filter=TRUE, n=1000)
@@ -364,6 +363,10 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
     }
     # Apply VST for count data
     if(vstransform) {
+        if(!requireNamespace("DESeq2", quietly = TRUE)) {
+            stop("vstransform = TRUE requires the Bioconductor package 'DESeq2'.")
+        }
+
         fexp <- as.matrix(handleSE(exp))
         fexp <- as.data.frame(DESeq2::varianceStabilizingTransformation(fexp))
         if(is(exp, "SummarizedExperiment")) {

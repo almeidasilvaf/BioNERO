@@ -177,8 +177,7 @@ grn_average_rank <- function(list_edges) {
 #' @importFrom igraph graph_from_data_frame degree
 #' @importFrom BiocParallel bplapply SerialParam
 #' @importFrom WGCNA scaleFreeFitIndex
-#' @importFrom ggpubr ggline
-#' @importFrom ggplot2 theme element_text
+#' @importFrom ggplot2 theme element_text geom_point geom_line theme_bw
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
@@ -186,7 +185,7 @@ grn_average_rank <- function(list_edges) {
 #' ranked_grn <- grn_average_rank(grn_list)
 #' # split in only 2 groups for demonstration purposes
 #' filtered_edges <- grn_filter(ranked_grn, nsplit=2)
-grn_filter <- function(edgelist, nsplit=10,
+grn_filter <- function(edgelist, nsplit = 10,
                        bp_param = BiocParallel::SerialParam()) {
 
     # Split edge list into n data frames and calculate degree
@@ -206,14 +205,17 @@ grn_filter <- function(edgelist, nsplit=10,
     max.index <- which.max(sft.rsquared)
 
     # Plot scale-free topology fit for r values
-    plot.data <- data.frame(x=cutpoints, y=sft.rsquared, stringsAsFactors = FALSE)
-    plot <- ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
-                           color="firebrick",
-                           xlab = "Number of top edges considered",
-                           xtickslab.rt = 45,
-                           ylab = expression(paste("Scale-free topology fit - ", R^{2})),
-                           title = "Scale-free topology fit for top n edges", font.title = c(13, "bold")) +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    plot.data <- data.frame(x = cutpoints, y = sft.rsquared)
+
+    plot <- ggplot(plot.data, aes_(x = ~x, y = ~y, group = 1)) +
+        geom_point(color = "firebrick", size = 4) +
+        geom_line(color = "firebrick", size = 2) +
+        labs(
+            x = "Number of top edges considered",
+            y = expression(paste("Scale-free topology fit - ", R^{2})),
+            title = "Scale-free topology fit for given r values"
+        ) +
+        theme_bw()
     print(plot)
 
     optimal_cutoff <- cutpoints[max.index]

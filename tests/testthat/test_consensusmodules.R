@@ -14,7 +14,8 @@ test_that("consensus_SFT_fit() calculates best SFT fit for all networks", {
                                   setLabels = c("Maize 1", "Maize 2"),
                                   cor_method = "pearson")
     expect_equal(class(cons_sft[[1]]), "numeric")
-    expect_equal(class(cons_sft[[2]]), c("gg", "ggplot", "ggarrange"))
+    expect_true("patchwork" %in% class(cons_sft[[2]]))
+    expect_true("ggplot" %in% class(cons_sft[[2]]))
     expect_equal(length(cons_sft[[1]]), length(list.sets))
 })
 

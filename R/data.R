@@ -14,6 +14,7 @@
 #' phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
 #' data(zma.se)
+#' @usage data(zma.se)
 "zma.se"
 
 
@@ -32,6 +33,7 @@
 #' phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
 #' data(osa.se)
+#' @usage data(osa.se)
 "osa.se"
 
 
@@ -51,6 +53,7 @@
 #' phylogenies. Nucleic Acids Research, 49(1), e3-e3.
 #' @examples
 #' data(filt.se)
+#' @usage data(filt.se)
 "filt.se"
 
 
@@ -70,6 +73,7 @@
 #' genomics. Nucleic acids research, 46(D1), D1190-D1196.
 #' @examples
 #' data(zma.interpro)
+#' @usage data(zma.interpro)
 "zma.interpro"
 
 
@@ -85,6 +89,7 @@
 #' factors and regulatory interactions in plants. Nucleic acids research, gkw982.
 #' @examples
 #' data(zma.tfs)
+#' @usage data(zma.tfs)
 "zma.tfs"
 
 
@@ -102,6 +107,7 @@
 #'
 #' @examples
 #' data(og.zma.osa)
+#' @usage data(og.zma.osa)
 "og.zma.osa"
 
 

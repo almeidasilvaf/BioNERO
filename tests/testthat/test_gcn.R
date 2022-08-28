@@ -19,7 +19,8 @@ test_that("SFT_fit() performs SFT fit test and returns a list with", {
     sft <- SFT_fit(filt.se, cor_method="pearson")
     expect_equal(class(sft), "list")
     expect_equal(length(sft), 2)
-    expect_true(all.equal(class(sft$plot), c("gg", "ggplot", "ggarrange")))
+    expect_true("patchwork" %in% class(sft$plot))
+    expect_true("ggplot" %in% class(sft$plot))
     expect_equal(class(sft$power), "numeric")
 })
 

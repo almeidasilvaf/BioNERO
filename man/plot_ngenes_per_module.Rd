@@ -20,6 +20,3 @@ data(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 plot_ngenes_per_module(gcn)
 }
-\seealso{
-\code{\link[ggpubr]{ggbarplot}}
-}

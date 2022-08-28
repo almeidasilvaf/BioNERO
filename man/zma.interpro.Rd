@@ -9,7 +9,7 @@ A 2-column data frame containing gene IDs and their
 associated Interpro annotations.
 }
 \usage{
-zma.interpro
+data(zma.interpro)
 }
 \description{
 Interpro protein domain annotation retrieved from the

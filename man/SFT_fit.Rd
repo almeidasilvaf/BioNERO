@@ -29,7 +29,7 @@ Pick power to fit network to a scale-free topology
 }
 \examples{
 data(filt.se)
-sft <- SFT_fit(filt.se, cor_method="pearson")
+sft <- SFT_fit(filt.se, cor_method = "pearson")
 }
 \seealso{
 \code{\link[WGCNA]{pickSoftThreshold}}

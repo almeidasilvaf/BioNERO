@@ -8,7 +8,7 @@
 A 3-column data frame with orthogroups, species IDs and gene IDs.
 }
 \usage{
-og.zma.osa
+data(og.zma.osa)
 }
 \description{
 The orthogroups were downloaded from the PLAZA 4.0 Monocots database.

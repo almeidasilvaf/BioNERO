@@ -81,8 +81,6 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #'
 #' @param explist List of expression data frames or SummarizedExperiment objects.
 #' @param ref_net Reference network object returned by the function \code{exp2net}.
-#' @param plot_all_stats Logical indicating whether to save all density and
-#' connectivity statistics in a PDF file or not. Default is FALSE.
 #' @param nPerm Number of permutations for the module preservation statistics.
 #' Default: 200.
 #'
@@ -90,29 +88,29 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #' @rdname modPres_WGCNA
 #' @export
 #' @importFrom WGCNA standardColors
-#' @importFrom ggpubr ggscatter ggarrange ggexport
-#' @importFrom ggplot2 theme element_text geom_hline
+#' @importFrom ggplot2 theme geom_hline geom_point
+#' @importFrom ggrepel geom_text_repel
+#' @importFrom patchwork wrap_plots
 #' @examples
 #' \donttest{
 #' set.seed(1)
 #' data(og.zma.osa)
 #' data(zma.se)
 #' data(osa.se)
+#' explist <- list(Zma = zma.se, Osa = osa.se)
 #' og <- og.zma.osa
 #' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
 #' exp_ortho <- lapply(exp_ortho, function(x) filter_by_variance(x, n=1500))
 #' # Previously calculated power
 #' powers <- c(13, 15)
-#' gcn_osa <- exp2gcn(exp_ortho$osa, net_type = "signed hybrid",
+#' gcn_osa <- exp2gcn(exp_ortho$Osa, net_type = "signed hybrid",
 #'                    SFTpower = powers[1], cor_method = "pearson")
 #' explist <- exp_ortho
 #' ref_net <- gcn_osa
 #' # 5 permutations for demonstration purposes
 #' pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
 #' }
-modPres_WGCNA <- function(explist, ref_net,
-                          plot_all_stats = FALSE,
-                          nPerm = 200) {
+modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
     explist <- handleSElist(explist)
     explist <- lapply(explist, function(x) return(t(x)))
 
@@ -144,15 +142,13 @@ modPres_WGCNA <- function(explist, ref_net,
       stop("Please, specify a valid correlation method.")
     }
 
-    pres <- WGCNA::modulePreservation(multiExpr, multiColor,
-                                      referenceNetworks = 1,
-                                      nPermutations = nPerm,
-                                      randomSeed = 1,
-                                      quickCor = 0, corFnc = corFnc,
-                                      corOptions = corOptions,
-                                      verbose = 0, networkType = net_type,
-                                      savePermutedStatistics = FALSE,
-                                      plotInterpolation = FALSE)
+    pres <- WGCNA::modulePreservation(
+        multiExpr, multiColor, referenceNetworks = 1, nPermutations = nPerm,
+        randomSeed = 1, quickCor = 0, corFnc = corFnc, corOptions = corOptions,
+        verbose = 0, networkType = net_type, savePermutedStatistics = FALSE,
+        plotInterpolation = FALSE
+    )
+
     # Isolate the observed statistics and their Z-scores
     ref <- 1
     test <- 2
@@ -177,71 +173,41 @@ modPres_WGCNA <- function(explist, ref_net,
 
 
     # Plot preservation median rank
-    dplot1 <- data.frame(x=moduleSizes[plotMods], y=plotData[plotMods, 1],
-                         label=as.factor(text))
-    p1 <- suppressWarnings(ggpubr::ggscatter(dplot1, x = "x", y = "y", size=4,
-                            color="black", fill=text, shape=21,
-                            label = "label", repel = TRUE,
-                            xlab = "Module size", ylab = "Median rank",
-                            title = "Preservation median rank",
-                            font.title = c(13, "bold")) +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)))
+    dplot1 <- data.frame(
+        x = moduleSizes[plotMods],
+        y = plotData[plotMods, 1],
+        label = as.factor(text)
+    )
+
+    p1 <- ggplot(dplot1, aes_(x = ~x, y = ~y)) +
+        geom_point(fill = text, color = "black", shape = 21) +
+        geom_text_repel(aes_(label = ~label)) +
+        labs(
+            x = "Module size", y = "Median rank",
+            title = "Preservation median rank"
+        ) +
+        theme_bw()
 
     # Plot preservation Z-summary
-    dplot2 <- data.frame(x=moduleSizes[plotMods], y=plotData[plotMods, 2], label=text, stringsAsFactors=FALSE)
-    p2 <- suppressWarnings(ggscatter(dplot2, x = "x", y = "y", size=4,
-                    color="black", fill=text, shape=21,
-                    label = "label", repel = TRUE,
-                    xlab = "Module size", ylab = expression("Z"[summary]),
-                    title = expression("Preservation Z"[summary]),
-                    font.title = c(13, "bold")) +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-        ggplot2::geom_hline(yintercept = 0, linetype = 2) +
-        ggplot2::geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
-        ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
+    dplot2 <- data.frame(
+        x = moduleSizes[plotMods],
+        y = plotData[plotMods, 2],
+        label = text
+    )
 
-    fig1 <- ggpubr::ggarrange(p1, p2, ncol=2, nrow=1)
-    if(plot_all_stats) {
-        # Re-initialize module color labels and sizes
-        modColors <- rownames(statsZ)
-        moduleSizes <- pres$quality$Z[[ref]][[test]][, 1];
-        plotMods <- !(modColors %in% c("grey", "gold"))
+    p2 <- ggplot(dplot2, aes_(x = ~x, y = ~y)) +
+        geom_point(fill = text, color = "black", shape = 21) +
+        geom_text_repel(aes_(label = ~label)) +
+        labs(
+            x = "Module size", y = expression("Z"[summary]),
+            title = expression("Preservation Z"[summary])
+        ) +
+        theme_bw() +
+        geom_hline(yintercept = 0, linetype = 2) +
+        geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
+        geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2)
 
-        # Create a list of plots per column of statsZ
-        df <- cbind(moduleSizes[plotMods], statsZ[plotMods, ])
-        colnames(df)[1] <- "module_size"
-        ylabs <- colnames(df)[2:ncol(df)]
-        df$labels <- rownames(df)
-
-        plots <- lapply(ylabs, function(x) {
-          y <- suppressWarnings(ggpubr::ggscatter(df, x = "module_size", y = x, size=4,
-                                 color="black", fill=df$labels, shape=21,
-                                 label = "labels", repel = TRUE,
-                                 xlab = "Module size", ylab = x,
-                                 title = x, font.title = c(13, "bold")) +
-            ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-            ggplot2::geom_hline(yintercept = 0, linetype = 2) +
-            ggplot2::geom_hline(yintercept = 2, colour = "blue", linetype = 2) +
-            ggplot2::geom_hline(yintercept = 10, colour = "forestgreen", linetype = 2))
-          return(y)
-          })
-        pl1 <- plots[c(1,2,3,4)]
-        pl2 <- plots[5:8]
-        pl3 <- plots[9:12]
-        pl4 <- plots[13:16]
-        pl5 <- plots[17:19]
-        mpage1 <- ggpubr::ggarrange(plotlist = pl1)
-        mpage2 <- ggpubr::ggarrange(plotlist = pl2)
-        mpage3 <- ggpubr::ggarrange(plotlist = pl3)
-        mpage4 <- ggpubr::ggarrange(plotlist = pl4)
-        mpage5 <- ggpubr::ggarrange(plotlist = pl5)
-        final_list <- list(mpage1, mpage2, mpage3, mpage4, mpage5)
-
-        multipage <- ggpubr::ggarrange(plotlist = final_list, ncol=1, nrow=1)
-        date <- Sys.Date()
-        ggpubr::ggexport(multipage, filename=paste0(date, "all_Zstats.pdf"),
-                         height = 9, width = 9)
-        }
+    fig1 <- patchwork::wrap_plots(p1, p2, ncol = 2)
     return(fig1)
 }
 
@@ -353,8 +319,6 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 #' @param nPerm Number of permutations. Default: 1000
 #' @param nThreads Number of threads to be used for parallel computing.
 #' Default: 1
-#' @param plot_all_stats Logical indicating whether to save all density and
-#' connectivity statistics in a PDF file or not. Default: FALSE.
 #'
 #' @return A list containing the preservation statistics (netrep) or a ggplot
 #' object with preservation statistics.
@@ -386,8 +350,7 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 #'
 module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
                                 algorithm = "netrep",
-                                nPerm = 1000, nThreads = 1,
-                                plot_all_stats = FALSE) {
+                                nPerm = 1000, nThreads = 1) {
 
     if(algorithm == "netrep") {
         pres <- modPres_netrep(explist = explist,
@@ -398,7 +361,6 @@ module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
     } else if(algorithm == "WGCNA") {
         pres <- modPres_WGCNA(explist = explist,
                               ref_net = ref_net,
-                              plot_all_stats = plot_all_stats,
                               nPerm = nPerm)
     } else {
         stop("Please, specify a valid algorithm. One of 'netrep' or 'WGCNA'.")
