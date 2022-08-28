@@ -118,7 +118,7 @@ Here, we will keep only the top 2000 most variable genes. Users can also filter
 by percentile (e.g., the top 10% most variable genes).
 
 ```{r filter_by_variance}
-exp_filt <- filter_by_variance(exp_filt, n=2000)
+exp_filt <- filter_by_variance(exp_filt, n = 2000)
 dim(exp_filt)
 ```
 
@@ -161,7 +161,7 @@ transformation [@Love2014] to your count data.
 
 ```{r exp_preprocess}
 final_exp <- exp_preprocess(zma.se, min_exp = 10, variance_filter = TRUE, n=2000)
-dim(exp_filt) == dim(final_exp)
+identical(dim(exp_filt), dim(final_exp))
 
 # Take a look at the final data
 final_exp
@@ -187,9 +187,11 @@ and activate/deactivate clustering for rows and/or columns.
 ```{r plot_heatmap, fig.width=6, fig.height=4, message=FALSE}
 # Heatmap of sample correlations
 p <- plot_heatmap(final_exp, type = "samplecor")
+p
 
 # Heatmap of gene expression
-p <- plot_heatmap(final_exp, type="expr")
+p <- plot_heatmap(final_exp, type = "expr")
+p
 ```
 
 **Principal component analysis (PCA):** the function `plot_PCA()` performs a 
@@ -217,7 +219,7 @@ in `SFT_fit()`, 0.8). This makes the network close to the scale-free topology
 without dramatically reducing the mean connectivity.
 
 ```{r sft_fit}
-sft <- SFT_fit(final_exp, net_type="signed hybrid", cor_method="pearson")
+sft <- SFT_fit(final_exp, net_type = "signed hybrid", cor_method = "pearson")
 sft$power
 power <- sft$power
 ```
@@ -288,7 +290,7 @@ some reason to suspect that the modules are highly dependent on a particular
 set of samples.
 
 ```{r module_stability}
-module_stability(final_exp, net, nRuns=5)
+module_stability(final_exp, net, nRuns = 5)
 ```
 
 ## Module-trait associations

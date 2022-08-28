@@ -43,18 +43,18 @@ Imports:
     WGCNA,
     dynamicTreeCut,
     matrixStats,
-    DESeq2,
     sva,
     RColorBrewer,
     ComplexHeatmap,
     ggplot2,
+    ggrepel,
+    patchwork,
     reshape2,
     igraph,
     ggnetwork,
     intergraph,
     networkD3,
     ggnewscale,
-    ggpubr,
     NetRep,
     stats,
     grDevices,
@@ -65,12 +65,13 @@ Imports:
     minet, 
     GENIE3,
     SummarizedExperiment
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
     BiocStyle,
+    DESeq2,
     covr
 VignetteBuilder: knitr
 Config/testthat/edition: 3

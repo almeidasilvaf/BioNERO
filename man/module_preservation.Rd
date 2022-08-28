@@ -10,8 +10,7 @@ module_preservation(
   test_net = NULL,
   algorithm = "netrep",
   nPerm = 1000,
-  nThreads = 1,
-  plot_all_stats = FALSE
+  nThreads = 1
 )
 }
 \arguments{
@@ -30,9 +29,6 @@ the function \code{exp2gcn}.}
 
 \item{nThreads}{Number of threads to be used for parallel computing.
 Default: 1}
-
-\item{plot_all_stats}{Logical indicating whether to save all density and
-connectivity statistics in a PDF file or not. Default: FALSE.}
 }
 \value{
 A list containing the preservation statistics (netrep) or a ggplot

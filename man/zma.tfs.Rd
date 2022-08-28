@@ -8,7 +8,7 @@
 A data frame with gene IDs of TFs and their associated families.
 }
 \usage{
-zma.tfs
+data(zma.tfs)
 }
 \description{
 Transcription factors and their families were downloaded from PlantTFDB 4.0.

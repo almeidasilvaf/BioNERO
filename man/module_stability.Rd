@@ -22,10 +22,11 @@ Perform module stability analysis
 }
 \examples{
 data(filt.se)
+filt <- filt.se[1:100, ] # reducing even further for testing purposes
 # The SFT fit was previously calculated and the optimal power was 16
-gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
+gcn <- exp2gcn(filt, SFTpower = 16, cor_method = "pearson")
 # For simplicity, only 2 runs
-module_stability(exp = filt.se, net = gcn, nRuns = 2)
+module_stability(exp = filt, net = gcn, nRuns = 2)
 }
 \seealso{
 \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}

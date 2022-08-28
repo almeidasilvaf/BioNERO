@@ -305,29 +305,39 @@ plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
 #'
 #' @param net List object returned by \code{exp2gcn}.
 #' @return A ggplot object with a bar plot of gene number in each module.
-#' @seealso
-#'  \code{\link[ggpubr]{ggbarplot}}
+#'
 #' @rdname plot_ngenes_per_module
 #' @export
-#' @importFrom ggpubr ggbarplot
-#' @importFrom ggplot2 theme element_text
+#' @importFrom ggplot2 ggplot aes_ geom_col scale_fill_manual theme_bw labs
+#' theme element_text geom_text
 #' @examples
 #' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' plot_ngenes_per_module(gcn)
 plot_ngenes_per_module <- function(net = NULL) {
+
     genes_and_modules <- net$genes_and_modules
-    frequency_df <- as.data.frame(table(genes_and_modules$Modules),
-                                  stringsAsFactors=FALSE)
+    frequency_df <- as.data.frame(table(genes_and_modules$Modules))
     names(frequency_df) <- c("Module", "Frequency")
     frequency_df <- frequency_df[order(frequency_df$Frequency, decreasing = TRUE), ]
-    cols <- unique(frequency_df$Module)
-    ggpubr::ggbarplot(data=frequency_df, x="Module", y="Frequency",
-                      fill="Module", palette=cols,
-                      legend="none", title="Number of genes per module",
-                      x.text.angle=60, font.title="bold",
-                      label=TRUE, label.pos="out", ylim=c(0, NA)) +
-        ggplot2::theme(plot.title=ggplot2::element_text(hjust=0.5))
+    frequency_df$Module <- factor(
+        frequency_df$Module,
+        levels = frequency_df$Module
+    )
+
+    cols <- levels(frequency_df$Module)
+
+    p <- ggplot(frequency_df, aes_(x = ~Module, y = ~Frequency)) +
+        geom_col(aes_(fill = ~Module), color = "black") +
+        geom_text(aes_(label = ~Frequency), vjust = -0.3) +
+        scale_fill_manual(values = cols) +
+        theme_bw() +
+        labs(title = "Number of genes per module") +
+        theme(
+            legend.position = "none",
+            axis.text.x = element_text(angle = 45, hjust = 1)
+        )
+    return(p)
 }
 
 

@@ -26,8 +26,9 @@
 #' @rdname consensus_SFT_fit
 #' @export
 #' @importFrom WGCNA pickSoftThreshold checkSets
-#' @importFrom ggpubr ggarrange ggscatter
-#' @importFrom ggplot2 theme element_text geom_hline
+#' @importFrom ggplot2 ggplot aes_ geom_point labs theme_bw scale_color_manual
+#' ylim theme geom_hline
+#' @importFrom ggrepel geom_text_repel
 #' @examples
 #' set.seed(12)
 #' data(zma.se)
@@ -91,29 +92,35 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 
     # Plot 1
     cols <- custom_palette(1)
-    p1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
-                            xlab="Soft threshold (power)",
-                            ylab=expression(paste("Scale-free topology fit - ", R^{2})),
-                            title = "Scale independence",
-                            ylim=c(0, 1), label="power", size=1,
-                            font.label=10, repel=TRUE,
-                            color="Set", palette=cols,
-                            legend="none",
-                            font.tickslab=10, ytickslab.rt=90) +
+    p1 <- ggplot(sft_df, aes_(x = ~power, y = ~fit)) +
+        geom_point(aes_(color = ~Set)) +
+        ggrepel::geom_text_repel(aes_(label = ~power, color = ~Set)) +
+        scale_color_manual(values = cols) +
+        labs(
+            x = "Soft threshold (power)",
+            y = expression(paste("Scale-free topology fit - ", R^{2})),
+            title = "Scale independence"
+        ) +
+        theme_bw() +
+        ylim(c(0,1)) +
         geom_hline(yintercept = rsquared, color="brown3") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(legend.position = "none")
 
     # Plot 2
-    p2 <- ggscatter(sft_df, x="power", y="meank",
-                    xlab="Soft threshold (power)", ylab="Mean connectivity (k)",
-                    title="Mean connectivity",
-                    label="power", size=1, font.label=10,
-                    color="Set", palette=cols, legend="right",
-                    font.tickslab=10, ytickslab.rt=90) +
-        theme(plot.title = element_text(hjust=0.5))
+    p2 <- ggplot(sft_df, aes_(x = ~power, y = ~meank)) +
+        geom_point(aes_(color = ~Set)) +
+        ggrepel::geom_text_repel(aes_(label = ~power, color = ~Set),
+                                 show.legend = FALSE) +
+        scale_color_manual(values = cols) +
+        labs(
+            x = "Soft threshold (power)",
+            y = "Mean connectivity (k)",
+            title = "Mean connectivity"
+        ) +
+        theme_bw()
 
-    # Combined plot
-    sft_plot <- ggpubr::ggarrange(p1, p2)
+    sft_plot <- patchwork::wrap_plots(p1, p2, ncol = 2)
+
     results <- list(power = power, plot = sft_plot)
     return(results)
 }

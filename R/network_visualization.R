@@ -135,7 +135,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
         if(add_color_legend) {
             set_legend <- NULL
         } else {
-            set_legend <- ggplot2::guides(color=FALSE)
+            set_legend <- ggplot2::guides(color = "none")
         }
 
         # Handle node labeling based on which labels to display (top hubs, hubs or all genes)

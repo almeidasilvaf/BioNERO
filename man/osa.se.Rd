@@ -8,7 +8,7 @@
 An object of class \code{SummarizedExperiment}
 }
 \usage{
-osa.se
+data(osa.se)
 }
 \description{
 Filtered expression data in transcripts per million (TPM) from

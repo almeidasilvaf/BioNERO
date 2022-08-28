@@ -19,23 +19,31 @@
 #' @rdname SFT_fit
 #' @export
 #' @importFrom WGCNA pickSoftThreshold
-#' @importFrom ggpubr ggarrange ggscatter
 #' @importFrom ggplot2 theme element_text geom_hline
 #' @examples
 #' data(filt.se)
-#' sft <- SFT_fit(filt.se, cor_method="pearson")
+#' sft <- SFT_fit(filt.se, cor_method = "pearson")
 SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman") {
     exp <- handleSE(exp)
     texp <- t(exp)
 
     if(cor_method == "pearson") {
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20, RsquaredCut = rsquared)
+        sft <- WGCNA::pickSoftThreshold(
+            texp, networkType = net_type, powerVector = 3:20,
+            RsquaredCut = rsquared
+        )
     } else if(cor_method == "biweight") {
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20,
-                                        RsquaredCut = rsquared, corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
+        sft <- WGCNA::pickSoftThreshold(
+            texp, networkType = net_type, powerVector = 3:20,
+            RsquaredCut = rsquared, corFnc = bicor,
+            corOptions = list(use = 'p', maxPOutliers = 0.05)
+        )
     } else if (cor_method == "spearman"){
-        sft <- WGCNA::pickSoftThreshold(texp, networkType = net_type, powerVector=3:20,
-                                        RsquaredCut = rsquared, corOptions = list(use = 'p', method = "spearman"))
+        sft <- WGCNA::pickSoftThreshold(
+            texp, networkType = net_type, powerVector=3:20,
+            RsquaredCut = rsquared,
+            corOptions = list(use = 'p', method = "spearman")
+        )
     } else {
         stop("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
     }
@@ -49,29 +57,36 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
     sft_df <- data.frame(power = sft$fitIndices$Power,
                          fit = -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq,
                          meank = sft$fitIndices$mean.k.)
+    sft_df <- sft_df[sft_df$fit > 0, ]
+
     # Plot 1
-    p1 <- ggpubr::ggscatter(sft_df, x="power", y="fit",
-                            xlab="Soft threshold (power)",
-                            ylab=expression(paste("Scale-free topology fit - ", R^{2})),
-                            title = "Scale independence",
-                            ylim=c(0, 1), label="power", size=1,
-                            font.label=10,
-                            color="gray10",
-                            font.tickslab=10, ytickslab.rt=90) +
+    p1 <- ggplot(sft_df, aes_(x = ~power, y = ~fit)) +
+        geom_point(color = "gray10") +
+        ggrepel::geom_text_repel(aes_(label = ~power)) +
+        labs(
+            x = "Soft threshold (power)",
+            y = expression(paste("Scale-free topology fit - ", R^{2})),
+            title = "Scale independence"
+        ) +
+        theme_bw() +
+        ylim(c(0,1)) +
         geom_hline(yintercept = rsquared, color="brown3") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(legend.position = "none")
 
     # Plot 2
-    p2 <- ggscatter(sft_df, x="power", y="meank",
-                    xlab="Soft threshold (power)", ylab="Mean connectivity (k)",
-                    title="Mean connectivity",
-                    label="power", size=1, font.label=10, color="gray10",
-                    font.tickslab=10, ytickslab.rt=90) +
-        theme(plot.title = element_text(hjust=0.5))
+    p2 <- ggplot(sft_df, aes_(x = ~power, y = ~meank)) +
+        geom_point(color = "gray10") +
+        ggrepel::geom_text_repel(aes_(label = ~power)) +
+        labs(
+            x = "Soft threshold (power)",
+            y = "Mean connectivity (k)",
+            title = "Mean connectivity"
+        ) +
+        theme_bw()
 
     # Combined plot
-    sft_plot <- ggpubr::ggarrange(p1, p2)
-    result <- list(power=as.numeric(wgcna_power), plot=sft_plot)
+    sft_plot <- patchwork::wrap_plots(p1, p2, ncol = 2)
+    result <- list(power = as.numeric(wgcna_power), plot = sft_plot)
     return(result)
 }
 
@@ -286,10 +301,11 @@ plot_dendro_and_colors <- function(gcn) {
 #' @importFrom graphics par layout
 #' @examples
 #' data(filt.se)
+#' filt <- filt.se[1:100, ] # reducing even further for testing purposes
 #' # The SFT fit was previously calculated and the optimal power was 16
-#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
+#' gcn <- exp2gcn(filt, SFTpower = 16, cor_method = "pearson")
 #' # For simplicity, only 2 runs
-#' module_stability(exp = filt.se, net = gcn, nRuns = 2)
+#' module_stability(exp = filt, net = gcn, nRuns = 2)
 module_stability <- function(exp, net, nRuns = 20) {
     norm.exp <- handleSE(exp)
     expr <- as.matrix(t(norm.exp))
@@ -937,8 +953,7 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' @rdname get_edge_list
 #' @export
 #' @importFrom WGCNA scaleFreeFitIndex corPvalueStudent
-#' @importFrom ggpubr ggline
-#' @importFrom ggplot2 theme element_text
+#' @importFrom ggplot2 theme geom_point geom_line theme_bw
 #' @importFrom BiocParallel bplapply SerialParam
 #' @examples
 #' data(filt.se)
@@ -1011,13 +1026,18 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
             max.index <- which.max(sft.rsquared)
 
             # Plot scale-free topology fit for r values
-            plot.data <- data.frame(x=cutoff, y=sft.rsquared, stringsAsFactors = FALSE)
-            plot <- ggpubr::ggline(plot.data, x = "x", y = "y", size=2,
-                                   color="firebrick",
-                                   xlab = "Correlation (r) values",
-                                   ylab = expression(paste("Scale-free topology fit - ", R^{2})),
-                                   title = "Scale-free topology fit for given r values", font.title = c(13, "bold")) +
-                ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+            plot.data <- data.frame(x = cutoff, y = sft.rsquared)
+
+            plot <- ggplot(plot.data, aes_(x = ~x, y = ~y, group = 1)) +
+                geom_point(color = "firebrick", size = 4) +
+                geom_line(color = "firebrick", size = 2) +
+                labs(
+                    x = "Correlation (r) values",
+                    y = expression(paste("Scale-free topology fit - ", R^{2})),
+                    title = "Scale-free topology fit for given r values"
+                ) +
+                theme_bw()
+
             print(plot)
             optimalr <- cutoff[max.index]
             message("The correlation threshold that best fits the scale-free topology is ", optimalr)
