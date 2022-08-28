@@ -4,7 +4,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content='BioNERO aims to integrate all aspects of biological network inference
+        in a single package, including data preprocessing, exploratory analyses,
+        network inference, and analyses for biological interpretations. BioNERO
+        can be used to infer gene coexpression networks (GCNs) and gene 
+        regulatory networks (GRNs) from gene expression data. Additionally,
+        it can be used to explore topological properties of protein-protein 
+        interaction (PPI) networks. GCN inference relies on the popular WGCNA 
+        algorithm. GRN inference is based on the "wisdom of the crowds" principle,
+        which consists in inferring GRNs with multiple algorithms (here, CLR,
+        GENIE3 and ARACNE) and calculating the average rank for each interaction
+        pair. As all steps of network analyses are included in this package,
+        BioNERO makes users avoid having to learn the syntaxes of several 
+        packages and how to communicate between them. Finally, users can also 
+        identify consensus modules across independent expression sets and
+        calculate intra and interspecies module preservation statistics 
+        between different networks.'>
 <title>Biological Network Reconstruction Omnibus • BioNERO</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -12,12 +28,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="deps/Atkinson_Hyperlegible-0.4.2/font.css" rel="stylesheet">
+<link href="deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Biological Network Reconstruction Omnibus">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Biological Network Reconstruction Omnibus">
 <meta property="og:description" content='BioNERO aims to integrate all aspects of biological network inference
         in a single package, including data preprocessing, exploratory analyses,
         network inference, and analyses for biological interpretations. BioNERO
@@ -40,110 +57,124 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-#0092ac"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">BioNERO</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
-    </li>
-    <li>
-      <a href="articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
-    </li>
-    <li>
-      <a href="articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
+    <a class="dropdown-item" href="articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
+    <a class="dropdown-item" href="articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
   </div>
-<!--/.container -->
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/almeidasilvaf/BioNERO/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="bionero-">BioNERO
-<img src="reference/figures/logo.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#bionero-"></a>
-</h1></div>
+    
+  </div>
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="bionero-">BioNERO <a class="anchor" aria-label="anchor" href="#bionero-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
+<p><code>BioNERO</code> aims to integrate all aspects of biological network inference in a single package, so users don’t have to learn the syntaxes of several packages and how to communicate among them. <code>BioNERO</code> features:</p>
+<ul>
+<li>
+<strong>Expression data preprocessing</strong> using state-of-the-art techniques for network inference.</li>
+<li>
+<strong>Automated exploratory data analyses</strong>, including principal component analysis (PCA) and heatmaps of gene expression or sample correlations.</li>
+<li>
+<strong>Inference of gene coexpression networks (GCNs)</strong> using the popular WGCNA algorithm.</li>
+<li>
+<strong>Inference of gene regulatory networks (GRNs)</strong> based on the “wisdom of the crowds” principle. This principle consists in inferring GRNs with multiple algorithms (here, CLR, GENIE3 and ARACNE) and calculating the average rank for each interaction pair.</li>
+<li>
+<strong>Exploration of network topology</strong> of GCNs, GRNs, and protein-protein interaction networks.</li>
+<li>
+<strong>Network visualization</strong>.</li>
+<li>
+<strong>Network comparison</strong>, including identification of consensus modules across independent expression sets, and calculation of intra and interspecies module preservation statistics between different networks.</li>
+</ul>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="installation-instructions">Installation instructions<a class="anchor" aria-label="anchor" href="#installation-instructions"></a>
 </h2>
-<p>You can download the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>Get the latest stable <code>R</code> release from <a href="http://cran.r-project.org/" class="external-link">CRAN</a>. Then install <code>BioNERO</code> from <a href="http://bioconductor.org/" class="external-link">Bioconductor</a> using the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"almeidasilvaf/BioNERO"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></span></code></pre></div>
+<p>And the development version from <a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"almeidasilvaf/BioNERO"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>BioNERO aims to integrate all aspects of biological network inference
-in a single package, including data preprocessing, exploratory analyses,
-network inference, and analyses for biological interpretations. BioNERO
-can be used to infer gene coexpression networks (GCNs) and gene
-regulatory networks (GRNs) from gene expression data. Additionally, it
-can be used to explore topological properties of protein-protein
-interaction (PPI) networks. GCN inference relies on the popular WGCNA
-algorithm. GRN inference is based on the “wisdom of the crowds”
-principle, which consists in inferring GRNs with multiple algorithms
-(here, CLR, GENIE3 and ARACNE) and calculating the average rank for each
-interaction pair. As all steps of network analyses are included in this
-package, BioNERO makes users avoid having to learn the syntaxes of
-several packages and how to communicate between them. Finally, users can
-also identify consensus modules across independent expression sets and
-calculate intra and interspecies module preservation statistics between
-different networks.</p>
+<p>Below is the citation output from using <code>citation('BioNERO')</code> in R. Please run this yourself to check for any updates on how to cite <strong>BioNERO</strong>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">'BioNERO'</span><span class="op">)</span>, bibtex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># To cite BioNERO in publications use:</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co">#   Almeida-Silva, F., Venancio, T.M. BioNERO: an all-in-one</span></span>
+<span><span class="co">#   R/Bioconductor package for comprehensive and easy biological network</span></span>
+<span><span class="co">#   reconstruction. Funct Integr Genomics 22, 131-136 (2022).</span></span>
+<span><span class="co">#   https://doi.org/10.1007/s10142-021-00821-9</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># A BibTeX entry for LaTeX users is</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co">#   @Article{,</span></span>
+<span><span class="co">#     title = {BioNERO: an all-in-one R/Bioconductor package for comprehensive and easy biological network reconstruction},</span></span>
+<span><span class="co">#     author = {Fabricio Almeida-Silva and Thiago M. Venancio},</span></span>
+<span><span class="co">#     journal = {Functional And Integrative Genomics},</span></span>
+<span><span class="co">#     year = {2022},</span></span>
+<span><span class="co">#     volume = {22},</span></span>
+<span><span class="co">#     number = {1},</span></span>
+<span><span class="co">#     pages = {131-136},</span></span>
+<span><span class="co">#     url = {https://link.springer.com/article/10.1007/s10142-021-00821-9},</span></span>
+<span><span class="co">#     doi = {10.1007/s10142-021-00821-9},</span></span>
+<span><span class="co">#   }</span></span></code></pre></div>
+<p>Please note that the <code>BioNERO</code> was only made possible thanks to many other R and bioinformatics software authors, which are cited either in the vignettes and/or the paper(s) describing this package.</p>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.bioconductor.org/packages/BioNERO" class="external-link">View on Bioconductor</a></li>
@@ -178,32 +209,31 @@ different networks.</p>
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/almeidasilvaf/BioNERO/issues" class="external-link"><img src="https://img.shields.io/github/issues/almeidasilvaf/BioNERO" alt="GitHub issues"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 <li><a href="https://github.com/almeidasilvaf/BioNERO/actions" class="external-link"><img src="https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg" alt="R-CMD-check-bioc"></a></li>
 <li><a href="https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master" class="external-link"><img src="https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 

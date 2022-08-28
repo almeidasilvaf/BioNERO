@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="BioNERO">
 <title>Network comparison: consensus modules and module preservation • BioNERO</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -12,12 +13,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.2/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Network comparison: consensus modules and module preservation">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Network comparison: consensus modules and module preservation">
 <meta property="og:description" content="BioNERO">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -25,74 +27,62 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-#0092ac"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
-    </li>
-    <li>
-      <a href="../articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
-    </li>
-    <li>
-      <a href="../articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
+    <a class="dropdown-item" href="../articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
+    <a class="dropdown-item" href="../articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
   </div>
-<!--/.container -->
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/almeidasilvaf/BioNERO/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
+    
+  </div>
+</nav><div class="container template-article">
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Network comparison: consensus modules and module
-preservation</h1>
+
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="../logo.png" class="logo" alt=""><h1>Network comparison: consensus modules and module preservation</h1>
                         <h4 data-toc-skip class="author">Fabricio
 Almeida-Silva</h4>
             <address class="author_afil">
@@ -102,8 +92,7 @@ Motta Venancio</h4>
             <address class="author_afil">
       Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
 Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/HEAD/vignettes/vignette_03_network_comparison.Rmd" class="external-link"><code>vignettes/vignette_03_network_comparison.Rmd</code></a></small>
-      <div class="hidden name"><code>vignette_03_network_comparison.Rmd</code></div>
-
+      <div class="d-none name"><code>vignette_03_network_comparison.Rmd</code></div>
     </address>
 </address>
 </div>
@@ -114,15 +103,15 @@ Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidas
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
-
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Load package after installation</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span>
-<span class="co">## </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Load package after installation</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span> <span class="co"># for reproducibility</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
@@ -146,27 +135,27 @@ commonalities, module preservation focuses on the divergences.</p>
 (<em>Oryza sativa</em>) obtained from <span class="citation">Shin et al.
 (2020)</span>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
-<span class="va">zma.se</span>
-<span class="co">## class: SummarizedExperiment </span>
-<span class="co">## dim: 10802 28 </span>
-<span class="co">## metadata(0):</span>
-<span class="co">## assays(1): ''</span>
-<span class="co">## rownames(10802): ZeamMp030 ZeamMp044 ... Zm00001d054106 Zm00001d054107</span>
-<span class="co">## rowData names(0):</span>
-<span class="co">## colnames(28): SRX339756 SRX339757 ... SRX2792103 SRX2792104</span>
-<span class="co">## colData names(1): Tissue</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">osa.se</span><span class="op">)</span>
-<span class="va">osa.se</span>
-<span class="co">## class: SummarizedExperiment </span>
-<span class="co">## dim: 7647 27 </span>
-<span class="co">## metadata(0):</span>
-<span class="co">## assays(1): ''</span>
-<span class="co">## rownames(7647): Os01g0100700 Os01g0100900 ... Os12g0641400 Os12g0641500</span>
-<span class="co">## rowData names(0):</span>
-<span class="co">## colnames(27): SRX831140 SRX831141 ... SRX263041 SRX1544234</span>
-<span class="co">## colData names(1): Tissue</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span></span>
+<span><span class="va">zma.se</span></span>
+<span><span class="co">## class: SummarizedExperiment </span></span>
+<span><span class="co">## dim: 10802 28 </span></span>
+<span><span class="co">## metadata(0):</span></span>
+<span><span class="co">## assays(1): ''</span></span>
+<span><span class="co">## rownames(10802): ZeamMp030 ZeamMp044 ... Zm00001d054106 Zm00001d054107</span></span>
+<span><span class="co">## rowData names(0):</span></span>
+<span><span class="co">## colnames(28): SRX339756 SRX339757 ... SRX2792103 SRX2792104</span></span>
+<span><span class="co">## colData names(1): Tissue</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">osa.se</span><span class="op">)</span></span>
+<span><span class="va">osa.se</span></span>
+<span><span class="co">## class: SummarizedExperiment </span></span>
+<span><span class="co">## dim: 7647 27 </span></span>
+<span><span class="co">## metadata(0):</span></span>
+<span><span class="co">## assays(1): ''</span></span>
+<span><span class="co">## rownames(7647): Os01g0100700 Os01g0100900 ... Os12g0641400 Os12g0641500</span></span>
+<span><span class="co">## rowData names(0):</span></span>
+<span><span class="co">## colnames(27): SRX831140 SRX831141 ... SRX263041 SRX1544234</span></span>
+<span><span class="co">## colData names(1): Tissue</span></span></code></pre></div>
 <p>All <code>BioNERO</code>’s functions for consensus modules and module
 preservation analyses require the expression data to be in a
 <strong>list</strong>. Each element of the list can be a
@@ -190,30 +179,30 @@ population structure or kinship.</p>
 <p>Here, we will subset 22 random samples from the maize data twice and
 find consensus modules between the two sets.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Preprocess data and keep top 2000 genes with highest variances</span>
-<span class="va">filt_zma</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>
-<span class="co">## Number of removed samples: 1</span>
-
-<span class="co"># Create different subsets by resampling data</span>
-<span class="va">zma_set1</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
-<span class="va">zma_set2</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set1</span><span class="op">)</span>
-<span class="co">##  [1] "SRX3804716" "SRX2792102" "SRX2527287" "SRX2792108" "SRX3804723"</span>
-<span class="co">##  [6] "SRX2792107" "SRX2792103" "SRX2792104" "SRX3804715" "SRX339808" </span>
-<span class="co">## [11] "SRX339758"  "SRX339756"  "SRX339809"  "SRX2792105" "SRX339757" </span>
-<span class="co">## [16] "SRX2641029" "SRX339762"  "SRX2792110" "SRX339807"  "SRX3804718"</span>
-<span class="co">## [21] "ERX2154032" "SRX339764"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set2</span><span class="op">)</span>
-<span class="co">##  [1] "SRX2792111" "SRX339756"  "SRX3804715" "SRX2792108" "SRX2792103"</span>
-<span class="co">##  [6] "SRX339762"  "SRX339807"  "ERX2154030" "SRX2792105" "SRX2792107"</span>
-<span class="co">## [11] "SRX2527287" "ERX2154032" "SRX2792104" "SRX2527288" "SRX339809" </span>
-<span class="co">## [16] "SRX3804718" "SRX3804716" "SRX2792109" "SRX3804723" "SRX2792102"</span>
-<span class="co">## [21] "SRX339808"  "SRX339758"</span>
-
-<span class="co"># Create list</span>
-<span class="va">zma_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>set1 <span class="op">=</span> <span class="va">zma_set1</span>, set2 <span class="op">=</span> <span class="va">zma_set2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">zma_list</span><span class="op">)</span>
-<span class="co">## [1] 2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Preprocess data and keep top 2000 genes with highest variances</span></span>
+<span><span class="va">filt_zma</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="co">## Number of removed samples: 1</span></span>
+<span></span>
+<span><span class="co"># Create different subsets by resampling data</span></span>
+<span><span class="va">zma_set1</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">zma_set2</span> <span class="op">&lt;-</span> <span class="va">filt_zma</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">filt_zma</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">22</span>, replace<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set1</span><span class="op">)</span></span>
+<span><span class="co">##  [1] "SRX3804716" "SRX2792102" "SRX2527287" "SRX2792108" "SRX3804723"</span></span>
+<span><span class="co">##  [6] "SRX2792107" "SRX2792103" "SRX2792104" "SRX3804715" "SRX339808" </span></span>
+<span><span class="co">## [11] "SRX339758"  "SRX339756"  "SRX339809"  "SRX2792105" "SRX339757" </span></span>
+<span><span class="co">## [16] "SRX2641029" "SRX339762"  "SRX2792110" "SRX339807"  "SRX3804718"</span></span>
+<span><span class="co">## [21] "ERX2154032" "SRX339764"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">zma_set2</span><span class="op">)</span></span>
+<span><span class="co">##  [1] "SRX2792111" "SRX339756"  "SRX3804715" "SRX2792108" "SRX2792103"</span></span>
+<span><span class="co">##  [6] "SRX339762"  "SRX339807"  "ERX2154030" "SRX2792105" "SRX2792107"</span></span>
+<span><span class="co">## [11] "SRX2527287" "ERX2154032" "SRX2792104" "SRX2527288" "SRX339809" </span></span>
+<span><span class="co">## [16] "SRX3804718" "SRX3804716" "SRX2792109" "SRX3804723" "SRX2792102"</span></span>
+<span><span class="co">## [21] "SRX339808"  "SRX339758"</span></span>
+<span></span>
+<span><span class="co"># Create list</span></span>
+<span><span class="va">zma_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>set1 <span class="op">=</span> <span class="va">zma_set1</span>, set2 <span class="op">=</span> <span class="va">zma_set2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">zma_list</span><span class="op">)</span></span>
+<span><span class="co">## [1] 2</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="identification-of-consensus-modules">Identification of consensus modules<a class="anchor" aria-label="anchor" href="#identification-of-consensus-modules"></a>
@@ -223,92 +212,96 @@ need to identify the optimal <span class="math inline">\(\beta\)</span>
 power that makes the network closer to a scale-free topology. We can do
 that with <code><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cons_sft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit</a></span><span class="op">(</span><span class="va">zma_list</span>, setLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maize 1"</span>, <span class="st">"Maize 2"</span><span class="op">)</span>,
-                              cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
-<span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
-<span class="co">## 1      5    0.658 -0.650          0.656  107.00     90.50  304.0</span>
-<span class="co">## 2      6    0.761 -0.706          0.774   79.70     62.90  244.0</span>
-<span class="co">## 3      7    0.833 -0.757          0.863   61.30     45.10  200.0</span>
-<span class="co">## 4      8    0.825 -0.830          0.868   48.30     32.80  169.0</span>
-<span class="co">## 5      9    0.822 -0.916          0.887   38.70     24.50  145.0</span>
-<span class="co">## 6     10    0.838 -0.975          0.910   31.50     18.90  126.0</span>
-<span class="co">## 7     11    0.824 -1.040          0.914   26.00     15.00  111.0</span>
-<span class="co">## 8     12    0.837 -1.090          0.932   21.70     12.20   97.6</span>
-<span class="co">## 9     13    0.851 -1.130          0.944   18.30     10.10   86.6</span>
-<span class="co">## 10    14    0.842 -1.190          0.941   15.50      8.42   77.3</span>
-<span class="co">## 11    15    0.844 -1.230          0.947   13.30      7.17   69.4</span>
-<span class="co">## 12    16    0.842 -1.270          0.951   11.50      6.13   62.5</span>
-<span class="co">## 13    17    0.855 -1.300          0.962    9.99      5.24   56.5</span>
-<span class="co">## 14    18    0.864 -1.320          0.967    8.73      4.54   51.3</span>
-<span class="co">## 15    19    0.869 -1.330          0.970    7.67      3.92   46.7</span>
-<span class="co">## 16    20    0.875 -1.340          0.977    6.78      3.38   42.7</span>
-<span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
-<span class="co">## 1      5    0.592 -0.621          0.574   94.70     82.40  265.0</span>
-<span class="co">## 2      6    0.702 -0.666          0.710   69.90     56.80  209.0</span>
-<span class="co">## 3      7    0.757 -0.713          0.771   53.20     40.30  167.0</span>
-<span class="co">## 4      8    0.829 -0.729          0.853   41.50     29.50  136.0</span>
-<span class="co">## 5      9    0.855 -0.782          0.884   32.90     22.10  113.0</span>
-<span class="co">## 6     10    0.868 -0.826          0.911   26.60     17.20   96.6</span>
-<span class="co">## 7     11    0.873 -0.868          0.931   21.80     13.70   83.2</span>
-<span class="co">## 8     12    0.837 -0.943          0.914   18.10     11.30   73.0</span>
-<span class="co">## 9     13    0.826 -1.000          0.917   15.20      9.30   64.7</span>
-<span class="co">## 10    14    0.815 -1.070          0.917   12.80      7.73   57.6</span>
-<span class="co">## 11    15    0.810 -1.120          0.926   11.00      6.53   51.5</span>
-<span class="co">## 12    16    0.823 -1.150          0.943    9.42      5.45   46.3</span>
-<span class="co">## 13    17    0.815 -1.210          0.942    8.16      4.57   41.8</span>
-<span class="co">## 14    18    0.827 -1.240          0.954    7.11      3.92   37.8</span>
-<span class="co">## 15    19    0.833 -1.260          0.964    6.23      3.42   34.3</span>
-<span class="co">## 16    20    0.831 -1.280          0.965    5.49      2.99   31.2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cons_sft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_SFT_fit.html">consensus_SFT_fit</a></span><span class="op">(</span><span class="va">zma_list</span>, setLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Maize 1"</span>, <span class="st">"Maize 2"</span><span class="op">)</span>,</span>
+<span>                              cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
+<span><span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span></span>
+<span><span class="co">## 1      5    0.658 -0.650          0.656  107.00     90.50  304.0</span></span>
+<span><span class="co">## 2      6    0.761 -0.706          0.774   79.70     62.90  244.0</span></span>
+<span><span class="co">## 3      7    0.833 -0.757          0.863   61.30     45.10  200.0</span></span>
+<span><span class="co">## 4      8    0.825 -0.830          0.868   48.30     32.80  169.0</span></span>
+<span><span class="co">## 5      9    0.822 -0.916          0.887   38.70     24.50  145.0</span></span>
+<span><span class="co">## 6     10    0.838 -0.975          0.910   31.50     18.90  126.0</span></span>
+<span><span class="co">## 7     11    0.824 -1.040          0.914   26.00     15.00  111.0</span></span>
+<span><span class="co">## 8     12    0.837 -1.090          0.932   21.70     12.20   97.6</span></span>
+<span><span class="co">## 9     13    0.851 -1.130          0.944   18.30     10.10   86.6</span></span>
+<span><span class="co">## 10    14    0.842 -1.190          0.941   15.50      8.42   77.3</span></span>
+<span><span class="co">## 11    15    0.844 -1.230          0.947   13.30      7.17   69.4</span></span>
+<span><span class="co">## 12    16    0.842 -1.270          0.951   11.50      6.13   62.5</span></span>
+<span><span class="co">## 13    17    0.855 -1.300          0.962    9.99      5.24   56.5</span></span>
+<span><span class="co">## 14    18    0.864 -1.320          0.967    8.73      4.54   51.3</span></span>
+<span><span class="co">## 15    19    0.869 -1.330          0.970    7.67      3.92   46.7</span></span>
+<span><span class="co">## 16    20    0.875 -1.340          0.977    6.78      3.38   42.7</span></span>
+<span><span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span></span>
+<span><span class="co">## 1      5    0.592 -0.621          0.574   94.70     82.40  265.0</span></span>
+<span><span class="co">## 2      6    0.702 -0.666          0.710   69.90     56.80  209.0</span></span>
+<span><span class="co">## 3      7    0.757 -0.713          0.771   53.20     40.30  167.0</span></span>
+<span><span class="co">## 4      8    0.829 -0.729          0.853   41.50     29.50  136.0</span></span>
+<span><span class="co">## 5      9    0.855 -0.782          0.884   32.90     22.10  113.0</span></span>
+<span><span class="co">## 6     10    0.868 -0.826          0.911   26.60     17.20   96.6</span></span>
+<span><span class="co">## 7     11    0.873 -0.868          0.931   21.80     13.70   83.2</span></span>
+<span><span class="co">## 8     12    0.837 -0.943          0.914   18.10     11.30   73.0</span></span>
+<span><span class="co">## 9     13    0.826 -1.000          0.917   15.20      9.30   64.7</span></span>
+<span><span class="co">## 10    14    0.815 -1.070          0.917   12.80      7.73   57.6</span></span>
+<span><span class="co">## 11    15    0.810 -1.120          0.926   11.00      6.53   51.5</span></span>
+<span><span class="co">## 12    16    0.823 -1.150          0.943    9.42      5.45   46.3</span></span>
+<span><span class="co">## 13    17    0.815 -1.210          0.942    8.16      4.57   41.8</span></span>
+<span><span class="co">## 14    18    0.827 -1.240          0.954    7.11      3.92   37.8</span></span>
+<span><span class="co">## 15    19    0.833 -1.260          0.964    6.23      3.42   34.3</span></span>
+<span><span class="co">## 16    20    0.831 -1.280          0.965    5.49      2.99   31.2</span></span></code></pre></div>
 <p>This function returns a list with the optimal powers and a summary
 plot, exactly as <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> does.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">powers</span> <span class="op">&lt;-</span> <span class="va">cons_sft</span><span class="op">$</span><span class="va">power</span>
-<span class="va">powers</span>
-<span class="co">## set1 set2 </span>
-<span class="co">##    7    8</span>
-<span class="va">cons_sft</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">powers</span> <span class="op">&lt;-</span> <span class="va">cons_sft</span><span class="op">$</span><span class="va">power</span></span>
+<span><span class="va">powers</span></span>
+<span><span class="co">## set1 set2 </span></span>
+<span><span class="co">##    7    8</span></span>
+<span><span class="va">cons_sft</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <p><img src="vignette_03_network_comparison_files/figure-html/sft_results-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Now, we can infer GCNs and identify consensus modules across data
 sets.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_modules.html">consensus_modules</a></span><span class="op">(</span><span class="va">zma_list</span>, power <span class="op">=</span> <span class="va">powers</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
-<span class="co">## ..connectivity..</span>
-<span class="co">## ..matrix multiplication (system BLAS)..</span>
-<span class="co">## ..normalization..</span>
-<span class="co">## ..done.</span>
-<span class="co">## ..connectivity..</span>
-<span class="co">## ..matrix multiplication (system BLAS)..</span>
-<span class="co">## ..normalization..</span>
-<span class="co">## ..done.</span>
-<span class="co">##  ..done.</span>
-<span class="co">##  multiSetMEs: Calculating module MEs.</span>
-<span class="co">##    Working on set 1 ...</span>
-<span class="co">##    Working on set 2 ...</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">)</span>
-<span class="co">## [1] "consModules"         "consMEs"             "exprSize"           </span>
-<span class="co">## [4] "sampleInfo"          "genes_cmodules"      "dendro_plot_objects"</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">$</span><span class="va">genes_cmodules</span><span class="op">)</span>
-<span class="co">##       Genes Cons_modules</span>
-<span class="co">## 1 ZeamMp030    royalblue</span>
-<span class="co">## 2 ZeamMp044      darkred</span>
-<span class="co">## 3 ZeamMp092      darkred</span>
-<span class="co">## 4 ZeamMp108  saddlebrown</span>
-<span class="co">## 5 ZeamMp116      darkred</span>
-<span class="co">## 6 ZeamMp158  saddlebrown</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">consensus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_modules.html">consensus_modules</a></span><span class="op">(</span><span class="va">zma_list</span>, power <span class="op">=</span> <span class="va">powers</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
+<span><span class="co">## ..connectivity..</span></span>
+<span><span class="co">## ..matrix multiplication (system BLAS)..</span></span>
+<span><span class="co">## ..normalization..</span></span>
+<span><span class="co">## ..done.</span></span>
+<span><span class="co">## ..connectivity..</span></span>
+<span><span class="co">## ..matrix multiplication (system BLAS)..</span></span>
+<span><span class="co">## ..normalization..</span></span>
+<span><span class="co">## ..done.</span></span>
+<span><span class="co">##  ..done.</span></span>
+<span><span class="co">##  multiSetMEs: Calculating module MEs.</span></span>
+<span><span class="co">##    Working on set 1 ...</span></span>
+<span><span class="co">##    Working on set 2 ...</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">)</span></span>
+<span><span class="co">## [1] "consModules"         "consMEs"             "exprSize"           </span></span>
+<span><span class="co">## [4] "sampleInfo"          "genes_cmodules"      "dendro_plot_objects"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">$</span><span class="va">genes_cmodules</span><span class="op">)</span></span>
+<span><span class="co">##       Genes Cons_modules</span></span>
+<span><span class="co">## 1 ZeamMp030    royalblue</span></span>
+<span><span class="co">## 2 ZeamMp044      darkred</span></span>
+<span><span class="co">## 3 ZeamMp092      darkred</span></span>
+<span><span class="co">## 4 ZeamMp108  saddlebrown</span></span>
+<span><span class="co">## 5 ZeamMp116      darkred</span></span>
+<span><span class="co">## 6 ZeamMp158  saddlebrown</span></span></code></pre></div>
 <p>Finally, we can correlate consensus module eigengenes to sample
-metadata (here, plant tissues).<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+metadata (here, plant tissues).<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Blank grey cells in the heatmap
+represent correlation values that have opposite sign in the expression
+sets. For each correlation pair, consensus correlations are calculated
+by selecting the minimum value across matrices of consensus module-trait
+correlations.&lt;/p&gt;"><sup>1</sup></a></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">consensus_trait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_trait_cor.html">consensus_trait_cor</a></span><span class="op">(</span><span class="va">consensus</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">consensus_trait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/consensus_trait_cor.html">consensus_trait_cor</a></span><span class="op">(</span><span class="va">consensus</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_03_network_comparison_files/figure-html/consensus_trait_cor-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus_trait</span><span class="op">)</span>
-<span class="co">##        ME          trait          cor    pvalue</span>
-<span class="co">## 1 MEblack      endosperm -0.297224435 0.1815879</span>
-<span class="co">## 2 MEblack         pollen  0.284525339 0.2021641</span>
-<span class="co">## 3 MEblack whole_seedling  0.007301901 0.9746086</span>
-<span class="co">## 4  MEblue      endosperm -0.164695363 0.4687656</span>
-<span class="co">## 5  MEblue         pollen  0.295979347 0.1835410</span>
-<span class="co">## 6  MEblue whole_seedling -0.016437184 0.9428769</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus_trait</span><span class="op">)</span></span>
+<span><span class="co">##        ME          trait          cor    pvalue</span></span>
+<span><span class="co">## 1 MEblack      endosperm -0.297224435 0.1815879</span></span>
+<span><span class="co">## 2 MEblack         pollen  0.284525339 0.2021641</span></span>
+<span><span class="co">## 3 MEblack whole_seedling  0.007301901 0.9746086</span></span>
+<span><span class="co">## 4  MEblue      endosperm -0.164695363 0.4687656</span></span>
+<span><span class="co">## 5  MEblue         pollen  0.295979347 0.1835410</span></span>
+<span><span class="co">## 6  MEblue whole_seedling -0.016437184 0.9428769</span></span></code></pre></div>
 <p>Users can also transpose the heatmap as in
 <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code>.</p>
 </div>
@@ -332,19 +325,24 @@ collapse the gene-level expression values to orthogroup-level expression
 values. This way, all expression sets will have common row names. We
 recommend identifying orthogroups with <strong>OrthoFinder</strong>
 <span class="citation">(Emms and Kelly 2015)</span>, as it is simple to
-use and widely used.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Here, we will compare maize and rice
+use and widely used.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;&lt;strong&gt;PRO TIP:&lt;/strong&gt; If you identify orthogroups
+with &lt;strong&gt;OrthoFinder&lt;/strong&gt;, &lt;code&gt;BioNERO&lt;/code&gt; has a helper
+function named &lt;code&gt;&lt;a href="../reference/parse_orthofinder.html"&gt;parse_orthofinder()&lt;/a&gt;&lt;/code&gt; that parses the
+&lt;em&gt;Orthogroups.tsv&lt;/em&gt; file generated by OrthoFinder into a suitable
+data frame for module preservation analysis. See
+&lt;code&gt;&lt;a href="../reference/parse_orthofinder.html"&gt;?parse_orthofinder&lt;/a&gt;&lt;/code&gt; for more details.&lt;/p&gt;'><sup>2</sup></a> Here, we will compare maize and rice
 expression profiles. The orthogroups between these species were
 downloaded from the PLAZA 4.0 Monocots database <span class="citation">(Van Bel et al. 2018)</span>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span>
-<span class="co">##              Family Species           Gene</span>
-<span class="co">## 1548 ORTHO04M000001     osa   Os01g0100700</span>
-<span class="co">## 1549 ORTHO04M000001     osa   Os01g0100900</span>
-<span class="co">## 4824 ORTHO04M000001     zma Zm00001d009743</span>
-<span class="co">## 4854 ORTHO04M000001     zma Zm00001d020834</span>
-<span class="co">## 4874 ORTHO04M000001     zma Zm00001d026672</span>
-<span class="co">## 4921 ORTHO04M000001     zma Zm00001d039873</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">og.zma.osa</span><span class="op">)</span></span>
+<span><span class="co">##              Family Species           Gene</span></span>
+<span><span class="co">## 1548 ORTHO04M000001     osa   Os01g0100700</span></span>
+<span><span class="co">## 1549 ORTHO04M000001     osa   Os01g0100900</span></span>
+<span><span class="co">## 4824 ORTHO04M000001     zma Zm00001d009743</span></span>
+<span><span class="co">## 4854 ORTHO04M000001     zma Zm00001d020834</span></span>
+<span><span class="co">## 4874 ORTHO04M000001     zma Zm00001d026672</span></span>
+<span><span class="co">## 4921 ORTHO04M000001     zma Zm00001d039873</span></span></code></pre></div>
 <p>As you can see, the orthogroup object for <code>BioNERO</code> must
 be a data frame with orthogroups, species IDs and gene IDs,
 respectively. Let’s collapse gene-level expression to orthogroup-level
@@ -353,40 +351,40 @@ than one gene in the same orthogroup for a given species, their
 expression levels are summarized to the median. Users can also summarize
 to the mean.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Store SummarizedExperiment objects in a list</span>
-<span class="va">zma_osa_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>osa <span class="op">=</span> <span class="va">osa.se</span>, zma <span class="op">=</span> <span class="va">zma.se</span><span class="op">)</span>
-
-<span class="co"># Collapse gene-level expression to orthogroup-level</span>
-<span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_genes2orthogroups.html">exp_genes2orthogroups</a></span><span class="op">(</span><span class="va">zma_osa_list</span>, <span class="va">og.zma.osa</span>, summarize <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>
-
-<span class="co"># Inspect new expression data</span>
-<span class="va">ortho_exp</span><span class="op">$</span><span class="va">osa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
-<span class="co">##                SRX831140 SRX831141 SRX831137 SRX831138 SRX831134</span>
-<span class="co">## ORTHO04M000001  6.909420  7.258330  94.20870  92.85195 123.01060</span>
-<span class="co">## ORTHO04M000002  9.203498  8.709974  66.45512  44.97913  33.86936</span>
-<span class="co">## ORTHO04M000003  9.417930  9.444861  42.57513  66.02237  55.37741</span>
-<span class="co">## ORTHO04M000004  9.019436  8.920091  96.22074  62.56506 109.32262</span>
-<span class="co">## ORTHO04M000005 40.845040 41.844234  52.33474  31.31474  22.42236</span>
-<span class="va">ortho_exp</span><span class="op">$</span><span class="va">zma</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>
-<span class="co">##                SRX339756 SRX339757 SRX339758 SRX339762 SRX339763</span>
-<span class="co">## ORTHO04M000001  26.02510  15.07917  14.91571  13.82989  8.080476</span>
-<span class="co">## ORTHO04M000002  19.28281  13.94254  13.57854  12.96032 13.522525</span>
-<span class="co">## ORTHO04M000003  45.17294  48.63796  54.22404  42.12135 10.779117</span>
-<span class="co">## ORTHO04M000004  28.05475  38.53734  39.48070  27.13272  2.978207</span>
-<span class="co">## ORTHO04M000005  67.58868  34.87009  21.46280  12.79565  7.452068</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Store SummarizedExperiment objects in a list</span></span>
+<span><span class="va">zma_osa_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>osa <span class="op">=</span> <span class="va">osa.se</span>, zma <span class="op">=</span> <span class="va">zma.se</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Collapse gene-level expression to orthogroup-level</span></span>
+<span><span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_genes2orthogroups.html">exp_genes2orthogroups</a></span><span class="op">(</span><span class="va">zma_osa_list</span>, <span class="va">og.zma.osa</span>, summarize <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Inspect new expression data</span></span>
+<span><span class="va">ortho_exp</span><span class="op">$</span><span class="va">osa</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">##                SRX831140 SRX831141 SRX831137 SRX831138 SRX831134</span></span>
+<span><span class="co">## ORTHO04M000001  6.909420  7.258330  94.20870  92.85195 123.01060</span></span>
+<span><span class="co">## ORTHO04M000002  9.203498  8.709974  66.45512  44.97913  33.86936</span></span>
+<span><span class="co">## ORTHO04M000003  9.417930  9.444861  42.57513  66.02237  55.37741</span></span>
+<span><span class="co">## ORTHO04M000004  9.019436  8.920091  96.22074  62.56506 109.32262</span></span>
+<span><span class="co">## ORTHO04M000005 40.845040 41.844234  52.33474  31.31474  22.42236</span></span>
+<span><span class="va">ortho_exp</span><span class="op">$</span><span class="va">zma</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="co">##                SRX339756 SRX339757 SRX339758 SRX339762 SRX339763</span></span>
+<span><span class="co">## ORTHO04M000001  26.02510  15.07917  14.91571  13.82989  8.080476</span></span>
+<span><span class="co">## ORTHO04M000002  19.28281  13.94254  13.57854  12.96032 13.522525</span></span>
+<span><span class="co">## ORTHO04M000003  45.17294  48.63796  54.22404  42.12135 10.779117</span></span>
+<span><span class="co">## ORTHO04M000004  28.05475  38.53734  39.48070  27.13272  2.978207</span></span>
+<span><span class="co">## ORTHO04M000005  67.58868  34.87009  21.46280  12.79565  7.452068</span></span></code></pre></div>
 <p>Now, we will preprocess both expression sets and keep only the top
 1000 orthogroups with the highest variances for demonstration
 purposes.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Preprocess data and keep top 1000 genes with highest variances</span>
-<span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">exp_preprocess</span>, variance_filter<span class="op">=</span><span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span>
-<span class="co">## Number of removed samples: 2</span>
-<span class="co">## Number of removed samples: 2</span>
-
-<span class="co"># Check orthogroup number</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">nrow</span><span class="op">)</span>
-<span class="co">##  osa  zma </span>
-<span class="co">## 1000 1000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Preprocess data and keep top 1000 genes with highest variances</span></span>
+<span><span class="va">ortho_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">exp_preprocess</span>, variance_filter<span class="op">=</span><span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="co">## Number of removed samples: 2</span></span>
+<span><span class="co">## Number of removed samples: 2</span></span>
+<span></span>
+<span><span class="co"># Check orthogroup number</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">nrow</span><span class="op">)</span></span>
+<span><span class="co">##  osa  zma </span></span>
+<span><span class="co">## 1000 1000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="calculating-module-preservation-statistics">Calculating module preservation statistics<a class="anchor" aria-label="anchor" href="#calculating-module-preservation-statistics"></a>
@@ -394,63 +392,63 @@ purposes.</p>
 <p>Now that row names are comparable, we can infer GCNs for each set. We
 will do that iteratively with lapply.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Calculate SFT power</span>
-<span class="va">power_ortho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">SFT_fit</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span>
-<span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span>
-<span class="co">## 1      3  0.00503 -0.174          0.792  196.00    196.00  277.0</span>
-<span class="co">## 2      4  0.10300 -0.767          0.874  133.00    131.00  210.0</span>
-<span class="co">## 3      5  0.15600 -0.861          0.903   94.40     92.90  165.0</span>
-<span class="co">## 4      6  0.18900 -0.873          0.929   69.90     68.30  132.0</span>
-<span class="co">## 5      7  0.22000 -0.936          0.915   53.40     51.70  109.0</span>
-<span class="co">## 6      8  0.32100 -1.070          0.918   41.90     40.10   90.9</span>
-<span class="co">## 7      9  0.35400 -1.030          0.903   33.60     31.70   77.0</span>
-<span class="co">## 8     10  0.39800 -0.991          0.909   27.50     25.50   66.0</span>
-<span class="co">## 9     11  0.46900 -0.997          0.914   22.80     20.90   57.2</span>
-<span class="co">## 10    12  0.51800 -0.969          0.917   19.20     17.30   50.0</span>
-<span class="co">## 11    13  0.58400 -0.944          0.935   16.40     14.50   44.1</span>
-<span class="co">## 12    14  0.66000 -0.913          0.969   14.20     12.50   39.3</span>
-<span class="co">## 13    15  0.70900 -0.906          0.977   12.30     10.60   35.5</span>
-<span class="co">## 14    16  0.76000 -0.920          0.983   10.80      9.14   32.2</span>
-<span class="co">## 15    17  0.77900 -0.945          0.929    9.57      7.79   29.3</span>
-<span class="co">## 16    18  0.81000 -0.954          0.938    8.52      6.81   26.9</span>
-<span class="co">## 17    19  0.82600 -0.972          0.954    7.64      5.97   25.1</span>
-<span class="co">## 18    20  0.84700 -1.000          0.954    6.88      5.26   23.6</span>
-<span class="co">##    Power SFT.R.sq   slope truncated.R.sq mean.k. median.k. max.k.</span>
-<span class="co">## 1      3   0.6910  0.7290         0.6260   269.0     284.0  407.0</span>
-<span class="co">## 2      4   0.4540  0.3460         0.3270   199.0     209.0  329.0</span>
-<span class="co">## 3      5   0.0802  0.1070        -0.0486   153.0     158.0  273.0</span>
-<span class="co">## 4      6   0.0459 -0.0746        -0.0302   121.0     123.0  233.0</span>
-<span class="co">## 5      7   0.2620 -0.2140         0.3480    98.1      97.1  201.0</span>
-<span class="co">## 6      8   0.4070 -0.3270         0.4820    80.7      78.1  176.0</span>
-<span class="co">## 7      9   0.5030 -0.4180         0.5960    67.4      63.4  155.0</span>
-<span class="co">## 8     10   0.4930 -0.4950         0.5950    57.0      52.5  138.0</span>
-<span class="co">## 9     11   0.5730 -0.5520         0.6790    48.8      43.8  124.0</span>
-<span class="co">## 10    12   0.5770 -0.6090         0.6860    42.1      37.2  112.0</span>
-<span class="co">## 11    13   0.6560 -0.6500         0.7490    36.7      31.6  101.0</span>
-<span class="co">## 12    14   0.6740 -0.7010         0.7630    32.2      27.5   92.1</span>
-<span class="co">## 13    15   0.7240 -0.7330         0.7930    28.4      23.8   84.2</span>
-<span class="co">## 14    16   0.7800 -0.7460         0.8470    25.3      20.6   77.3</span>
-<span class="co">## 15    17   0.8330 -0.7540         0.9060    22.6      18.0   71.2</span>
-<span class="co">## 16    18   0.8560 -0.7740         0.9200    20.3      15.8   65.7</span>
-<span class="co">## 17    19   0.8690 -0.7870         0.9320    18.3      13.9   60.9</span>
-<span class="co">## 18    20   0.8810 -0.8120         0.9240    16.6      12.3   56.6</span>
-
-<span class="co"># Infer GCNs</span>
-<span class="va">gcns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">power_ortho</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> 
-  <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span><span class="va">ortho_exp</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span>, SFTpower <span class="op">=</span> <span class="va">power_ortho</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">power</span>, 
-          cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span>
-  <span class="op">)</span>
-<span class="co">## ..connectivity..</span>
-<span class="co">## ..matrix multiplication (system BLAS)..</span>
-<span class="co">## ..normalization..</span>
-<span class="co">## ..done.</span>
-<span class="co">## ..connectivity..</span>
-<span class="co">## ..matrix multiplication (system BLAS)..</span>
-<span class="co">## ..normalization..</span>
-<span class="co">## ..done.</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gcns</span><span class="op">)</span>
-<span class="co">## [1] 2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Calculate SFT power</span></span>
+<span><span class="va">power_ortho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ortho_exp</span>, <span class="va">SFT_fit</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span></span>
+<span><span class="co">##    Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.</span></span>
+<span><span class="co">## 1      3  0.00503 -0.174          0.792  196.00    196.00  277.0</span></span>
+<span><span class="co">## 2      4  0.10300 -0.767          0.874  133.00    131.00  210.0</span></span>
+<span><span class="co">## 3      5  0.15600 -0.861          0.903   94.40     92.90  165.0</span></span>
+<span><span class="co">## 4      6  0.18900 -0.873          0.929   69.90     68.30  132.0</span></span>
+<span><span class="co">## 5      7  0.22000 -0.936          0.915   53.40     51.70  109.0</span></span>
+<span><span class="co">## 6      8  0.32100 -1.070          0.918   41.90     40.10   90.9</span></span>
+<span><span class="co">## 7      9  0.35400 -1.030          0.903   33.60     31.70   77.0</span></span>
+<span><span class="co">## 8     10  0.39800 -0.991          0.909   27.50     25.50   66.0</span></span>
+<span><span class="co">## 9     11  0.46900 -0.997          0.914   22.80     20.90   57.2</span></span>
+<span><span class="co">## 10    12  0.51800 -0.969          0.917   19.20     17.30   50.0</span></span>
+<span><span class="co">## 11    13  0.58400 -0.944          0.935   16.40     14.50   44.1</span></span>
+<span><span class="co">## 12    14  0.66000 -0.913          0.969   14.20     12.50   39.3</span></span>
+<span><span class="co">## 13    15  0.70900 -0.906          0.977   12.30     10.60   35.5</span></span>
+<span><span class="co">## 14    16  0.76000 -0.920          0.983   10.80      9.14   32.2</span></span>
+<span><span class="co">## 15    17  0.77900 -0.945          0.929    9.57      7.79   29.3</span></span>
+<span><span class="co">## 16    18  0.81000 -0.954          0.938    8.52      6.81   26.9</span></span>
+<span><span class="co">## 17    19  0.82600 -0.972          0.954    7.64      5.97   25.1</span></span>
+<span><span class="co">## 18    20  0.84700 -1.000          0.954    6.88      5.26   23.6</span></span>
+<span><span class="co">##    Power SFT.R.sq   slope truncated.R.sq mean.k. median.k. max.k.</span></span>
+<span><span class="co">## 1      3   0.6910  0.7290         0.6260   269.0     284.0  407.0</span></span>
+<span><span class="co">## 2      4   0.4540  0.3460         0.3270   199.0     209.0  329.0</span></span>
+<span><span class="co">## 3      5   0.0802  0.1070        -0.0486   153.0     158.0  273.0</span></span>
+<span><span class="co">## 4      6   0.0459 -0.0746        -0.0302   121.0     123.0  233.0</span></span>
+<span><span class="co">## 5      7   0.2620 -0.2140         0.3480    98.1      97.1  201.0</span></span>
+<span><span class="co">## 6      8   0.4070 -0.3270         0.4820    80.7      78.1  176.0</span></span>
+<span><span class="co">## 7      9   0.5030 -0.4180         0.5960    67.4      63.4  155.0</span></span>
+<span><span class="co">## 8     10   0.4930 -0.4950         0.5950    57.0      52.5  138.0</span></span>
+<span><span class="co">## 9     11   0.5730 -0.5520         0.6790    48.8      43.8  124.0</span></span>
+<span><span class="co">## 10    12   0.5770 -0.6090         0.6860    42.1      37.2  112.0</span></span>
+<span><span class="co">## 11    13   0.6560 -0.6500         0.7490    36.7      31.6  101.0</span></span>
+<span><span class="co">## 12    14   0.6740 -0.7010         0.7630    32.2      27.5   92.1</span></span>
+<span><span class="co">## 13    15   0.7240 -0.7330         0.7930    28.4      23.8   84.2</span></span>
+<span><span class="co">## 14    16   0.7800 -0.7460         0.8470    25.3      20.6   77.3</span></span>
+<span><span class="co">## 15    17   0.8330 -0.7540         0.9060    22.6      18.0   71.2</span></span>
+<span><span class="co">## 16    18   0.8560 -0.7740         0.9200    20.3      15.8   65.7</span></span>
+<span><span class="co">## 17    19   0.8690 -0.7870         0.9320    18.3      13.9   60.9</span></span>
+<span><span class="co">## 18    20   0.8810 -0.8120         0.9240    16.6      12.3   56.6</span></span>
+<span></span>
+<span><span class="co"># Infer GCNs</span></span>
+<span><span class="va">gcns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">power_ortho</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span><span class="va">ortho_exp</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span>, SFTpower <span class="op">=</span> <span class="va">power_ortho</span><span class="op">[[</span><span class="va">n</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">power</span>, </span>
+<span>          cor_method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">## ..connectivity..</span></span>
+<span><span class="co">## ..matrix multiplication (system BLAS)..</span></span>
+<span><span class="co">## ..normalization..</span></span>
+<span><span class="co">## ..done.</span></span>
+<span><span class="co">## ..connectivity..</span></span>
+<span><span class="co">## ..matrix multiplication (system BLAS)..</span></span>
+<span><span class="co">## ..normalization..</span></span>
+<span><span class="co">## ..done.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">gcns</span><span class="op">)</span></span>
+<span><span class="co">## [1] 2</span></span></code></pre></div>
 <p>Initially, module preservation analyses were performed with WGCNA’s
 algorithm <span class="citation">(Langfelder and Horvath 2008)</span>.
 However, the summary preservation statistics used by WGCNA rely on
@@ -466,24 +464,24 @@ a single function: <code><a href="../reference/module_preservation.html">module_
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ref_net =</span> gcns[[<span class="dv">1</span>]], </span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">test_net =</span> gcns[[<span class="dv">2</span>]], </span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">algorithm =</span> <span class="st">"netrep"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:47 UTC] Validating user input...</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:47 UTC]   Checking matrices for problems...</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:47 UTC] Input ok!</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:47 UTC] Calculating preservation of network subsets from</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:00:58 UTC] Validating user input...</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:00:58 UTC]   Checking matrices for problems...</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:00:59 UTC] Input ok!</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:00:59 UTC] Calculating preservation of network subsets from</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##                           dataset "osa" in dataset "zma".</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:47 UTC]   Pre-computing network properties in dataset</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:00:59 UTC]   Pre-computing network properties in dataset</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                             "osa"...</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:48 UTC]   Calculating observed test statistics...</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:48 UTC]   Generating null distributions from 1000</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:01:00 UTC]   Calculating observed test statistics...</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:01:00 UTC]   Generating null distributions from 1000</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                             permutations using 1 thread...</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>% completed.</span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span>% completed.</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:49 UTC]   Calculating P-values...</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:49 UTC]   Collating results...</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-04-21 10:58:51 UTC] Done!</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:01:01 UTC]   Calculating P-values...</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:01:01 UTC]   Collating results...</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2022-08-28 13:01:03 UTC] Done!</span></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="do">## None of the modules in osa were preserved in zma.</span></span></code></pre></div>
 <p>None of the modules in rice were preserved in maize. This can be
 either due to the small number of orthogroups we have chosen or to the
@@ -499,135 +497,132 @@ view of transcriptional conservation between species.</p>
 genes with <code><a href="../reference/is_singleton.html">is_singleton()</a></code>. This function returns logical
 vectors indicating if each of the input genes is a singleton or not.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Sample 50 random genes</span>
-<span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
-<span class="fu"><a href="../reference/is_singleton.html">is_singleton</a></span><span class="op">(</span><span class="va">genes</span>, <span class="va">og.zma.osa</span><span class="op">)</span>
-<span class="co">## Zm00001d000240 Zm00001d006084 Zm00001d007075 Zm00001d007888 Zm00001d008982 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d009683 Zm00001d013642 Zm00001d013678 Zm00001d013730 Zm00001d014286 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d014770 Zm00001d014993 Zm00001d015585 Zm00001d016894 Zm00001d016988 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d018142 Zm00001d018636 Zm00001d019283 Zm00001d021464 Zm00001d022182 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d023452 Zm00001d023655 Zm00001d025946 Zm00001d027337 Zm00001d027505 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d027976 Zm00001d028661 Zm00001d030955 Zm00001d031310 Zm00001d033532 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d034152 Zm00001d035039 Zm00001d035933 Zm00001d037263 Zm00001d038003 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d038361 Zm00001d038685 Zm00001d039684 Zm00001d039816 Zm00001d042108 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d042506 Zm00001d043483 Zm00001d044525 Zm00001d045195 Zm00001d045763 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span>
-<span class="co">## Zm00001d046937 Zm00001d047187 Zm00001d048627 Zm00001d049325 Zm00001d050347 </span>
-<span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Sample 50 random genes</span></span>
+<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/is_singleton.html">is_singleton</a></span><span class="op">(</span><span class="va">genes</span>, <span class="va">og.zma.osa</span><span class="op">)</span></span>
+<span><span class="co">## Zm00001d000112 Zm00001d000241 Zm00001d003725 Zm00001d004090 Zm00001d005881 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d006059 Zm00001d010343 Zm00001d011272 Zm00001d011691 Zm00001d012084 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d012518 Zm00001d012610 Zm00001d013061 Zm00001d013532 Zm00001d014097 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d014992 Zm00001d017915 Zm00001d018936 Zm00001d018961 Zm00001d019139 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d019490 Zm00001d020783 Zm00001d021231 Zm00001d022112 Zm00001d022267 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d024830 Zm00001d025352 Zm00001d025712 Zm00001d028244 Zm00001d028360 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d028679 Zm00001d029033 Zm00001d030573 Zm00001d030893 Zm00001d033262 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d034018 Zm00001d034757 Zm00001d034776 Zm00001d038600 Zm00001d042262 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d043301 Zm00001d043841 Zm00001d043842 Zm00001d044826 Zm00001d045028 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE </span></span>
+<span><span class="co">## Zm00001d047581 Zm00001d047834 Zm00001d050785 Zm00001d052122 Zm00001d052224 </span></span>
+<span><span class="co">##           TRUE           TRUE           TRUE           TRUE           TRUE</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
 <p>This vignette was created under the following conditions:</p>
-<pre><code><span class="co">## R version 4.1.3 (2022-03-10)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] BioNERO_1.3.2    BiocStyle_2.22.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##   [1] backports_1.4.1             circlize_0.4.14            </span>
-<span class="co">##   [3] Hmisc_4.7-0                 systemfonts_1.0.4          </span>
-<span class="co">##   [5] plyr_1.8.7                  igraph_1.3.0               </span>
-<span class="co">##   [7] splines_4.1.3               GENIE3_1.16.0              </span>
-<span class="co">##   [9] BiocParallel_1.28.3         ggnetwork_0.5.10           </span>
-<span class="co">##  [11] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
-<span class="co">##  [13] sva_3.42.0                  digest_0.6.29              </span>
-<span class="co">##  [15] foreach_1.5.2               htmltools_0.5.2            </span>
-<span class="co">##  [17] GO.db_3.14.0                fansi_1.0.3                </span>
-<span class="co">##  [19] magrittr_2.0.3              checkmate_2.0.0            </span>
-<span class="co">##  [21] memoise_2.0.1               cluster_2.1.3              </span>
-<span class="co">##  [23] doParallel_1.0.17           limma_3.50.3               </span>
-<span class="co">##  [25] ComplexHeatmap_2.10.0       fastcluster_1.2.3          </span>
-<span class="co">##  [27] Biostrings_2.62.0           annotate_1.72.0            </span>
-<span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.2              </span>
-<span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span>
-<span class="co">##  [33] ggrepel_0.9.1               blob_1.2.3                 </span>
-<span class="co">##  [35] textshaping_0.3.6           xfun_0.30                  </span>
-<span class="co">##  [37] dplyr_1.0.8                 crayon_1.5.1               </span>
-<span class="co">##  [39] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
-<span class="co">##  [41] genefilter_1.76.0           impute_1.68.0              </span>
-<span class="co">##  [43] survival_3.3-1              iterators_1.0.14           </span>
-<span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span>
-<span class="co">##  [47] zlibbioc_1.40.0             XVector_0.34.0             </span>
-<span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.20.0        </span>
-<span class="co">##  [51] car_3.0-12                  shape_1.4.6                </span>
-<span class="co">##  [53] BiocGenerics_0.40.0         abind_1.4-5                </span>
-<span class="co">##  [55] scales_1.2.0                edgeR_3.36.0               </span>
-<span class="co">##  [57] DBI_1.1.2                   rstatix_0.7.0              </span>
-<span class="co">##  [59] Rcpp_1.0.8.3                xtable_1.8-4               </span>
-<span class="co">##  [61] htmlTable_2.4.0             clue_0.3-60                </span>
-<span class="co">##  [63] foreign_0.8-82              bit_4.0.4                  </span>
-<span class="co">##  [65] preprocessCore_1.56.0       Formula_1.2-4              </span>
-<span class="co">##  [67] stats4_4.1.3                htmlwidgets_1.5.4          </span>
-<span class="co">##  [69] httr_1.4.2                  RColorBrewer_1.1-3         </span>
-<span class="co">##  [71] ellipsis_0.3.2              farver_2.1.0               </span>
-<span class="co">##  [73] pkgconfig_2.0.3             XML_3.99-0.9               </span>
-<span class="co">##  [75] nnet_7.3-17                 sass_0.4.1                 </span>
-<span class="co">##  [77] locfit_1.5-9.5              utf8_1.2.2                 </span>
-<span class="co">##  [79] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
-<span class="co">##  [81] reshape2_1.4.4              tidyselect_1.1.2           </span>
-<span class="co">##  [83] rlang_1.0.2                 AnnotationDbi_1.56.2       </span>
-<span class="co">##  [85] munsell_0.5.0               tools_4.1.3                </span>
-<span class="co">##  [87] cachem_1.0.6                cli_3.2.0                  </span>
-<span class="co">##  [89] generics_0.1.2              RSQLite_2.2.12             </span>
-<span class="co">##  [91] statnet.common_4.5.0        broom_0.8.0                </span>
-<span class="co">##  [93] evaluate_0.15               stringr_1.4.0              </span>
-<span class="co">##  [95] fastmap_1.1.0               yaml_2.3.5                 </span>
-<span class="co">##  [97] ragg_1.2.2                  RhpcBLASctl_0.21-247.1     </span>
-<span class="co">##  [99] knitr_1.38                  bit64_4.0.5                </span>
-<span class="co">## [101] fs_1.5.2                    purrr_0.3.4                </span>
-<span class="co">## [103] KEGGREST_1.34.0             nlme_3.1-157               </span>
-<span class="co">## [105] compiler_4.1.3              rstudioapi_0.13            </span>
-<span class="co">## [107] png_0.1-7                   ggsignif_0.6.3             </span>
-<span class="co">## [109] minet_3.52.0                tibble_3.1.6               </span>
-<span class="co">## [111] statmod_1.4.36              geneplotter_1.72.0         </span>
-<span class="co">## [113] bslib_0.3.1                 stringi_1.7.6              </span>
-<span class="co">## [115] highr_0.9                   desc_1.4.1                 </span>
-<span class="co">## [117] lattice_0.20-45             Matrix_1.4-1               </span>
-<span class="co">## [119] vctrs_0.4.1                 networkD3_0.4              </span>
-<span class="co">## [121] pillar_1.7.0                lifecycle_1.0.1            </span>
-<span class="co">## [123] BiocManager_1.30.16         jquerylib_0.1.4            </span>
-<span class="co">## [125] GlobalOptions_0.1.2         cowplot_1.1.1              </span>
-<span class="co">## [127] data.table_1.14.2           bitops_1.0-7               </span>
-<span class="co">## [129] GenomicRanges_1.46.1        R6_2.5.1                   </span>
-<span class="co">## [131] latticeExtra_0.6-29         bookdown_0.26              </span>
-<span class="co">## [133] network_1.17.1              gridExtra_2.3              </span>
-<span class="co">## [135] IRanges_2.28.0              codetools_0.2-18           </span>
-<span class="co">## [137] SummarizedExperiment_1.24.0 DESeq2_1.34.0              </span>
-<span class="co">## [139] rprojroot_2.0.3             rjson_0.2.21               </span>
-<span class="co">## [141] S4Vectors_0.32.4            GenomeInfoDbData_1.2.7     </span>
-<span class="co">## [143] intergraph_2.0-2            mgcv_1.8-40                </span>
-<span class="co">## [145] parallel_4.1.3              grid_4.1.3                 </span>
-<span class="co">## [147] rpart_4.1.16                tidyr_1.2.0                </span>
-<span class="co">## [149] NetRep_1.2.4                coda_0.19-4                </span>
-<span class="co">## [151] rmarkdown_2.13              carData_3.0-5              </span>
-<span class="co">## [153] MatrixGenerics_1.6.0        ggpubr_0.4.0               </span>
-<span class="co">## [155] ggnewscale_0.4.7            Biobase_2.54.0             </span>
-<span class="co">## [157] WGCNA_1.70-3                base64enc_0.1-3</span></code></pre>
+<pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] BioNERO_1.5.1    BiocStyle_2.24.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##   [1] backports_1.4.1             circlize_0.4.15            </span></span>
+<span><span class="co">##   [3] Hmisc_4.7-1                 systemfonts_1.0.4          </span></span>
+<span><span class="co">##   [5] plyr_1.8.7                  igraph_1.3.4               </span></span>
+<span><span class="co">##   [7] splines_4.2.1               GENIE3_1.18.0              </span></span>
+<span><span class="co">##   [9] BiocParallel_1.30.3         GenomeInfoDb_1.32.3        </span></span>
+<span><span class="co">##  [11] ggnetwork_0.5.10            ggplot2_3.3.6              </span></span>
+<span><span class="co">##  [13] sva_3.44.0                  digest_0.6.29              </span></span>
+<span><span class="co">##  [15] foreach_1.5.2               htmltools_0.5.3            </span></span>
+<span><span class="co">##  [17] GO.db_3.15.0                fansi_1.0.3                </span></span>
+<span><span class="co">##  [19] magrittr_2.0.3              checkmate_2.1.0            </span></span>
+<span><span class="co">##  [21] memoise_2.0.1               cluster_2.1.4              </span></span>
+<span><span class="co">##  [23] doParallel_1.0.17           limma_3.52.2               </span></span>
+<span><span class="co">##  [25] annotate_1.74.0             ComplexHeatmap_2.12.1      </span></span>
+<span><span class="co">##  [27] fastcluster_1.2.3           Biostrings_2.64.1          </span></span>
+<span><span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.6              </span></span>
+<span><span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span></span>
+<span><span class="co">##  [33] blob_1.2.3                  ggrepel_0.9.1              </span></span>
+<span><span class="co">##  [35] textshaping_0.3.6           xfun_0.32                  </span></span>
+<span><span class="co">##  [37] dplyr_1.0.9                 crayon_1.5.1               </span></span>
+<span><span class="co">##  [39] RCurl_1.98-1.8              jsonlite_1.8.0             </span></span>
+<span><span class="co">##  [41] genefilter_1.78.0           impute_1.70.0              </span></span>
+<span><span class="co">##  [43] survival_3.4-0              iterators_1.0.14           </span></span>
+<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span></span>
+<span><span class="co">##  [47] zlibbioc_1.42.0             XVector_0.36.0             </span></span>
+<span><span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.22.0        </span></span>
+<span><span class="co">##  [51] shape_1.4.6                 BiocGenerics_0.42.0        </span></span>
+<span><span class="co">##  [53] abind_1.4-5                 scales_1.2.1               </span></span>
+<span><span class="co">##  [55] edgeR_3.38.4                DBI_1.1.3                  </span></span>
+<span><span class="co">##  [57] Rcpp_1.0.9                  xtable_1.8-4               </span></span>
+<span><span class="co">##  [59] htmlTable_2.4.1             clue_0.3-61                </span></span>
+<span><span class="co">##  [61] foreign_0.8-82              bit_4.0.4                  </span></span>
+<span><span class="co">##  [63] preprocessCore_1.58.0       Formula_1.2-4              </span></span>
+<span><span class="co">##  [65] stats4_4.2.1                htmlwidgets_1.5.4          </span></span>
+<span><span class="co">##  [67] httr_1.4.4                  RColorBrewer_1.1-3         </span></span>
+<span><span class="co">##  [69] farver_2.1.1                XML_3.99-0.10              </span></span>
+<span><span class="co">##  [71] pkgconfig_2.0.3             nnet_7.3-17                </span></span>
+<span><span class="co">##  [73] sass_0.4.2                  deldir_1.0-6               </span></span>
+<span><span class="co">##  [75] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
+<span><span class="co">##  [77] dynamicTreeCut_1.63-1       labeling_0.4.2             </span></span>
+<span><span class="co">##  [79] reshape2_1.4.4              tidyselect_1.1.2           </span></span>
+<span><span class="co">##  [81] rlang_1.0.4                 AnnotationDbi_1.58.0       </span></span>
+<span><span class="co">##  [83] munsell_0.5.0               tools_4.2.1                </span></span>
+<span><span class="co">##  [85] cachem_1.0.6                cli_3.3.0                  </span></span>
+<span><span class="co">##  [87] generics_0.1.3              RSQLite_2.2.16             </span></span>
+<span><span class="co">##  [89] statnet.common_4.6.0        evaluate_0.16              </span></span>
+<span><span class="co">##  [91] stringr_1.4.1               fastmap_1.1.0              </span></span>
+<span><span class="co">##  [93] yaml_2.3.5                  ragg_1.2.2                 </span></span>
+<span><span class="co">##  [95] RhpcBLASctl_0.21-247.1      knitr_1.40                 </span></span>
+<span><span class="co">##  [97] bit64_4.0.5                 fs_1.5.2                   </span></span>
+<span><span class="co">##  [99] purrr_0.3.4                 KEGGREST_1.36.3            </span></span>
+<span><span class="co">## [101] nlme_3.1-159                compiler_4.2.1             </span></span>
+<span><span class="co">## [103] rstudioapi_0.14             png_0.1-7                  </span></span>
+<span><span class="co">## [105] minet_3.54.0                tibble_3.1.8               </span></span>
+<span><span class="co">## [107] statmod_1.4.37              bslib_0.4.0                </span></span>
+<span><span class="co">## [109] stringi_1.7.8               highr_0.9                  </span></span>
+<span><span class="co">## [111] desc_1.4.1                  lattice_0.20-45            </span></span>
+<span><span class="co">## [113] Matrix_1.4-1                vctrs_0.4.1                </span></span>
+<span><span class="co">## [115] pillar_1.8.1                lifecycle_1.0.1            </span></span>
+<span><span class="co">## [117] networkD3_0.4               BiocManager_1.30.18        </span></span>
+<span><span class="co">## [119] jquerylib_0.1.4             GlobalOptions_0.1.2        </span></span>
+<span><span class="co">## [121] data.table_1.14.2           bitops_1.0-7               </span></span>
+<span><span class="co">## [123] patchwork_1.1.2             GenomicRanges_1.48.0       </span></span>
+<span><span class="co">## [125] R6_2.5.1                    latticeExtra_0.6-30        </span></span>
+<span><span class="co">## [127] bookdown_0.28               network_1.17.2             </span></span>
+<span><span class="co">## [129] gridExtra_2.3               IRanges_2.30.1             </span></span>
+<span><span class="co">## [131] codetools_0.2-18            SummarizedExperiment_1.26.1</span></span>
+<span><span class="co">## [133] rprojroot_2.0.3             rjson_0.2.21               </span></span>
+<span><span class="co">## [135] S4Vectors_0.34.0            GenomeInfoDbData_1.2.8     </span></span>
+<span><span class="co">## [137] intergraph_2.0-2            mgcv_1.8-40                </span></span>
+<span><span class="co">## [139] parallel_4.2.1              grid_4.2.1                 </span></span>
+<span><span class="co">## [141] rpart_4.1.16                NetRep_1.2.4               </span></span>
+<span><span class="co">## [143] coda_0.19-4                 rmarkdown_2.16             </span></span>
+<span><span class="co">## [145] MatrixGenerics_1.8.1        ggnewscale_0.4.7           </span></span>
+<span><span class="co">## [147] Biobase_2.56.0              WGCNA_1.71                 </span></span>
+<span><span class="co">## [149] base64enc_0.1-3             interp_1.1-3</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -666,50 +661,27 @@ D1190–96. <a href="https://doi.org/10.1093/nar/gkx1002" class="external-link">
 </div>
 </div>
 </div>
-<div class="footnotes footnotes-end-of-document">
-<hr>
-<ol>
-<li id="fn1"><p><strong>NOTE:</strong> Blank grey cells in the heatmap
-represent correlation values that have opposite sign in the expression
-sets. For each correlation pair, consensus correlations are calculated
-by selecting the minimum value across matrices of consensus module-trait
-correlations.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><strong>PRO TIP:</strong> If you identify orthogroups
-with <strong>OrthoFinder</strong>, <code>BioNERO</code> has a helper
-function named <code><a href="../reference/parse_orthofinder.html">parse_orthofinder()</a></code> that parses the
-<em>Orthogroups.tsv</em> file generated by OrthoFinder into a suitable
-data frame for module preservation analysis. See
-<code><a href="../reference/parse_orthofinder.html">?parse_orthofinder</a></code> for more details.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
-  </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 

@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="BioNERO">
 <title>Gene regulatory network inference • BioNERO</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -12,12 +13,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.2/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Gene regulatory network inference">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Gene regulatory network inference">
 <meta property="og:description" content="BioNERO">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -25,73 +27,61 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">BioNERO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.2</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-#0092ac"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
-    </li>
-    <li>
-      <a href="../articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
-    </li>
-    <li>
-      <a href="../articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/almeidasilvaf/BioNERO/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/vignette_01_GCN_inference.html">Gene coexpression network inference</a>
+    <a class="dropdown-item" href="../articles/vignette_02_GRN_inference.html">Gene regulatory network inference</a>
+    <a class="dropdown-item" href="../articles/vignette_03_network_comparison.html">Network comparison: consensus modules and module preservation</a>
   </div>
-<!--/.container -->
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/almeidasilvaf/BioNERO/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
+    
+  </div>
+</nav><div class="container template-article">
 
-      </header><script src="vignette_02_GRN_inference_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="vignette_02_GRN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_02_GRN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Gene regulatory network inference</h1>
+
+
+<script src="vignette_02_GRN_inference_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="vignette_02_GRN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_02_GRN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="../logo.png" class="logo" alt=""><h1>Gene regulatory network inference</h1>
                         <h4 data-toc-skip class="author">Fabricio
 Almeida-Silva</h4>
             <address class="author_afil">
@@ -101,8 +91,7 @@ Motta Venancio</h4>
             <address class="author_afil">
       Universidade Estadual do Norte Fluminense Darcy Ribeiro, RJ,
 Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/BioNERO/blob/HEAD/vignettes/vignette_02_GRN_inference.Rmd" class="external-link"><code>vignettes/vignette_02_GRN_inference.Rmd</code></a></small>
-      <div class="hidden name"><code>vignette_02_GRN_inference.Rmd</code></div>
-
+      <div class="d-none name"><code>vignette_02_GRN_inference.Rmd</code></div>
     </address>
 </address>
 </div>
@@ -113,15 +102,15 @@ Brazil<br><small class="dont-index">Source: <a href="https://github.com/almeidas
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
-
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BioNERO"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Load package after installation</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span>
-<span class="co">## </span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># for reproducibility</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Load package after installation</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/BioNERO" class="external-link">BioNERO</a></span><span class="op">)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># for reproducibility</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="introduction-and-algorithm-description">Introduction and algorithm description<a class="anchor" aria-label="anchor" href="#introduction-and-algorithm-description"></a>
@@ -159,12 +148,12 @@ algorithms: GENIE3 <span class="citation">(Huynh-Thu et al.
 <p>Before inferring the GRN, we will preprocess the expression data the
 same way we did in the previous vignette.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Load example data set</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span>
-
-<span class="co"># Preprocess the expression data</span>
-<span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span>
-<span class="co">## Number of removed samples: 1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Load example data set</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Preprocess the expression data</span></span>
+<span><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="co">## Number of removed samples: 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="gene-regulatory-network-inference">Gene regulatory network inference<a class="anchor" aria-label="anchor" href="#gene-regulatory-network-inference"></a>
@@ -175,15 +164,15 @@ frame) and a character vector of <strong>regulators</strong>
 (transcription factors or miRNAs). The transcription factors used in
 this vignette were downloaded from PlantTFDB 4.0 <span class="citation">(Jin et al. 2017)</span>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.tfs</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">zma.tfs</span><span class="op">)</span>
-<span class="co">##              Gene Family</span>
-<span class="co">## 6  Zm00001d022525    Dof</span>
-<span class="co">## 25 Zm00001d037605   GATA</span>
-<span class="co">## 28 Zm00001d049540    NAC</span>
-<span class="co">## 45 Zm00001d042287    MYB</span>
-<span class="co">## 46 Zm00001d042288    NAC</span>
-<span class="co">## 54 Zm00001d039371    TCP</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.tfs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">zma.tfs</span><span class="op">)</span></span>
+<span><span class="co">##              Gene Family</span></span>
+<span><span class="co">## 6  Zm00001d022525    Dof</span></span>
+<span><span class="co">## 25 Zm00001d037605   GATA</span></span>
+<span><span class="co">## 28 Zm00001d049540    NAC</span></span>
+<span><span class="co">## 45 Zm00001d042287    MYB</span></span>
+<span><span class="co">## 46 Zm00001d042288    NAC</span></span>
+<span><span class="co">## 54 Zm00001d039371    TCP</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="consensus-grn-inference">Consensus GRN inference<a class="anchor" aria-label="anchor" href="#consensus-grn-inference"></a>
 </h3>
@@ -200,19 +189,19 @@ the last network being the original input network. Then, for each
 network, the function will calculate the SFT fit and select the best
 fit.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span>
-<span class="va">grn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2grn.html">exp2grn</a></span><span class="op">(</span>exp <span class="op">=</span> <span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">## The top number of edges that best fits the scale-free topology is 247</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span></span>
+<span><span class="va">grn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2grn.html">exp2grn</a></span><span class="op">(</span>exp <span class="op">=</span> <span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">## The top number of edges that best fits the scale-free topology is 247</span></span></code></pre></div>
 <p><img src="vignette_02_GRN_inference_files/figure-html/exp2grn-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span>
-<span class="co">##          Regulator         Target</span>
-<span class="co">## 290 Zm00001d041474 Zm00001d018986</span>
-<span class="co">## 280 Zm00001d041474 Zm00001d006602</span>
-<span class="co">## 281 Zm00001d041474 Zm00001d006942</span>
-<span class="co">## 325 Zm00001d044315 Zm00001d043497</span>
-<span class="co">## 65  Zm00001d013777 Zm00001d046996</span>
-<span class="co">## 252 Zm00001d038832 Zm00001d021147</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span></span>
+<span><span class="co">##          Regulator         Target</span></span>
+<span><span class="co">## 290 Zm00001d041474 Zm00001d018986</span></span>
+<span><span class="co">## 280 Zm00001d041474 Zm00001d006602</span></span>
+<span><span class="co">## 281 Zm00001d041474 Zm00001d006942</span></span>
+<span><span class="co">## 325 Zm00001d044315 Zm00001d043497</span></span>
+<span><span class="co">## 65  Zm00001d013777 Zm00001d046996</span></span>
+<span><span class="co">## 252 Zm00001d038832 Zm00001d021147</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="algorithm-specific-grn-inference">Algorithm-specific GRN inference<a class="anchor" aria-label="anchor" href="#algorithm-specific-grn-inference"></a>
@@ -226,76 +215,79 @@ regression problems. For each regression problem, the expression profile
 of a target gene is predicted from the expression profiles of all other
 genes using random forests (default) or extra-trees.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span>
-<span class="va">genie3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"genie3"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, 
-                    nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">genie3</span><span class="op">)</span>
-<span class="co">##                Node1          Node2    Weight</span>
-<span class="co">## 23436 Zm00001d030617 Zm00001d020827 0.4221923</span>
-<span class="co">## 2993  Zm00001d034751 Zm00001d002543 0.4121333</span>
-<span class="co">## 15973 Zm00001d003822 Zm00001d014519 0.4074259</span>
-<span class="co">## 29683 Zm00001d041474 Zm00001d027374 0.3993255</span>
-<span class="co">## 11749 Zm00001d030617 Zm00001d011401 0.3971345</span>
-<span class="co">## 40456 Zm00001d045323 Zm00001d036250 0.3932967</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">genie3</span><span class="op">)</span>
-<span class="co">## [1] 60111     3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span></span>
+<span><span class="va">genie3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"genie3"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, </span>
+<span>                    nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">genie3</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2    Weight</span></span>
+<span><span class="co">## 20352 Zm00001d041474 Zm00001d017881 0.5439514</span></span>
+<span><span class="co">## 41340 Zm00001d034751 Zm00001d037111 0.5322394</span></span>
+<span><span class="co">## 13037 Zm00001d034751 Zm00001d012407 0.4348469</span></span>
+<span><span class="co">## 13207 Zm00001d045323 Zm00001d012513 0.4203583</span></span>
+<span><span class="co">## 55378 Zm00001d028432 Zm00001d048693 0.4071160</span></span>
+<span><span class="co">## 50200 Zm00001d013777 Zm00001d044212 0.3957483</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">genie3</span><span class="op">)</span></span>
+<span><span class="co">## [1] 60136     3</span></span></code></pre></div>
 <p><strong>ARACNE:</strong> information-theoretic algorithm that aims to
 remove indirect interactions inferred by coexpression.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">aracne</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"aracne"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aracne</span><span class="op">)</span>
-<span class="co">##                Node1          Node2   Weight</span>
-<span class="co">## 23861 Zm00001d038832 Zm00001d021147 1.789818</span>
-<span class="co">## 1758  Zm00001d038832 Zm00001d000432 1.692232</span>
-<span class="co">## 11337 Zm00001d038832 Zm00001d011086 1.692232</span>
-<span class="co">## 27014 Zm00001d011139 Zm00001d024274 1.674840</span>
-<span class="co">## 51070 Zm00001d011139 Zm00001d045069 1.658043</span>
-<span class="co">## 28387 Zm00001d038832 Zm00001d025784 1.641802</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">aracne</span><span class="op">)</span>
-<span class="co">## [1] 411   3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">aracne</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"aracne"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aracne</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2   Weight</span></span>
+<span><span class="co">## 23861 Zm00001d038832 Zm00001d021147 1.789818</span></span>
+<span><span class="co">## 1758  Zm00001d038832 Zm00001d000432 1.692232</span></span>
+<span><span class="co">## 11337 Zm00001d038832 Zm00001d011086 1.692232</span></span>
+<span><span class="co">## 27014 Zm00001d011139 Zm00001d024274 1.674840</span></span>
+<span><span class="co">## 51070 Zm00001d011139 Zm00001d045069 1.658043</span></span>
+<span><span class="co">## 28387 Zm00001d038832 Zm00001d025784 1.641802</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">aracne</span><span class="op">)</span></span>
+<span><span class="co">## [1] 411   3</span></span></code></pre></div>
 <p><strong>CLR:</strong> extension of the relevance networks algorithm
 that uses mutual information to identify regulatory interactions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">clr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"clr"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">clr</span><span class="op">)</span>
-<span class="co">##                Node1          Node2   Weight</span>
-<span class="co">## 26302 Zm00001d046937 Zm00001d023376 12.70216</span>
-<span class="co">## 11267 Zm00001d046937 Zm00001d011080 12.25336</span>
-<span class="co">## 12540 Zm00001d041474 Zm00001d012007 10.74023</span>
-<span class="co">## 51019 Zm00001d042263 Zm00001d045042 10.50925</span>
-<span class="co">## 17810 Zm00001d041474 Zm00001d015811 10.33216</span>
-<span class="co">## 29278 Zm00001d046937 Zm00001d026632 10.20075</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">clr</span><span class="op">)</span>
-<span class="co">## [1] 26657     3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">clr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"clr"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">clr</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2   Weight</span></span>
+<span><span class="co">## 26302 Zm00001d046937 Zm00001d023376 12.70216</span></span>
+<span><span class="co">## 11267 Zm00001d046937 Zm00001d011080 12.25336</span></span>
+<span><span class="co">## 12540 Zm00001d041474 Zm00001d012007 10.74023</span></span>
+<span><span class="co">## 51019 Zm00001d042263 Zm00001d045042 10.50925</span></span>
+<span><span class="co">## 17810 Zm00001d041474 Zm00001d015811 10.33216</span></span>
+<span><span class="co">## 29278 Zm00001d046937 Zm00001d026632 10.20075</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">clr</span><span class="op">)</span></span>
+<span><span class="co">## [1] 26657     3</span></span></code></pre></div>
 <p>Users can also infer GRNs with the 3 algorithms at once using the
 function <code>exp_combined()</code>. The resulting edge lists are
-stored in a list of 3 elements. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+stored in a list of 3 elements. <a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Under the hood,
+&lt;code&gt;&lt;a href="../reference/exp2grn.html"&gt;exp2grn()&lt;/a&gt;&lt;/code&gt; uses &lt;code&gt;exp_combined()&lt;/code&gt; followed by
+averaging ranks with &lt;code&gt;&lt;a href="../reference/grn_average_rank.html"&gt;grn_average_rank()&lt;/a&gt;&lt;/code&gt; and filtering with
+&lt;code&gt;&lt;a href="../reference/grn_filter.html"&gt;grn_filter()&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>1</sup></a></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">grn_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_combined.html">grn_combined</a></span><span class="op">(</span><span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">genie3</span><span class="op">)</span>
-<span class="co">##                Node1          Node2    Weight</span>
-<span class="co">## 39975 Zm00001d041474 Zm00001d035696 0.5020457</span>
-<span class="co">## 3543  Zm00001d027957 Zm00001d003346 0.4897761</span>
-<span class="co">## 60968 Zm00001d038832 Zm00001d054089 0.4738519</span>
-<span class="co">## 34907 Zm00001d045323 Zm00001d032181 0.4284764</span>
-<span class="co">## 21728 Zm00001d044315 Zm00001d018758 0.4268109</span>
-<span class="co">## 18551 Zm00001d011139 Zm00001d016549 0.4189310</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">aracne</span><span class="op">)</span>
-<span class="co">##                Node1          Node2   Weight</span>
-<span class="co">## 23861 Zm00001d038832 Zm00001d021147 1.789818</span>
-<span class="co">## 1758  Zm00001d038832 Zm00001d000432 1.692232</span>
-<span class="co">## 11337 Zm00001d038832 Zm00001d011086 1.692232</span>
-<span class="co">## 27014 Zm00001d011139 Zm00001d024274 1.674840</span>
-<span class="co">## 51070 Zm00001d011139 Zm00001d045069 1.658043</span>
-<span class="co">## 28387 Zm00001d038832 Zm00001d025784 1.641802</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">clr</span><span class="op">)</span>
-<span class="co">##                Node1          Node2   Weight</span>
-<span class="co">## 26302 Zm00001d046937 Zm00001d023376 12.70216</span>
-<span class="co">## 11267 Zm00001d046937 Zm00001d011080 12.25336</span>
-<span class="co">## 12540 Zm00001d041474 Zm00001d012007 10.74023</span>
-<span class="co">## 51019 Zm00001d042263 Zm00001d045042 10.50925</span>
-<span class="co">## 17810 Zm00001d041474 Zm00001d015811 10.33216</span>
-<span class="co">## 29278 Zm00001d046937 Zm00001d026632 10.20075</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">grn_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_combined.html">grn_combined</a></span><span class="op">(</span><span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">genie3</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2    Weight</span></span>
+<span><span class="co">## 12013 Zm00001d041474 Zm00001d011541 0.4629469</span></span>
+<span><span class="co">## 30418 Zm00001d046568 Zm00001d027841 0.4289222</span></span>
+<span><span class="co">## 33403 Zm00001d041474 Zm00001d030748 0.4140894</span></span>
+<span><span class="co">## 6910  Zm00001d044315 Zm00001d006725 0.4103733</span></span>
+<span><span class="co">## 22057 Zm00001d041474 Zm00001d018986 0.4020641</span></span>
+<span><span class="co">## 45153 Zm00001d034751 Zm00001d039733 0.3935705</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">aracne</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2   Weight</span></span>
+<span><span class="co">## 23861 Zm00001d038832 Zm00001d021147 1.789818</span></span>
+<span><span class="co">## 1758  Zm00001d038832 Zm00001d000432 1.692232</span></span>
+<span><span class="co">## 11337 Zm00001d038832 Zm00001d011086 1.692232</span></span>
+<span><span class="co">## 27014 Zm00001d011139 Zm00001d024274 1.674840</span></span>
+<span><span class="co">## 51070 Zm00001d011139 Zm00001d045069 1.658043</span></span>
+<span><span class="co">## 28387 Zm00001d038832 Zm00001d025784 1.641802</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">clr</span><span class="op">)</span></span>
+<span><span class="co">##                Node1          Node2   Weight</span></span>
+<span><span class="co">## 26302 Zm00001d046937 Zm00001d023376 12.70216</span></span>
+<span><span class="co">## 11267 Zm00001d046937 Zm00001d011080 12.25336</span></span>
+<span><span class="co">## 12540 Zm00001d041474 Zm00001d012007 10.74023</span></span>
+<span><span class="co">## 51019 Zm00001d042263 Zm00001d045042 10.50925</span></span>
+<span><span class="co">## 17810 Zm00001d041474 Zm00001d015811 10.33216</span></span>
+<span><span class="co">## 29278 Zm00001d046937 Zm00001d026632 10.20075</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -307,51 +299,55 @@ some common downstream analyses.</p>
 <h3 id="hub-gene-identification">Hub gene identification<a class="anchor" aria-label="anchor" href="#hub-gene-identification"></a>
 </h3>
 <p>GRN hubs are defined as the top 10% most highly connected regulators,
-but this percentile is flexible in <code>BioNERO</code>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> They can be identified
+but this percentile is flexible in <code>BioNERO</code>.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Remember: GRNs are represented as
+&lt;strong&gt;directed&lt;/strong&gt; graphs. This implies that only regulators are
+taken into account when identifying hubs. The goal here is to identify
+regulators (e.g., transcription factors) that control the expression of
+several genes.&lt;/p&gt;"><sup>2</sup></a> They can be identified
 with <code><a href="../reference/get_hubs_grn.html">get_hubs_grn()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">hubs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_hubs_grn.html">get_hubs_grn</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span>
-<span class="va">hubs</span>
-<span class="co">##              Gene Degree</span>
-<span class="co">## 1  Zm00001d038832     16</span>
-<span class="co">## 2  Zm00001d041474     13</span>
-<span class="co">## 3  Zm00001d046937     13</span>
-<span class="co">## 4  Zm00001d011139     12</span>
-<span class="co">## 5  Zm00001d052229     11</span>
-<span class="co">## 6  Zm00001d013777     10</span>
-<span class="co">## 7  Zm00001d039989     10</span>
-<span class="co">## 8  Zm00001d038227     10</span>
-<span class="co">## 9  Zm00001d030617     10</span>
-<span class="co">## 10 Zm00001d044315      9</span>
-<span class="co">## 11 Zm00001d003822      9</span>
-<span class="co">## 12 Zm00001d020020      9</span>
-<span class="co">## 13 Zm00001d046568      9</span>
-<span class="co">## 14 Zm00001d010227      9</span>
-<span class="co">## 15 Zm00001d025339      8</span>
-<span class="co">## 16 Zm00001d028974      8</span>
-<span class="co">## 17 Zm00001d042267      7</span>
-<span class="co">## 18 Zm00001d014377      7</span>
-<span class="co">## 19 Zm00001d054038      6</span>
-<span class="co">## 20 Zm00001d042263      6</span>
-<span class="co">## 21 Zm00001d035440      6</span>
-<span class="co">## 22 Zm00001d036148      6</span>
-<span class="co">## 23 Zm00001d031655      6</span>
-<span class="co">## 24 Zm00001d034751      6</span>
-<span class="co">## 25 Zm00001d018081      6</span>
-<span class="co">## 26 Zm00001d027957      5</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hubs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_hubs_grn.html">get_hubs_grn</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span></span>
+<span><span class="va">hubs</span></span>
+<span><span class="co">##              Gene Degree</span></span>
+<span><span class="co">## 1  Zm00001d038832     16</span></span>
+<span><span class="co">## 2  Zm00001d041474     13</span></span>
+<span><span class="co">## 3  Zm00001d046937     13</span></span>
+<span><span class="co">## 4  Zm00001d011139     12</span></span>
+<span><span class="co">## 5  Zm00001d052229     11</span></span>
+<span><span class="co">## 6  Zm00001d013777     10</span></span>
+<span><span class="co">## 7  Zm00001d039989     10</span></span>
+<span><span class="co">## 8  Zm00001d038227     10</span></span>
+<span><span class="co">## 9  Zm00001d030617     10</span></span>
+<span><span class="co">## 10 Zm00001d044315      9</span></span>
+<span><span class="co">## 11 Zm00001d003822      9</span></span>
+<span><span class="co">## 12 Zm00001d020020      9</span></span>
+<span><span class="co">## 13 Zm00001d046568      9</span></span>
+<span><span class="co">## 14 Zm00001d010227      9</span></span>
+<span><span class="co">## 15 Zm00001d025339      8</span></span>
+<span><span class="co">## 16 Zm00001d028974      8</span></span>
+<span><span class="co">## 17 Zm00001d042267      7</span></span>
+<span><span class="co">## 18 Zm00001d014377      7</span></span>
+<span><span class="co">## 19 Zm00001d054038      6</span></span>
+<span><span class="co">## 20 Zm00001d042263      6</span></span>
+<span><span class="co">## 21 Zm00001d035440      6</span></span>
+<span><span class="co">## 22 Zm00001d036148      6</span></span>
+<span><span class="co">## 23 Zm00001d031655      6</span></span>
+<span><span class="co">## 24 Zm00001d034751      6</span></span>
+<span><span class="co">## 25 Zm00001d018081      6</span></span>
+<span><span class="co">## 26 Zm00001d027957      5</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="network-visualization">Network visualization<a class="anchor" aria-label="anchor" href="#network-visualization"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_grn.html">plot_grn</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_grn.html">plot_grn</a></span><span class="op">(</span><span class="va">grn</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_02_GRN_inference_files/figure-html/plot_static-1.png" width="384" style="display: block; margin: auto;"></p>
 <p>GRNs can also be visualized interactively for exploratory
 purposes.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_grn.html">plot_grn</a></span><span class="op">(</span><span class="va">grn</span>, interactive <span class="op">=</span> <span class="cn">TRUE</span>, dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>,<span class="fl">500</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-0d467b50767b79a7b35b" style="width:500px;height:500px;" class="forceNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0d467b50767b79a7b35b">{"x":{"links":{"source":[18,17,3,26,12,22,3,25,3,24,1,1,16,24,5,20,3,22,18,0,0,16,1,7,14,0,1,25,6,1,4,1,12,8,3,5,2,5,3,29,18,6,26,0,19,5,17,17,18,2,23,6,1,19,1,24,6,27,12,0,28,5,30,26,24,6,6,0,0,10,9,10,10,5,26,17,12,2,11,23,26,5,0,27,3,0,27,14,18,9,4,13,3,3,17,2,9,11,20,14,19,11,15,23,5,15,16,7,23,24,7,3,6,28,16,23,5,19,20,0,13,22,28,20,15,26,24,9,26,2,28,15,8,24,17,4,2,25,2,30,22,21,12,12,18,20,22,16,8,5,20,9,10,21,0,21,17,12,21,18,7,7,16,9,7,18,22,14,29,27,21,22,13,24,13,0,13,25,9,29,26,11,12,6,21,16,15,22,2,18,4,12,24,10,1,25,8,23,8,3,17,22,22,21,4,10,7,3,17,26,8,5,2,30,4,16,7,7,23,9,3,7,8,15,11,16,3,14,30,19,3,6,14,6,23,0,7,5,25,5,2,7,26,24,11,3,6],"target":[252,164,108,250,113,212,152,77,161,75,145,197,192,209,211,200,136,151,61,32,33,55,129,242,175,50,114,96,96,187,58,54,204,41,150,135,153,38,239,254,257,147,183,89,120,112,92,109,185,98,70,244,190,88,207,243,233,233,47,43,130,166,166,165,165,255,248,191,221,139,103,103,95,196,127,202,80,195,46,186,111,216,68,213,177,31,227,251,106,132,102,49,36,259,176,170,105,107,179,51,256,168,53,53,232,234,240,84,181,91,48,48,140,203,73,73,220,188,123,57,90,124,156,66,97,149,149,64,249,229,157,74,52,184,184,122,56,174,169,169,69,208,86,87,180,206,253,238,133,261,160,172,225,141,142,215,76,171,137,167,119,235,173,237,60,121,78,231,258,85,194,138,158,144,128,82,155,198,42,182,116,228,99,214,67,65,65,217,199,230,125,218,146,44,34,223,118,118,201,154,205,126,134,222,37,193,40,93,59,79,236,224,35,241,131,246,260,104,81,189,178,162,226,115,115,115,143,110,245,62,94,83,72,71,100,45,219,247,159,63,148,117,163,163,210,101,39],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d041474","Zm00001d044315","Zm00001d013777","Zm00001d038832","Zm00001d054038","Zm00001d046937","Zm00001d052229","Zm00001d011139","Zm00001d042267","Zm00001d025339","Zm00001d042263","Zm00001d035440","Zm00001d003822","Zm00001d027957","Zm00001d036148","Zm00001d031655","Zm00001d020020","Zm00001d046568","Zm00001d010227","Zm00001d018208","Zm00001d034751","Zm00001d014377","Zm00001d039989","Zm00001d028974","Zm00001d038227","Zm00001d018081","Zm00001d030617","Zm00001d028432","Zm00001d002654","Zm00001d045323","Zm00001d045044","Zm00001d018986","Zm00001d006602","Zm00001d006942","Zm00001d043497","Zm00001d046996","Zm00001d021147","Zm00001d045041","Zm00001d011080","Zm00001d054093","Zm00001d045069","Zm00001d010618","Zm00001d040735","Zm00001d014773","Zm00001d043382","Zm00001d051676","Zm00001d018192","Zm00001d014519","Zm00001d025784","Zm00001d020926","Zm00001d008691","Zm00001d022237","Zm00001d032442","Zm00001d022569","Zm00001d009774","Zm00001d007097","Zm00001d032668","Zm00001d027374","Zm00001d009418","Zm00001d046492","Zm00001d037877","Zm00001d006474","Zm00001d049826","Zm00001d052122","Zm00001d029968","Zm00001d042245","Zm00001d028998","Zm00001d042216","Zm00001d018668","Zm00001d033301","Zm00001d013319","Zm00001d051272","Zm00001d049965","Zm00001d026490","Zm00001d031349","Zm00001d003817","Zm00001d036738","Zm00001d003277","Zm00001d037962","Zm00001d046593","Zm00001d017169","Zm00001d047913","Zm00001d040477","Zm00001d049867","Zm00001d024274","Zm00001d038161","Zm00001d033840","Zm00001d033846","Zm00001d014073","Zm00001d011541","Zm00001d027652","Zm00001d024518","Zm00001d012339","Zm00001d046317","Zm00001d049835","Zm00001d016572","Zm00001d008962","Zm00001d029151","Zm00001d013300","Zm00001d042025","Zm00001d051420","Zm00001d054017","Zm00001d020381","Zm00001d016568","Zm00001d047498","Zm00001d021709","Zm00001d020108","Zm00001d021773","Zm00001d000432","Zm00001d012597","Zm00001d048634","Zm00001d018366","Zm00001d011855","Zm00001d001881","Zm00001d008826","Zm00001d048431","Zm00001d041794","Zm00001d053625","Zm00001d043693","Zm00001d037489","Zm00001d011816","Zm00001d037937","Zm00001d032547","Zm00001d027342","Zm00001d027731","Zm00001d042481","Zm00001d044575","Zm00001d016926","Zm00001d040323","Zm00001d007422","Zm00001d014785","Zm00001d047448","Zm00001d020236","Zm00001d034644","Zm00001d044747","Zm00001d010814","Zm00001d006008","Zm00001d037257","Zm00001d039043","Zm00001d016567","Zm00001d025892","Zm00001d035562","Zm00001d035664","Zm00001d048609","Zm00001d039131","Zm00001d004125","Zm00001d043217","Zm00001d011401","Zm00001d053197","Zm00001d029965","Zm00001d010733","Zm00001d006160","Zm00001d003127","Zm00001d011004","Zm00001d044035","Zm00001d040508","Zm00001d028201","Zm00001d031168","Zm00001d039081","Zm00001d052093","Zm00001d035054","Zm00001d003539","Zm00001d048163","Zm00001d053663","Zm00001d000417","Zm00001d015004","Zm00001d014968","Zm00001d037346","Zm00001d022546","Zm00001d033128","Zm00001d021508","Zm00001d037052","Zm00001d035115","Zm00001d037684","Zm00001d032830","Zm00001d008610","Zm00001d021301","Zm00001d018896","Zm00001d048157","Zm00001d022134","Zm00001d033910","Zm00001d024379","Zm00001d041593","Zm00001d011500","Zm00001d032517","Zm00001d013141","Zm00001d018359","Zm00001d009339","Zm00001d027288","Zm00001d048085","Zm00001d013757","Zm00001d015279","Zm00001d004936","Zm00001d045042","Zm00001d038547","Zm00001d017719","Zm00001d016720","Zm00001d004821","Zm00001d040561","Zm00001d042367","Zm00001d005791","Zm00001d043905","Zm00001d017072","Zm00001d026056","Zm00001d010455","Zm00001d044525","Zm00001d033979","Zm00001d014124","Zm00001d033559","Zm00001d005347","Zm00001d053671","Zm00001d005675","Zm00001d001913","Zm00001d018744","Zm00001d042030","Zm00001d036293","Zm00001d018639","Zm00001d042309","Zm00001d042613","Zm00001d051929","Zm00001d026632","Zm00001d015811","Zm00001d044939","Zm00001d043613","Zm00001d046952","Zm00001d035308","Zm00001d048165","Zm00001d019002","Zm00001d041809","Zm00001d030149","Zm00001d042476","Zm00001d037984","Zm00001d023376","Zm00001d014349","Zm00001d023694","Zm00001d037507","Zm00001d046661","Zm00001d037695","Zm00001d034558","Zm00001d011086","Zm00001d023987","Zm00001d047020","Zm00001d008257","Zm00001d014294","Zm00001d013320","Zm00001d049619","Zm00001d047470","Zm00001d052079","Zm00001d015138","Zm00001d030048","Zm00001d001857","Zm00001d019670","Zm00001d000123","Zm00001d034505","Zm00001d011087","Zm00001d015084","Zm00001d022301","Zm00001d011162","Zm00001d038057","Zm00001d021196","Zm00001d047481","Zm00001d034668"],"group":["Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target"],"nodesize":[16,13,13,12,11,10,10,10,10,9,9,9,9,9,8,8,7,7,6,6,6,6,6,6,6,5,5,4,4,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal() .domain([\"Regulator\", \"Target\"]) .range([\"forestgreen\", \"orange\"])","fontSize":20,"fontFamily":"serif","clickTextSize":50,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":1,"zoom":true,"legend":true,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script><p>Finally, <code>BioNERO</code> can also be used for visualization and
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_grn.html">plot_grn</a></span><span class="op">(</span><span class="va">grn</span>, interactive <span class="op">=</span> <span class="cn">TRUE</span>, dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>,<span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-82606d076d63ab4a598c" style="width:500px;height:500px;" class="forceNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-82606d076d63ab4a598c">{"x":{"links":{"source":[18,17,3,26,12,22,3,25,3,24,1,1,16,24,5,20,3,22,18,0,0,16,1,7,14,0,1,25,6,1,4,1,12,8,3,5,2,5,3,29,18,6,26,0,19,5,17,17,18,2,23,6,1,19,1,24,6,27,12,0,28,5,30,26,24,6,6,0,0,10,9,10,10,5,26,17,12,2,11,23,26,5,0,27,3,0,27,14,18,9,4,13,3,3,17,2,9,11,20,14,19,11,15,23,5,15,16,7,23,24,7,3,6,28,16,23,5,19,20,0,13,22,28,20,15,26,24,9,26,2,28,15,8,24,17,4,2,25,2,30,22,21,12,12,18,20,22,16,8,5,20,9,10,21,0,21,17,12,21,18,7,7,16,9,7,18,22,14,29,27,21,22,13,24,13,0,13,25,9,29,26,11,12,6,21,16,15,22,2,18,4,12,24,10,1,25,8,23,8,3,17,22,22,21,4,10,7,3,17,26,8,5,2,30,4,16,7,7,23,9,3,7,8,15,11,16,3,14,30,19,3,6,14,6,23,0,7,5,25,5,2,7,26,24,11,3,6],"target":[252,164,108,250,113,212,152,77,161,75,145,197,192,209,211,200,136,151,61,32,33,55,129,242,175,50,114,96,96,187,58,54,204,41,150,135,153,38,239,254,257,147,183,89,120,112,92,109,185,98,70,244,190,88,207,243,233,233,47,43,130,166,166,165,165,255,248,191,221,139,103,103,95,196,127,202,80,195,46,186,111,216,68,213,177,31,227,251,106,132,102,49,36,259,176,170,105,107,179,51,256,168,53,53,232,234,240,84,181,91,48,48,140,203,73,73,220,188,123,57,90,124,156,66,97,149,149,64,249,229,157,74,52,184,184,122,56,174,169,169,69,208,86,87,180,206,253,238,133,261,160,172,225,141,142,215,76,171,137,167,119,235,173,237,60,121,78,231,258,85,194,138,158,144,128,82,155,198,42,182,116,228,99,214,67,65,65,217,199,230,125,218,146,44,34,223,118,118,201,154,205,126,134,222,37,193,40,93,59,79,236,224,35,241,131,246,260,104,81,189,178,162,226,115,115,115,143,110,245,62,94,83,72,71,100,45,219,247,159,63,148,117,163,163,210,101,39],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d041474","Zm00001d044315","Zm00001d013777","Zm00001d038832","Zm00001d054038","Zm00001d046937","Zm00001d052229","Zm00001d011139","Zm00001d042267","Zm00001d025339","Zm00001d042263","Zm00001d035440","Zm00001d003822","Zm00001d027957","Zm00001d036148","Zm00001d031655","Zm00001d020020","Zm00001d046568","Zm00001d010227","Zm00001d018208","Zm00001d034751","Zm00001d014377","Zm00001d039989","Zm00001d028974","Zm00001d038227","Zm00001d018081","Zm00001d030617","Zm00001d028432","Zm00001d002654","Zm00001d045323","Zm00001d045044","Zm00001d018986","Zm00001d006602","Zm00001d006942","Zm00001d043497","Zm00001d046996","Zm00001d021147","Zm00001d045041","Zm00001d011080","Zm00001d054093","Zm00001d045069","Zm00001d010618","Zm00001d040735","Zm00001d014773","Zm00001d043382","Zm00001d051676","Zm00001d018192","Zm00001d014519","Zm00001d025784","Zm00001d020926","Zm00001d008691","Zm00001d022237","Zm00001d032442","Zm00001d022569","Zm00001d009774","Zm00001d007097","Zm00001d032668","Zm00001d027374","Zm00001d009418","Zm00001d046492","Zm00001d037877","Zm00001d006474","Zm00001d049826","Zm00001d052122","Zm00001d029968","Zm00001d042245","Zm00001d028998","Zm00001d042216","Zm00001d018668","Zm00001d033301","Zm00001d013319","Zm00001d051272","Zm00001d049965","Zm00001d026490","Zm00001d031349","Zm00001d003817","Zm00001d036738","Zm00001d003277","Zm00001d037962","Zm00001d046593","Zm00001d017169","Zm00001d047913","Zm00001d040477","Zm00001d049867","Zm00001d024274","Zm00001d038161","Zm00001d033840","Zm00001d033846","Zm00001d014073","Zm00001d011541","Zm00001d027652","Zm00001d024518","Zm00001d012339","Zm00001d046317","Zm00001d049835","Zm00001d016572","Zm00001d008962","Zm00001d029151","Zm00001d013300","Zm00001d042025","Zm00001d051420","Zm00001d054017","Zm00001d020381","Zm00001d016568","Zm00001d047498","Zm00001d021709","Zm00001d020108","Zm00001d021773","Zm00001d000432","Zm00001d012597","Zm00001d048634","Zm00001d018366","Zm00001d011855","Zm00001d001881","Zm00001d008826","Zm00001d048431","Zm00001d041794","Zm00001d053625","Zm00001d043693","Zm00001d037489","Zm00001d011816","Zm00001d037937","Zm00001d032547","Zm00001d027342","Zm00001d027731","Zm00001d042481","Zm00001d044575","Zm00001d016926","Zm00001d040323","Zm00001d007422","Zm00001d014785","Zm00001d047448","Zm00001d020236","Zm00001d034644","Zm00001d044747","Zm00001d010814","Zm00001d006008","Zm00001d037257","Zm00001d039043","Zm00001d016567","Zm00001d025892","Zm00001d035562","Zm00001d035664","Zm00001d048609","Zm00001d039131","Zm00001d004125","Zm00001d043217","Zm00001d011401","Zm00001d053197","Zm00001d029965","Zm00001d010733","Zm00001d006160","Zm00001d003127","Zm00001d011004","Zm00001d044035","Zm00001d040508","Zm00001d028201","Zm00001d031168","Zm00001d039081","Zm00001d052093","Zm00001d035054","Zm00001d003539","Zm00001d048163","Zm00001d053663","Zm00001d000417","Zm00001d015004","Zm00001d014968","Zm00001d037346","Zm00001d022546","Zm00001d033128","Zm00001d021508","Zm00001d037052","Zm00001d035115","Zm00001d037684","Zm00001d032830","Zm00001d008610","Zm00001d021301","Zm00001d018896","Zm00001d048157","Zm00001d022134","Zm00001d033910","Zm00001d024379","Zm00001d041593","Zm00001d011500","Zm00001d032517","Zm00001d013141","Zm00001d018359","Zm00001d009339","Zm00001d027288","Zm00001d048085","Zm00001d013757","Zm00001d015279","Zm00001d004936","Zm00001d045042","Zm00001d038547","Zm00001d017719","Zm00001d016720","Zm00001d004821","Zm00001d040561","Zm00001d042367","Zm00001d005791","Zm00001d043905","Zm00001d017072","Zm00001d026056","Zm00001d010455","Zm00001d044525","Zm00001d033979","Zm00001d014124","Zm00001d033559","Zm00001d005347","Zm00001d053671","Zm00001d005675","Zm00001d001913","Zm00001d018744","Zm00001d042030","Zm00001d036293","Zm00001d018639","Zm00001d042309","Zm00001d042613","Zm00001d051929","Zm00001d026632","Zm00001d015811","Zm00001d044939","Zm00001d043613","Zm00001d046952","Zm00001d035308","Zm00001d048165","Zm00001d019002","Zm00001d041809","Zm00001d030149","Zm00001d042476","Zm00001d037984","Zm00001d023376","Zm00001d014349","Zm00001d023694","Zm00001d037507","Zm00001d046661","Zm00001d037695","Zm00001d034558","Zm00001d011086","Zm00001d023987","Zm00001d047020","Zm00001d008257","Zm00001d014294","Zm00001d013320","Zm00001d049619","Zm00001d047470","Zm00001d052079","Zm00001d015138","Zm00001d030048","Zm00001d001857","Zm00001d019670","Zm00001d000123","Zm00001d034505","Zm00001d011087","Zm00001d015084","Zm00001d022301","Zm00001d011162","Zm00001d038057","Zm00001d021196","Zm00001d047481","Zm00001d034668"],"group":["Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target"],"nodesize":[16,13,13,12,11,10,10,10,10,9,9,9,9,9,8,8,7,7,6,6,6,6,6,6,6,5,5,4,4,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal() .domain([\"Regulator\", \"Target\"]) .range([\"forestgreen\", \"orange\"])","fontSize":20,"fontFamily":"serif","clickTextSize":50,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":1,"zoom":true,"legend":true,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script><p>Finally, <code>BioNERO</code> can also be used for visualization and
 hub identification in protein-protein (PPI) interaction networks. The
 functions <code><a href="../reference/get_hubs_grn.html">get_hubs_ppi()</a></code> and <code><a href="../reference/plot_ppi.html">plot_ppi()</a></code> work
 the same way as their equivalents for GRNs (<code><a href="../reference/get_hubs_grn.html">get_hubs_grn()</a></code>
@@ -363,108 +359,105 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 </h2>
 <p>This vignette was created under the following conditions:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">## R version 4.1.3 (2022-03-10)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] BioNERO_1.3.2    BiocStyle_2.22.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##   [1] backports_1.4.1             circlize_0.4.14            </span>
-<span class="co">##   [3] Hmisc_4.7-0                 systemfonts_1.0.4          </span>
-<span class="co">##   [5] plyr_1.8.7                  igraph_1.3.0               </span>
-<span class="co">##   [7] splines_4.1.3               GENIE3_1.16.0              </span>
-<span class="co">##   [9] BiocParallel_1.28.3         ggnetwork_0.5.10           </span>
-<span class="co">##  [11] GenomeInfoDb_1.30.1         ggplot2_3.3.5              </span>
-<span class="co">##  [13] sva_3.42.0                  digest_0.6.29              </span>
-<span class="co">##  [15] foreach_1.5.2               htmltools_0.5.2            </span>
-<span class="co">##  [17] GO.db_3.14.0                fansi_1.0.3                </span>
-<span class="co">##  [19] magrittr_2.0.3              checkmate_2.0.0            </span>
-<span class="co">##  [21] memoise_2.0.1               cluster_2.1.3              </span>
-<span class="co">##  [23] doParallel_1.0.17           limma_3.50.3               </span>
-<span class="co">##  [25] ComplexHeatmap_2.10.0       fastcluster_1.2.3          </span>
-<span class="co">##  [27] Biostrings_2.62.0           annotate_1.72.0            </span>
-<span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.2              </span>
-<span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span>
-<span class="co">##  [33] ggrepel_0.9.1               blob_1.2.3                 </span>
-<span class="co">##  [35] textshaping_0.3.6           xfun_0.30                  </span>
-<span class="co">##  [37] dplyr_1.0.8                 crayon_1.5.1               </span>
-<span class="co">##  [39] RCurl_1.98-1.6              jsonlite_1.8.0             </span>
-<span class="co">##  [41] genefilter_1.76.0           impute_1.68.0              </span>
-<span class="co">##  [43] survival_3.3-1              iterators_1.0.14           </span>
-<span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span>
-<span class="co">##  [47] zlibbioc_1.40.0             XVector_0.34.0             </span>
-<span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.20.0        </span>
-<span class="co">##  [51] car_3.0-12                  shape_1.4.6                </span>
-<span class="co">##  [53] BiocGenerics_0.40.0         abind_1.4-5                </span>
-<span class="co">##  [55] scales_1.2.0                edgeR_3.36.0               </span>
-<span class="co">##  [57] DBI_1.1.2                   rstatix_0.7.0              </span>
-<span class="co">##  [59] Rcpp_1.0.8.3                xtable_1.8-4               </span>
-<span class="co">##  [61] htmlTable_2.4.0             clue_0.3-60                </span>
-<span class="co">##  [63] foreign_0.8-82              bit_4.0.4                  </span>
-<span class="co">##  [65] preprocessCore_1.56.0       Formula_1.2-4              </span>
-<span class="co">##  [67] stats4_4.1.3                htmlwidgets_1.5.4          </span>
-<span class="co">##  [69] httr_1.4.2                  RColorBrewer_1.1-3         </span>
-<span class="co">##  [71] ellipsis_0.3.2              farver_2.1.0               </span>
-<span class="co">##  [73] pkgconfig_2.0.3             XML_3.99-0.9               </span>
-<span class="co">##  [75] nnet_7.3-17                 sass_0.4.1                 </span>
-<span class="co">##  [77] locfit_1.5-9.5              utf8_1.2.2                 </span>
-<span class="co">##  [79] dynamicTreeCut_1.63-1       labeling_0.4.2             </span>
-<span class="co">##  [81] reshape2_1.4.4              tidyselect_1.1.2           </span>
-<span class="co">##  [83] rlang_1.0.2                 AnnotationDbi_1.56.2       </span>
-<span class="co">##  [85] munsell_0.5.0               tools_4.1.3                </span>
-<span class="co">##  [87] cachem_1.0.6                cli_3.2.0                  </span>
-<span class="co">##  [89] generics_0.1.2              RSQLite_2.2.12             </span>
-<span class="co">##  [91] statnet.common_4.5.0        broom_0.8.0                </span>
-<span class="co">##  [93] evaluate_0.15               stringr_1.4.0              </span>
-<span class="co">##  [95] fastmap_1.1.0               yaml_2.3.5                 </span>
-<span class="co">##  [97] ragg_1.2.2                  RhpcBLASctl_0.21-247.1     </span>
-<span class="co">##  [99] knitr_1.38                  bit64_4.0.5                </span>
-<span class="co">## [101] fs_1.5.2                    purrr_0.3.4                </span>
-<span class="co">## [103] KEGGREST_1.34.0             nlme_3.1-157               </span>
-<span class="co">## [105] compiler_4.1.3              rstudioapi_0.13            </span>
-<span class="co">## [107] png_0.1-7                   ggsignif_0.6.3             </span>
-<span class="co">## [109] minet_3.52.0                tibble_3.1.6               </span>
-<span class="co">## [111] statmod_1.4.36              geneplotter_1.72.0         </span>
-<span class="co">## [113] bslib_0.3.1                 stringi_1.7.6              </span>
-<span class="co">## [115] highr_0.9                   desc_1.4.1                 </span>
-<span class="co">## [117] lattice_0.20-45             Matrix_1.4-1               </span>
-<span class="co">## [119] vctrs_0.4.1                 networkD3_0.4              </span>
-<span class="co">## [121] pillar_1.7.0                lifecycle_1.0.1            </span>
-<span class="co">## [123] BiocManager_1.30.16         jquerylib_0.1.4            </span>
-<span class="co">## [125] GlobalOptions_0.1.2         data.table_1.14.2          </span>
-<span class="co">## [127] bitops_1.0-7                GenomicRanges_1.46.1       </span>
-<span class="co">## [129] R6_2.5.1                    latticeExtra_0.6-29        </span>
-<span class="co">## [131] bookdown_0.26               network_1.17.1             </span>
-<span class="co">## [133] gridExtra_2.3               IRanges_2.28.0             </span>
-<span class="co">## [135] codetools_0.2-18            SummarizedExperiment_1.24.0</span>
-<span class="co">## [137] DESeq2_1.34.0               rprojroot_2.0.3            </span>
-<span class="co">## [139] rjson_0.2.21                S4Vectors_0.32.4           </span>
-<span class="co">## [141] GenomeInfoDbData_1.2.7      intergraph_2.0-2           </span>
-<span class="co">## [143] mgcv_1.8-40                 parallel_4.1.3             </span>
-<span class="co">## [145] grid_4.1.3                  rpart_4.1.16               </span>
-<span class="co">## [147] tidyr_1.2.0                 NetRep_1.2.4               </span>
-<span class="co">## [149] coda_0.19-4                 rmarkdown_2.13             </span>
-<span class="co">## [151] carData_3.0-5               MatrixGenerics_1.6.0       </span>
-<span class="co">## [153] ggpubr_0.4.0                ggnewscale_0.4.7           </span>
-<span class="co">## [155] Biobase_2.54.0              WGCNA_1.70-3               </span>
-<span class="co">## [157] base64enc_0.1-3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] BioNERO_1.5.1    BiocStyle_2.24.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##   [1] backports_1.4.1             circlize_0.4.15            </span></span>
+<span><span class="co">##   [3] Hmisc_4.7-1                 systemfonts_1.0.4          </span></span>
+<span><span class="co">##   [5] plyr_1.8.7                  igraph_1.3.4               </span></span>
+<span><span class="co">##   [7] splines_4.2.1               GENIE3_1.18.0              </span></span>
+<span><span class="co">##   [9] BiocParallel_1.30.3         GenomeInfoDb_1.32.3        </span></span>
+<span><span class="co">##  [11] ggnetwork_0.5.10            ggplot2_3.3.6              </span></span>
+<span><span class="co">##  [13] sva_3.44.0                  digest_0.6.29              </span></span>
+<span><span class="co">##  [15] foreach_1.5.2               htmltools_0.5.3            </span></span>
+<span><span class="co">##  [17] GO.db_3.15.0                fansi_1.0.3                </span></span>
+<span><span class="co">##  [19] magrittr_2.0.3              checkmate_2.1.0            </span></span>
+<span><span class="co">##  [21] memoise_2.0.1               cluster_2.1.4              </span></span>
+<span><span class="co">##  [23] doParallel_1.0.17           limma_3.52.2               </span></span>
+<span><span class="co">##  [25] annotate_1.74.0             ComplexHeatmap_2.12.1      </span></span>
+<span><span class="co">##  [27] fastcluster_1.2.3           Biostrings_2.64.1          </span></span>
+<span><span class="co">##  [29] matrixStats_0.62.0          pkgdown_2.0.6              </span></span>
+<span><span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span></span>
+<span><span class="co">##  [33] blob_1.2.3                  ggrepel_0.9.1              </span></span>
+<span><span class="co">##  [35] textshaping_0.3.6           xfun_0.32                  </span></span>
+<span><span class="co">##  [37] dplyr_1.0.9                 crayon_1.5.1               </span></span>
+<span><span class="co">##  [39] RCurl_1.98-1.8              jsonlite_1.8.0             </span></span>
+<span><span class="co">##  [41] genefilter_1.78.0           impute_1.70.0              </span></span>
+<span><span class="co">##  [43] survival_3.4-0              iterators_1.0.14           </span></span>
+<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span></span>
+<span><span class="co">##  [47] zlibbioc_1.42.0             XVector_0.36.0             </span></span>
+<span><span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.22.0        </span></span>
+<span><span class="co">##  [51] shape_1.4.6                 BiocGenerics_0.42.0        </span></span>
+<span><span class="co">##  [53] abind_1.4-5                 scales_1.2.1               </span></span>
+<span><span class="co">##  [55] edgeR_3.38.4                DBI_1.1.3                  </span></span>
+<span><span class="co">##  [57] Rcpp_1.0.9                  xtable_1.8-4               </span></span>
+<span><span class="co">##  [59] htmlTable_2.4.1             clue_0.3-61                </span></span>
+<span><span class="co">##  [61] foreign_0.8-82              bit_4.0.4                  </span></span>
+<span><span class="co">##  [63] preprocessCore_1.58.0       Formula_1.2-4              </span></span>
+<span><span class="co">##  [65] stats4_4.2.1                htmlwidgets_1.5.4          </span></span>
+<span><span class="co">##  [67] httr_1.4.4                  RColorBrewer_1.1-3         </span></span>
+<span><span class="co">##  [69] farver_2.1.1                XML_3.99-0.10              </span></span>
+<span><span class="co">##  [71] pkgconfig_2.0.3             nnet_7.3-17                </span></span>
+<span><span class="co">##  [73] sass_0.4.2                  deldir_1.0-6               </span></span>
+<span><span class="co">##  [75] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
+<span><span class="co">##  [77] dynamicTreeCut_1.63-1       labeling_0.4.2             </span></span>
+<span><span class="co">##  [79] reshape2_1.4.4              tidyselect_1.1.2           </span></span>
+<span><span class="co">##  [81] rlang_1.0.4                 AnnotationDbi_1.58.0       </span></span>
+<span><span class="co">##  [83] munsell_0.5.0               tools_4.2.1                </span></span>
+<span><span class="co">##  [85] cachem_1.0.6                cli_3.3.0                  </span></span>
+<span><span class="co">##  [87] generics_0.1.3              RSQLite_2.2.16             </span></span>
+<span><span class="co">##  [89] statnet.common_4.6.0        evaluate_0.16              </span></span>
+<span><span class="co">##  [91] stringr_1.4.1               fastmap_1.1.0              </span></span>
+<span><span class="co">##  [93] yaml_2.3.5                  ragg_1.2.2                 </span></span>
+<span><span class="co">##  [95] RhpcBLASctl_0.21-247.1      knitr_1.40                 </span></span>
+<span><span class="co">##  [97] bit64_4.0.5                 fs_1.5.2                   </span></span>
+<span><span class="co">##  [99] purrr_0.3.4                 KEGGREST_1.36.3            </span></span>
+<span><span class="co">## [101] nlme_3.1-159                compiler_4.2.1             </span></span>
+<span><span class="co">## [103] rstudioapi_0.14             png_0.1-7                  </span></span>
+<span><span class="co">## [105] minet_3.54.0                tibble_3.1.8               </span></span>
+<span><span class="co">## [107] statmod_1.4.37              bslib_0.4.0                </span></span>
+<span><span class="co">## [109] stringi_1.7.8               highr_0.9                  </span></span>
+<span><span class="co">## [111] desc_1.4.1                  lattice_0.20-45            </span></span>
+<span><span class="co">## [113] Matrix_1.4-1                vctrs_0.4.1                </span></span>
+<span><span class="co">## [115] pillar_1.8.1                lifecycle_1.0.1            </span></span>
+<span><span class="co">## [117] networkD3_0.4               BiocManager_1.30.18        </span></span>
+<span><span class="co">## [119] jquerylib_0.1.4             GlobalOptions_0.1.2        </span></span>
+<span><span class="co">## [121] data.table_1.14.2           bitops_1.0-7               </span></span>
+<span><span class="co">## [123] patchwork_1.1.2             GenomicRanges_1.48.0       </span></span>
+<span><span class="co">## [125] R6_2.5.1                    latticeExtra_0.6-30        </span></span>
+<span><span class="co">## [127] bookdown_0.28               network_1.17.2             </span></span>
+<span><span class="co">## [129] gridExtra_2.3               IRanges_2.30.1             </span></span>
+<span><span class="co">## [131] codetools_0.2-18            SummarizedExperiment_1.26.1</span></span>
+<span><span class="co">## [133] rprojroot_2.0.3             rjson_0.2.21               </span></span>
+<span><span class="co">## [135] S4Vectors_0.34.0            GenomeInfoDbData_1.2.8     </span></span>
+<span><span class="co">## [137] intergraph_2.0-2            mgcv_1.8-40                </span></span>
+<span><span class="co">## [139] parallel_4.2.1              grid_4.2.1                 </span></span>
+<span><span class="co">## [141] rpart_4.1.16                NetRep_1.2.4               </span></span>
+<span><span class="co">## [143] coda_0.19-4                 rmarkdown_2.16             </span></span>
+<span><span class="co">## [145] MatrixGenerics_1.8.1        ggnewscale_0.4.7           </span></span>
+<span><span class="co">## [147] Biobase_2.56.0              WGCNA_1.71                 </span></span>
+<span><span class="co">## [149] base64enc_0.1-3             interp_1.1-3</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -506,48 +499,27 @@ context</span>.”</span> <em>BMC Bioinformatics</em> 7 (SUPPL.1): 1–15.
 </div>
 </div>
 </div>
-<div class="footnotes footnotes-end-of-document">
-<hr>
-<ol>
-<li id="fn1"><p><strong>NOTE:</strong> Under the hood,
-<code><a href="../reference/exp2grn.html">exp2grn()</a></code> uses <code>exp_combined()</code> followed by
-averaging ranks with <code><a href="../reference/grn_average_rank.html">grn_average_rank()</a></code> and filtering with
-<code><a href="../reference/grn_filter.html">grn_filter()</a></code>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><strong>NOTE:</strong> Remember: GRNs are represented as
-<strong>directed</strong> graphs. This implies that only regulators are
-taken into account when identifying hubs. The goal here is to identify
-regulators (e.g., transcription factors) that control the expression of
-several genes.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
-  </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Fabricio Almeida-Silva, Thiago Venancio.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 
