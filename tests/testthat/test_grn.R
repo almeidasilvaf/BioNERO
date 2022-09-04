@@ -5,10 +5,10 @@ data(filt.se)
 tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 
 #----Infer GRNs----
-clr <- grn_infer(filt.se, method = "clr", regulators=tfs)
-aracne <- grn_infer(filt.se, method = "aracne", regulators=tfs)
-genie3 <- grn_infer(filt.se, method = "genie3", regulators=tfs, nTrees=2)
-grn_list <- grn_combined(filt.se, regulators=tfs, nTrees=2)
+clr <- grn_infer(filt.se, method = "clr", regulators = tfs)
+aracne <- grn_infer(filt.se, method = "aracne", regulators = tfs)
+genie3 <- grn_infer(filt.se, method = "genie3", regulators = tfs, nTrees = 1)
+grn_list <- grn_combined(filt.se, regulators = tfs, nTrees = 1)
 ranked_grn <- grn_average_rank(grn_list)
 
 #----Start tests----
@@ -20,6 +20,7 @@ test_that("cormat_to_edgelist() converts correlation matrix to edge list", {
 })
 
 test_that("grn_infer() produces an edge list", {
+
     expect_equal(colnames(clr), c("Node1", "Node2", "Weight"))
     expect_equal(is.character(clr[,1]), TRUE)
     expect_equal(is.character(clr[,2]), TRUE)
@@ -33,6 +34,9 @@ test_that("grn_infer() produces an edge list", {
     expect_equal(is.character(genie3[,1]), TRUE)
     expect_equal(is.character(genie3[,2]), TRUE)
     expect_equal(is.numeric(genie3[,3]), TRUE)
+
+    expect_error(grn_infer(filt.se, method = "random", regulators = tfs))
+    expect_error(grn_infer(filt.se, method = "clr"))
 })
 
 test_that("grn_combined() produces a list of edge lists", {
@@ -71,7 +75,8 @@ test_that("check_SFT() checks SFT fit for different network types", {
 
 
 test_that("grn_filter() calculates the best SFT fit for n number of top edges", {
-    filtered_edges <- grn_filter(ranked_grn, nsplit=2)
+    filtered_edges <- grn_filter(ranked_grn, nsplit = 2)
+
     expect_equal(ncol(filtered_edges), 2)
     expect_lte(nrow(filtered_edges), nrow(ranked_grn))
 })
@@ -79,16 +84,30 @@ test_that("grn_filter() calculates the best SFT fit for n number of top edges", 
 
 test_that("get_hubs_grn() returns a data frame with hub genes and their out degree", {
     filtered_edges <- grn_filter(ranked_grn, nsplit = 2)
-    n_genes <- length(unique(c(as.character(filtered_edges[,1]), as.character(filtered_edges[,2]))))
+    n_genes <- length(unique(
+        c(as.character(filtered_edges[,1]), as.character(filtered_edges[,2]))
+    ))
+
+    fedges <- filtered_edges
+    fedges$rank <- seq_len(nrow(fedges))
+
     hubs <- get_hubs_grn(filtered_edges)
+    hubs2 <- get_hubs_grn(filtered_edges, top_n = 1)
+    hubs3 <- get_hubs_grn(fedges, top_n = 1)
+
     expect_equal(nrow(hubs), floor(n_genes * 0.1))
+    expect_equal(nrow(hubs2), 1)
+    expect_equal(nrow(hubs3), 1)
 })
 
 test_that("get_hubs_ppi() returns a list or data frame of hubs and degree", {
     ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
     hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
+    hubs2 <- get_hubs_ppi(ppi_edges, top_n = 1)
+
     expect_equal(class(hubs[[1]]), "data.frame")
     expect_equal(class(hubs), "list")
+    expect_equal(nrow(hubs2), 1)
 })
 
 

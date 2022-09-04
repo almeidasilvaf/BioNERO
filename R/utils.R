@@ -18,7 +18,8 @@ handleSE <- function(exp) {
 
 #' Replace content of a SummarizedExperiment object based on filtered expression data frame
 #'
-#' @param exp Expression data frame with genes IDs in row names and samples in column names.
+#' @param exp Expression data frame with genes IDs in row names and samples
+#' in column names.
 #' @param SE Original SummarizedExperiment object.
 #' @return A SummarizedExperiment object
 #' @noRd
@@ -33,7 +34,7 @@ exp2SE <- function(exp, SE) {
     # Modify original SE based on filtered expression data frame
     SE_final <- SummarizedExperiment::SummarizedExperiment(
         assays = exp,
-        colData = SummarizedExperiment::colData(SE)[overlap, , drop=FALSE]
+        colData = SummarizedExperiment::colData(SE)[overlap, , drop = FALSE]
     )
 
     return(SE_final)
@@ -103,9 +104,11 @@ sample_cols_heatmap <- function(col_metadata, fexp) {
     if(!exists("annotation_color")) {
         annotation_color <- NA
     }
-    results <- list(col_metadata = col_metadata,
-                    fexp = fexp,
-                    annotation_colors = annotation_color)
+    results <- list(
+        col_metadata = col_metadata,
+        fexp = fexp,
+        annotation_colors = annotation_color
+    )
     return(results)
 
 }
@@ -120,6 +123,7 @@ sample_cols_heatmap <- function(col_metadata, fexp) {
 #' @return List containing processed row_metadata, fexp and annotation_color.
 #' @noRd
 gene_cols_heatmap <- function(row_metadata, fexp, annotation_color) {
+
     if(is.data.frame(row_metadata)) {
         colnames(row_metadata) <- "Gene annotation"
         row_metadata <- row_metadata[order(row_metadata[, 1]), , drop=FALSE]
@@ -133,9 +137,11 @@ gene_cols_heatmap <- function(row_metadata, fexp, annotation_color) {
         names(annotation_color$`Gene annotation`) <- unique(row_metadata[,1])
     }
 
-    results <- list(row_metadata = row_metadata,
-                    fexp = fexp,
-                    annotation_color = annotation_color)
+    results <- list(
+        row_metadata = row_metadata,
+        fexp = fexp,
+        annotation_color = annotation_color
+    )
     return(results)
 }
 
@@ -147,25 +153,21 @@ gene_cols_heatmap <- function(row_metadata, fexp, annotation_color) {
 #' @importFrom ggplot2 theme element_text element_blank element_rect
 theme_exp_profile <- function() {
     theme <- ggplot2::theme(
-        plot.title = ggplot2::element_text(lineheight=0.8,
-                                           face='bold',
-                                           colour='black',
-                                           size=13,
-                                           hjust=0.5),
-        axis.title = ggplot2::element_text(size=11),
-        axis.text.y = ggplot2::element_text(angle=0,
-                                          vjust=0.5,
-                                          size=8),
-        axis.text.x = ggplot2::element_text(angle=90,
-                                          vjust=0.5,
-                                          size=6),
+        plot.title = ggplot2::element_text(
+            lineheight = 0.8, face = 'bold', colour = 'black',
+            size = 13, hjust = 0.5
+        ),
+        axis.title = ggplot2::element_text(size = 11),
+        axis.text.y = ggplot2::element_text(
+            angle = 0, vjust = 0.5, size = 8
+        ),
+        axis.text.x = ggplot2::element_text(
+            angle = 90, vjust = 0.5, size = 6
+        ),
         panel.grid = ggplot2::element_blank(),
         legend.title = ggplot2::element_blank(),
         legend.text = ggplot2::element_text(size = 8),
-        legend.background = ggplot2::element_rect(fill='gray90',
-                                                  size=0.5,
-                                                  linetype='dotted'),
-        legend.position='bottom'
+        legend.position = 'bottom'
     )
     return(theme)
 }
@@ -186,24 +188,23 @@ calculate_cor_adj <- function(cor_method, norm.exp, SFTpower,
 
     if(cor_method == "pearson") {
         cor_matrix <- cor(t(norm.exp), method = "pearson")
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
-                                                      power = SFTpower,
-                                                      type=net_type)
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(
+            cor_matrix, power = SFTpower, type = net_type
+        )
     } else if(cor_method == "spearman") {
         cor_matrix <- cor(t(norm.exp), use="p", method = "spearman")
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
-                                                      power=SFTpower,
-                                                      type=net_type)
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(
+            cor_matrix, power = SFTpower, type = net_type
+        )
     } else if (cor_method == "biweight") {
         cor_matrix <- WGCNA::bicor(t(norm.exp), maxPOutliers = 0.1)
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(cor_matrix,
-                                                      power=SFTpower,
-                                                      type=net_type)
+        adj_matrix <- WGCNA::adjacency.fromSimilarity(
+            cor_matrix, power = SFTpower, type = net_type
+        )
     } else {
         stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
     }
-    results <- list(cor = cor_matrix,
-                    adj = adj_matrix)
+    results <- list(cor = cor_matrix, adj = adj_matrix)
     return(results)
 }
 
@@ -237,14 +238,15 @@ get_TOMtype <- function(net_type) {
 #' @noRd
 handle_trait_type <- function(metadata, continuous_trait = FALSE) {
     if(!continuous_trait) {
-        sampleinfo <- cbind(Samples=rownames(metadata), metadata)
+        sampleinfo <- cbind(Samples = rownames(metadata), metadata)
         tmpdir <- tempdir()
         tmpfile <- tempfile(tmpdir = tmpdir, fileext = "traitmatrix.txt")
         tablesamples <- table(sampleinfo)
-        write.table(tablesamples, file = tmpfile,
-                    quote = FALSE, sep="\t", row.names=TRUE)
-        trait <- read.csv(tmpfile, header=TRUE,
-                          sep="\t", row.names=1, stringsAsFactors = FALSE)
+        write.table(
+            tablesamples, file = tmpfile, quote = FALSE, sep = "\t",
+            row.names = TRUE
+        )
+        trait <- read.csv(tmpfile, header = TRUE, sep = "\t", row.names = 1)
         unlink(tmpfile)
     } else {
         trait <- metadata
@@ -265,6 +267,7 @@ handle_trait_type <- function(metadata, continuous_trait = FALSE) {
 #' cor_mat <- cor(t(SummarizedExperiment::assay(filt.se)))
 #' edgelist <- cormat_to_edgelist(cor_mat)
 cormat_to_edgelist <- function(matrix) {
+
     edgelist <- matrix
     edgelist[lower.tri(edgelist, diag=TRUE)] <- NA
     edgelist <- na.omit(data.frame(as.table(edgelist), stringsAsFactors=FALSE))
@@ -301,16 +304,16 @@ check_SFT <- function(edgelist, net_type = "gcn") {
 
     # Calculate degree of the resulting graph
     if(net_type == "gcn") {
-        graph <- igraph::graph_from_data_frame(edgelist, directed=FALSE)
+        graph <- igraph::graph_from_data_frame(edgelist, directed = FALSE)
         adj <- igraph::as_adjacency_matrix(graph, sparse = FALSE)
         diag(adj) <- 0
-        degree <- apply(adj, 1, sum, na.rm=TRUE)
+        degree <- apply(adj, 1, sum, na.rm = TRUE)
     } else if(net_type == "grn") {
-        graph <- igraph::graph_from_data_frame(edgelist, directed=TRUE)
+        graph <- igraph::graph_from_data_frame(edgelist, directed = TRUE)
         degree <- igraph::degree(graph, mode = "out")
     } else if(net_type == "ppi") {
-        graph <- igraph::graph_from_data_frame(edgelist, directed=FALSE)
-        degree <- igraph::degree(graph, mode)
+        graph <- igraph::graph_from_data_frame(edgelist, directed = FALSE)
+        degree <- igraph::degree(graph)
     } else {
         stop("Invalid network type. Please, input one of 'gcn', 'grn', or 'ppi'.")
     }
@@ -336,6 +339,7 @@ check_SFT <- function(edgelist, net_type = "gcn") {
 #' @noRd
 #' @importFrom SummarizedExperiment assay
 handleSElist <- function(exp) {
+
     if(is(exp[[1]], "SummarizedExperiment")) {
         list <- lapply(exp, handleSE)
     } else {
@@ -353,6 +357,7 @@ handleSElist <- function(exp) {
 #' @noRd
 #' @importFrom SummarizedExperiment colData
 handle_metadata <- function(exp, metadata) {
+
     if(is(exp[[1]], "SummarizedExperiment")) {
         metadata <- Reduce(rbind, lapply(exp, function(x) {
             meta <- as.data.frame(SummarizedExperiment::colData(x))

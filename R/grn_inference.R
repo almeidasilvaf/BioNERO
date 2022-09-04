@@ -36,12 +36,13 @@
 #' aracne <- grn_infer(filt.se, method = "aracne", regulators=tfs)
 #' # only 2 trees for demonstration purposes
 #' genie3 <- grn_infer(filt.se, method = "genie3", regulators=tfs, nTrees=2)
-grn_infer <- function(exp, regulators=NULL,
+grn_infer <- function(exp, regulators = NULL,
                       method = c("clr", "aracne", "genie3"),
                       estimator_clr = "pearson",
                       estimator_aracne = "spearman",
                       eps = 0.1,
                       remove_zero = TRUE, ...) {
+
     exp <- handleSE(exp)
     if(is.null(regulators)) {
         stop("Please, input a character vector of IDs of regulators.")
@@ -112,10 +113,12 @@ grn_combined <- function(exp, regulators = NULL,
     regulators <- regulators[regulators %in% rownames(exp)]
     methods <- c("genie3", "aracne", "clr")
     res_list <- lapply(methods, function(x) {
-        grns <- grn_infer(exp, regulators = regulators, method = x,
-                          estimator_aracne = estimator_aracne,
-                          estimator_clr = estimator_clr,
-                          remove_zero = remove_zero, ...)
+        grns <- grn_infer(
+            exp, regulators = regulators, method = x,
+            estimator_aracne = estimator_aracne,
+            estimator_clr = estimator_clr,
+            remove_zero = remove_zero, ...
+        )
         return(grns)
     })
     names(res_list) <- methods
@@ -146,7 +149,7 @@ grn_average_rank <- function(list_edges) {
     })
 
     # Reduce list to a single data frame
-    df_ranks <- Reduce(function(x, y) merge(x, y, by=c("Node1", "Node2")), ranked_list)
+    df_ranks <- Reduce(function(x, y) merge(x, y, by = c("Node1", "Node2")), ranked_list)
     colnames(df_ranks) <- c("Regulator", "Target", "Rank1", "Rank2", "Rank3")
 
     # Calculate mean and order from the highest mean rank to the lowest
@@ -190,7 +193,9 @@ grn_filter <- function(edgelist, nsplit = 10,
 
     # Split edge list into n data frames and calculate degree
     n_edges <- seq_len(nrow(edgelist))
-    cutpoints <- round(unname(quantile(n_edges, probs = seq(0, 1, 1/nsplit))))[-1]
+    cutpoints <- round(
+        unname(quantile(n_edges, probs = seq(0, 1, 1 / nsplit)))
+    )[-1]
 
     list_degree <- BiocParallel::bplapply(cutpoints, function(x) {
         filt_edges <- edgelist[seq_len(x), c(1,2)]
@@ -264,20 +269,22 @@ grn_filter <- function(edgelist, nsplit = 10,
 #' # Test with small number of trees for demonstration purpose
 #' grn <- exp2grn(filt.se, regulators = tfs, nTrees=2, nsplit=2)
 exp2grn <- function(exp, regulators = NULL,
-                    eps=0,
+                    eps = 0,
                     estimator_aracne = "spearman",
                     estimator_clr = "pearson",
-                    remove_zero=TRUE,
-                    nsplit=10,
+                    remove_zero = TRUE,
+                    nsplit = 10,
                     ...) {
-    grn_list <- grn_combined(exp, regulators = regulators,
-                             eps = eps,
-                             estimator_aracne = estimator_aracne,
-                             estimator_clr = estimator_clr,
-                             remove_zero = remove_zero, ...)
+    grn_list <- grn_combined(
+        exp, regulators = regulators,
+        eps = eps,
+        estimator_aracne = estimator_aracne,
+        estimator_clr = estimator_clr,
+        remove_zero = remove_zero, ...
+    )
 
     grn_ranks <- grn_average_rank(grn_list)
-    final_grn <- grn_filter(grn_ranks, nsplit=nsplit)
+    final_grn <- grn_filter(grn_ranks, nsplit = nsplit)
     return(final_grn)
 }
 
@@ -318,12 +325,14 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
         }
     }
     graph <- igraph::graph_from_data_frame(edgelist, directed = TRUE)
-    degree <- sort(igraph::degree(graph, mode="out"), decreasing = TRUE)
+    degree <- sort(igraph::degree(graph, mode = "out"), decreasing = TRUE)
 
     # Find hubs
-    degree_df <- data.frame(row.names=seq_along(degree),
-                            Gene=names(degree),
-                            Degree=degree, stringsAsFactors = FALSE)
+    degree_df <- data.frame(
+        row.names = seq_along(degree),
+        Gene = names(degree),
+        Degree = degree
+    )
 
     if(is.null(top_n)) {
         nrows <- nrow(degree_df) * top_percentile
@@ -361,16 +370,18 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
 #' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
 #' hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
 get_hubs_ppi <- function(edgelist, top_percentile = 0.1, top_n = NULL,
-                         return_degree=FALSE) {
+                         return_degree = FALSE) {
 
     # Calculate degree
     graph <- igraph::graph_from_data_frame(edgelist, directed = FALSE)
     degree <- sort(igraph::degree(graph), decreasing = TRUE)
 
     # Find hubs
-    degree_df <- data.frame(row.names=seq_along(degree),
-                            Protein=names(degree),
-                            Degree=degree, stringsAsFactors = FALSE)
+    degree_df <- data.frame(
+        row.names = seq_along(degree),
+        Protein = names(degree),
+        Degree=degree
+    )
 
     if(is.null(top_n)) {
         nrows <- nrow(degree_df) * top_percentile
@@ -380,8 +391,7 @@ get_hubs_ppi <- function(edgelist, top_percentile = 0.1, top_n = NULL,
     }
     results <- hubs
     if(return_degree) {
-        results <- list(Hubs=hubs,
-                        Degree=degree_df)
+        results <- list(Hubs = hubs, Degree = degree_df)
     }
     return(results)
 }

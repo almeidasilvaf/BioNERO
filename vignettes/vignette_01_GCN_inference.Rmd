@@ -107,7 +107,7 @@ The function's default for `min_exp` is 1.
 For other options, see `?remove_nonexp`.
 
 ```{r remove_nonexp}
-exp_filt <- remove_nonexp(exp_filt, method="median", min_exp = 10)
+exp_filt <- remove_nonexp(exp_filt, method = "median", min_exp = 10)
 dim(exp_filt)
 ```
 
@@ -160,7 +160,9 @@ in `exp_preprocess()`. This will apply DESeq2's variance stabilizing
 transformation [@Love2014] to your count data.
 
 ```{r exp_preprocess}
-final_exp <- exp_preprocess(zma.se, min_exp = 10, variance_filter = TRUE, n=2000)
+final_exp <- exp_preprocess(
+    zma.se, min_exp = 10, variance_filter = TRUE, n = 2000
+)
 identical(dim(exp_filt), dim(final_exp))
 
 # Take a look at the final data
@@ -242,8 +244,10 @@ The function `exp2gcn()` infers a GCN and outputs a list of 7 elements, each of
 which will be used by other functions in the analysis pipeline.
 
 ```{r exp2net}
-net <- exp2gcn(final_exp, net_type="signed hybrid", 
-               SFTpower=power, cor_method="pearson")
+net <- exp2gcn(
+    final_exp, net_type = "signed hybrid", SFTpower = power, 
+    cor_method = "pearson"
+)
 names(net)
 ```
 
@@ -311,7 +315,9 @@ candidate genes and you want to find which of them are more associated with
 the trait of interest. See `?gene_significance()` for more details.
 
 ```{r moddtraitcor, fig.width=5, fig.height=5}
-MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson")
+MEtrait <- module_trait_cor(
+    exp = final_exp, MEs = net$MEs, cor_method = "pearson"
+)
 head(MEtrait)
 ```
 
@@ -320,9 +326,13 @@ For instance:
 
 ```{r modtraitcor_transpose, fig.width=9, fig.height=3}
 # Transpose the matrix and change palette (RColorBrewer palette)
-MEtrait <- module_trait_cor(exp=final_exp, MEs=net$MEs, cor_method="pearson",
-                            transpose = TRUE, palette="PRGn", cex.text = 0.7,
-                            cex.lab.y = 0.7)
+MEtrait <- module_trait_cor(
+    exp = final_exp, 
+    MEs = net$MEs, 
+    cor_method = "pearson", 
+    transpose = TRUE, palette = "PRGn", 
+    cex.text = 0.7, cex.lab.y = 0.7
+)
 ```
 
 ## Visualizing module expression profile
@@ -332,8 +342,12 @@ correlated with endosperm samples. We can visually explore it
 with `plot_expression_profile()`.
 
 ```{r exp_profile, fig.width=4, fig.height=3}
-plot_expression_profile(exp=final_exp, net=net, 
-                        plot_module=TRUE, modulename="yellow")
+plot_expression_profile(
+    exp = final_exp, 
+    net = net, 
+    plot_module = TRUE, 
+    modulename = "yellow"
+)
 ```
 
 ## Enrichment analysis
@@ -354,9 +368,11 @@ the PLAZA 4.0 Monocots database [@VanBel2018].
 ```{r module_enrichment}
 # Enrichment analysis for conserved protein domains (Interpro)
 data(zma.interpro)
-interpro_enrichment <- module_enrichment(net = net, 
-                                         background_genes = rownames(final_exp),
-                                         annotation = zma.interpro)
+interpro_enrichment <- module_enrichment(
+    net = net, 
+    background_genes = rownames(final_exp),
+    annotation = zma.interpro
+)
 
 # Print results without geneIDs for better visualization
 interpro_enrichment[, -6]
@@ -417,20 +433,22 @@ biological interpretations.
 
 ```{r filter_edges, fig.small=TRUE}
 # Remove edges based on optimal scale-free topology fit
-edges_filtered <- get_edge_list(net, module="midnightblue",
-                                filter=TRUE)
+edges_filtered <- get_edge_list(net, module = "midnightblue", filter = TRUE)
 dim(edges_filtered)
 
 # Remove edges based on p-value
-edges_filtered <- get_edge_list(net, module="midnightblue",
-                                filter=TRUE, method="pvalue",
-                                nSamples = ncol(final_exp))
+edges_filtered <- get_edge_list(
+    net, module = "midnightblue",
+    filter = TRUE, method = "pvalue", 
+    nSamples = ncol(final_exp)
+)
 dim(edges_filtered)
 
 # Remove edges based on minimum correlation
-edges_filtered <- get_edge_list(net, module="midnightblue",
-                                filter=TRUE, method="min_cor",
-                                rcutoff = 0.7)
+edges_filtered <- get_edge_list(
+    net, module = "midnightblue", 
+    filter = TRUE, method = "min_cor", rcutoff = 0.7
+)
 dim(edges_filtered)
 ```
 
@@ -442,22 +460,26 @@ function `plot_gcn()`. By default, this function only labels the top 5 hubs
 according to the user's preference (see `?plot_gcn` for more information).
 
 ```{r plot_gcn, fig.width=4, fig.height=4}
-plot_gcn(edgelist_gcn = edges_filtered, 
-         net = net,
-         color_by = "module",
-         hubs = hubs)
+plot_gcn(
+    edgelist_gcn = edges_filtered, 
+    net = net, 
+    color_by = "module", 
+    hubs = hubs
+)
 ```
 
 Networks can also be visualized interactively by 
 setting `interactive = TRUE` in `plot_gcn`.
 
 ```{r interactive_gcn}
-plot_gcn(edgelist_gcn = edges_filtered, 
-         net = net,
-         color_by="module",
-         hubs = hubs,
-         interactive = TRUE,
-         dim_interactive = c(500, 500))
+plot_gcn(
+    edgelist_gcn = edges_filtered, 
+    net = net,
+    color_by = "module",
+    hubs = hubs,
+    interactive = TRUE,
+    dim_interactive = c(500, 500)
+)
 ```
 
 ## Network statistics
@@ -465,7 +487,7 @@ plot_gcn(edgelist_gcn = edges_filtered,
 Finally, the function `net_stats()` can be used to calculate the main 
 network statistics (or properties, or indices), namely: *connectivity*,
 *scaled connectivity*, *clustering coefficient*, *maximum adjacency ratio*, 
-*density*, *centralization*, *heterogeneity*, *number of cliques*, *diameter*, 
+*density*, *centralization*, *heterogeneity*, *diameter*, 
 *betweenness* (optional), and *closeness* (optional).
 
 Depending on your system capacities and network size, this may take 

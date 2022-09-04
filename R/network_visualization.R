@@ -87,6 +87,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
                      show_labels = "tophubs",
                      top_n_hubs = 5, interactive = FALSE,
                      add_color_legend=TRUE, dim_interactive = c(600,600)) {
+
     requireNamespace("intergraph", quietly=TRUE)
     # How should genes be colored?
     if(is.data.frame(color_by)) {
@@ -102,7 +103,7 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 
     # Create a data frame of nodes and node attributes
     protIDs <- unique(c(as.character(edgelist_int[,1]), as.character(edgelist_int[,2])))
-    nod_at <- data.frame(Protein = protIDs, stringsAsFactors = FALSE)
+    nod_at <- data.frame(Protein = protIDs)
     nod_at$Class <- as.factor(prot_annotation[prot_annotation[,1] %in% nod_at$Protein, 2])
     nod_at$Degree <- h$Degree$Degree[h$Degree$Protein %in% nod_at$Protein]
     nod_at$isHub <- ifelse(nod_at$Protein %in% h$Hubs$Protein, TRUE, FALSE)
@@ -113,14 +114,18 @@ plot_ppi <- function(edgelist_int, color_by = "community",
         graph <- igraph::graph_from_data_frame(d = edgelist_int,
                                                vertices = nod_at, directed=FALSE)
         graph <- igraph::simplify(graph)
-        graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$mem)
-        graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)
+        graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
+        graph_d3$nodes <- merge(
+            graph_d3$nodes, nod_at, by.x = "name", by.y = "Protein", sort = FALSE
+        )
         d <- dim_interactive
-        p <- networkD3::forceNetwork(Links = graph_d3$links, Nodes = graph_d3$nodes,
-                                     Source = 'source', Target = 'target',
-                                     NodeID = 'name', Group = 'group',
-                                     Nodesize = 'Degree', height=d[2], width=d[1],
-                                     opacity=0.8, zoom = TRUE, fontSize = 20)
+        p <- networkD3::forceNetwork(
+            Links = graph_d3$links, Nodes = graph_d3$nodes,
+            Source = 'source', Target = 'target',
+            NodeID = 'name', Group = 'group',
+            Nodesize = 'Degree', height = d[2], width = d[1],
+            opacity=0.8, zoom = TRUE, fontSize = 20
+        )
 
     } else { #Static network
         # Define plotting parameters

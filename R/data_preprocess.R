@@ -153,8 +153,7 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
 filter_by_variance <- function(exp, n=NULL, percentile=NULL) {
     fexp <- handleSE(exp)
 
-    gene_var <- data.frame(Genes = rownames(fexp), Var = apply(fexp, 1, var),
-                           stringsAsFactors = FALSE)
+    gene_var <- data.frame(Genes = rownames(fexp), Var = apply(fexp, 1, var))
     gene_var_ordered <- gene_var[order(gene_var$Var, decreasing = TRUE), ]
     if(!is.null(n) & is.null(percentile)) {
         top_var <- gene_var_ordered$Genes[seq_len(n)]
@@ -201,9 +200,14 @@ ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
     if(cor_method == "pearson") {
         A <- WGCNA::adjacency(fexp, type = "distance")
     } else if(cor_method == "biweight") {
-        A <- WGCNA::adjacency(fexp, type = "distance", corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
+        A <- WGCNA::adjacency(
+            fexp, type = "distance", corFnc = bicor,
+            corOptions = list(use = 'p', maxPOutliers = 0.05)
+        )
     } else if(cor_method == "spearman"){
-        A <- WGCNA::adjacency(fexp, type = "distance", corOptions = list(use = 'p', method = "spearman"))
+        A <- WGCNA::adjacency(
+            fexp, type = "distance", corOptions = list(use = 'p', method = "spearman")
+        )
     } else {
         print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
     }
@@ -272,10 +276,10 @@ PC_correction <- function(exp, verbose = FALSE) {
     mod <- matrix(1, nrow = nrow(texp), ncol = 1)
     colnames(mod) <- "Intercept"
 
-    if(verbose){ message("Calculating number of PCs to be removed...") }
+    if(verbose) { message("Calculating number of PCs to be removed...") }
     nsv <- sva::num.sv(t(texp), mod, method = "be")
 
-    if(verbose){ message("Number of PCs estimated to be removed: ", nsv) }
+    if(verbose) { message("Number of PCs estimated to be removed: ", nsv) }
 
     # PC residualization of gene expression data using sva_network
     if(verbose){ message("Removing PCs that contribute to noise...") }
@@ -357,9 +361,11 @@ exp_preprocess <- function(exp, NA_rm = TRUE, replaceby = 0,
     }
     # Remove non-expressed genes
     if(remove_nonexpressed) {
-        exp <- remove_nonexp(exp, method = method,
-                             min_exp = min_exp,
-                             min_percentage_samples = min_percentage_samples)
+        exp <- remove_nonexp(
+            exp, method = method,
+            min_exp = min_exp,
+            min_percentage_samples = min_percentage_samples
+        )
     }
     # Apply VST for count data
     if(vstransform) {

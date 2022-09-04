@@ -20,11 +20,11 @@ parse_orthofinder <- function(file_path = NULL) {
   of <- read.csv(file_path, sep="\t")
   melt_of <- reshape2::melt(of, id.vars="Orthogroup")
   s <- strsplit(melt_of$value, split = ", ")
-  final_of <- data.frame(Orthogroup = rep(melt_of$Orthogroup,
-                                          vapply(s, length, numeric(1))),
-                         Species = rep(melt_of$variable,
-                                       vapply(s, length, numeric(1))),
-                         Gene = unlist(s))
+  final_of <- data.frame(
+      Orthogroup = rep(melt_of$Orthogroup, vapply(s, length, numeric(1))),
+      Species = rep(melt_of$variable, vapply(s, length, numeric(1))),
+      Gene = unlist(s)
+  )
   return(final_of)
 }
 
@@ -58,16 +58,19 @@ parse_orthofinder <- function(file_path = NULL) {
 #' exp_ortho <- exp_genes2orthogroups(explist, og, summarize = "mean")
 #' }
 exp_genes2orthogroups <- function(explist = NULL, og = NULL,
-                                  summarize="median") {
+                                  summarize = "median") {
+
     colnames(og) <- c("Family", "Species", "Gene")
     exp <- handleSElist(explist)
     exp <- exp[order(names(exp))]
     og_list <- split(og, og$Species)
     og_list <- og_list[order(names(og_list))]
     og_exp <- lapply(seq_along(exp), function(x) {
-        set <- merge(exp[[x]], og_list[[x]], by.x="row.names", by.y=3)
+        set <- merge(exp[[x]], og_list[[x]], by.x = "row.names", by.y = 3)
         set <- set[, -c(1, ncol(set))]
-        set <- suppressWarnings(aggregate(set, by=list(set$Family), FUN=summarize))
+        set <- suppressWarnings(
+            aggregate(set, by = list(set$Family), FUN = summarize)
+        )
         rownames(set) <- set[,1]
         set <- set[, -c(1, ncol(set))]
         return(set)
@@ -82,7 +85,7 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #' @param explist List of expression data frames or SummarizedExperiment objects.
 #' @param ref_net Reference network object returned by the function \code{exp2net}.
 #' @param nPerm Number of permutations for the module preservation statistics.
-#' Default: 200.
+#' It must be greater than 1. Default: 200.
 #'
 #' @return A ggplot object with module preservation statistics.
 #' @rdname modPres_WGCNA
@@ -111,6 +114,7 @@ exp_genes2orthogroups <- function(explist = NULL, og = NULL,
 #' pres_wgcna <- modPres_WGCNA(explist, ref_net, nPerm=5)
 #' }
 modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
+
     explist <- handleSElist(explist)
     explist <- lapply(explist, function(x) return(t(x)))
 
@@ -119,8 +123,9 @@ modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
     cor_method <- ref_net$params$cor_method
 
     # Create multiExpr object
-    multiExpr <- list(ref = list(data = explist[[1]]),
-                      test = list(data = explist[[2]]))
+    multiExpr <- list(
+        ref = list(data = explist[[1]]), test = list(data = explist[[2]])
+    )
 
     # Create vector of module assignments
     moduleColors <- ref_net$genes_and_modules$Modules
@@ -257,19 +262,23 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 
     # Set data set names
     if(is.null(names(explist))) {
-      data_names <- c("cohort1", "cohort2")
+        data_names <- c("cohort1", "cohort2")
     } else {
-      data_names <- names(explist)
+        data_names <- names(explist)
     }
 
     # Create correlation list
-    correlation_list <- list(as.matrix(ref_net$correlation_matrix),
-                             as.matrix(test_net$correlation_matrix))
+    correlation_list <- list(
+        as.matrix(ref_net$correlation_matrix),
+        as.matrix(test_net$correlation_matrix)
+    )
     names(correlation_list) <- data_names
 
     # Create network list
-    network_list <- list(as.matrix(ref_net$adjacency_matrix),
-                         as.matrix(test_net$adjacency_matrix))
+    network_list <- list(
+        as.matrix(ref_net$adjacency_matrix),
+        as.matrix(test_net$adjacency_matrix)
+    )
     names(network_list) <- data_names
 
     # Set background label
@@ -285,22 +294,22 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
 
     # Calculate preservation statistics
     pres <- NetRep::modulePreservation(
-        network=network_list, data=explist, correlation=correlation_list,
-        moduleAssignments=modAssignments,
-        discovery=data_names[1], test=data_names[2],
-        nPerm=nPerm, nThreads=nThreads
+        network = network_list, data = explist, correlation = correlation_list,
+        moduleAssignments = modAssignments,
+        discovery = data_names[1], test = data_names[2],
+        nPerm = nPerm, nThreads = nThreads
     )
 
     # Get preserved modules (p < 0.05 for all statistics)
     max_pval <- apply(pres$p.value, 1, max)
     preservedmodules <- names(max_pval[max_pval < 0.05])
     if(length(preservedmodules) > 0) {
-      message(length(preservedmodules), " modules in ", data_names[1],
-              " were preserved in ", data_names[2], ":", "\n",
-              toString(preservedmodules))
+        message(length(preservedmodules), " modules in ", data_names[1],
+                " were preserved in ", data_names[2], ":", "\n",
+                toString(preservedmodules))
     } else {
-      message("None of the modules in ", data_names[1],
-              " were preserved in ", data_names[2], ".")
+        message("None of the modules in ", data_names[1],
+                " were preserved in ", data_names[2], ".")
     }
     return(pres)
 }
@@ -353,15 +362,19 @@ module_preservation <- function(explist, ref_net = NULL, test_net = NULL,
                                 nPerm = 1000, nThreads = 1) {
 
     if(algorithm == "netrep") {
-        pres <- modPres_netrep(explist = explist,
-                               ref_net = ref_net,
-                               test_net = test_net,
-                               nPerm = nPerm, nThreads = nThreads)
+        pres <- modPres_netrep(
+            explist = explist,
+            ref_net = ref_net,
+            test_net = test_net,
+            nPerm = nPerm, nThreads = nThreads
+        )
 
     } else if(algorithm == "WGCNA") {
-        pres <- modPres_WGCNA(explist = explist,
-                              ref_net = ref_net,
-                              nPerm = nPerm)
+        pres <- modPres_WGCNA(
+            explist = explist,
+            ref_net = ref_net,
+            nPerm = nPerm
+        )
     } else {
         stop("Please, specify a valid algorithm. One of 'netrep' or 'WGCNA'.")
     }

@@ -46,7 +46,8 @@ or 'expr'. Default: 'samplecor'.}
 \item{palette}{RColorBrewer palette to use. Default is "Blues" for sample
 correlation heatmap and "YlOrRd" for gene expression heatmap.}
 
-\item{log_trans}{Logical indicating whether to log transform the expression data or not. Default: FALSE.}
+\item{log_trans}{Logical indicating whether to log transform the expression
+data or not. Default: FALSE.}
 
 \item{cluster_rows}{Logical indicating whether to cluster rows or not.
 Default: TRUE.}
@@ -71,7 +72,8 @@ Default: NA (no division).}
 \item{cutree_cols}{Number of clusters into which columns are divided.
 Default: NA (no division).}
 
-\item{...}{Additional arguments to be passed to \code{ComplexHeatmap::pheatmap()}.}
+\item{...}{Additional arguments to be passed
+to \code{ComplexHeatmap::pheatmap()}.}
 }
 \value{
 A heatmap of sample correlations or gene expression.

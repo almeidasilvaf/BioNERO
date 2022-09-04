@@ -15,7 +15,8 @@ enrichment_analysis(
 )
 }
 \arguments{
-\item{genes}{Character vector containing genes for overrepresentation analysis.}
+\item{genes}{Character vector containing genes for overrepresentation
+analysis.}
 
 \item{background_genes}{Character vector of genes to be used as background
 for the Fisher's Exact Test.}
@@ -24,7 +25,8 @@ for the Fisher's Exact Test.}
 functional annotation in the other columns. This data frame can be exported
 from Biomart or similar databases.}
 
-\item{column}{Column or columns of \code{annotation} to be used for enrichment.
+\item{column}{Column or columns of \code{annotation} to be used for
+enrichment.
 Both character or numeric values with column indices can be used.
 If users want to supply more than one column, input a character or
 numeric vector. Default: all columns from \code{annotation}.}
@@ -40,7 +42,8 @@ considered significant. Default is 0.05.}
 Default: BiocParallel::SerialParam()}
 }
 \value{
-Data frame containing significant terms, p-values and associated genes.
+Data frame containing significant terms, p-values and
+associated genes.
 }
 \description{
 Perform enrichment analysis for a set of genes

@@ -79,7 +79,12 @@ same way we did in the previous vignette.
 data(zma.se)
 
 # Preprocess the expression data
-final_exp <- exp_preprocess(zma.se, min_exp = 10, variance_filter = TRUE, n=2000)
+final_exp <- exp_preprocess(
+    zma.se, 
+    min_exp = 10, 
+    variance_filter = TRUE, 
+    n = 2000
+)
 ```
 
 
@@ -110,7 +115,11 @@ will calculate the SFT fit and select the best fit.
 
 ```{r exp2grn, fig.small=TRUE}
 # Using 10 trees for demonstration purposes. Use the default: 1000
-grn <- exp2grn(exp = final_exp, regulators = zma.tfs$Gene, nTrees=10)
+grn <- exp2grn(
+    exp = final_exp, 
+    regulators = zma.tfs$Gene, 
+    nTrees = 10
+)
 head(grn)
 ```
 
@@ -129,8 +138,11 @@ or extra-trees.
 
 ```{r genie3}
 # Using 10 trees for demonstration purposes. Use the default: 1000
-genie3 <- grn_infer(final_exp, method = "genie3", regulators = zma.tfs$Gene, 
-                    nTrees=10)
+genie3 <- grn_infer(
+    final_exp, 
+    method = "genie3", 
+    regulators = zma.tfs$Gene, 
+    nTrees = 10)
 head(genie3)
 dim(genie3)
 ```
@@ -164,7 +176,7 @@ of 3 elements. [^1]
 by averaging ranks with `grn_average_rank()` and filtering with `grn_filter()`.
 
 ```{r grn_combined}
-grn_list <- grn_combined(final_exp, regulators = zma.tfs$Gene, nTrees=10)
+grn_list <- grn_combined(final_exp, regulators = zma.tfs$Gene, nTrees = 10)
 head(grn_list$genie3)
 head(grn_list$aracne)
 head(grn_list$clr)

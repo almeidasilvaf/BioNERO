@@ -65,9 +65,6 @@ data(filt.se)
 gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 module_trait_cor(filt.se, MEs=gcn$MEs)
 }
-\seealso{
-\code{\link[WGCNA]{corPvalueStudent}},\code{\link[WGCNA]{labeledHeatmap}},\code{\link[WGCNA]{blueWhiteRed}}
-}
 \author{
 Fabricio Almeida-Silva
 }
