@@ -37,7 +37,6 @@ List containing: \itemize{
   \item Data frame of module eigengenes
   \item Data frame of genes and their corresponding modules
   \item Data frame of intramodular connectivity
-  \item Vector of module assignment
   \item Correlation matrix
   \item Parameters used for network reconstruction
   \item Objects to plot the dendrogram in \code{plot_dendro_and_colors}.

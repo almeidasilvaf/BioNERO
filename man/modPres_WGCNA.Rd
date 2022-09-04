@@ -12,7 +12,7 @@ modPres_WGCNA(explist, ref_net, nPerm = 200)
 \item{ref_net}{Reference network object returned by the function \code{exp2net}.}
 
 \item{nPerm}{Number of permutations for the module preservation statistics.
-Default: 200.}
+It must be greater than 1. Default: 200.}
 }
 \value{
 A ggplot object with module preservation statistics.

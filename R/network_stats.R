@@ -16,7 +16,6 @@
 #'   \item Density
 #'   \item Centralization
 #'   \item Heterogeneity (gcn only)
-#'   \item nCliques
 #'   \item Diameter
 #'   \item Betweenness
 #'   \item Closeness
@@ -32,61 +31,69 @@
 #'  \code{\link[WGCNA]{fundamentalNetworkConcepts}}
 #' @rdname net_stats
 #' @export
-#' @importFrom igraph graph_from_adjacency_matrix cliques diameter betweenness V closeness degree transitivity edge_density centralization.degree
+#' @importFrom igraph graph_from_adjacency_matrix cliques diameter
+#' betweenness V closeness degree transitivity edge_density
+#' centralization.degree
 #' @importFrom WGCNA fundamentalNetworkConcepts
 #' @examples
 #' \donttest{
 #' data(filt.se)
 #' set.seed(12)
-#' filt.se <- filter_by_variance(filt.se, n=100)
-#' gcn <- exp2gcn(filt.se, SFTpower = 19, cor_method = "pearson",
-#'                net_type = "signed hybrid")
-#' stats <- net_stats(gcn$adjacency_matrix, net_type="gcn")
+#' filt.se <- exp_preprocess(
+#'     filt.se, Zk_filtering = FALSE, variance_filter = TRUE, n = 200
+#' )
+#' gcn <- exp2gcn(
+#'     filt.se, SFTpower = 7, cor_method = "pearson", net_type = "signed hybrid"
+#' )
+#' stats <- net_stats(gcn$adjacency_matrix, net_type = "gcn")
 #' }
-net_stats <- function(adj_matrix = NULL, net_type=c("gcn", "ppi", "grn"),
+net_stats <- function(adj_matrix = NULL, net_type = c("gcn", "ppi", "grn"),
                       calculate_additional = FALSE) {
-  weighted <- FALSE
-  mode <- "undirected"
-  directed <- FALSE
-  if(net_type == "gcn") {
-    weighted <- TRUE
-  } else if(net_type == "grn") {
-    mode <- "directed"
-    directed <- TRUE
-  } else if(net_type == "ppi") {
-    a <- NULL
-  } else {
-    stop("Please, specify a valid network type. One of 'gcn', 'ppi' or 'grn'.")
-  }
-  graph <- igraph::graph_from_adjacency_matrix(
-    adj_matrix, mode = mode, diag = FALSE, weighted = weighted
-  )
-  diam <- igraph::diameter(graph, directed = directed)
-  if(net_type != "grn") {
-    stats <- WGCNA::fundamentalNetworkConcepts(adj_matrix)
-    stats$nCliques <- length(igraph::cliques(graph, min=3)) # number of cliques
-    stats$diameter <- diam
-    if(net_type == "ppi") { stats$MAR <- NULL }
-  } else {
-    degree <- igraph::degree(graph, mode = "all")
-    clustercoef <- igraph::transitivity(graph, mode="global")
-    density <- igraph::edge_density(graph)
-    centralization <- igraph::centralization.degree(graph)$centralization
-    stats <- list(Connectivity = degree,
-                  ScaledConnectiviy = degree / max(degree),
-                  ClusterCoef = clustercoef,
-                  Density = density, Centralization = centralization,
-                  Diameter = diam)
-  }
-  if(calculate_additional) {
-    betweenness <- igraph::betweenness(graph, directed = directed)
-    names(betweenness) <- igraph::V(graph)
-    closeness <- igraph::closeness(graph, mode="all")
-    names(closeness) <- igraph::V(graph)
-    stats$betweenness <- as.data.frame(betweenness)
-    stats$closeness <- as.data.frame(closeness)
-  }
-  return(stats)
+
+    weighted <- NULL
+    mode <- "undirected"
+    directed <- FALSE
+    if(net_type == "gcn") {
+        weighted <- TRUE
+    } else if(net_type == "grn") {
+        mode <- "directed"
+        directed <- TRUE
+    } else if(net_type == "ppi") {
+        a <- NULL
+    } else {
+        stop("Please, specify a valid network type. One of 'gcn', 'ppi' or 'grn'.")
+    }
+    graph <- igraph::graph_from_adjacency_matrix(
+        adj_matrix, mode = mode, diag = FALSE, weighted = weighted
+    )
+    diam <- igraph::diameter(graph, directed = directed)
+    if(net_type != "grn") {
+        stats <- WGCNA::fundamentalNetworkConcepts(adj_matrix)
+        stats$Diameter <- diam
+        if(net_type == "ppi") { stats$MAR <- NULL }
+    } else {
+        degree <- igraph::degree(graph, mode = "all")
+        clustercoef <- igraph::transitivity(graph, type = "global")
+        density <- igraph::edge_density(graph)
+        centralization <- igraph::centralization.degree(graph)$centralization
+        stats <- list(
+            Connectivity = degree,
+            ScaledConnectiviy = degree / max(degree),
+            ClusterCoef = clustercoef,
+            Density = density,
+            Centralization = centralization,
+            Diameter = diam
+        )
+    }
+    if(calculate_additional) {
+        betweenness <- igraph::betweenness(graph, directed = directed)
+        names(betweenness) <- igraph::V(graph)
+        closeness <- igraph::closeness(graph, mode="all")
+        names(closeness) <- igraph::V(graph)
+        stats$betweenness <- as.data.frame(betweenness)
+        stats$closeness <- as.data.frame(closeness)
+    }
+    return(stats)
 }
 
 

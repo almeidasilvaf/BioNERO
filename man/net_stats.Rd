@@ -29,7 +29,6 @@ A list containing the following elements: \itemize{
   \item Density
   \item Centralization
   \item Heterogeneity (gcn only)
-  \item nCliques
   \item Diameter
   \item Betweenness
   \item Closeness
@@ -42,10 +41,13 @@ Calculate network statistics
 \donttest{
 data(filt.se)
 set.seed(12)
-filt.se <- filter_by_variance(filt.se, n=100)
-gcn <- exp2gcn(filt.se, SFTpower = 19, cor_method = "pearson",
-               net_type = "signed hybrid")
-stats <- net_stats(gcn$adjacency_matrix, net_type="gcn")
+filt.se <- exp_preprocess(
+    filt.se, Zk_filtering = FALSE, variance_filter = TRUE, n = 200
+)
+gcn <- exp2gcn(
+    filt.se, SFTpower = 7, cor_method = "pearson", net_type = "signed hybrid"
+)
+stats <- net_stats(gcn$adjacency_matrix, net_type = "gcn")
 }
 }
 \seealso{

@@ -17,7 +17,8 @@
 #' or 'expr'. Default: 'samplecor'.
 #' @param palette RColorBrewer palette to use. Default is "Blues" for sample
 #' correlation heatmap and "YlOrRd" for gene expression heatmap.
-#' @param log_trans Logical indicating whether to log transform the expression data or not. Default: FALSE.
+#' @param log_trans Logical indicating whether to log transform the expression
+#' data or not. Default: FALSE.
 #' @param cluster_rows Logical indicating whether to cluster rows or not.
 #' Default: TRUE.
 #' @param cluster_cols Logical indicating whether to cluster columns or not.
@@ -33,7 +34,8 @@
 #' Default: NA (no division).
 #' @param cutree_cols Number of clusters into which columns are divided.
 #' Default: NA (no division).
-#' @param ... Additional arguments to be passed to \code{ComplexHeatmap::pheatmap()}.
+#' @param ... Additional arguments to be passed
+#' to \code{ComplexHeatmap::pheatmap()}.
 #'
 #' @return A heatmap of sample correlations or gene expression.
 #' @author Fabricio Almeida-Silva
@@ -56,6 +58,7 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
                          show_rownames = FALSE, show_colnames = TRUE,
                          scale = "none", fontsize = 9,
                          cutree_rows = NA, cutree_cols = NA, ...) {
+
     fexp <- handleSE(exp)
     if(methods::is(exp, "SummarizedExperiment")) {
         col_metadata <- as.data.frame(SummarizedExperiment::colData(exp))
@@ -67,11 +70,13 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
     annotation_color <- sample_cols_heatmap(col_metadata, fexp)$annotation_colors
 
     # Rename and reorder rows based on annotation and handle colors
-    row_metadata <- gene_cols_heatmap(row_metadata, fexp,
-                                      annotation_color)$row_metadata
+    row_metadata <- gene_cols_heatmap(
+        row_metadata, fexp, annotation_color
+    )$row_metadata
     fexp <- gene_cols_heatmap(row_metadata, fexp, annotation_color)$fexp
-    annotation_color <- gene_cols_heatmap(row_metadata, fexp,
-                                          annotation_color)$annotation_color
+    annotation_color <- gene_cols_heatmap(
+        row_metadata, fexp, annotation_color
+    )$annotation_color
 
     if(log_trans) {
         fexp <- log2(fexp+1)
@@ -100,17 +105,15 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
         stop("Please, specify a type. One of 'samplecor' or 'expr'.")
     }
 
-    hm <- ComplexHeatmap::pheatmap(as.matrix(x), color=pal, border_color = NA,
-                                   show_rownames = show_rownames,
-                                   show_colnames = show_colnames,
-                                   annotation_row = row_metadata,
-                                   annotation_col = col_metadata,
-                                   cluster_rows = cluster_rows,
-                                   cluster_cols = cluster_cols,
-                                   scale = scale, fontsize = fontsize,
-                                   main=title, cutree_rows = cutree_rows,
-                                   cutree_cols = cutree_cols,
-                                   annotation_colors = annotation_color, ...)
+    hm <- ComplexHeatmap::pheatmap(
+        as.matrix(x), color = pal, border_color = NA,
+        show_rownames = show_rownames, show_colnames = show_colnames,
+        annotation_row = row_metadata, annotation_col = col_metadata,
+        cluster_rows = cluster_rows, cluster_cols = cluster_cols,
+        scale = scale, fontsize = fontsize, main = title,
+        cutree_rows = cutree_rows, cutree_cols = cutree_cols,
+        annotation_colors = annotation_color, ...
+    )
     return(hm)
 
 }
@@ -133,7 +136,8 @@ plot_heatmap <- function(exp, col_metadata = NA, row_metadata = NA,
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname plot_PCA
 #' @export
-#' @importFrom ggplot2 ggplot aes aes_ geom_point scale_color_manual labs theme_classic ggtitle theme element_text
+#' @importFrom ggplot2 ggplot aes aes_ geom_point scale_color_manual labs
+#' theme_classic ggtitle theme element_text
 #' @importFrom SummarizedExperiment colData
 #' @examples
 #' data(zma.se)
@@ -158,17 +162,23 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
     rownames(var_explained) <- colnames(pca$x)
 
     if(PCs == "1x2") {
-        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC2, color = ~`Sample group`))
-        labs <- ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
-                              y = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""))
+        aes_map <- ggplot(pca_df, aes_(~PC1, ~PC2, color = ~`Sample group`))
+        labs <- ggplot2::labs(
+            x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
+            y = paste("PC2 (", var_explained["PC2", ], "%)", sep = "")
+        )
     } else if(PCs == "1x3") {
-        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC1, ~PC3, color = ~`Sample group`))
-        labs <- ggplot2::labs(x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
-                              y = paste("PC3 (", var_explained["PC3", ], "%)", sep = ""))
+        aes_map <- ggplot(pca_df, aes_(~PC1, ~PC3, color = ~`Sample group`))
+        labs <- ggplot2::labs(
+            x = paste("PC1 (", var_explained["PC1", ], "%)", sep = ""),
+            y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")
+        )
     } else if(PCs == "2x3") {
-        aes_map <- ggplot2::ggplot(pca_df, ggplot2::aes_(~PC2, ~PC3, color = ~`Sample group`))
-        labs <- ggplot2::labs(x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""),
-                              y = paste("PC3 (", var_explained["PC3", ], "%)", sep = ""))
+        aes_map <- ggplot(pca_df, aes_(~PC2, ~PC3, color = ~`Sample group`))
+        labs <- ggplot2::labs(
+            x = paste("PC2 (", var_explained["PC2", ], "%)", sep = ""),
+            y = paste("PC3 (", var_explained["PC3", ], "%)", sep = "")
+        )
     } else {
         stop("Please, specify the PCs to be plotted. One of '1x2', '1x3', or '2x3'.")
     }
@@ -209,18 +219,20 @@ plot_PCA <- function(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2) {
 get_HK <- function(exp) {
     exp <- handleSE(exp)
     exp <- exp
-    exp[exp < 1] <- 0 #expression values below 1 are considered as not expressed
+    exp[exp < 1] <- 0 # expression values < 1 are considered as not expressed
     ncols <- ncol(exp)
     final.exp <- exp[rowSums(exp > 0) == ncols,]
     final.exp$mean <- rowMeans(final.exp[, seq_len(ncols)])
     final.exp$sd <-  apply(final.exp[, seq_len(ncols)], 1, sd)
-    final.exp$covar <- final.exp$sd/final.exp$mean
+    final.exp$covar <- final.exp$sd / final.exp$mean
     final.exp$max <- apply(final.exp[, seq_len(ncols)], 1, max)
     final.exp$min <- apply(final.exp[, seq_len(ncols)], 1, min)
-    final.exp$MFC <- final.exp$max/final.exp$min
+    final.exp$MFC <- final.exp$max / final.exp$min
     final.exp$MFC.CoV <- final.exp$MFC * final.exp$covar
-    hk <- head(final.exp[order(final.exp$MFC.CoV, decreasing=FALSE),],
-               n = nrow(final.exp)*0.25)
+    hk <- head(
+        final.exp[order(final.exp$MFC.CoV, decreasing = FALSE),],
+        n = nrow(final.exp) * 0.25
+    )
     hk.genes <- rownames(hk)
     return(hk.genes)
 }
@@ -256,6 +268,7 @@ get_HK <- function(exp) {
 #' plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
 plot_expression_profile <- function(genes, exp, metadata, plot_module = TRUE,
                                     net, modulename) {
+
     if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }

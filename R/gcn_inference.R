@@ -23,7 +23,8 @@
 #' @examples
 #' data(filt.se)
 #' sft <- SFT_fit(filt.se, cor_method = "pearson")
-SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman") {
+SFT_fit <- function(exp, net_type = "signed", rsquared = 0.8,
+                    cor_method = "spearman") {
     exp <- handleSE(exp)
     texp <- t(exp)
 
@@ -54,9 +55,11 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
     }
 
     # Create data frame with indices to plot
-    sft_df <- data.frame(power = sft$fitIndices$Power,
-                         fit = -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq,
-                         meank = sft$fitIndices$mean.k.)
+    sft_df <- data.frame(
+        power = sft$fitIndices$Power,
+        fit = -sign(sft$fitIndices$slope) * sft$fitIndices$SFT.R.sq,
+        meank = sft$fitIndices$mean.k.
+    )
     sft_df <- sft_df[sft_df$fit > 0, ]
 
     # Plot 1
@@ -110,7 +113,6 @@ SFT_fit <- function(exp, net_type="signed", rsquared=0.8, cor_method="spearman")
 #'   \item Data frame of module eigengenes
 #'   \item Data frame of genes and their corresponding modules
 #'   \item Data frame of intramodular connectivity
-#'   \item Vector of module assignment
 #'   \item Correlation matrix
 #'   \item Parameters used for network reconstruction
 #'   \item Objects to plot the dendrogram in \code{plot_dendro_and_colors}.
@@ -134,10 +136,12 @@ exp2gcn <- function(exp, net_type="signed",
                     SFTpower = NULL, cor_method = "spearman",
                     verbose = FALSE) {
 
-    params <- list(net_type=net_type,
-                   module_merging_threshold=module_merging_threshold,
-                   SFTpower=SFTpower,
-                   cor_method=cor_method)
+    params <- list(
+        net_type = net_type,
+        module_merging_threshold = module_merging_threshold,
+        SFTpower = SFTpower,
+        cor_method = cor_method
+    )
     norm.exp <- handleSE(exp)
 
     if(is.null(SFTpower)) { stop("Please, specify the SFT power.") }
@@ -163,19 +167,21 @@ exp2gcn <- function(exp, net_type="signed",
 
     #Detecting coexpression modules
     if(verbose) { message("Detecting coexpression modules...") }
-    old.module_labels <- dynamicTreeCut::cutreeDynamicTree(dendro=geneTree,
-                                                           minModuleSize=30,
-                                                           deepSplit=TRUE)
+    old.module_labels <- dynamicTreeCut::cutreeDynamicTree(
+        dendro = geneTree, minModuleSize = 30, deepSplit = TRUE
+    )
 
     nmod <- length(unique(old.module_labels))
     palette <- rev(WGCNA::standardColors(nmod))
-    old.module_colors <- WGCNA::labels2colors(old.module_labels, colorSeq = palette)
+    old.module_colors <- WGCNA::labels2colors(
+        old.module_labels, colorSeq = palette
+    )
 
     #Calculate eigengenes and merge the ones who are highly correlated
     if(verbose) { message("Calculating module eigengenes (MEs)...") }
-    old.MElist <- WGCNA::moduleEigengenes(t(norm.exp),
-                                          colors = old.module_colors,
-                                          softPower = SFTpower)
+    old.MElist <- WGCNA::moduleEigengenes(
+        t(norm.exp), colors = old.module_colors, softPower = SFTpower
+    )
     old.MEs <- old.MElist$eigengenes
 
     #Calculate dissimilarity of module eigengenes
@@ -190,20 +196,21 @@ exp2gcn <- function(exp, net_type="signed",
     #Merge the modules.
     if(verbose) { message("Merging similar modules...") }
     if(cor_method == "pearson") {
-        merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors,
-                                           cutHeight = MEDissThreshold,
-                                           verbose = 0, colorSeq=palette)
+        merge1 <- WGCNA::mergeCloseModules(
+            t(norm.exp), old.module_colors, cutHeight = MEDissThreshold,
+            verbose = 0, colorSeq = palette
+        )
     } else if(cor_method == "spearman") {
-        merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors,
-                                           cutHeight = MEDissThreshold,
-                                           verbose = 0,
-                                           corOptions = list(use = "p", method = "spearman"),
-                                           colorSeq=palette)
+        merge1 <- WGCNA::mergeCloseModules(
+            t(norm.exp), old.module_colors, cutHeight = MEDissThreshold,
+            verbose = 0, corOptions = list(use = "p", method = "spearman"),
+            colorSeq = palette
+        )
     } else if(cor_method == "biweight") {
-        merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors,
-                                           cutHeight = MEDissThreshold,
-                                           verbose = 0,
-                                           corFnc = bicor, colorSeq=palette)
+        merge1 <- WGCNA::mergeCloseModules(
+            t(norm.exp), old.module_colors, cutHeight = MEDissThreshold,
+            verbose = 0, corFnc = bicor, colorSeq = palette
+        )
     } else {
         stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
     }
@@ -214,23 +221,23 @@ exp2gcn <- function(exp, net_type="signed",
     new.METree <- hclust(as.dist(1-cor(new.MEs)), method="average")
 
     #Get data frame with genes and modules they belong to
-    genes_and_modules <- as.data.frame(cbind(gene_ids, new.module_colors),
-                                       stringsAsFactors = FALSE)
+    genes_and_modules <- as.data.frame(cbind(gene_ids, new.module_colors))
     colnames(genes_and_modules) <- c("Genes", "Modules")
 
     if(verbose) { message("Calculating intramodular connectivity...") }
     kwithin <- WGCNA::intramodularConnectivity(adj_matrix, new.module_colors)
 
-    result.list <- list(adjacency_matrix = adj_matrix,
-                        MEs = new.MEs,
-                        genes_and_modules = genes_and_modules,
-                        kIN = kwithin,
-                        moduleColors = new.module_colors,
-                        correlation_matrix = cor_matrix,
-                        params=params,
-                        dendro_plot_objects = list(tree = geneTree,
-                                                   unmerged = old.module_colors)
-                        )
+    result.list <- list(
+        adjacency_matrix = adj_matrix,
+        MEs = new.MEs,
+        genes_and_modules = genes_and_modules,
+        kIN = kwithin,
+        correlation_matrix = cor_matrix,
+        params = params,
+        dendro_plot_objects = list(
+            tree = geneTree, unmerged = old.module_colors
+        )
+    )
     return(result.list)
 }
 
@@ -249,11 +256,11 @@ exp2gcn <- function(exp, net_type="signed",
 #' plot_eigengene_network(gcn)
 plot_eigengene_network <- function(gcn) {
     on.exit(graphics::layout(1))
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar), add=TRUE, after=FALSE)
-    p <- WGCNA::plotEigengeneNetworks(gcn$MEs, "",
-                                      marDendro = c(3,5,2,6),
-                                      marHeatmap = c(3,4,2,2))
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar), add = TRUE, after = FALSE)
+    p <- WGCNA::plotEigengeneNetworks(
+        gcn$MEs, "", marDendro = c(3,5,2,6), marHeatmap = c(3,4,2,2)
+    )
     return(p)
 }
 
@@ -272,16 +279,17 @@ plot_eigengene_network <- function(gcn) {
 #' plot_dendro_and_colors(gcn)
 plot_dendro_and_colors <- function(gcn) {
     on.exit(graphics::layout(1))
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar), add=TRUE, after=FALSE)
-    p <- WGCNA::plotDendroAndColors(gcn$dendro_plot_objects$tree,
-                               cbind(
-                                   gcn$dendro_plot_objects$unmerged,
-                                   gcn$moduleColors
-                               ),
-                               c("Unmerged", "Merged"),
-                               dendroLabels = FALSE, hang = 0.03,
-                               addGuide = TRUE, guideHang = 0.05)
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar), add = TRUE, after = FALSE)
+    p <- WGCNA::plotDendroAndColors(
+        gcn$dendro_plot_objects$tree,
+        cbind(
+            gcn$dendro_plot_objects$unmerged,
+            gcn$moduleColors
+        ),
+        c("Unmerged", "Merged"),
+        dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05
+    )
     return(NULL)
 }
 
@@ -307,6 +315,7 @@ plot_dendro_and_colors <- function(gcn) {
 #' # For simplicity, only 2 runs
 #' module_stability(exp = filt, net = gcn, nRuns = 2)
 module_stability <- function(exp, net, nRuns = 20) {
+
     norm.exp <- handleSE(exp)
     expr <- as.matrix(t(norm.exp))
     net_type <- net$params$net_type
@@ -336,20 +345,17 @@ module_stability <- function(exp, net, nRuns = 20) {
     labels <- cbind(labels[,1], labs)
 
     on.exit(graphics::layout(1))
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar), add=TRUE, after=FALSE)
-    p <- WGCNA::plotDendroAndColors(mods0[[1]]$mods$dendrograms[[1]],
-                               labels,
-                               c("Full data set", paste("Resampling",
-                                                        seq_len(nRuns))),
-                               main = "Dendrogram and modules: resampled data",
-                               autoColorHeight = FALSE, colorHeight = 0.65,
-                               dendroLabels = FALSE, hang = 0.03,
-                               guideHang = 0.05,
-                               addGuide = TRUE, guideAll = FALSE,
-                               cex.main = 1, cex.lab = 0.8,
-                               cex.colorLabels = 0.7,
-                               marAll = c(0, 5, 3, 0))
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar), add = TRUE, after = FALSE)
+    p <- WGCNA::plotDendroAndColors(
+        mods0[[1]]$mods$dendrograms[[1]], labels,
+        c("Full data set", paste("Resampling", seq_len(nRuns))),
+        main = "Dendrogram and modules: resampled data",
+        autoColorHeight = FALSE, colorHeight = 0.65,
+        dendroLabels = FALSE, hang = 0.03, guideHang = 0.05,
+        addGuide = TRUE, guideAll = FALSE, cex.main = 1, cex.lab = 0.8,
+        cex.colorLabels = 0.7, marAll = c(0, 5, 3, 0)
+    )
     return(NULL)
 }
 
@@ -383,8 +389,6 @@ module_stability <- function(exp, net, nRuns = 20) {
 #' no asterisk: not significant.
 #'
 #' @author Fabricio Almeida-Silva
-#' @seealso
-#'  \code{\link[WGCNA]{corPvalueStudent}},\code{\link[WGCNA]{labeledHeatmap}},\code{\link[WGCNA]{blueWhiteRed}}
 #' @rdname module_trait_cor
 #' @export
 #' @importFrom WGCNA corPvalueStudent labeledHeatmap
@@ -396,11 +400,12 @@ module_stability <- function(exp, net, nRuns = 20) {
 #' data(filt.se)
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' module_trait_cor(filt.se, MEs=gcn$MEs)
-module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
-                             transpose=FALSE, palette="RdYlBu",
-                             continuous_trait=FALSE,
-                             cex.lab.x=0.6, cex.lab.y=0.6,
-                             cex.text=0.6) {
+module_trait_cor <- function(exp, metadata, MEs, cor_method = "spearman",
+                             transpose = FALSE, palette = "RdYlBu",
+                             continuous_trait = FALSE,
+                             cex.lab.x = 0.6, cex.lab.y = 0.6,
+                             cex.text = 0.6) {
+
     if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
@@ -408,14 +413,14 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
     metadata <- metadata[colnames(exp), , drop=FALSE]
     trait <- handle_trait_type(metadata, continuous_trait)
 
-    modtraitcor <- cor(as.matrix(MEs), trait, use = "p", method=cor_method)
+    modtraitcor <- cor(as.matrix(MEs), trait, use = "p", method = cor_method)
     nSamples <- ncol(exp)
     modtraitpvalue <- WGCNA::corPvalueStudent(modtraitcor, nSamples)
     modtraitsymbol <- pval2symbol(modtraitpvalue)
 
     modtrait_long <- reshape2::melt(modtraitcor)
     pvals_long <- reshape2::melt(modtraitpvalue)
-    combined_long <- merge(modtrait_long, pvals_long, by=c("Var1", "Var2"))
+    combined_long <- merge(modtrait_long, pvals_long, by = c("Var1", "Var2"))
     colnames(combined_long) <- c("ME", "trait", "cor", "pvalue")
     combined_long$ME <- as.character(combined_long$ME)
     combined_long$trait <- as.character(combined_long$trait)
@@ -441,16 +446,14 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
         ySymbols <- names(MEs)
     }
     cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
-    hm <- WGCNA::labeledHeatmap(Matrix = modtraitcor,
-                                yLabels = yLabels, xLabels = xLabels,
-                                ySymbols = ySymbols, xSymbols = xSymbols,
-                                colorLabels=FALSE,
-                                colors = cols,
-                                textMatrix = textMatrix, setStdMargins = FALSE,
-                                cex.text = cex.text,
-                                cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
-                                zlim = c(-1,1), cex.main=1,
-                                main = paste("Module-trait relationships"))
+    hm <- WGCNA::labeledHeatmap(
+        Matrix = modtraitcor, yLabels = yLabels, xLabels = xLabels,
+        ySymbols = ySymbols, xSymbols = xSymbols, colorLabels = FALSE,
+        colors = cols, textMatrix = textMatrix, setStdMargins = FALSE,
+        cex.text = cex.text, cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
+        zlim = c(-1,1), cex.main = 1,
+        main = paste("Module-trait relationships")
+    )
     return(combined_long)
 }
 
@@ -492,18 +495,18 @@ module_trait_cor <- function(exp, metadata, MEs, cor_method="spearman",
 #' @examples
 #' data(filt.se)
 #' gs <- gene_significance(filt.se)
-gene_significance <- function(exp, metadata, genes=NULL,
+gene_significance <- function(exp, metadata, genes = NULL,
                               alpha = 0.05, min_cor = 0.2,
                               use_abs = TRUE,
-                              palette="RdYlBu", show_rownames=FALSE,
-                              continuous_trait=FALSE) {
+                              palette = "RdYlBu", show_rownames = FALSE,
+                              continuous_trait = FALSE) {
     if(is(exp, "SummarizedExperiment")) {
         metadata <- as.data.frame(SummarizedExperiment::colData(exp))
     }
     exp <- handleSE(exp)
     final_exp <- exp[, rownames(metadata)]
     if(!is.null(genes)) {
-        final_exp <- final_exp[genes, , drop=FALSE]
+        final_exp <- final_exp[genes, , drop = FALSE]
     }
     trait <- handle_trait_type(metadata, continuous_trait)
     GS <- cor(as.matrix(t(final_exp)), trait, use = "p")
@@ -527,10 +530,10 @@ gene_significance <- function(exp, metadata, genes=NULL,
         corandp <- corandp[corandp$pvalue < alpha & corandp$cor > min_cor, ]
     }
     cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
-    p <- ComplexHeatmap::pheatmap(as.matrix(GS), border_color = NA,
-                             color=cols,
-                             show_rownames=show_rownames,
-                             main="Gene-trait correlations")
+    p <- ComplexHeatmap::pheatmap(
+        as.matrix(GS), border_color = NA, color = cols,
+        show_rownames = show_rownames, main = "Gene-trait correlations"
+    )
 
     resultlist <- list(filtered_corandp = corandp, raw_GS = GS)
     return(resultlist)
@@ -556,6 +559,7 @@ gene_significance <- function(exp, metadata, genes=NULL,
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' hubs <- get_hubs_gcn(filt.se, gcn)
 get_hubs_gcn <- function(exp, net) {
+
     exp <- handleSE(exp)
     cor_method <- net$params$cor_method
     genes_modules <- net$genes_and_modules
@@ -563,19 +567,23 @@ get_hubs_gcn <- function(exp, net) {
     kIN <- net$kIN[, 2, drop=FALSE]
 
     # Add kIN info
-    genes_modulesk <- merge(genes_modules, kIN, by.x="Genes", by.y="row.names")
+    genes_modulesk <- merge(
+        genes_modules, kIN, by.x = "Genes", by.y = "row.names"
+    )
 
     # Calculate kME
     if(cor_method == "spearman") {
-        MM <- WGCNA::signedKME(t(exp), MEs, outputColumnName="",
-                               corOptions = "use = 'p', method = 'spearman'")
+        MM <- WGCNA::signedKME(
+            t(exp), MEs, outputColumnName = "",
+            corOptions = "use = 'p', method = 'spearman'"
+        )
     } else if(cor_method == "pearson") {
-        MM <- WGCNA::signedKME(t(exp), MEs, outputColumnName="")
+        MM <- WGCNA::signedKME(t(exp), MEs, outputColumnName = "")
     } else if(cor_method == "biweight") {
-        MM <- WGCNA::signedKME(t(exp), MEs, corFcn="bicor", outputColumnName="",
-                               corOptions = "maxPOutliers = 0.1")
-    } else {
-        stop("Invalid correlation method. Pick one of 'spearman' or 'pearson'.")
+        MM <- WGCNA::signedKME(
+            t(exp), MEs, corFnc = "bicor", outputColumnName = "",
+            corOptions = "maxPOutliers = 0.1"
+        )
     }
 
     # Add kME info
@@ -603,18 +611,25 @@ get_hubs_gcn <- function(exp, net) {
 
 #' Helper function to perform Fisher's Exact Test with parallel computing
 #'
-#' @param genes Character vector containing genes on which enrichment will be tested.
+#' @param genes Character vector containing genes on which enrichment will
+#' be tested.
 #' @param reference Character vector containing genes to be used as background.
 #' @param genesets List of functional annotation categories.
 #' (e.g., GO, pathway, etc.) with their associated genes.
 #' @param adj Multiple testing correction method.
+#' @param bp_param BiocParallel back-end to be used.
+#' Default: BiocParallel::SerialParam()
+#'
 #' @return Results of Fisher's Exact Test in a data frame with TermID,
 #' number of associated genes, number of genes in reference set,
 #' P-value and adjusted P-value.
+#'
 #' @importFrom stats p.adjust fisher.test
-#' @importFrom BiocParallel bplapply
+#' @importFrom BiocParallel bplapply SerialParam
 #' @noRd
-par_enrich <- function(genes, reference, genesets, adj = "BH") {
+par_enrich <- function(genes, reference, genesets, adj = "BH",
+                       bp_param = BiocParallel::SerialParam()) {
+
     reference <- reference[!reference %in% genes]
 
     tab <- BiocParallel::bplapply(seq_along(genesets), function(i) {
@@ -623,8 +638,10 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
         RninSet <- length(reference) - RinSet
         GinSet <- sum(genes %in% genesets[[i]])
         GninSet <- length(genes) - GinSet
-        fmat <- matrix(c(GinSet, RinSet, GninSet, RninSet), nrow = 2,
-                       ncol = 2, byrow = FALSE)
+        fmat <- matrix(
+            c(GinSet, RinSet, GninSet, RninSet),
+            nrow = 2, ncol = 2, byrow = FALSE
+        )
         colnames(fmat) <- c("inSet", "ninSet")
         rownames(fmat) <- c("genes", "reference")
         fish <- stats::fisher.test(fmat, alternative = "greater")
@@ -632,7 +649,8 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
         inSet <- RinSet + GinSet
         res <- c(GinSet, inSet, pval)
         return(res)
-    })
+    }, BPPARAM = bp_param)
+
     rtab <- do.call(rbind, tab)
     rtab <- data.frame(as.vector(names(genesets)), rtab)
     rtab <- rtab[order(rtab[, 4]), ]
@@ -646,13 +664,15 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
 
 #' Perform enrichment analysis for a set of genes
 #'
-#' @param genes Character vector containing genes for overrepresentation analysis.
+#' @param genes Character vector containing genes for overrepresentation
+#' analysis.
 #' @param background_genes Character vector of genes to be used as background
 #' for the Fisher's Exact Test.
 #' @param annotation Annotation data frame with genes in the first column and
 #' functional annotation in the other columns. This data frame can be exported
 #' from Biomart or similar databases.
-#' @param column Column or columns of \code{annotation} to be used for enrichment.
+#' @param column Column or columns of \code{annotation} to be used for
+#' enrichment.
 #' Both character or numeric values with column indices can be used.
 #' If users want to supply more than one column, input a character or
 #' numeric vector. Default: all columns from \code{annotation}.
@@ -663,7 +683,10 @@ par_enrich <- function(genes, reference, genesets, adj = "BH") {
 #' considered significant. Default is 0.05.
 #' @param bp_param BiocParallel back-end to be used.
 #' Default: BiocParallel::SerialParam()
-#' @return Data frame containing significant terms, p-values and associated genes.
+#'
+#' @return Data frame containing significant terms, p-values and
+#' associated genes.
+#'
 #' @author Fabricio Almeida-Silva
 #' @rdname enrichment_analysis
 #' @export
@@ -706,17 +729,20 @@ enrichment_analysis <- function(genes, background_genes, annotation,
         annotation_list <- split(background[,1], background[,2])
 
         # Perform the enrichment analysis
-        enrich.table <- par_enrich(genes, background_genes, annotation_list, adj = correction)
-        signif_enrich <- as.data.frame(enrich.table[enrich.table$padj <= p, ],
-                                       stringsAsFactors = FALSE)
+        enrich.table <- par_enrich(
+            genes, background_genes, annotation_list, adj = correction,
+            bp_param = bp_param
+        )
+        signif_enrich <- as.data.frame(enrich.table[enrich.table$padj <= p, ])
 
         if(nrow(signif_enrich) > 0) {
             signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
             signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
 
             # Save final result with a column containing gene IDs of associated genes
-            signif_enrich$GeneID <- unlist(lapply(signif_terms_genes,
-                                                  paste, collapse = ","))
+            signif_enrich$GeneID <- unlist(
+                lapply(signif_terms_genes, paste, collapse = ",")
+            )
             df_signif_enrich <- signif_enrich
         } else {
             df_signif_enrich <- NULL
@@ -733,10 +759,12 @@ enrichment_analysis <- function(genes, background_genes, annotation,
         })
 
         # Perform the enrichment analysis
-        signif_enrich <- BiocParallel::bplapply(annotation_list_final, function(x) {
-            enrich.table <- par_enrich(genes, background_genes, x, adj=correction)
-            sig_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ],
-                                        stringsAsFactors=FALSE)
+        signif_enrich <- bplapply(annotation_list_final, function(x) {
+            enrich.table <- par_enrich(
+                genes, background_genes, x, adj = correction,
+                bp_param = bp_param
+            )
+            sig_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ])
             return(sig_enrich)
         }, BPPARAM = bp_param)
 
@@ -747,9 +775,10 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 
             # Create a data frame containing annotations and the annotation class
             annot_correspondence <- Reduce(rbind, lapply(seq_along(background)[-1], function(x) {
-                annot_correspondence <- data.frame(TermID = background[,x],
-                                                   Category = names(background)[x],
-                                                   stringsAsFactors = FALSE)
+                annot_correspondence <- data.frame(
+                    TermID = background[, x],
+                    Category = names(background)[x]
+                )
                 annot_correspondence <- annot_correspondence[!duplicated(annot_correspondence[,c(1,2)]),]
                 return(annot_correspondence)
             }))
@@ -768,8 +797,9 @@ enrichment_analysis <- function(genes, background_genes, annotation,
             signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
 
             # Get final table with enriched terms and a column containing the associated genes
-            df_signif_enrich$GeneID <- unlist(lapply(signif_terms_genes,
-                                                     paste, collapse = ","))
+            df_signif_enrich$GeneID <- unlist(
+                lapply(signif_terms_genes, paste, collapse = ",")
+            )
 
         } else {
             df_signif_enrich <- NULL
@@ -812,7 +842,8 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' mod_enrich <- module_enrichment(gcn, background, zma.interpro, p=1)
 #' }
-module_enrichment <- function(net=NULL, background_genes, annotation, column = NULL,
+module_enrichment <- function(net = NULL, background_genes, annotation,
+                              column = NULL,
                               correction = "BH", p = 0.05,
                               bp_param = BiocParallel::SerialParam()) {
 
@@ -824,11 +855,12 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
     enrichment_allmodules <- BiocParallel::bplapply(seq_along(list.gmodules), function(x) {
         message("Enrichment analysis for module ",
                     names(list.gmodules)[x], "...")
-        l <- enrichment_analysis(genes = as.character(list.gmodules[[x]][,1]),
-                                 background_genes = background_genes,
-                                 annotation = annotation,
-                                 column = column,
-                                 correction = correction, p = p)
+        l <- enrichment_analysis(
+            genes = as.character(list.gmodules[[x]][, 1]),
+            background_genes = background_genes,
+            annotation = annotation,
+            column = column, correction = correction, p = p
+        )
         return(l)
     }, BPPARAM = bp_param)
     names(enrichment_allmodules) <- names(list.gmodules)
@@ -843,8 +875,9 @@ module_enrichment <- function(net=NULL, background_genes, annotation, column = N
     } else {
         # Add module name to each data frame
         enrichment_modnames <- lapply(seq_along(enrichment_filtered), function(x) {
-            return(cbind(enrichment_filtered[[x]],
-                         Module=names(enrichment_filtered)[x]))
+            return(cbind(
+                enrichment_filtered[[x]], Module=names(enrichment_filtered)[x]
+            ))
         })
 
         # Reduce list of data frames to a single data frame
@@ -1014,8 +1047,8 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
                 matrix[lower.tri(matrix, diag=TRUE)] <- NA
 
                 # Convert symmetrical matrix to edge list (Gene1, Gene2, Weight)
-                matrix <- na.omit(data.frame(as.table(matrix), stringsAsFactors=FALSE))
-                result <- list(matrix=matrix, degree=degree)
+                matrix <- na.omit(data.frame(as.table(matrix)))
+                result <- list(matrix = matrix, degree = degree)
                 return(result)
             }, BPPARAM = bp_param)
 

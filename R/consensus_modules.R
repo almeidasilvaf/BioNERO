@@ -60,13 +60,22 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
     powers <- seq(5, 20, by=1)
     sft <- lapply(multiExp, function(x) {
         if(cor_method == "pearson") {
-            sft <- WGCNA::pickSoftThreshold(x$data, networkType = net_type, powerVector=powers, RsquaredCut = rsquared)
+            sft <- WGCNA::pickSoftThreshold(
+                x$data, networkType = net_type, powerVector = powers,
+                RsquaredCut = rsquared
+            )
         } else if(cor_method == "biweight") {
-            sft <- WGCNA::pickSoftThreshold(x$data, networkType = net_type, powerVector=powers,
-                                            RsquaredCut = rsquared, corFnc = bicor, corOptions = list(use = 'p', maxPOutliers = 0.05))
+            sft <- WGCNA::pickSoftThreshold(
+                x$data, networkType = net_type, powerVector = powers,
+                RsquaredCut = rsquared, corFnc = bicor,
+                corOptions = list(use = 'p', maxPOutliers = 0.05)
+            )
         } else if (cor_method == "spearman") {
-            sft <- WGCNA::pickSoftThreshold(x$data, networkType = net_type, powerVector=powers,
-                                            RsquaredCut = rsquared, corOptions = list(use = 'p', method = "spearman"))
+            sft <- WGCNA::pickSoftThreshold(
+                x$data, networkType = net_type, powerVector = powers,
+                RsquaredCut = rsquared,
+                corOptions = list(use = 'p', method = "spearman")
+            )
         } else {
             stop("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
         }
@@ -200,13 +209,19 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
     if(verbose) { message("Calculating adjacency matrix...") }
     adj <- lapply(seq_len(nSets), function(x) {
         if(cor_method == "pearson") {
-            adjacencies <- WGCNA::adjacency(multiExp[[x]]$data, power=power[x], type=net_type)
+            adjacencies <- WGCNA::adjacency(
+                multiExp[[x]]$data, power = power[x], type = net_type
+            )
         } else if(cor_method == "spearman") {
-            adjacencies <- WGCNA::adjacency(multiExp[[x]]$data, power=power[x], type=net_type,
-                                                     corOptions = list(use = "p", method = "spearman"))
+            adjacencies <- WGCNA::adjacency(
+                multiExp[[x]]$data, power = power[x], type = net_type,
+                corOptions = list(use = "p", method = "spearman")
+            )
         } else if (cor_method == "biweight") {
-            adjacencies <- WGCNA::adjacency(multiExp[[x]]$data, power=power[x], type=net_type,
-                                                     corFnc = bicor)
+            adjacencies <- WGCNA::adjacency(
+                multiExp[[x]]$data, power = power[x], type = net_type,
+                corFnc = bicor
+            )
         } else {
             stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
         }
@@ -228,7 +243,7 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Scaling TOM to make them comparable
     scaleP <- 0.95
-    nSamples <- as.integer(1 / (1-scaleP) * 1000)
+    nSamples <- as.integer(1 / (1-scaleP) * 100)
     scaleSample <- sample(nGenes * (nGenes-1) / 2, size = nSamples)
 
     scaledTOM <- lapply(seq_len(nSets), function(x) {
@@ -252,41 +267,44 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Clustering and module identification
     consTree <- hclust(as.dist(1-consensusTOM), method = "average")
-    unmergedLabels <- dynamicTreeCut::cutreeDynamic(dendro = consTree,
-                                                    distM = 1-consensusTOM,
-                                                    deepSplit = 2,
-                                                    cutHeight = 0.995,
-                                                    minClusterSize = 30,
-                                                    pamRespectsDendro = FALSE)
+    unmergedLabels <- dynamicTreeCut::cutreeDynamic(
+        dendro = consTree,
+        distM = 1-consensusTOM,
+        deepSplit = 2,
+        cutHeight = 0.995,
+        minClusterSize = 30,
+        pamRespectsDendro = FALSE
+    )
 
     nmod <- length(unique(unmergedLabels))
     palette <- rev(WGCNA::standardColors(nmod))
     unmergedColors <- WGCNA::labels2colors(unmergedLabels, colorSeq = palette)
 
     # Merge similar modules
-    unmergedMEs <- WGCNA::multiSetMEs(multiExp, colors = NULL,
-                                      universalColors = unmergedColors)
+    unmergedMEs <- WGCNA::multiSetMEs(
+        multiExp, colors = NULL, universalColors = unmergedColors
+    )
     consMEDiss <- WGCNA::consensusMEDissimilarity(unmergedMEs)
     consMETree <- hclust(as.dist(consMEDiss), method = "average")
 
     merging_threshold <- 1-module_merging_threshold
-    merge <- WGCNA::mergeCloseModules(multiExp, unmergedColors,
-                                      cutHeight = merging_threshold, verbose = 0)
+    merge <- WGCNA::mergeCloseModules(
+        multiExp, unmergedColors, cutHeight = merging_threshold, verbose = 0
+    )
 
     moduleLabels <- merge$colors
     moduleColors <- WGCNA::labels2colors(moduleLabels, colorSeq = palette)
-    genes_cmod <- data.frame(Genes = rownames(adj[[1]]),
-                             Cons_modules = moduleColors)
+    genes_cmod <- data.frame(
+        Genes = rownames(adj[[1]]), Cons_modules = moduleColors
+    )
     consMEs <- merge$newMEs
 
     # Plot dendrogram with merged colors
-    result_list <- list(consModules = moduleColors,
-                        consMEs = consMEs,
-                        exprSize = expSize,
-                        sampleInfo = sampleinfo,
-                        genes_cmodules = genes_cmod,
-                        dendro_plot_objects = list(tree = consTree,
-                                                   unmerged = unmergedColors))
+    result_list <- list(
+        consModules = moduleColors, consMEs = consMEs, exprSize = expSize,
+        sampleInfo = sampleinfo, genes_cmodules = genes_cmod,
+        dendro_plot_objects = list(tree = consTree, unmerged = unmergedColors)
+    )
     return(result_list)
 }
 
@@ -312,16 +330,17 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 #' plot_dendro_and_cons_colors(cons_mod)
 plot_dendro_and_cons_colors <- function(consensus) {
     on.exit(graphics::layout(1))
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar), add=TRUE, after=FALSE)
-    WGCNA::plotDendroAndColors(consensus$dendro_plot_objects$tree,
-                               cbind(
-                                   consensus$dendro_plot_objects$unmerged,
-                                   consensus$consModules
-                               ),
-                               c("Unmerged", "Merged"),
-                               dendroLabels = FALSE, hang = 0.03,
-                               addGuide = TRUE, guideHang = 0.05)
+    opar <- par(no.readonly = TRUE)
+    on.exit(par(opar), add = TRUE, after = FALSE)
+    WGCNA::plotDendroAndColors(
+        consensus$dendro_plot_objects$tree,
+        cbind(
+            consensus$dendro_plot_objects$unmerged,
+            consensus$consModules
+        ),
+        c("Unmerged", "Merged"),
+        dendroLabels = FALSE, hang = 0.03,
+        addGuide = TRUE, guideHang = 0.05)
 }
 
 
@@ -372,20 +391,33 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
                                 cex.lab.x=0.6, cex.lab.y=0.6,
                                 cex.text=0.6,
                                 transpose=FALSE) {
+
     consMEs <- consensus$consMEs
     exprSize <- consensus$exprSize
     sampleInfo <- consensus$sampleInfo
-    sampleInfo <- lapply(sampleInfo, handle_trait_type, continuous_trait = continuous_trait)
+    sampleInfo <- lapply(
+        sampleInfo, handle_trait_type, continuous_trait = continuous_trait
+    )
     nSets <- exprSize$nSets
 
     # Calculate the correlations
     mod_trait_cor <- lapply(seq_len(nSets), function(set) {
         if(cor_method == "spearman") {
-            moduleTraitCor <- cor(consMEs[[set]]$data, sampleInfo[[set]], use = "p", method = "spearman")
-            moduleTraitPvalue <- WGCNA::corPvalueFisher(moduleTraitCor, exprSize$nSamples[set])
+            moduleTraitCor <- cor(
+                consMEs[[set]]$data, sampleInfo[[set]], use = "p",
+                method = "spearman"
+            )
+            moduleTraitPvalue <- WGCNA::corPvalueFisher(
+                moduleTraitCor, exprSize$nSamples[set]
+            )
         } else if(cor_method == "pearson") {
-            moduleTraitCor <- cor(consMEs[[set]]$data, sampleInfo[[set]], use = "p", method = "pearson")
-            moduleTraitPvalue <- WGCNA::corPvalueFisher(moduleTraitCor, exprSize$nSamples[set])
+            moduleTraitCor <- cor(
+                consMEs[[set]]$data, sampleInfo[[set]], use = "p",
+                method = "pearson"
+            )
+            moduleTraitPvalue <- WGCNA::corPvalueFisher(
+                moduleTraitCor, exprSize$nSamples[set]
+            )
         }
         results <- list(moduleTraitCor, moduleTraitPvalue)
         return(results)
@@ -420,7 +452,7 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
     rownames(cons_pval) <- rownames(moduleTraitCor[[1]])
     cor_long <- reshape2::melt(cons_cor)
     pval_long <- reshape2::melt(cons_pval)
-    combined_long <- merge(cor_long, pval_long, by=c("Var1", "Var2"))
+    combined_long <- merge(cor_long, pval_long, by = c("Var1", "Var2"))
     colnames(combined_long) <- c("ME", "trait", "cor", "pvalue")
     combined_long$ME <- as.character(combined_long$ME)
     combined_long$trait <- as.character(combined_long$trait)
@@ -452,16 +484,15 @@ consensus_trait_cor <- function(consensus, cor_method = "spearman",
     on.exit(graphics::layout(1))
     opar <- par(no.readonly=TRUE)
     on.exit(par(opar), add=TRUE, after=FALSE)
-    hm <- WGCNA::labeledHeatmap(Matrix = cons_cor,
-                                yLabels = yLabels, xLabels = xLabels,
-                                ySymbols = ySymbols, xSymbols = xSymbols,
-                                colorLabels=FALSE,
-                                colors = cols,
-                                textMatrix = textMatrix, setStdMargins = FALSE,
-                                cex.text = cex.text,
-                                cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
-                                zlim = c(-1,1), cex.main=1,
-                                main = "Consensus module-trait relationships")
+    hm <- WGCNA::labeledHeatmap(
+        Matrix = cons_cor, yLabels = yLabels, xLabels = xLabels,
+        ySymbols = ySymbols, xSymbols = xSymbols,
+        colorLabels = FALSE, colors = cols,
+        textMatrix = textMatrix, setStdMargins = FALSE,
+        cex.text = cex.text, cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
+        zlim = c(-1,1), cex.main = 1,
+        main = "Consensus module-trait relationships"
+    )
     return(combined_long)
 }
 
