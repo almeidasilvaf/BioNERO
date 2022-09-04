@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -196,7 +196,7 @@ faster network reconstruction, we will remove every gene whose median
 value is below 10. The function’s default for <code>min_exp</code> is 1.
 For other options, see <code><a href="../reference/remove_nonexp.html">?remove_nonexp</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_nonexp.html">remove_nonexp</a></span><span class="op">(</span><span class="va">exp_filt</span>, method<span class="op">=</span><span class="st">"median"</span>, min_exp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">exp_filt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_nonexp.html">remove_nonexp</a></span><span class="op">(</span><span class="va">exp_filt</span>, method <span class="op">=</span> <span class="st">"median"</span>, min_exp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span></span>
 <span><span class="co">## [1] 8529   28</span></span></code></pre></div>
 <p><strong>Step 3 (optional):</strong> Filtering genes by variance. It
@@ -248,7 +248,9 @@ data. If you have expression data as raw read counts, set the argument
 will apply DESeq2’s variance stabilizing transformation &lt;span class="citation"&gt;(Love, Huber, and Anders 2014)&lt;/span&gt; to your count
 data.&lt;/p&gt;'><sup>2</sup></a></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span></span>
+<span>    <span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n <span class="op">=</span> <span class="fl">2000</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">## Number of removed samples: 1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">exp_filt</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## [1] TRUE</span></span>
@@ -353,16 +355,18 @@ infer the GCN. The function <code><a href="../reference/exp2gcn.html">exp2gcn()<
 outputs a list of 7 elements, each of which will be used by other
 functions in the analysis pipeline.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span><span class="va">final_exp</span>, net_type<span class="op">=</span><span class="st">"signed hybrid"</span>, </span>
-<span>               SFTpower<span class="op">=</span><span class="va">power</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2gcn.html">exp2gcn</a></span><span class="op">(</span></span>
+<span>    <span class="va">final_exp</span>, net_type <span class="op">=</span> <span class="st">"signed hybrid"</span>, SFTpower <span class="op">=</span> <span class="va">power</span>, </span>
+<span>    cor_method <span class="op">=</span> <span class="st">"pearson"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">## ..connectivity..</span></span>
 <span><span class="co">## ..matrix multiplication (system BLAS)..</span></span>
 <span><span class="co">## ..normalization..</span></span>
 <span><span class="co">## ..done.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></span>
 <span><span class="co">## [1] "adjacency_matrix"    "MEs"                 "genes_and_modules"  </span></span>
-<span><span class="co">## [4] "kIN"                 "moduleColors"        "correlation_matrix" </span></span>
-<span><span class="co">## [7] "params"              "dendro_plot_objects"</span></span></code></pre></div>
+<span><span class="co">## [4] "kIN"                 "correlation_matrix"  "params"             </span></span>
+<span><span class="co">## [7] "dendro_plot_objects"</span></span></code></pre></div>
 <p>The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> saves objects in the last element
 of the resulting list that can be subsequently used to plot common
 figures in GCN papers. The figures are publication-ready and display i.
@@ -433,7 +437,9 @@ set of candidate genes and you want to find which of them are more
 associated with the trait of interest. See
 &lt;code&gt;?gene_significance()&lt;/code&gt; for more details.&lt;/p&gt;'><sup>5</sup></a></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, MEs<span class="op">=</span><span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span></span>
+<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, MEs <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/moddtraitcor-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span></span>
@@ -448,9 +454,13 @@ associated with the trait of interest. See
 customization. For instance:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Transpose the matrix and change palette (RColorBrewer palette)</span></span>
-<span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, MEs<span class="op">=</span><span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method<span class="op">=</span><span class="st">"pearson"</span>,</span>
-<span>                            transpose <span class="op">=</span> <span class="cn">TRUE</span>, palette<span class="op">=</span><span class="st">"PRGn"</span>, cex.text <span class="op">=</span> <span class="fl">0.7</span>,</span>
-<span>                            cex.lab.y <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span></span>
+<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, </span>
+<span>    MEs <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, </span>
+<span>    cor_method <span class="op">=</span> <span class="st">"pearson"</span>, </span>
+<span>    transpose <span class="op">=</span> <span class="cn">TRUE</span>, palette <span class="op">=</span> <span class="st">"PRGn"</span>, </span>
+<span>    cex.text <span class="op">=</span> <span class="fl">0.7</span>, cex.lab.y <span class="op">=</span> <span class="fl">0.7</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/modtraitcor_transpose-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -460,8 +470,12 @@ customization. For instance:</p>
 negatively correlated with endosperm samples. We can visually explore it
 with <code><a href="../reference/plot_expression_profile.html">plot_expression_profile()</a></code>.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_expression_profile.html">plot_expression_profile</a></span><span class="op">(</span>exp<span class="op">=</span><span class="va">final_exp</span>, net<span class="op">=</span><span class="va">net</span>, </span>
-<span>                        plot_module<span class="op">=</span><span class="cn">TRUE</span>, modulename<span class="op">=</span><span class="st">"yellow"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_expression_profile.html">plot_expression_profile</a></span><span class="op">(</span></span>
+<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, </span>
+<span>    net <span class="op">=</span> <span class="va">net</span>, </span>
+<span>    plot_module <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>    modulename <span class="op">=</span> <span class="st">"yellow"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/exp_profile-1.png" width="384" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -483,9 +497,11 @@ Monocots database <span class="citation">(Van Bel et al.
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Enrichment analysis for conserved protein domains (Interpro)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.interpro</span><span class="op">)</span></span>
-<span><span class="va">interpro_enrichment</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_enrichment.html">module_enrichment</a></span><span class="op">(</span>net <span class="op">=</span> <span class="va">net</span>, </span>
-<span>                                         background_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>,</span>
-<span>                                         annotation <span class="op">=</span> <span class="va">zma.interpro</span><span class="op">)</span></span>
+<span><span class="va">interpro_enrichment</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_enrichment.html">module_enrichment</a></span><span class="op">(</span></span>
+<span>    net <span class="op">=</span> <span class="va">net</span>, </span>
+<span>    background_genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span>,</span>
+<span>    annotation <span class="op">=</span> <span class="va">zma.interpro</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">## Enrichment analysis for module black...</span></span>
 <span><span class="co">## Enrichment analysis for module brown...</span></span>
 <span><span class="co">## Enrichment analysis for module darkgreen...</span></span>
@@ -586,8 +602,7 @@ trust it for biological interpretations.&lt;/p&gt;'><sup>7</sup></a> For more de
 details, check <code>?get_edge_list()</code>.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove edges based on optimal scale-free topology fit</span></span>
-<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,</span>
-<span>                                filter<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module <span class="op">=</span> <span class="st">"midnightblue"</span>, filter <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">## The correlation threshold that best fits the scale-free topology is 0.7</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/filter_edges-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
@@ -595,16 +610,19 @@ details, check <code>?get_edge_list()</code>.</p>
 <span><span class="co">## [1] 588   3</span></span>
 <span></span>
 <span><span class="co"># Remove edges based on p-value</span></span>
-<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,</span>
-<span>                                filter<span class="op">=</span><span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"pvalue"</span>,</span>
-<span>                                nSamples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span></span>
+<span>    <span class="va">net</span>, module <span class="op">=</span> <span class="st">"midnightblue"</span>,</span>
+<span>    filter <span class="op">=</span> <span class="cn">TRUE</span>, method <span class="op">=</span> <span class="st">"pvalue"</span>, </span>
+<span>    nSamples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span></span>
 <span><span class="co">## [1] 921   3</span></span>
 <span></span>
 <span><span class="co"># Remove edges based on minimum correlation</span></span>
-<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span>,</span>
-<span>                                filter<span class="op">=</span><span class="cn">TRUE</span>, method<span class="op">=</span><span class="st">"min_cor"</span>,</span>
-<span>                                rcutoff <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span>
+<span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span></span>
+<span>    <span class="va">net</span>, module <span class="op">=</span> <span class="st">"midnightblue"</span>, </span>
+<span>    filter <span class="op">=</span> <span class="cn">TRUE</span>, method <span class="op">=</span> <span class="st">"min_cor"</span>, rcutoff <span class="op">=</span> <span class="fl">0.7</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span></span>
 <span><span class="co">## [1] 588   3</span></span></code></pre></div>
 </div>
@@ -617,20 +635,24 @@ the top 5 hubs (or less if there are less than 5 hubs). However, this
 can be customized according to the user’s preference (see
 <code><a href="../reference/plot_gcn.html">?plot_gcn</a></code> for more information).</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span>edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
-<span>         net <span class="op">=</span> <span class="va">net</span>,</span>
-<span>         color_by <span class="op">=</span> <span class="st">"module"</span>,</span>
-<span>         hubs <span class="op">=</span> <span class="va">hubs</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span></span>
+<span>    edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
+<span>    net <span class="op">=</span> <span class="va">net</span>, </span>
+<span>    color_by <span class="op">=</span> <span class="st">"module"</span>, </span>
+<span>    hubs <span class="op">=</span> <span class="va">hubs</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/plot_gcn-1.png" width="384" style="display: block; margin: auto;"></p>
 <p>Networks can also be visualized interactively by setting
 <code>interactive = TRUE</code> in <code>plot_gcn</code>.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span>edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
-<span>         net <span class="op">=</span> <span class="va">net</span>,</span>
-<span>         color_by<span class="op">=</span><span class="st">"module"</span>,</span>
-<span>         hubs <span class="op">=</span> <span class="va">hubs</span>,</span>
-<span>         interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>         dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span></span>
+<span>    edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
+<span>    net <span class="op">=</span> <span class="va">net</span>,</span>
+<span>    color_by <span class="op">=</span> <span class="st">"module"</span>,</span>
+<span>    hubs <span class="op">=</span> <span class="va">hubs</span>,</span>
+<span>    interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div id="htmlwidget-e3b0c74c0f6f0bd21e61" style="width:500px;height:500px;" class="forceNetwork html-widget"></div>
 <script type="application/json" data-for="htmlwidget-e3b0c74c0f6f0bd21e61">{"x":{"links":{"source":[2,3,0,4,1,11,12,7,5,6,8,0,3,4,1,10,9,2,3,1,7,4,5,0,2,6,25,14,20,2,0,16,7,3,5,30,17,29,6,23,12,1,10,28,33,15,10,16,7,4,5,3,0,1,12,9,20,23,25,15,2,26,8,6,17,27,5,4,24,1,15,10,14,0,23,19,3,12,25,16,6,7,20,8,11,9,13,17,2,4,5,0,2,3,1,6,7,8,5,1,14,0,12,15,6,10,7,16,8,11,4,9,3,17,13,20,23,2,37,5,4,1,3,2,0,6,2,8,3,0,1,4,5,10,9,7,5,14,1,13,16,3,9,11,0,8,12,2,7,10,17,6,4,23,6,7,15,34,14,10,25,33,3,0,5,14,16,20,13,7,6,1,8,22,10,15,19,9,3,2,17,4,12,5,4,1,7,15,0,13,9,14,12,10,6,11,8,2,3,5,6,14,17,12,13,23,26,4,7,0,10,11,21,3,1,15,25,26,12,16,25,10,5,0,13,23,15,20,9,8,17,3,6,1,4,2,3,13,17,5,24,16,9,15,14,2,12,4,7,19,18,1,8,0,6,11,22,35,23,7,20,31,24,10,14,8,9,22,13,15,7,3,19,21,12,1,17,23,5,0,11,6,4,2,20,18,22,32,7,24,31,13,21,14,0,2,1,6,14,21,31,24,36,22,32,7,35,5,8,0,11,1,4,12,6,7,13,3,9,2,10,6,0,8,3,1,2,4,7,9,5,8,11,3,6,0,4,7,9,2,5,10,1,4,6,3,5,1,2,0,3,9,0,7,10,5,12,8,4,21,14,20,18,17,6,2,11,15,1,13,19,2,14,9,3,15,0,23,28,7,20,32,1,25,10,22,33,31,12,6,4,9,4,1,2,6,3,35,27,12,23,25,7,10,20,28,15,0,24,3,14,13,12,15,19,2,1,8,5,21,17,29,7,6,18,16,11,0,2,0,1,3,7,13,16,3,2,5,0,15,12,9,14,10,6,11,4,17,1,8,18,16,0,15,12,7,9,5,3,8,11,1,14,10,13,6,4,2,7,14,0,11,4,5,12,13,6,1,10,9,8,2,3,0,5,16,7,0,10,1,15,8,13,14,3,6,17,9,12,11,4,19,2,16,3,10,5,15,0,7,9,14,12,8,17,2,20,6,4,1,13,11,18,19,0,22,5,14,3,15,13,4,7,10,18,19,20,8,2,6,9,11,12,1,17,16,21,14,11,7,1,6,5,3,13,4,22,2,26,0,23,24,9,15,12,21,31,31,37,22,36,15,3,4,23,10,20,0,7,1,30,25,12,6,14,11,1,0],"target":[5,5,5,5,5,13,13,13,13,13,13,13,13,13,13,13,13,13,8,8,8,8,8,8,8,8,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,9,9,9,9,9,9,9,9,9,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,42,6,6,6,6,6,6,11,11,11,11,11,11,11,11,11,11,11,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,40,40,40,40,40,40,40,40,40,40,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,41,41,41,41,41,41,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,36,36,36,36,36,36,36,36,3,3,3,37,37,37,37,37,37,37,37,37,37,14,14,14,14,14,14,14,14,14,14,14,14,14,14,10,10,10,10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,12,12,12,12,7,7,7,7,7,7,7,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,39,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,4,4,4,4,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,43,43,43,43,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,2,2],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d034368","Zm00001d042976","Zm00001d051362","Zm00001d028375","Zm00001d038136","Zm00001d001857","Zm00001d011034","Zm00001d033707","Zm00001d002690","Zm00001d007234","Zm00001d031569","Zm00001d011081","Zm00001d033038","Zm00001d002384","Zm00001d029378","Zm00001d042372","Zm00001d016733","Zm00001d040803","Zm00001d014781","Zm00001d038218","Zm00001d043299","Zm00001d043998","Zm00001d034828","Zm00001d015918","Zm00001d047204","Zm00001d008305","Zm00001d006458","Zm00001d019563","Zm00001d005421","Zm00001d021813","Zm00001d037018","Zm00001d023559","Zm00001d048693","Zm00001d049691","Zm00001d003962","Zm00001d036162","Zm00001d025892","Zm00001d028630","Zm00001d019553","Zm00001d036547","Zm00001d015399","Zm00001d022464","Zm00001d008600","Zm00001d048802"],"group":["midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue"],"nodesize":[10.5817658089403,10.2457134175312,10.1012265821005,9.20536757438946,9.09708978527968,9.02890397173426,8.90902323921577,8.8960519819567,8.83398655496156,8.17926469128355,8.07960378246698,7.95166881927189,7.48687403118163,7.46018171904601,7.39303782719813,7.29407548122694,7.20544171499372,6.71003994604486,5.56968360957348,5.2513403679063,5.22106943556366,5.21776630620915,4.99594484674438,4.77413047577239,4.77324261059502,4.39060194558006,4.10510591167904,3.79870217969408,3.74610910181984,3.47086972584609,3.35860606173085,3.31743803885518,3.26312724068693,3.21699033303724,2.70939551612667,2.56173369044579,1.90480419574236,1.58878210422147,1.56723036367367,1.47677712893716,1.38039516028772,1.00125948426605,0.485854283155314,0.364633092930587]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":13,"fontFamily":"serif","clickTextSize":32.5,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":0.8,"zoom":true,"legend":false,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script>
 </div>
@@ -642,8 +664,8 @@ calculate the main network statistics (or properties, or indices),
 namely: <em>connectivity</em>, <em>scaled connectivity</em>,
 <em>clustering coefficient</em>, <em>maximum adjacency ratio</em>,
 <em>density</em>, <em>centralization</em>, <em>heterogeneity</em>,
-<em>number of cliques</em>, <em>diameter</em>, <em>betweenness</em>
-(optional), and <em>closeness</em> (optional).</p>
+<em>diameter</em>, <em>betweenness</em> (optional), and
+<em>closeness</em> (optional).</p>
 <p>Depending on your system capacities and network size, this may take a
 very long time. Hence, if you are willing to calculate network
 statistics for your data set, grab a cup of coffee, because the waiting
@@ -676,7 +698,7 @@ may be long.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BioNERO_1.5.1    BiocStyle_2.24.0</span></span>
+<span><span class="co">## [1] BioNERO_1.5.2    BiocStyle_2.24.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] backports_1.4.1             circlize_0.4.15            </span></span>
@@ -697,11 +719,11 @@ may be long.</p>
 <span><span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span></span>
 <span><span class="co">##  [33] blob_1.2.3                  ggrepel_0.9.1              </span></span>
 <span><span class="co">##  [35] textshaping_0.3.6           xfun_0.32                  </span></span>
-<span><span class="co">##  [37] dplyr_1.0.9                 crayon_1.5.1               </span></span>
+<span><span class="co">##  [37] dplyr_1.0.10                crayon_1.5.1               </span></span>
 <span><span class="co">##  [39] RCurl_1.98-1.8              jsonlite_1.8.0             </span></span>
 <span><span class="co">##  [41] genefilter_1.78.0           impute_1.70.0              </span></span>
 <span><span class="co">##  [43] survival_3.4-0              iterators_1.0.14           </span></span>
-<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span></span>
+<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.1               </span></span>
 <span><span class="co">##  [47] zlibbioc_1.42.0             XVector_0.36.0             </span></span>
 <span><span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.22.0        </span></span>
 <span><span class="co">##  [51] shape_1.4.6                 BiocGenerics_0.42.0        </span></span>
@@ -719,7 +741,7 @@ may be long.</p>
 <span><span class="co">##  [75] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
 <span><span class="co">##  [77] dynamicTreeCut_1.63-1       labeling_0.4.2             </span></span>
 <span><span class="co">##  [79] reshape2_1.4.4              tidyselect_1.1.2           </span></span>
-<span><span class="co">##  [81] rlang_1.0.4                 AnnotationDbi_1.58.0       </span></span>
+<span><span class="co">##  [81] rlang_1.0.5                 AnnotationDbi_1.58.0       </span></span>
 <span><span class="co">##  [83] munsell_0.5.0               tools_4.2.1                </span></span>
 <span><span class="co">##  [85] cachem_1.0.6                cli_3.3.0                  </span></span>
 <span><span class="co">##  [87] generics_0.1.3              RSQLite_2.2.16             </span></span>

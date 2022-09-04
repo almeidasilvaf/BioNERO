@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,7 +152,12 @@ same way we did in the previous vignette.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.se</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Preprocess the expression data</span></span>
-<span><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span><span class="va">zma.se</span>, min_exp <span class="op">=</span> <span class="fl">10</span>, variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, n<span class="op">=</span><span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="va">final_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp_preprocess.html">exp_preprocess</a></span><span class="op">(</span></span>
+<span>    <span class="va">zma.se</span>, </span>
+<span>    min_exp <span class="op">=</span> <span class="fl">10</span>, </span>
+<span>    variance_filter <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>    n <span class="op">=</span> <span class="fl">2000</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">## Number of removed samples: 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -190,7 +195,11 @@ network, the function will calculate the SFT fit and select the best
 fit.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span></span>
-<span><span class="va">grn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2grn.html">exp2grn</a></span><span class="op">(</span>exp <span class="op">=</span> <span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">grn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exp2grn.html">exp2grn</a></span><span class="op">(</span></span>
+<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, </span>
+<span>    regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, </span>
+<span>    nTrees <span class="op">=</span> <span class="fl">10</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">## The top number of edges that best fits the scale-free topology is 247</span></span></code></pre></div>
 <p><img src="vignette_02_GRN_inference_files/figure-html/exp2grn-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -216,8 +225,11 @@ of a target gene is predicted from the expression profiles of all other
 genes using random forests (default) or extra-trees.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using 10 trees for demonstration purposes. Use the default: 1000</span></span>
-<span><span class="va">genie3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span><span class="va">final_exp</span>, method <span class="op">=</span> <span class="st">"genie3"</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, </span>
-<span>                    nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">genie3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_infer.html">grn_infer</a></span><span class="op">(</span></span>
+<span>    <span class="va">final_exp</span>, </span>
+<span>    method <span class="op">=</span> <span class="st">"genie3"</span>, </span>
+<span>    regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, </span>
+<span>    nTrees <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">genie3</span><span class="op">)</span></span>
 <span><span class="co">##                Node1          Node2    Weight</span></span>
 <span><span class="co">## 20352 Zm00001d041474 Zm00001d017881 0.5439514</span></span>
@@ -263,7 +275,7 @@ stored in a list of 3 elements. <a class="footnote-ref" tabindex="0" data-bs-tog
 averaging ranks with &lt;code&gt;&lt;a href="../reference/grn_average_rank.html"&gt;grn_average_rank()&lt;/a&gt;&lt;/code&gt; and filtering with
 &lt;code&gt;&lt;a href="../reference/grn_filter.html"&gt;grn_filter()&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>1</sup></a></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grn_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_combined.html">grn_combined</a></span><span class="op">(</span><span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grn_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/grn_combined.html">grn_combined</a></span><span class="op">(</span><span class="va">final_exp</span>, regulators <span class="op">=</span> <span class="va">zma.tfs</span><span class="op">$</span><span class="va">Gene</span>, nTrees <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">$</span><span class="va">genie3</span><span class="op">)</span></span>
 <span><span class="co">##                Node1          Node2    Weight</span></span>
 <span><span class="co">## 12013 Zm00001d041474 Zm00001d011541 0.4629469</span></span>
@@ -380,7 +392,7 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BioNERO_1.5.1    BiocStyle_2.24.0</span></span>
+<span><span class="co">## [1] BioNERO_1.5.2    BiocStyle_2.24.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] backports_1.4.1             circlize_0.4.15            </span></span>
@@ -401,11 +413,11 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 <span><span class="co">##  [31] jpeg_0.1-9                  colorspace_2.0-3           </span></span>
 <span><span class="co">##  [33] blob_1.2.3                  ggrepel_0.9.1              </span></span>
 <span><span class="co">##  [35] textshaping_0.3.6           xfun_0.32                  </span></span>
-<span><span class="co">##  [37] dplyr_1.0.9                 crayon_1.5.1               </span></span>
+<span><span class="co">##  [37] dplyr_1.0.10                crayon_1.5.1               </span></span>
 <span><span class="co">##  [39] RCurl_1.98-1.8              jsonlite_1.8.0             </span></span>
 <span><span class="co">##  [41] genefilter_1.78.0           impute_1.70.0              </span></span>
 <span><span class="co">##  [43] survival_3.4-0              iterators_1.0.14           </span></span>
-<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.0               </span></span>
+<span><span class="co">##  [45] glue_1.6.2                  gtable_0.3.1               </span></span>
 <span><span class="co">##  [47] zlibbioc_1.42.0             XVector_0.36.0             </span></span>
 <span><span class="co">##  [49] GetoptLong_1.0.5            DelayedArray_0.22.0        </span></span>
 <span><span class="co">##  [51] shape_1.4.6                 BiocGenerics_0.42.0        </span></span>
@@ -423,7 +435,7 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 <span><span class="co">##  [75] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
 <span><span class="co">##  [77] dynamicTreeCut_1.63-1       labeling_0.4.2             </span></span>
 <span><span class="co">##  [79] reshape2_1.4.4              tidyselect_1.1.2           </span></span>
-<span><span class="co">##  [81] rlang_1.0.4                 AnnotationDbi_1.58.0       </span></span>
+<span><span class="co">##  [81] rlang_1.0.5                 AnnotationDbi_1.58.0       </span></span>
 <span><span class="co">##  [83] munsell_0.5.0               tools_4.2.1                </span></span>
 <span><span class="co">##  [85] cachem_1.0.6                cli_3.3.0                  </span></span>
 <span><span class="co">##  [87] generics_0.1.3              RSQLite_2.2.16             </span></span>

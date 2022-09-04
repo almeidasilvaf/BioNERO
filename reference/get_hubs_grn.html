@@ -12,7 +12,7 @@ Get hubs for protein-protein interaction network"><meta property="og:image" cont
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,7 +129,7 @@ for all genes, respectively.</p>
 <span class="r-in"><span><span class="va">ranked_grn</span> <span class="op">&lt;-</span> <span class="fu"><a href="grn_average_rank.html">grn_average_rank</a></span><span class="op">(</span><span class="va">grn_list</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># split in only 2 groups for demonstration purposes</span></span></span>
 <span class="r-in"><span><span class="va">filtered_edges</span> <span class="op">&lt;-</span> <span class="fu"><a href="grn_filter.html">grn_filter</a></span><span class="op">(</span><span class="va">ranked_grn</span>, nsplit<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The top number of edges that best fits the scale-free topology is 245</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The top number of edges that best fits the scale-free topology is 126</span>
 <span class="r-plt img"><img src="get_hubs_grn-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">hubs</span> <span class="op">&lt;-</span> <span class="fu">get_hubs_grn</span><span class="op">(</span><span class="va">filtered_edges</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ppi_edges</span> <span class="op">&lt;-</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/as_edgelist.html" class="external-link">get.edgelist</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/sample_pa.html" class="external-link">barabasi.game</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, directed<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
