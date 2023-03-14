@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 [![GitHub issues](https://img.shields.io/github/issues/almeidasilvaf/BioNERO)](https://github.com/almeidasilvaf/BioNERO/issues)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check-bioc](https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/almeidasilvaf/BioNERO/actions)
-[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg)](https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/BioNERO/branch/devel/graph/badge.svg)](https://codecov.io/gh/almeidasilvaf/BioNERO?branch=devel)
 <!-- badges: end -->
 
 

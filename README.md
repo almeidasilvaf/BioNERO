@@ -11,31 +11,30 @@ issues](https://img.shields.io/github/issues/almeidasilvaf/BioNERO)](https://git
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check-bioc](https://github.com/almeidasilvaf/BioNERO/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/almeidasilvaf/BioNERO/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/almeidasilvaf/BioNERO/branch/master/graph/badge.svg)](https://codecov.io/gh/almeidasilvaf/BioNERO?branch=master)
+coverage](https://codecov.io/gh/almeidasilvaf/BioNERO/branch/devel/graph/badge.svg)](https://codecov.io/gh/almeidasilvaf/BioNERO?branch=devel)
 <!-- badges: end -->
 
 `BioNERO` aims to integrate all aspects of biological network inference
 in a single package, so users don’t have to learn the syntaxes of
 several packages and how to communicate among them. `BioNERO` features:
 
--   **Expression data preprocessing** using state-of-the-art techniques
-    for network inference.
--   **Automated exploratory data analyses**, including principal
-    component analysis (PCA) and heatmaps of gene expression or sample
-    correlations.
--   **Inference of gene coexpression networks (GCNs)** using the popular
-    WGCNA algorithm.
--   **Inference of gene regulatory networks (GRNs)** based on the
-    “wisdom of the crowds” principle. This principle consists in
-    inferring GRNs with multiple algorithms (here, CLR, GENIE3 and
-    ARACNE) and calculating the average rank for each interaction pair.
--   **Exploration of network topology** of GCNs, GRNs, and
-    protein-protein interaction networks.
--   **Network visualization**.
--   **Network comparison**, including identification of consensus
-    modules across independent expression sets, and calculation of intra
-    and interspecies module preservation statistics between different
-    networks.
+- **Expression data preprocessing** using state-of-the-art techniques
+  for network inference.
+- **Automated exploratory data analyses**, including principal component
+  analysis (PCA) and heatmaps of gene expression or sample correlations.
+- **Inference of gene coexpression networks (GCNs)** using the popular
+  WGCNA algorithm.
+- **Inference of gene regulatory networks (GRNs)** based on the “wisdom
+  of the crowds” principle. This principle consists in inferring GRNs
+  with multiple algorithms (here, CLR, GENIE3 and ARACNE) and
+  calculating the average rank for each interaction pair.
+- **Exploration of network topology** of GCNs, GRNs, and protein-protein
+  interaction networks.
+- **Network visualization**.
+- **Network comparison**, including identification of consensus modules
+  across independent expression sets, and calculation of intra and
+  interspecies module preservation statistics between different
+  networks.
 
 ## Installation instructions
 
