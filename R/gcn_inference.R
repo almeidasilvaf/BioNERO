@@ -164,6 +164,7 @@ exp2gcn <- function(exp, net_type="signed",
     #Hierarchically cluster genes
     dissTOM <- 1-TOM #hclust takes a distance structure
     geneTree <- hclust(as.dist(dissTOM), method="average")
+    geneTree$height <- round(geneTree$height, 7) # to address rounding issue with cutree
 
     #Detecting coexpression modules
     if(verbose) { message("Detecting coexpression modules...") }
