@@ -304,9 +304,11 @@ correlations. This analysis is useful to identify modules that are positively
 or negatively correlated with particular traits, which means that their gene 
 expression levels go up or down in these conditions. Here, tissues will be 
 considered traits, so we want to identify groups of genes whose expression 
-levels are inhibited or induced in particular tissues. Alternatively, one can 
-use continuous variables (e.g., metabolite content, protein concentration, 
-height) or discrete variables (e.g., disease index) as traits.[^5]
+levels are inhibited or induced in particular tissues. Of note, when using 
+categorical variables the function `module_trait_cor()` only works with a 
+single variable at a time. Alternatively, one can use any number of continuous 
+variables (e.g., metabolite content, protein concentration, height) or discrete 
+variables (e.g., disease index) as traits.[^5]
 
 [^5]: **NOTE:** The function `gene_significance()` works just 
 like `module_trait_cor()`, but it correlates individual genes (not the 
