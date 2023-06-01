@@ -4,21 +4,36 @@
 \alias{plot_PCA}
 \title{Plot Principal Component Analysis (PCA) of samples}
 \usage{
-plot_PCA(exp, metadata, log_trans = FALSE, PCs = "1x2", size = 2)
+plot_PCA(
+  exp,
+  metadata,
+  metadata_cols = NULL,
+  log_trans = FALSE,
+  PCs = c(1, 2),
+  size = 2
+)
 }
 \arguments{
 \item{exp}{A gene expression data frame with genes in row names
 and samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A data frame containing sample names in row names
-and sample annotation in the first column. Ignored if `exp` is
-a `SummarizedExperiment` object, since the function will extract colData.}
+\item{metadata}{A data frame of sample metadata containing sample names
+in row names and sample annotation in subsequent columns.
+Ignored if `exp` is a `SummarizedExperiment` object, since colData will be
+automatically extracted.}
 
-\item{log_trans}{Logical. If TRUE, the expression data frame will be log
-transformed with log2(exp+1).}
+\item{metadata_cols}{A vector (either numeric or character) indicating
+which columns should be extracted from column metadata if \strong{exp}
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.}
 
-\item{PCs}{Principal components to be plotted on the x-axis and y-axis,
-respectively. One of "1x2", "1x3" or "2x3. Default is "1x2".}
+\item{log_trans}{Logical indicating whether the gene expression matrix
+should be log transformed using \code{log(exp + 1)}. Default: FALSE.}
+
+\item{PCs}{Numeric vector of length 2 indicating the principal components
+to be plotted on the x-axis and y-axis, respectively.
+Default: \code{c(1, 2)}.}
 
 \item{size}{Numeric indicating the point size. Default is 2.}
 }

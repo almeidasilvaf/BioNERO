@@ -13,7 +13,8 @@ colnames(exp) <- paste0("Sample", seq_len(ncol(exp)))
 ## Sample metadata
 col_metadata <- data.frame(
     row.names = colnames(exp),
-    Class = paste0("Class", sample(1:5, size = ncol(exp), replace = TRUE))
+    Class = paste0("Class", sample(1:5, size = ncol(exp), replace = TRUE)),
+    Weight = stats::rnorm(ncol(exp), 50, 15)
 )
 
 ## Gene metadata
@@ -22,49 +23,56 @@ row_metadata <- data.frame(
     Pathway = paste0("Pathway", sample(1:5, size = nrow(exp), replace = TRUE))
 )
 
+## Simulate a SummarizedExperiment object
+se <- SummarizedExperiment::SummarizedExperiment(
+    assays = exp, colData = col_metadata, rowData = row_metadata
+)
+
 ## Edge list
 edges <- igraph::get.edgelist(igraph::barabasi.game(n = 50, directed = FALSE))
 
 #----Start tests----------------------------------------------------------------
-test_that("sample_cols_heatmap() returns a list of processed data", {
+test_that("metadata2colors() returns a list of metadata and named vectors", {
 
-    s1 <- sample_cols_heatmap(col_metadata, exp)
-    s2 <- sample_cols_heatmap(
-        cbind(col_metadata, col_metadata), exp
-    )
-    s3 <- sample_cols_heatmap(NULL, exp)
+    cols <- metadata2colors(col_metadata)
 
-    # Do 3+ columns return error?
-    expect_error(
-        sample_cols_heatmap(
-            cbind(col_metadata, col_metadata, col_metadata), exp
-        )
+    expect_equal(names(cols), c("metadata", "colors"))
+    expect_equal(length(cols), 2)
+
+    metadata_4columns <- cbind(
+        col_metadata, col_metadata, col_metadata, col_metadata
     )
 
-    expect_equal(class(s1), "list")
-    expect_equal(class(s2), "list")
-    expect_equal(class(s3), "list")
-
-    expect_equal(length(s1), 3)
-    expect_equal(length(s2), 3)
-    expect_equal(length(s3), 3)
-
+    expect_error(metadata2colors(metadata_4columns))
 })
 
 
-test_that("gene_cols_heatmap() returns a list of processed data", {
+test_that("heatmap_attributes() returns heatmap parameters as a list", {
 
-    s1 <- sample_cols_heatmap(col_metadata, exp)
+    p <- heatmap_attributes(exp)
 
-    g1 <- gene_cols_heatmap(row_metadata, exp, row_metadata)
-    g2 <- gene_cols_heatmap(row_metadata, exp, s1)
+    expect_equal(length(p), 4)
+    expect_equal(names(p), c("pal", "mat", "title", "name"))
 
-    expect_equal(class(g1), "list")
-    expect_equal(class(g2), "list")
+    expect_error(heatmap_attributes(exp, heatmap_type = "wrong"))
+})
 
-    expect_equal(length(g1), 3)
-    expect_equal(length(g2), 3)
 
+test_that("se2metadata() returns a list of row and coldata", {
+
+    m <- se2metadata(se)
+
+    expect_equal(length(m), 2)
+    expect_equal(names(m), c("rowdata", "coldata"))
+})
+
+test_that("get_model_matrix() returns a model matrix for module-trait cor", {
+
+    mat_char <- get_model_matrix(col_metadata, 1)
+    mat_num <- get_model_matrix(col_metadata, 2)
+
+    expect_equal(ncol(mat_char), 5)
+    expect_equal(ncol(mat_num), 1)
 })
 
 

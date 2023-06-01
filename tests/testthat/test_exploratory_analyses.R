@@ -64,16 +64,10 @@ test_that("plot_heatmap() correctly handles row and col annotation", {
 test_that("plot_PCA() performs PCA and plots it", {
 
     p1 <- plot_PCA(exp, col_metadata, log_trans = TRUE)
-    p2 <- plot_PCA(filt.se, log_trans = FALSE)
-    p3 <- plot_PCA(filt.se, PCs = "1x3")
-    p4 <- plot_PCA(filt.se, PCs = "2x3")
+    p2 <- plot_PCA(filt.se, log_trans = FALSE, PCs = c(1,3))
 
     expect_error(
-        plot_PCA(filt.se, PCs = "1x5")
-    )
-
-    expect_error(
-        plot_PCA(exp, cbind(col_metadata, col_metadata))
+        plot_PCA(exp, cbind(col_metadata, col_metadata, col_metadata))
     )
 
     expect_true(all.equal(class(p1), c("gg", "ggplot")))

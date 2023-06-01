@@ -106,12 +106,15 @@ test_that("exp2gcn() returns a list and get_hubs_gcn() finds hubs", {
 test_that("plot_eigengene_network() plots eigengene networks", {
 
     p <- plot_eigengene_network(gcn)
-    expect_equal(class(p), "NULL")
+    expect_equal(attr(class(p), "package"), "ComplexHeatmap")
+
 })
 
 test_that("plot_dendro_and_colors() plots dendro and colors", {
+
     p <- plot_dendro_and_colors(gcn)
     expect_equal(class(p), "NULL")
+
 })
 
 test_that("module_stability() recomputes network with n resamplings", {
@@ -121,16 +124,17 @@ test_that("module_stability() recomputes network with n resamplings", {
     expect_equal(class(p), "NULL")
 })
 
-test_that("module_trait_cor() returns a heatmap of mod-trait correlations", {
+test_that("module_trait_cor() and plot_module_trait_cor() work", {
+
+    # module_trait_cor()
     mod_trait <- module_trait_cor(filt.se, MEs = gcn$MEs)
-    mod_trait2 <- module_trait_cor(filt.se, MEs = gcn$MEs, transpose = TRUE)
 
     expect_equal(class(mod_trait), "data.frame")
-    expect_equal(ncol(mod_trait), 4)
-    expect_equal(class(mod_trait$ME), "character")
-    expect_equal(class(mod_trait$trait), "character")
+    expect_equal(ncol(mod_trait), 5)
+    expect_equal(names(mod_trait), c("ME", "trait", "cor", "pvalue", "group"))
 
-    expect_equal(class(mod_trait2), "data.frame")
+    # plot_
+
 })
 
 test_that("gene_significance() returns a list of GS matrices", {

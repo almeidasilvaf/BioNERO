@@ -212,9 +212,9 @@ grn_filter <- function(edgelist, nsplit = 10,
     # Plot scale-free topology fit for r values
     plot.data <- data.frame(x = cutpoints, y = sft.rsquared)
 
-    plot <- ggplot(plot.data, aes_(x = ~x, y = ~y, group = 1)) +
+    plot <- ggplot(plot.data, aes(x = .data$x, y = .data$y, group = 1)) +
         geom_point(color = "firebrick", size = 4) +
-        geom_line(color = "firebrick", size = 2) +
+        geom_line(color = "firebrick", linewidth = 2) +
         labs(
             x = "Number of top edges considered",
             y = expression(paste("Scale-free topology fit - ", R^{2})),

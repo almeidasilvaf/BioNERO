@@ -71,105 +71,200 @@ custom_palette <- function(pal = 1) {
     return(l_final)
 }
 
-
-#' Wrapper to handle sample color annotation in heatmap
+#' Map levels of metadata variables to colors for plotting
 #'
-#' @param col_metadata Sample annotation.
-#' @param fexp Gene expression data frame
+#' @param col_metadata A data frame with column or row metadata. If column
+#' metadata is passed, row names must contain sample names. If row metadata is
+#' passed, row names must contain gene names.
 #'
-#' @return List containing processed col_metadata, fexp and annotation_color.
+#' @return A list containing the following elements:
+#' \describe{
+#'   \item{metadata}{A metadata data frame as in \strong{col_metadata}, but
+#'                   with rows sorted by levels of every column.}
+#'   \item{colors}{A list of named character vectors containing the mapping
+#'                 between levels of metadata variables and colors.}
+#' }
+#'
 #' @noRd
-sample_cols_heatmap <- function(col_metadata, fexp) {
-    col_names <- c("Sample group 1", "Sample group 2")
+#' @importFrom stats setNames
+metadata2colors <- function(col_metadata) {
+
+    coldata <- NA
+    colors <- NA
+
     if(is.data.frame(col_metadata)) {
-        colnames(col_metadata) <- col_names[seq_along(col_metadata)]
-        col_metadata <- col_metadata[order(col_metadata[, 1]), , drop=FALSE]
-        fexp <- fexp[, rownames(col_metadata)]
-        if(ncol(col_metadata) == 1) {
-            colors1 <- custom_palette(1)[seq_along(unique(col_metadata[,1]))]
-            annotation_color <- list(`Sample group 1` = colors1)
-            names(annotation_color$`Sample group 1`) <- unique(col_metadata[,1])
-        } else if(ncol(col_metadata) == 2) {
-            colors1 <- custom_palette(1)[seq_along(unique(col_metadata[,1]))]
-            colors2 <- custom_palette(2)[seq_along(unique(col_metadata[,2]))]
-            annotation_color <- list(`Sample group 1` = colors1,
-                                     `Sample group 2` = colors2)
-            names(annotation_color$`Sample group 1`) <- unique(col_metadata[,1])
-            names(annotation_color$`Sample group 2`) <- unique(col_metadata[,2])
-        } else {
-            stop("Maximum number of columns for col_metadata is 2.")
+        # Get variable names in metadata
+        col_names <- names(col_metadata)
+        if(length(col_names) > 3) {
+            stop("Maximum number of columns for row and sample metadata is 3.")
         }
+
+        # Sort elements in all columns
+        coldata <- col_metadata[do.call(order, col_metadata), , drop = FALSE]
+
+        # Create a list of named vectors with variable levels and colors
+        colors <- lapply(seq_along(col_names), function(x) {
+            levels <- unique(coldata[, x])
+            cols <- setNames(custom_palette(x)[seq_along(levels)], levels)
+            return(cols)
+        })
+        names(colors) <- col_names
     }
 
-    if(!exists("annotation_color")) {
-        annotation_color <- NA
-    }
+    # Return results as a list
     results <- list(
-        col_metadata = col_metadata,
-        fexp = fexp,
-        annotation_colors = annotation_color
+        metadata = coldata,
+        colors = colors
     )
-    return(results)
 
-}
-
-
-#' Wrapper to handle gene color annotation in heatmap
-#'
-#' @param row_metadata Gene annotation.
-#' @param fexp Gene expression data frame.
-#' @param annotation_color Object returned by \code{sample_cols_heatmap}.
-#'
-#' @return List containing processed row_metadata, fexp and annotation_color.
-#' @noRd
-gene_cols_heatmap <- function(row_metadata, fexp, annotation_color) {
-
-    if(is.data.frame(row_metadata)) {
-        colnames(row_metadata) <- "Gene annotation"
-        row_metadata <- row_metadata[order(row_metadata[, 1]), , drop=FALSE]
-        fexp <- fexp[rownames(row_metadata), ]
-        if(!is.list(annotation_color)) {
-            annotation_color <- list()
-        }
-        annotation_color$`Gene annotation` <- custom_palette(3)[
-            seq_along(unique(row_metadata[,1]))
-        ]
-        names(annotation_color$`Gene annotation`) <- unique(row_metadata[,1])
-    }
-
-    results <- list(
-        row_metadata = row_metadata,
-        fexp = fexp,
-        annotation_color = annotation_color
-    )
     return(results)
 }
 
-
-#' Set theme for expression profile plot
+#' Construct parameters to plot heatmap
 #'
-#' @return Custom theme for the function \code{plot_expression_profile}.
+#' @param exp A gene expression matrix with gene IDs in row names and
+#' samples in column names.
+#' @param palette Character indicating an RColorBrewer palette to use.
+#' @param heatmap_type Character indicating which heatmap type to plot.
+#' One of "samplecor" (for pairwise sample correlations) or "expr" (for
+#' gene expression).
+#' @param cor_method Character indicating which correlation method to use
+#' in the \code{cor()} function. Only meaningful if parameter
+#' \strong{heatmap_type} equals "samplecor".
+#'
+#' @return A list with the following elements:
+#' \describe{
+#'   \item{pal}{Character, name of the RColorBrewer palette to use.}
+#'   \item{mat}{Matrix to use to construct the heatmap.}
+#'   \item{title}{Character, title of the heatmap.}
+#'   \item{name}{Character, matrix name. This is what goes to the title of
+#'               matrix's main legend.}
+#' }
+#'
 #' @noRd
-#' @importFrom ggplot2 theme element_text element_blank element_rect
-theme_exp_profile <- function() {
-    theme <- ggplot2::theme(
-        plot.title = ggplot2::element_text(
-            lineheight = 0.8, face = 'bold', colour = 'black',
-            size = 13, hjust = 0.5
-        ),
-        axis.title = ggplot2::element_text(size = 11),
-        axis.text.y = ggplot2::element_text(
-            angle = 0, vjust = 0.5, size = 8
-        ),
-        axis.text.x = ggplot2::element_text(
-            angle = 90, vjust = 0.5, size = 6
-        ),
-        panel.grid = ggplot2::element_blank(),
-        legend.title = ggplot2::element_blank(),
-        legend.text = ggplot2::element_text(size = 8),
-        legend.position = 'bottom'
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom stats cor
+#'
+heatmap_attributes <- function(exp, palette = NULL, heatmap_type = "samplecor",
+                               cor_method = "pearson") {
+
+    # Create objects with attributes `pal`, `mat`, `title`, and `name`
+    if(heatmap_type == "samplecor") {
+        pal <- "Blues"
+        mat <- cor(exp, method = cor_method)
+        title <- "Pairwise correlations between samples"
+        name <- "Correlation"
+    } else if(heatmap_type == "expr") {
+        pal <- "YlOrRd"
+        mat <- exp
+        title <- "Gene expression"
+        name <- "Expression"
+    } else {
+        stop("Invalid argument to `type`. Pick one of 'samplecor' or 'expr'.")
+    }
+    if(!is.null(palette)) { pal <- palette }
+    pal <- colorRampPalette(RColorBrewer::brewer.pal(9, pal))(100)
+
+    # Return results as a list
+    results <- list(
+        pal = pal,
+        mat = mat,
+        title = title,
+        name = name
     )
-    return(theme)
+    return(results)
+}
+
+#' Extract row and column metadata from `SummarizedExperiment` objects
+#'
+#' @param se A `SummarizedExperiment` object.
+#' @param rowdata_cols Columns to use from the rowData element of the
+#' `SummarizedExperiment` object. It can be either a character vector
+#' of column names or a numeric vector of column indices.
+#' By default, all columns are used.
+#' @param coldata_cols Columns to use from the colData element of the
+#' `SummarizedExperiment` object. It can be either a character vector
+#' of column names or a numeric vector of column indices.
+#' By default, all columns are used.
+#'
+#' @return A list with the following elements:
+#' \describe{
+#'   \item{rowdata}{A data frame of row metadata containing only the selected
+#'                  columns.}
+#'   \item{coldata}{A data frame of column metadata containing only the
+#'                  selected columns.}
+#' }
+#'
+#' @noRd
+#' @importFrom SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment colData
+se2metadata <- function(se, rowdata_cols = NULL, coldata_cols = NULL) {
+
+    final_rowdata <- NA
+    final_coldata <- NA
+
+    # Extract row and column metadata
+    rowdata <- SummarizedExperiment::rowData(se)
+    coldata <- SummarizedExperiment::colData(se)
+
+    # Extract user-defined columns from metadata
+    ## Row metadata
+    if(ncol(rowdata) > 0) {
+        r_cols <- rowdata_cols
+        if(is.null(rowdata_cols)) { r_cols <- seq_along(rowdata) }
+
+        final_rowdata <- as.data.frame(rowdata[, r_cols, drop = FALSE])
+    }
+
+    if(ncol(coldata) > 0) {
+        c_cols <- coldata_cols
+        if(is.null(coldata_cols)) { c_cols <- seq_along(coldata) }
+        final_coldata <- as.data.frame(coldata[, c_cols, drop = FALSE])
+    }
+
+    # Return resuls as a list
+    metadata_list <- list(
+        rowdata = final_rowdata,
+        coldata = final_coldata
+    )
+
+    return(metadata_list)
+}
+
+
+#' Get model matrix for metadata variables
+#'
+#' @param metadata A data frame of column metadata with sample names
+#' in row names.
+#' @param column_idx Column to use to create the model matrix.
+#'
+#' @details If the variable is numeric (continuous or discrete),
+#' the model matrix is created by simply subsetting the column
+#' indicated in \strong{column_idx}. If the variable if categorical,
+#' a dummy model matrix is created (without an intercept).
+#'
+#' @return A data frame with the model matrix to use
+#' in \code{module_trait_cor()}.
+#'
+#' @noRd
+#' @importFrom stats model.matrix as.formula
+get_model_matrix <- function(metadata, column_idx = 1) {
+
+    # By default, assuming variable is numeric (continuous or discrete)
+    mat <- metadata[, column_idx, drop = FALSE]
+
+    if(!is.numeric(metadata[, column_idx])) {
+
+        # Create formula (format: `~var + 0`)
+        var_name <- names(metadata)[column_idx]
+        formula <- as.formula(paste("~", var_name, "+ 0"))
+
+        # Get model matrix
+        mat <- as.data.frame(model.matrix(formula, metadata))
+        names(mat) <- gsub(var_name, "", names(mat))
+    }
+
+    return(mat)
 }
 
 

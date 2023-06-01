@@ -63,6 +63,3 @@ list.sets <- list(zma.set1, zma.set2)
 cons_mod <- consensus_modules(list.sets, power = c(11, 13),
                               cor_method = "pearson")
 }
-\seealso{
-\code{\link[dynamicTreeCut]{cutreeDynamic}}
-}

@@ -183,23 +183,27 @@ network analysis as easy and simple as possible.
 
 **Plotting heatmaps:** the function `plot_heatmap()` plots heatmaps of 
 correlations between samples or gene expression in a single line. 
-Users can use their preferred RColorBrewer's palette, hide/show gene names, 
-and activate/deactivate clustering for rows and/or columns.
+Besides the arguments users can pass to parameters in `plot_heatmap()`, 
+they can also pass additional arguments to parameters 
+in `ComplexHeatmap::pheatmap()` to have additional control additional on
+plot aesthetics (e.g., hide/show gene and sample names, activate/deactivate 
+clustering for rows and/or columns, etc).
 
 ```{r plot_heatmap, fig.width=6, fig.height=4, message=FALSE}
 # Heatmap of sample correlations
-p <- plot_heatmap(final_exp, type = "samplecor")
+p <- plot_heatmap(final_exp, type = "samplecor", show_rownames = FALSE)
 p
 
-# Heatmap of gene expression
-p <- plot_heatmap(final_exp, type = "expr")
+# Heatmap of gene expression (here, only the first 50 genes)
+p <- plot_heatmap(
+    final_exp[1:50, ], type = "expr", show_rownames = FALSE, show_colnames = FALSE
+)
 p
 ```
 
 **Principal component analysis (PCA):** the function `plot_PCA()` performs a 
-PCA and plots PC1 vs PC2 (by default), as well the percentage of 
-variance explained by each PC. Users can also choose to plot PC1 vs PC3 
-or PC2 vs PC3.
+PCA and plots whatever pair of PCs users choose (PC1 and PC2 by default), as 
+well the percentage of variance explained by each PC.
 
 ```{r pcaplot, fig.small=TRUE}
 plot_PCA(final_exp)
@@ -235,7 +239,7 @@ list. To visualize it, you simply have to access the plot.
 
 [^3]: **PRO TIP:** If your $\beta$ power is too low (say below 6), look at the plot as a sanity check.
 
-```{r plot_sft, fig.width=6}
+```{r plot_sft, fig.width=8}
 sft$plot
 ```
 
@@ -261,7 +265,7 @@ modules; ii. heatmap of pairwise correlations between module eigengenes.
 plot_dendro_and_colors(net)
 ```
 
-```{r eigengene_net, fig.height=6}
+```{r eigengene_net, fig.height=4, fig.width=6}
 # Eigengene networks
 plot_eigengene_network(net)
 ```
@@ -314,25 +318,22 @@ whole module) to traits. This function is very useful if you have a set of
 candidate genes and you want to find which of them are more associated with 
 the trait of interest. See `?gene_significance()` for more details.
 
-```{r moddtraitcor, fig.width=5, fig.height=5}
-MEtrait <- module_trait_cor(
-    exp = final_exp, MEs = net$MEs, cor_method = "pearson"
-)
+```{r moddtraitcor}
+MEtrait <- module_trait_cor(exp = final_exp, MEs = net$MEs)
 head(MEtrait)
 ```
 
-The function `module_trait_cor()` also allows for plot customization. 
-For instance:
+Next, you can use the function `plot_module_trait_cor()` to visualize the output
+of `module_trait_cor()` as follows:
 
-```{r modtraitcor_transpose, fig.width=9, fig.height=3}
-# Transpose the matrix and change palette (RColorBrewer palette)
-MEtrait <- module_trait_cor(
-    exp = final_exp, 
-    MEs = net$MEs, 
-    cor_method = "pearson", 
-    transpose = TRUE, palette = "PRGn", 
-    cex.text = 0.7, cex.lab.y = 0.7
-)
+```{r plot-module-trait-cor, fig.width = 5, fig.height = 5}
+plot_module_trait_cor(MEtrait)
+```
+
+You can also change the color palette and transpose the plot.
+
+```{r modtraitcor_transpose, fig.width=8, fig.height=4}
+plot_module_trait_cor(MEtrait, palette = "PRGn", transpose = TRUE)
 ```
 
 ## Visualizing module expression profile
@@ -341,7 +342,7 @@ The heatmap above shows that genes in the *yellow* module are negatively
 correlated with endosperm samples. We can visually explore it 
 with `plot_expression_profile()`.
 
-```{r exp_profile, fig.width=4, fig.height=3}
+```{r exp_profile, fig.width=5, fig.height=3}
 plot_expression_profile(
     exp = final_exp, 
     net = net, 
@@ -459,7 +460,7 @@ function `plot_gcn()`. By default, this function only labels the top 5 hubs
 (or less if there are less than 5 hubs). However, this can be customized 
 according to the user's preference (see `?plot_gcn` for more information).
 
-```{r plot_gcn, fig.width=4, fig.height=4}
+```{r plot_gcn, fig.width=5, fig.height=5}
 plot_gcn(
     edgelist_gcn = edges_filtered, 
     net = net, 

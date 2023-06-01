@@ -26,7 +26,7 @@
 #' @rdname consensus_SFT_fit
 #' @export
 #' @importFrom WGCNA pickSoftThreshold checkSets
-#' @importFrom ggplot2 ggplot aes_ geom_point labs theme_bw scale_color_manual
+#' @importFrom ggplot2 ggplot aes geom_point labs theme_bw scale_color_manual
 #' ylim theme geom_hline
 #' @importFrom ggrepel geom_text_repel
 #' @examples
@@ -101,9 +101,9 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 
     # Plot 1
     cols <- custom_palette(1)
-    p1 <- ggplot(sft_df, aes_(x = ~power, y = ~fit)) +
-        geom_point(aes_(color = ~Set)) +
-        ggrepel::geom_text_repel(aes_(label = ~power, color = ~Set)) +
+    p1 <- ggplot(sft_df, aes(x = .data$power, y = .data$fit)) +
+        geom_point(aes(color = .data$Set)) +
+        ggrepel::geom_text_repel(aes(label = .data$power, color = .data$Set)) +
         scale_color_manual(values = cols) +
         labs(
             x = "Soft threshold (power)",
@@ -112,13 +112,13 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
         ) +
         theme_bw() +
         ylim(c(0,1)) +
-        geom_hline(yintercept = rsquared, color="brown3") +
+        geom_hline(yintercept = rsquared, color = "brown3") +
         theme(legend.position = "none")
 
     # Plot 2
-    p2 <- ggplot(sft_df, aes_(x = ~power, y = ~meank)) +
-        geom_point(aes_(color = ~Set)) +
-        ggrepel::geom_text_repel(aes_(label = ~power, color = ~Set),
+    p2 <- ggplot(sft_df, aes(x = .data$power, y = .data$meank)) +
+        geom_point(aes(color = .data$Set)) +
+        ggrepel::geom_text_repel(aes(label = .data$power, color = .data$Set),
                                  show.legend = FALSE) +
         scale_color_manual(values = cols) +
         labs(
@@ -164,8 +164,6 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #'   \item{dendro_plot_objects}{Objects to be used in dendrogram plotting}
 #' }
 #'
-#' @seealso
-#'  \code{\link[dynamicTreeCut]{cutreeDynamic}}
 #' @rdname consensus_modules
 #' @export
 #' @importFrom WGCNA checkSets adjacency TOMsimilarity pquantile labels2colors multiSetMEs consensusMEDissimilarity mergeCloseModules
@@ -184,13 +182,24 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
                               net_type = "signed hybrid",
                               module_merging_threshold = 0.8,
                               verbose = FALSE) {
-    metadata <- handle_metadata(exp_list, metadata)
-    exp_list <- handleSElist(exp_list)
+
     nSets <- length(exp_list)
 
+    # Extract sample metadata as a list of data frames
+    if(is(exp_list[[1]], "SummarizedExperiment")) {
+        metadata <- lapply(exp_list, function(x) {
+            return(se2metadata(x)$coldata)
+        })
+    }
+
+    # Keep only shared columns in sample metadata data frames
+    shared <- Reduce(intersect, lapply(metadata, colnames))
+    metadata <- lapply(metadata, function(x) return(x[, shared, drop = FALSE]))
+
     # Build multi-set object
+    exp_list <- handleSElist(exp_list)
     multiExp <- lapply(exp_list, function(x) {
-        element <- list(data=as.data.frame(t(x)))
+        element <- list(data = as.data.frame(t(x)))
         return(element)
     })
 
@@ -201,7 +210,7 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Build multi-set object with metadata
     sampleinfo <- lapply(seq_along(multiExp), function(x) {
-        sinfo <- metadata[rownames(multiExp[[x]]$data), , drop=FALSE]
+        sinfo <- metadata[[x]][rownames(multiExp[[x]]$data), , drop = FALSE]
         return(sinfo)
     })
 
@@ -230,16 +239,13 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Calculate TOMs in each individual data set
     if(verbose) { message("Calculating topological overlap matrix (TOM)...") }
-    TOM <- lapply(adj, function(x) {
-        if(net_type == "signed hybrid") {
-            tom <- WGCNA::TOMsimilarity(x, TOMType = "signed")
-        } else if(net_type == "signed") {
-            tom <- WGCNA::TOMsimilarity(x, TOMType = "signed Nowick")
-        } else {
-            tom <- WGCNA::TOMsimilarity(x, TOMType = "unsigned")
-        }
-        return(tom)
-    })
+    tom_type <- switch(
+        net_type,
+        "signed hybrid" = "signed",
+        "signed" = "signed Nowick",
+        "unsigned"
+    )
+    TOM <- lapply(adj, function(x) return(TOMsimilarity(x, TOMType = tom_type)))
 
     # Scaling TOM to make them comparable
     scaleP <- 0.95
@@ -247,10 +253,10 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
     scaleSample <- sample(nGenes * (nGenes-1) / 2, size = nSamples)
 
     scaledTOM <- lapply(seq_len(nSets), function(x) {
-        TOMScalingSamples <- as.dist(TOM[[x]])[scaleSample]
-        scaleQuant <- quantile(TOMScalingSamples, probs = scaleP, type = 8)
         tom_scaled <- TOM[[x]]
         if(x > 1) {
+            TOMScalingSamples <- as.dist(TOM[[x]])[scaleSample]
+            scaleQuant <- quantile(TOMScalingSamples, probs = scaleP, type = 8)
             scalePowers <- log(scaleQuant[1]) / log(scaleQuant)
             tom_scaled <- tom_scaled^scalePowers
         }
@@ -269,7 +275,7 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
     consTree <- hclust(as.dist(1-consensusTOM), method = "average")
     unmergedLabels <- dynamicTreeCut::cutreeDynamic(
         dendro = consTree,
-        distM = 1-consensusTOM,
+        distM = 1 - consensusTOM,
         deepSplit = 2,
         cutHeight = 0.995,
         minClusterSize = 30,
@@ -301,12 +307,19 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Plot dendrogram with merged colors
     result_list <- list(
-        consModules = moduleColors, consMEs = consMEs, exprSize = expSize,
-        sampleInfo = sampleinfo, genes_cmodules = genes_cmod,
-        dendro_plot_objects = list(tree = consTree, unmerged = unmergedColors)
+        consModules = moduleColors,
+        consMEs = consMEs,
+        exprSize = expSize,
+        sampleInfo = sampleinfo,
+        genes_cmodules = genes_cmod,
+        dendro_plot_objects = list(
+            tree = consTree,
+            unmerged = unmergedColors
+        )
     )
     return(result_list)
 }
+
 
 #' Plot dendrogram of genes and consensus modules
 #'
@@ -348,32 +361,29 @@ plot_dendro_and_cons_colors <- function(consensus) {
 #'
 #' @param consensus Consensus network returned by \code{consensus_modules}.
 #' @param cor_method Correlation method to be used. One of 'spearman' or
-#' 'pearson'. Default is 'spearman'.
-#' @param continuous_trait Logical indicating if trait is a continuous variable.
-#' Default is FALSE.
-#' @param palette RColorBrewer's color palette to use. Default is "RdYlBu",
-#' a palette ranging from blue to red.
-#' @param cex.lab.x Font size for x axis labels. Default: 0.6.
-#' @param cex.lab.y Font size for y axis labels. Default: 0.6.
-#' @param cex.text Font size for numbers inside matrix. Default: 0.6.
-#' @param transpose Logical indicating whether to transpose the heatmap of not.
-#' Default is FALSE.
+#' 'pearson'. Default: 'pearson'.
+#' @param metadata_cols A vector (either numeric or character) indicating
+#' which columns should be extracted from column metadata if \strong{exp}
+#' is a `SummarizedExperiment` object. The vector can contain column
+#' indices (numeric) or column names (character). By default, all columns are
+#' used.
 #'
-#' @return Data frame of consensus module-trait correlations and p-values.
-#' @details Significance levels:
-#' 1 asterisk: significant at alpha = 0.05.
-#' 2 asterisks: significant at alpha = 0.01.
-#' 3 asterisks: significant at alpha = 0.001.
-#' no asterisk: not significant.
+#' @return Data frame of consensus module-trait correlations and p-values,
+#' with the following variables:
+#' \describe{
+#'   \item{trait}{Factor, trait name. Each trait corresponds to a variable
+#'                of the sample metadata (if numeric) or levels of a variable
+#'                (if categorical).}
+#'   \item{ME}{Factor, module eigengene.}
+#'   \item{cor}{Numeric, correlation.}
+#'   \item{pvalue}{Numeric, correlation P-values.}
+#'   \item{group}{Character, name of the metadata variable.}
+#' }
 #'
-#' @seealso
-#'  \code{\link[WGCNA]{corPvalueFisher}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{labeledHeatmap}},\code{\link[WGCNA]{blueWhiteRed}}
 #' @rdname consensus_trait_cor
 #' @export
-#' @importFrom WGCNA corPvalueFisher labels2colors labeledHeatmap
+#' @importFrom WGCNA corPvalueFisher labels2colors
 #' @importFrom reshape2 melt
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom graphics par layout
 #' @examples
 #' set.seed(12)
 #' data(zma.se)
@@ -385,115 +395,76 @@ plot_dendro_and_cons_colors <- function(consensus) {
 #' consensus <- consensus_modules(list.sets, power = c(11, 13),
 #'                                cor_method = "pearson")
 #' consensus_trait <- consensus_trait_cor(consensus, cor_method = "pearson")
-consensus_trait_cor <- function(consensus, cor_method = "spearman",
-                                continuous_trait = FALSE,
-                                palette="RdYlBu",
-                                cex.lab.x=0.6, cex.lab.y=0.6,
-                                cex.text=0.6,
-                                transpose=FALSE) {
+consensus_trait_cor <- function(consensus, cor_method = "pearson",
+                                metadata_cols = NULL) {
 
     consMEs <- consensus$consMEs
-    exprSize <- consensus$exprSize
-    sampleInfo <- consensus$sampleInfo
-    sampleInfo <- lapply(
-        sampleInfo, handle_trait_type, continuous_trait = continuous_trait
-    )
-    nSets <- exprSize$nSets
+    metadata <- consensus$sampleInfo
+    nSets <- consensus$exprSize$nSets
 
-    # Calculate the correlations
-    mod_trait_cor <- lapply(seq_len(nSets), function(set) {
-        if(cor_method == "spearman") {
-            moduleTraitCor <- cor(
-                consMEs[[set]]$data, sampleInfo[[set]], use = "p",
-                method = "spearman"
-            )
-            moduleTraitPvalue <- WGCNA::corPvalueFisher(
-                moduleTraitCor, exprSize$nSamples[set]
-            )
-        } else if(cor_method == "pearson") {
-            moduleTraitCor <- cor(
-                consMEs[[set]]$data, sampleInfo[[set]], use = "p",
-                method = "pearson"
-            )
-            moduleTraitPvalue <- WGCNA::corPvalueFisher(
-                moduleTraitCor, exprSize$nSamples[set]
-            )
-        }
-        results <- list(moduleTraitCor, moduleTraitPvalue)
+    if(!is.null(metadata_cols)) {
+        metadata <- lapply(metadata, function(x) return(x[, metadata_cols, drop = FALSE]))
+    }
+
+
+    # Get a list of correlation and P-value matrices
+    matrices <- lapply(seq_len(nSets), function(set) {
+
+        coldata <- metadata[[set]]
+
+        # Get model matrices
+        mats <- Reduce(cbind, lapply(seq_along(coldata), function(x) {
+            model_mat <- get_model_matrix(coldata, column_idx = x)
+            return(model_mat)
+        }))
+
+        # Get correlation matrix
+        cormat <- cor(consMEs[[set]]$data, mats, use = "p", method = cor_method)
+
+        # Get P-value matrix
+        pmat <- WGCNA::corPvalueFisher(cormat, consensus$exprSize$nSamples[set])
+
+        results <- list(cor = cormat, pvals = pmat)
         return(results)
     })
-    moduleTraitCor <- lapply(mod_trait_cor, function(x) return(x[[1]]))
-    moduleTraitPvalue <- lapply(mod_trait_cor, function(x) return(x[[2]]))
 
-    MEColors <- substring(names(consMEs[[1]]$data), 3)
-    MEColorNames <- paste("ME", MEColors, sep="")
+    # Store correlation and P-value matrices in separate objects
+    cormats <- lapply(matrices, function(x) return(x$cor))
+    pmats <- lapply(matrices, function(x) return(x$pvals))
 
-    # Plot the module-trait relationship table for sets
-    cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
-
-    # Initialize matrices to hold the consensus correlation and p-value
-    cons_cor <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]))
-    cons_pval <- matrix(NA, nrow(moduleTraitCor[[1]]), ncol(moduleTraitCor[[1]]))
-
-    neg <- lapply(moduleTraitCor, function(x) return(x < 0))
-    neg <- Reduce(`&`, neg)
-    pos <- lapply(moduleTraitCor, function(x) return(x > 0))
-    pos <- Reduce(`&`, pos)
-
-    cons_cor[neg] <- do.call(pmax, lapply(moduleTraitCor, function(x) return(x[neg])))
-    cons_cor[pos] <- do.call(pmin, lapply(moduleTraitCor, function(x) return(x[pos])))
-    cons_pval[neg] <- do.call(pmax, lapply(moduleTraitPvalue, function(x) return(x[neg])))
-    cons_pval[pos] <- do.call(pmax, lapply(moduleTraitPvalue, function(x) return(x[pos])))
-
-    # Create data frame of correlations and p-values to return
-    colnames(cons_cor) <- colnames(moduleTraitCor[[1]])
-    rownames(cons_cor) <- rownames(moduleTraitCor[[1]])
-    colnames(cons_pval) <- colnames(moduleTraitCor[[1]])
-    rownames(cons_pval) <- rownames(moduleTraitCor[[1]])
-    cor_long <- reshape2::melt(cons_cor)
-    pval_long <- reshape2::melt(cons_pval)
-    combined_long <- merge(cor_long, pval_long, by = c("Var1", "Var2"))
-    colnames(combined_long) <- c("ME", "trait", "cor", "pvalue")
-    combined_long$ME <- as.character(combined_long$ME)
-    combined_long$trait <- as.character(combined_long$trait)
-
-    set <- 1
-    setLabels <- c("Set1", "Set2")
-    modtraitsymbol <- pval2symbol(cons_pval)
-    textMatrix <- paste(signif(cons_cor, 2), modtraitsymbol, sep = "")
-    textMatrix[textMatrix == "NANA"] <- "-"
-    dim(textMatrix) <- dim(moduleTraitCor[[set]])
-    if(transpose) {
-        cons_cor <- t(cons_cor)
-        textMatrix <- t(textMatrix)
-        yLabels <- names(sampleInfo[[set]])
-        xLabels <- MEColorNames
-        xSymbols <- MEColorNames
-        ySymbols <- NULL
-        xColorLabels <- TRUE
-        par(mar = c(5, 5, 1, 1))
-    } else {
-        par(mar = c(6, 8.5, 3, 3))
-        xLabels <- names(sampleInfo[[set]])
-        yLabels <- MEColorNames
-        ySymbols <- MEColorNames
-        xColorLabels <- FALSE
-        xSymbols <- NULL
-        xColorLabels <- FALSE
-    }
-    on.exit(graphics::layout(1))
-    opar <- par(no.readonly=TRUE)
-    on.exit(par(opar), add=TRUE, after=FALSE)
-    hm <- WGCNA::labeledHeatmap(
-        Matrix = cons_cor, yLabels = yLabels, xLabels = xLabels,
-        ySymbols = ySymbols, xSymbols = xSymbols,
-        colorLabels = FALSE, colors = cols,
-        textMatrix = textMatrix, setStdMargins = FALSE,
-        cex.text = cex.text, cex.lab.x = cex.lab.x, cex.lab.y = cex.lab.y,
-        zlim = c(-1,1), cex.main = 1,
-        main = "Consensus module-trait relationships"
+    # Create matrices of consensus correlation and P-values
+    cons_cor <- matrix(
+        NA, nrow(cormats[[1]]), ncol(cormats[[1]]),
+        dimnames = list(rownames(cormats[[1]]), colnames(cormats[[1]]))
     )
-    return(combined_long)
+    cons_pval <- cons_cor
+
+    ## If there is a difference in sign for element m[i,j], add FALSE to it
+    neg <- Reduce(`&`, lapply(cormats, function(x) return(x < 0)))
+    pos <- Reduce(`&`, lapply(cormats, function(x) return(x > 0)))
+
+    ## For every element, keep minimum cor and maximum P-value of all sets
+    cons_cor[neg] <- do.call(pmax, lapply(cormats, function(x) return(x[neg])))
+    cons_cor[pos] <- do.call(pmin, lapply(cormats, function(x) return(x[pos])))
+    cons_pval[neg] <- do.call(pmax, lapply(pmats, function(x) return(x[neg])))
+    cons_pval[pos] <- do.call(pmax, lapply(pmats, function(x) return(x[pos])))
+
+    # Reshape to long format and merge data frames into one
+    v <- c("ME", "trait")
+    cor_long <- reshape2::melt(cons_cor, value.name = "cor", varnames = v)
+    p_long <- reshape2::melt(cons_pval, value.name = "pvalue", varnames = v)
+    final_df <- merge(cor_long, p_long)
+
+    # Add a column `group` with metadata variable name
+    var_levels <- Reduce(rbind, lapply(seq_along(metadata[[1]]), function(x) {
+        return(data.frame(
+            trait = unique(metadata[[1]][, x]),
+            group = names(metadata[[1]])[x]
+        ))
+    }))
+    final_df <- merge(final_df, var_levels)
+
+    return(final_df)
 }
 
 

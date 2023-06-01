@@ -8,9 +8,11 @@ plot_expression_profile(
   genes,
   exp,
   metadata,
+  metadata_cols = 1,
   plot_module = TRUE,
   net,
-  modulename
+  modulename,
+  bg_line = "mean"
 )
 }
 \arguments{
@@ -20,16 +22,26 @@ edges will be extracted. It can be ignored if \code{plot_module} is TRUE.}
 \item{exp}{A gene expression data frame with genes in row names and
 samples in column names or a `SummarizedExperiment` object.}
 
-\item{metadata}{A data frame containing sample names in row names
-and sample annotation in the first column. Ignored if `exp`
-is a `SummarizedExperiment` object, since the function will extract colData.}
+\item{metadata}{A data frame of sample metadata containing sample names
+in row names and sample annotation in subsequent columns.
+Ignored if `exp` is a `SummarizedExperiment` object, since colData will be
+automatically extracted.}
+
+\item{metadata_cols}{A character or numeric scalar indicating
+which column should be extracted from column metadata if \strong{exp}
+is a `SummarizedExperiment` object. The column to be extracted can be
+represented by indices (numeric) or column names (character).
+By default, the first column is used.}
 
 \item{plot_module}{Logical indicating whether to plot a whole module or not.
 If set to FALSE, \code{genes} must be specified.}
 
-\item{net}{List object returned by \code{exp2net}.}
+\item{net}{List object returned by \code{exp2gcn}.}
 
 \item{modulename}{Name of the module to plot.}
+
+\item{bg_line}{Character indicating what to show in the background (black)
+line. One of "mean" or "median". Default: "mean".}
 }
 \value{
 A ggplot object showing the expression profile of some genes
@@ -42,10 +54,7 @@ Plot expression profile of given genes across samples
 data(zma.se)
 data(filt.se)
 genes <- rownames(filt.se)
-plot_expression_profile(genes=genes, exp=zma.se, plot_module=FALSE)
-}
-\seealso{
-\code{\link[reshape2]{melt}}
+plot_expression_profile(genes = genes, exp = zma.se, plot_module = FALSE)
 }
 \author{
 Fabricio Almeida-Silva

@@ -4,50 +4,35 @@
 \alias{consensus_trait_cor}
 \title{Correlate set-specific modules and consensus modules to sample information}
 \usage{
-consensus_trait_cor(
-  consensus,
-  cor_method = "spearman",
-  continuous_trait = FALSE,
-  palette = "RdYlBu",
-  cex.lab.x = 0.6,
-  cex.lab.y = 0.6,
-  cex.text = 0.6,
-  transpose = FALSE
-)
+consensus_trait_cor(consensus, cor_method = "pearson", metadata_cols = NULL)
 }
 \arguments{
 \item{consensus}{Consensus network returned by \code{consensus_modules}.}
 
 \item{cor_method}{Correlation method to be used. One of 'spearman' or
-'pearson'. Default is 'spearman'.}
+'pearson'. Default: 'pearson'.}
 
-\item{continuous_trait}{Logical indicating if trait is a continuous variable.
-Default is FALSE.}
-
-\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu",
-a palette ranging from blue to red.}
-
-\item{cex.lab.x}{Font size for x axis labels. Default: 0.6.}
-
-\item{cex.lab.y}{Font size for y axis labels. Default: 0.6.}
-
-\item{cex.text}{Font size for numbers inside matrix. Default: 0.6.}
-
-\item{transpose}{Logical indicating whether to transpose the heatmap of not.
-Default is FALSE.}
+\item{metadata_cols}{A vector (either numeric or character) indicating
+which columns should be extracted from column metadata if \strong{exp}
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.}
 }
 \value{
-Data frame of consensus module-trait correlations and p-values.
+Data frame of consensus module-trait correlations and p-values,
+with the following variables:
+\describe{
+  \item{trait}{Factor, trait name. Each trait corresponds to a variable
+               of the sample metadata (if numeric) or levels of a variable
+               (if categorical).}
+  \item{ME}{Factor, module eigengene.}
+  \item{cor}{Numeric, correlation.}
+  \item{pvalue}{Numeric, correlation P-values.}
+  \item{group}{Character, name of the metadata variable.}
+}
 }
 \description{
 Correlate set-specific modules and consensus modules to sample information
-}
-\details{
-Significance levels:
-1 asterisk: significant at alpha = 0.05.
-2 asterisks: significant at alpha = 0.01.
-3 asterisks: significant at alpha = 0.001.
-no asterisk: not significant.
 }
 \examples{
 set.seed(12)
@@ -60,7 +45,4 @@ list.sets <- list(zma.set1, zma.set2)
 consensus <- consensus_modules(list.sets, power = c(11, 13),
                                cor_method = "pearson")
 consensus_trait <- consensus_trait_cor(consensus, cor_method = "pearson")
-}
-\seealso{
-\code{\link[WGCNA]{corPvalueFisher}},\code{\link[WGCNA]{labels2colors}},\code{\link[WGCNA]{labeledHeatmap}},\code{\link[WGCNA]{blueWhiteRed}}
 }
