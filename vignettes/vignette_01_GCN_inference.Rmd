@@ -330,11 +330,6 @@ of `module_trait_cor()` as follows:
 plot_module_trait_cor(MEtrait)
 ```
 
-You can also change the color palette and transpose the plot.
-
-```{r modtraitcor_transpose, fig.width=8, fig.height=4}
-plot_module_trait_cor(MEtrait, palette = "PRGn", transpose = TRUE)
-```
 
 ## Visualizing module expression profile
 

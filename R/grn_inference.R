@@ -221,7 +221,8 @@ grn_filter <- function(edgelist, nsplit = 10,
             title = "Scale-free topology fit for given r values"
         ) +
         theme_bw()
-    print(plot)
+
+    plot
 
     optimal_cutoff <- cutpoints[max.index]
     message("The top number of edges that best fits the scale-free topology is ", optimal_cutoff)
