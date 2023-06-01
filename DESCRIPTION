@@ -1,7 +1,7 @@
 Package: BioNERO
 Type: Package
 Title: Biological Network Reconstruction Omnibus
-Version: 1.8.1
+Version: 1.8.2
 Authors@R: c(person("Fabricio", "Almeida-Silva", 
                     email="fabricio_almeidasilva@hotmail.com", 
                     role=c("cre", "aut"), 
@@ -38,7 +38,8 @@ biocViews:
     SystemsBiology,
     GraphAndNetwork,
     Preprocessing,
-    Network
+    Network,
+    NetworkInference
 Imports: 
     WGCNA,
     dynamicTreeCut,
