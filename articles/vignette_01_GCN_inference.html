@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.5/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Gene coexpression network inference">
@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -277,24 +277,29 @@ to make the user experience with biological network analysis as easy and
 simple as possible.</p>
 <p><strong>Plotting heatmaps:</strong> the function
 <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> plots heatmaps of correlations between
-samples or gene expression in a single line. Users can use their
-preferred RColorBrewer’s palette, hide/show gene names, and
-activate/deactivate clustering for rows and/or columns.</p>
+samples or gene expression in a single line. Besides the arguments users
+can pass to parameters in <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code>, they can also
+pass additional arguments to parameters in
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/pheatmap.html" class="external-link">ComplexHeatmap::pheatmap()</a></code> to have additional control
+additional on plot aesthetics (e.g., hide/show gene and sample names,
+activate/deactivate clustering for rows and/or columns, etc).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Heatmap of sample correlations</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type <span class="op">=</span> <span class="st">"samplecor"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type <span class="op">=</span> <span class="st">"samplecor"</span>, show_rownames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/plot_heatmap-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="co"># Heatmap of gene expression</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">final_exp</span>, type <span class="op">=</span> <span class="st">"expr"</span><span class="op">)</span></span>
+<span><span class="co"># Heatmap of gene expression (here, only the first 50 genes)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">final_exp</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span>, type <span class="op">=</span> <span class="st">"expr"</span>, show_rownames <span class="op">=</span> <span class="cn">FALSE</span>, show_colnames <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/plot_heatmap-2.png" width="576" style="display: block; margin: auto;"></p>
 <p><strong>Principal component analysis (PCA):</strong> the function
-<code><a href="../reference/plot_PCA.html">plot_PCA()</a></code> performs a PCA and plots PC1 vs PC2 (by
-default), as well the percentage of variance explained by each PC. Users
-can also choose to plot PC1 vs PC3 or PC2 vs PC3.</p>
+<code><a href="../reference/plot_PCA.html">plot_PCA()</a></code> performs a PCA and plots whatever pair of PCs
+users choose (PC1 and PC2 by default), as well the percentage of
+variance explained by each PC.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span><span class="va">final_exp</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/pcaplot-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -349,7 +354,7 @@ automatically saves a ggplot object in the second element of the
 resulting list. To visualize it, you simply have to access the plot.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sft</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/plot_sft-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="vignette_01_GCN_inference_files/figure-html/plot_sft-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>Now, we can use the power calculated by <code><a href="../reference/SFT_fit.html">SFT_fit()</a></code> to
 infer the GCN. The function <code><a href="../reference/exp2gcn.html">exp2gcn()</a></code> infers a GCN and
 outputs a list of 7 elements, each of which will be used by other
@@ -380,10 +385,9 @@ between module eigengenes.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Eigengene networks</span></span>
 <span><span class="fu"><a href="../reference/plot_eigengene_network.html">plot_eigengene_network</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/eigengene_net-1.png" width="480" style="display: block; margin: auto;"></p>
-<pre><code><span><span class="co">## NULL</span></span></code></pre>
+<p><img src="vignette_01_GCN_inference_files/figure-html/eigengene_net-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Let’s see the number of genes per module.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ngenes_per_module.html">plot_ngenes_per_module</a></span><span class="op">(</span><span class="va">net</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette_01_GCN_inference_files/figure-html/genes_per_module-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -407,7 +411,7 @@ only 5 resampling runs for demonstration purposes.<a class="footnote-ref" tabind
 this function may take a long time depending on the your network size.
 Use it only if you have some reason to suspect that the modules are
 highly dependent on a particular set of samples.&lt;/p&gt;"><sup>4</sup></a></p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/module_stability.html">module_stability</a></span><span class="op">(</span><span class="va">final_exp</span>, <span class="va">net</span>, nRuns <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="co">##  ...working on run 1 ..</span></span>
 <span><span class="co">##  ...working on run 2 ..</span></span>
@@ -436,32 +440,22 @@ the whole module) to traits. This function is very useful if you have a
 set of candidate genes and you want to find which of them are more
 associated with the trait of interest. See
 &lt;code&gt;?gene_significance()&lt;/code&gt; for more details.&lt;/p&gt;'><sup>5</sup></a></p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span>exp <span class="op">=</span> <span class="va">final_exp</span>, MEs <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">MEs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span></span>
+<span><span class="co">##        ME          trait          cor    pvalue  group</span></span>
+<span><span class="co">## 1 MEblack      endosperm -0.166480994 0.4065715 Tissue</span></span>
+<span><span class="co">## 2 MEblack         pollen  0.213691004 0.2845053 Tissue</span></span>
+<span><span class="co">## 3 MEblack whole_seedling -0.020227505 0.9202318 Tissue</span></span>
+<span><span class="co">## 4 MEbrown      endosperm  0.003843583 0.9848197 Tissue</span></span>
+<span><span class="co">## 5 MEbrown         pollen -0.020729547 0.9182584 Tissue</span></span>
+<span><span class="co">## 6 MEbrown whole_seedling  0.012815311 0.9494147 Tissue</span></span></code></pre></div>
+<p>Next, you can use the function <code><a href="../reference/plot_module_trait_cor.html">plot_module_trait_cor()</a></code>
+to visualize the output of <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> as
+follows:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span></span>
-<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, MEs <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, cor_method <span class="op">=</span> <span class="st">"pearson"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/moddtraitcor-1.png" width="480" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span></span>
-<span><span class="co">##        ME          trait         cor    pvalue</span></span>
-<span><span class="co">## 1 MEblack      endosperm  0.12925374 0.5205188</span></span>
-<span><span class="co">## 2 MEblack         pollen  0.11154977 0.5796226</span></span>
-<span><span class="co">## 3 MEblack whole_seedling -0.20119355 0.3142702</span></span>
-<span><span class="co">## 4 MEbrown      endosperm -0.02538113 0.8999982</span></span>
-<span><span class="co">## 5 MEbrown         pollen  0.06199200 0.7587116</span></span>
-<span><span class="co">## 6 MEbrown whole_seedling -0.02607732 0.8972693</span></span></code></pre></div>
-<p>The function <code><a href="../reference/module_trait_cor.html">module_trait_cor()</a></code> also allows for plot
-customization. For instance:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Transpose the matrix and change palette (RColorBrewer palette)</span></span>
-<span><span class="va">MEtrait</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_trait_cor.html">module_trait_cor</a></span><span class="op">(</span></span>
-<span>    exp <span class="op">=</span> <span class="va">final_exp</span>, </span>
-<span>    MEs <span class="op">=</span> <span class="va">net</span><span class="op">$</span><span class="va">MEs</span>, </span>
-<span>    cor_method <span class="op">=</span> <span class="st">"pearson"</span>, </span>
-<span>    transpose <span class="op">=</span> <span class="cn">TRUE</span>, palette <span class="op">=</span> <span class="st">"PRGn"</span>, </span>
-<span>    cex.text <span class="op">=</span> <span class="fl">0.7</span>, cex.lab.y <span class="op">=</span> <span class="fl">0.7</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/modtraitcor_transpose-1.png" width="864" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_module_trait_cor.html">plot_module_trait_cor</a></span><span class="op">(</span><span class="va">MEtrait</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette_01_GCN_inference_files/figure-html/plot-module-trait-cor-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="visualizing-module-expression-profile">Visualizing module expression profile<a class="anchor" aria-label="anchor" href="#visualizing-module-expression-profile"></a>
@@ -469,14 +463,14 @@ customization. For instance:</p>
 <p>The heatmap above shows that genes in the <em>yellow</em> module are
 negatively correlated with endosperm samples. We can visually explore it
 with <code><a href="../reference/plot_expression_profile.html">plot_expression_profile()</a></code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_expression_profile.html">plot_expression_profile</a></span><span class="op">(</span></span>
 <span>    exp <span class="op">=</span> <span class="va">final_exp</span>, </span>
 <span>    net <span class="op">=</span> <span class="va">net</span>, </span>
 <span>    plot_module <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>    modulename <span class="op">=</span> <span class="st">"yellow"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/exp_profile-1.png" width="384" style="display: block; margin: auto;"></p>
+<p><img src="vignette_01_GCN_inference_files/figure-html/exp_profile-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="enrichment-analysis">Enrichment analysis<a class="anchor" aria-label="anchor" href="#enrichment-analysis"></a>
@@ -494,7 +488,7 @@ for enriched protein domains using all genes in the network as
 background. The Interpro annotation was downloaded from the PLAZA 4.0
 Monocots database <span class="citation">(Van Bel et al.
 2018)</span>.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Enrichment analysis for conserved protein domains (Interpro)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">zma.interpro</span><span class="op">)</span></span>
 <span><span class="va">interpro_enrichment</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/module_enrichment.html">module_enrichment</a></span><span class="op">(</span></span>
@@ -557,7 +551,7 @@ while others consider those with MM &gt; 0.8. To avoid false positives,
 genes as the top 10% genes with highest degree that have MM &gt; 0.8.
 Hubs can be identified with the function
 <code><a href="../reference/get_hubs_gcn.html">get_hubs_gcn()</a></code>.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hubs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_hubs_gcn.html">get_hubs_gcn</a></span><span class="op">(</span><span class="va">final_exp</span>, <span class="va">net</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hubs</span><span class="op">)</span></span>
 <span><span class="co">##             Gene Module  kWithin</span></span>
@@ -576,7 +570,7 @@ modules, and it can be done with the function
 <code><a href="../reference/get_edge_list.html">get_edge_list()</a></code>. The function returns the subgraph as an
 edge list. Users can also extract an edge list for a particular gene set
 instead of a module.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">edges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module<span class="op">=</span><span class="st">"midnightblue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">edges</span><span class="op">)</span></span>
 <span><span class="co">##              Gene1          Gene2    Weight</span></span>
@@ -600,13 +594,11 @@ satisfies the scale-free topology. If it does not, then your graph does
 not resemble &lt;em&gt;real&lt;/em&gt; biological networks and, hence, one cannot
 trust it for biological interpretations.&lt;/p&gt;'><sup>7</sup></a> For more details
 details, check <code>?get_edge_list()</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove edges based on optimal scale-free topology fit</span></span>
 <span><span class="va">edges_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_edge_list.html">get_edge_list</a></span><span class="op">(</span><span class="va">net</span>, module <span class="op">=</span> <span class="st">"midnightblue"</span>, filter <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">## The correlation threshold that best fits the scale-free topology is 0.7</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/filter_edges-1.png" width="480" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span></span>
+<span><span class="co">## The correlation threshold that best fits the scale-free topology is 0.7</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">edges_filtered</span><span class="op">)</span></span>
 <span><span class="co">## [1] 588   3</span></span>
 <span></span>
 <span><span class="co"># Remove edges based on p-value</span></span>
@@ -634,17 +626,17 @@ function <code><a href="../reference/plot_gcn.html">plot_gcn()</a></code>. By de
 the top 5 hubs (or less if there are less than 5 hubs). However, this
 can be customized according to the user’s preference (see
 <code><a href="../reference/plot_gcn.html">?plot_gcn</a></code> for more information).</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span></span>
 <span>    edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
 <span>    net <span class="op">=</span> <span class="va">net</span>, </span>
 <span>    color_by <span class="op">=</span> <span class="st">"module"</span>, </span>
 <span>    hubs <span class="op">=</span> <span class="va">hubs</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette_01_GCN_inference_files/figure-html/plot_gcn-1.png" width="384" style="display: block; margin: auto;"></p>
+<p><img src="vignette_01_GCN_inference_files/figure-html/plot_gcn-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Networks can also be visualized interactively by setting
 <code>interactive = TRUE</code> in <code>plot_gcn</code>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_gcn.html">plot_gcn</a></span><span class="op">(</span></span>
 <span>    edgelist_gcn <span class="op">=</span> <span class="va">edges_filtered</span>, </span>
 <span>    net <span class="op">=</span> <span class="va">net</span>,</span>
@@ -676,15 +668,15 @@ may be long.</p>
 <h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <p>This vignette was created under the following conditions:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">## R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 22.04.2 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -694,87 +686,90 @@ may be long.</p>
 <span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
 <span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
 <span><span class="co">## </span></span>
+<span><span class="co">## time zone: UTC</span></span>
+<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BioNERO_1.7.1    BiocStyle_2.24.0</span></span>
+<span><span class="co">## [1] BioNERO_1.9.2    BiocStyle_2.28.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] backports_1.4.1             circlize_0.4.15            </span></span>
-<span><span class="co">##   [3] Hmisc_5.0-1                 systemfonts_1.0.4          </span></span>
-<span><span class="co">##   [5] plyr_1.8.8                  igraph_1.4.1               </span></span>
-<span><span class="co">##   [7] splines_4.2.1               GENIE3_1.18.0              </span></span>
-<span><span class="co">##   [9] BiocParallel_1.30.4         GenomeInfoDb_1.32.4        </span></span>
-<span><span class="co">##  [11] ggnetwork_0.5.12            ggplot2_3.4.1              </span></span>
-<span><span class="co">##  [13] sva_3.44.0                  digest_0.6.31              </span></span>
-<span><span class="co">##  [15] foreach_1.5.2               htmltools_0.5.4            </span></span>
-<span><span class="co">##  [17] GO.db_3.15.0                fansi_1.0.4                </span></span>
-<span><span class="co">##  [19] magrittr_2.0.3              checkmate_2.1.0            </span></span>
-<span><span class="co">##  [21] memoise_2.0.1               cluster_2.1.4              </span></span>
-<span><span class="co">##  [23] doParallel_1.0.17           limma_3.52.4               </span></span>
-<span><span class="co">##  [25] annotate_1.74.0             ComplexHeatmap_2.12.1      </span></span>
-<span><span class="co">##  [27] fastcluster_1.2.3           Biostrings_2.64.1          </span></span>
-<span><span class="co">##  [29] matrixStats_0.63.0          pkgdown_2.0.7              </span></span>
-<span><span class="co">##  [31] colorspace_2.1-0            blob_1.2.4                 </span></span>
-<span><span class="co">##  [33] ggrepel_0.9.3               textshaping_0.3.6          </span></span>
-<span><span class="co">##  [35] xfun_0.37                   dplyr_1.1.0                </span></span>
-<span><span class="co">##  [37] crayon_1.5.2                RCurl_1.98-1.10            </span></span>
-<span><span class="co">##  [39] jsonlite_1.8.4              genefilter_1.78.0          </span></span>
-<span><span class="co">##  [41] impute_1.70.0               survival_3.5-5             </span></span>
-<span><span class="co">##  [43] iterators_1.0.14            glue_1.6.2                 </span></span>
-<span><span class="co">##  [45] gtable_0.3.3                zlibbioc_1.42.0            </span></span>
-<span><span class="co">##  [47] XVector_0.36.0              GetoptLong_1.0.5           </span></span>
-<span><span class="co">##  [49] DelayedArray_0.22.0         shape_1.4.6                </span></span>
-<span><span class="co">##  [51] BiocGenerics_0.42.0         abind_1.4-5                </span></span>
-<span><span class="co">##  [53] scales_1.2.1                edgeR_3.38.4               </span></span>
-<span><span class="co">##  [55] DBI_1.1.3                   Rcpp_1.0.10                </span></span>
-<span><span class="co">##  [57] xtable_1.8-4                htmlTable_2.4.1            </span></span>
-<span><span class="co">##  [59] clue_0.3-64                 foreign_0.8-84             </span></span>
-<span><span class="co">##  [61] bit_4.0.5                   preprocessCore_1.58.0      </span></span>
-<span><span class="co">##  [63] Formula_1.2-5               stats4_4.2.1               </span></span>
-<span><span class="co">##  [65] htmlwidgets_1.6.2           httr_1.4.5                 </span></span>
-<span><span class="co">##  [67] RColorBrewer_1.1-3          ellipsis_0.3.2             </span></span>
-<span><span class="co">##  [69] farver_2.1.1                XML_3.99-0.14              </span></span>
-<span><span class="co">##  [71] pkgconfig_2.0.3             nnet_7.3-18                </span></span>
-<span><span class="co">##  [73] sass_0.4.5                  locfit_1.5-9.7             </span></span>
-<span><span class="co">##  [75] utf8_1.2.3                  dynamicTreeCut_1.63-1      </span></span>
-<span><span class="co">##  [77] labeling_0.4.2              tidyselect_1.2.0           </span></span>
-<span><span class="co">##  [79] rlang_1.1.0                 reshape2_1.4.4             </span></span>
-<span><span class="co">##  [81] AnnotationDbi_1.58.0        munsell_0.5.0              </span></span>
-<span><span class="co">##  [83] tools_4.2.1                 cachem_1.0.7               </span></span>
-<span><span class="co">##  [85] cli_3.6.0                   generics_0.1.3             </span></span>
-<span><span class="co">##  [87] RSQLite_2.3.0               statnet.common_4.8.0       </span></span>
-<span><span class="co">##  [89] evaluate_0.20               stringr_1.5.0              </span></span>
-<span><span class="co">##  [91] fastmap_1.1.1               yaml_2.3.7                 </span></span>
-<span><span class="co">##  [93] ragg_1.2.5                  RhpcBLASctl_0.23-42        </span></span>
-<span><span class="co">##  [95] knitr_1.42                  bit64_4.0.5                </span></span>
-<span><span class="co">##  [97] fs_1.6.1                    purrr_1.0.1                </span></span>
-<span><span class="co">##  [99] KEGGREST_1.36.3             nlme_3.1-162               </span></span>
-<span><span class="co">## [101] compiler_4.2.1              rstudioapi_0.14            </span></span>
-<span><span class="co">## [103] png_0.1-8                   minet_3.54.0               </span></span>
-<span><span class="co">## [105] tibble_3.2.1                statmod_1.5.0              </span></span>
-<span><span class="co">## [107] bslib_0.4.2                 stringi_1.7.12             </span></span>
-<span><span class="co">## [109] highr_0.10                  desc_1.4.2                 </span></span>
-<span><span class="co">## [111] lattice_0.20-45             Matrix_1.5-3               </span></span>
-<span><span class="co">## [113] vctrs_0.6.0                 pillar_1.8.1               </span></span>
-<span><span class="co">## [115] lifecycle_1.0.3             networkD3_0.4              </span></span>
-<span><span class="co">## [117] BiocManager_1.30.20         jquerylib_0.1.4            </span></span>
-<span><span class="co">## [119] GlobalOptions_0.1.2         data.table_1.14.8          </span></span>
-<span><span class="co">## [121] bitops_1.0-7                patchwork_1.1.2            </span></span>
-<span><span class="co">## [123] GenomicRanges_1.48.0        R6_2.5.1                   </span></span>
-<span><span class="co">## [125] bookdown_0.33               network_1.18.1             </span></span>
-<span><span class="co">## [127] gridExtra_2.3               IRanges_2.30.1             </span></span>
-<span><span class="co">## [129] codetools_0.2-19            SummarizedExperiment_1.26.1</span></span>
-<span><span class="co">## [131] rprojroot_2.0.3             rjson_0.2.21               </span></span>
-<span><span class="co">## [133] withr_2.5.0                 S4Vectors_0.34.0           </span></span>
-<span><span class="co">## [135] GenomeInfoDbData_1.2.8      intergraph_2.0-2           </span></span>
-<span><span class="co">## [137] mgcv_1.8-42                 parallel_4.2.1             </span></span>
-<span><span class="co">## [139] grid_4.2.1                  rpart_4.1.19               </span></span>
-<span><span class="co">## [141] NetRep_1.2.6                coda_0.19-4                </span></span>
-<span><span class="co">## [143] rmarkdown_2.20              MatrixGenerics_1.8.1       </span></span>
-<span><span class="co">## [145] ggnewscale_0.4.8            Biobase_2.56.0             </span></span>
-<span><span class="co">## [147] WGCNA_1.72-1                base64enc_0.1-3</span></span></code></pre></div>
+<span><span class="co">##   [1] RColorBrewer_1.1-3          rstudioapi_0.14            </span></span>
+<span><span class="co">##   [3] jsonlite_1.8.4              shape_1.4.6                </span></span>
+<span><span class="co">##   [5] NetRep_1.2.6                magrittr_2.0.3             </span></span>
+<span><span class="co">##   [7] farver_2.1.1                rmarkdown_2.21             </span></span>
+<span><span class="co">##   [9] GlobalOptions_0.1.2         fs_1.6.2                   </span></span>
+<span><span class="co">##  [11] zlibbioc_1.46.0             ragg_1.2.5                 </span></span>
+<span><span class="co">##  [13] vctrs_0.6.2                 memoise_2.0.1              </span></span>
+<span><span class="co">##  [15] RCurl_1.98-1.12             base64enc_0.1-3            </span></span>
+<span><span class="co">##  [17] htmltools_0.5.5             S4Arrays_1.0.4             </span></span>
+<span><span class="co">##  [19] dynamicTreeCut_1.63-1       Formula_1.2-5              </span></span>
+<span><span class="co">##  [21] sass_0.4.6                  bslib_0.4.2                </span></span>
+<span><span class="co">##  [23] htmlwidgets_1.6.2           desc_1.4.2                 </span></span>
+<span><span class="co">##  [25] plyr_1.8.8                  impute_1.74.1              </span></span>
+<span><span class="co">##  [27] cachem_1.0.8                networkD3_0.4              </span></span>
+<span><span class="co">##  [29] igraph_1.4.3                lifecycle_1.0.3            </span></span>
+<span><span class="co">##  [31] ggnetwork_0.5.12            iterators_1.0.14           </span></span>
+<span><span class="co">##  [33] pkgconfig_2.0.3             Matrix_1.5-4.1             </span></span>
+<span><span class="co">##  [35] R6_2.5.1                    fastmap_1.1.1              </span></span>
+<span><span class="co">##  [37] GenomeInfoDbData_1.2.10     MatrixGenerics_1.12.0      </span></span>
+<span><span class="co">##  [39] clue_0.3-64                 digest_0.6.31              </span></span>
+<span><span class="co">##  [41] colorspace_2.1-0            patchwork_1.1.2            </span></span>
+<span><span class="co">##  [43] AnnotationDbi_1.62.1        S4Vectors_0.38.1           </span></span>
+<span><span class="co">##  [45] rprojroot_2.0.3             GENIE3_1.22.0              </span></span>
+<span><span class="co">##  [47] textshaping_0.3.6           Hmisc_5.1-0                </span></span>
+<span><span class="co">##  [49] GenomicRanges_1.52.0        RSQLite_2.3.1              </span></span>
+<span><span class="co">##  [51] labeling_0.4.2              fansi_1.0.4                </span></span>
+<span><span class="co">##  [53] mgcv_1.8-42                 httr_1.4.6                 </span></span>
+<span><span class="co">##  [55] abind_1.4-5                 compiler_4.3.0             </span></span>
+<span><span class="co">##  [57] withr_2.5.0                 bit64_4.0.5                </span></span>
+<span><span class="co">##  [59] doParallel_1.0.17           htmlTable_2.4.1            </span></span>
+<span><span class="co">##  [61] backports_1.4.1             BiocParallel_1.34.2        </span></span>
+<span><span class="co">##  [63] DBI_1.1.3                   intergraph_2.0-2           </span></span>
+<span><span class="co">##  [65] highr_0.10                  DelayedArray_0.26.3        </span></span>
+<span><span class="co">##  [67] rjson_0.2.21                tools_4.3.0                </span></span>
+<span><span class="co">##  [69] foreign_0.8-84              nnet_7.3-19                </span></span>
+<span><span class="co">##  [71] glue_1.6.2                  nlme_3.1-162               </span></span>
+<span><span class="co">##  [73] grid_4.3.0                  checkmate_2.2.0            </span></span>
+<span><span class="co">##  [75] cluster_2.1.4               reshape2_1.4.4             </span></span>
+<span><span class="co">##  [77] sva_3.48.0                  generics_0.1.3             </span></span>
+<span><span class="co">##  [79] gtable_0.3.3                preprocessCore_1.62.1      </span></span>
+<span><span class="co">##  [81] data.table_1.14.8           WGCNA_1.72-1               </span></span>
+<span><span class="co">##  [83] utf8_1.2.3                  XVector_0.40.0             </span></span>
+<span><span class="co">##  [85] BiocGenerics_0.46.0         ggrepel_0.9.3              </span></span>
+<span><span class="co">##  [87] foreach_1.5.2               pillar_1.9.0               </span></span>
+<span><span class="co">##  [89] stringr_1.5.0               limma_3.56.1               </span></span>
+<span><span class="co">##  [91] genefilter_1.82.1           circlize_0.4.15            </span></span>
+<span><span class="co">##  [93] splines_4.3.0               dplyr_1.1.2                </span></span>
+<span><span class="co">##  [95] lattice_0.21-8              survival_3.5-5             </span></span>
+<span><span class="co">##  [97] bit_4.0.5                   annotate_1.78.0            </span></span>
+<span><span class="co">##  [99] tidyselect_1.2.0            locfit_1.5-9.7             </span></span>
+<span><span class="co">## [101] GO.db_3.17.0                ComplexHeatmap_2.16.0      </span></span>
+<span><span class="co">## [103] Biostrings_2.68.1           knitr_1.43                 </span></span>
+<span><span class="co">## [105] gridExtra_2.3               bookdown_0.34              </span></span>
+<span><span class="co">## [107] IRanges_2.34.0              edgeR_3.42.4               </span></span>
+<span><span class="co">## [109] SummarizedExperiment_1.30.1 RhpcBLASctl_0.23-42        </span></span>
+<span><span class="co">## [111] stats4_4.3.0                xfun_0.39                  </span></span>
+<span><span class="co">## [113] Biobase_2.60.0              statmod_1.5.0              </span></span>
+<span><span class="co">## [115] matrixStats_0.63.0          stringi_1.7.12             </span></span>
+<span><span class="co">## [117] statnet.common_4.9.0        yaml_2.3.7                 </span></span>
+<span><span class="co">## [119] minet_3.58.0                evaluate_0.21              </span></span>
+<span><span class="co">## [121] codetools_0.2-19            tibble_3.2.1               </span></span>
+<span><span class="co">## [123] BiocManager_1.30.20         cli_3.6.1                  </span></span>
+<span><span class="co">## [125] rpart_4.1.19                xtable_1.8-4               </span></span>
+<span><span class="co">## [127] systemfonts_1.0.4           munsell_0.5.0              </span></span>
+<span><span class="co">## [129] jquerylib_0.1.4             network_1.18.1             </span></span>
+<span><span class="co">## [131] Rcpp_1.0.10                 GenomeInfoDb_1.36.0        </span></span>
+<span><span class="co">## [133] coda_0.19-4                 png_0.1-8                  </span></span>
+<span><span class="co">## [135] XML_3.99-0.14               fastcluster_1.2.3          </span></span>
+<span><span class="co">## [137] parallel_4.3.0              ellipsis_0.3.2             </span></span>
+<span><span class="co">## [139] pkgdown_2.0.7               ggplot2_3.4.2              </span></span>
+<span><span class="co">## [141] blob_1.2.4                  bitops_1.0-7               </span></span>
+<span><span class="co">## [143] scales_1.2.1                purrr_1.0.1                </span></span>
+<span><span class="co">## [145] crayon_1.5.2                GetoptLong_1.0.5           </span></span>
+<span><span class="co">## [147] rlang_1.1.1                 KEGGREST_1.40.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
