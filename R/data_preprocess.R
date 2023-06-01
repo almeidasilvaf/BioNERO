@@ -122,7 +122,7 @@ remove_nonexp <- function(exp, method="median", min_exp=1, min_percentage_sample
     } else if (method == "allsamples") {
         final_exp <- fexp[rowSums(fexp >= min_exp) == ncol(fexp), ]
     } else {
-        print("No method specified. Please, choose a filtering method - mean, median or percentage")
+        stop("No method specified. Please, choose a filtering method - mean, median or percentage")
     }
 
     if(is(exp, "SummarizedExperiment")) {
@@ -209,7 +209,7 @@ ZKfiltering <- function(exp, zk = -2, cor_method = "spearman") {
             fexp, type = "distance", corOptions = list(use = 'p', method = "spearman")
         )
     } else {
-        print("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
+        stop("Please, specify a correlation method (one of 'spearman', 'pearson' or 'biweight').")
     }
 
     k <- colSums(A) - 1

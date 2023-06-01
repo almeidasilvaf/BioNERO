@@ -1170,7 +1170,7 @@ get_edge_list <- function(net, genes = NULL, module = NULL,
                 ) +
                 theme_bw()
 
-            print(plot)
+            plot
             optimalr <- cutoff[max.index]
             message("The correlation threshold that best fits the scale-free topology is ", optimalr)
             edgelist <- list_cormat_filtered[[max.index]][[1]]
