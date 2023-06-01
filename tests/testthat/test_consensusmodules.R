@@ -47,7 +47,6 @@ test_that("consensus_modules() and related functions work", {
         consensus_modules(
             rlist.sets2, power = c(20, 20), cor_method = "error"
         )
-
     )
 
     expect_equal(class(cm1), "list")
@@ -62,13 +61,9 @@ test_that("consensus_modules() and related functions work", {
 
     # consensus_trait_cor()
     ct <- consensus_trait_cor(cm1, cor_method = "pearson")
-    ct2 <- consensus_trait_cor(cm1, cor_method = "spearman", transpose = TRUE)
 
     expect_equal(class(ct), "data.frame")
-    expect_equal(names(ct), c("ME", "trait", "cor", "pvalue"))
-
-    expect_equal(class(ct2), "data.frame")
-    expect_equal(names(ct2), c("ME", "trait", "cor", "pvalue"))
+    expect_equal(names(ct), c("trait", "ME", "cor", "pvalue", "group"))
 
 })
 

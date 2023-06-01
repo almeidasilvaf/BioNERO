@@ -184,9 +184,9 @@ modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
         label = as.factor(text)
     )
 
-    p1 <- ggplot(dplot1, aes_(x = ~x, y = ~y)) +
+    p1 <- ggplot(dplot1, aes(x = .data$x, y = .data$y)) +
         geom_point(fill = text, color = "black", shape = 21) +
-        geom_text_repel(aes_(label = ~label)) +
+        geom_text_repel(aes(label = .data$label)) +
         labs(
             x = "Module size", y = "Median rank",
             title = "Preservation median rank"
@@ -200,9 +200,9 @@ modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
         label = text
     )
 
-    p2 <- ggplot(dplot2, aes_(x = ~x, y = ~y)) +
+    p2 <- ggplot(dplot2, aes(x = .data$x, y = .data$y)) +
         geom_point(fill = text, color = "black", shape = 21) +
-        geom_text_repel(aes_(label = ~label)) +
+        geom_text_repel(aes(label = .data$label)) +
         labs(
             x = "Module size", y = expression("Z"[summary]),
             title = expression("Preservation Z"[summary])

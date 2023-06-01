@@ -10,8 +10,9 @@ plot_ppi(
   clustering_method = igraph::cluster_infomap,
   show_labels = "tophubs",
   top_n_hubs = 5,
-  interactive = FALSE,
   add_color_legend = TRUE,
+  curvature = 0,
+  interactive = FALSE,
   dim_interactive = c(600, 600)
 )
 }
@@ -37,11 +38,15 @@ One of "all", "allhubs", "tophubs", or "none".}
 \item{top_n_hubs}{Number of top hubs to be labeled. It is only valid
 if \code{show_labels} equals "tophubs". Default is 5.}
 
-\item{interactive}{Logical indicating whether the network should be
-interactive or not. Default is FALSE.}
-
 \item{add_color_legend}{Logical indicating whether to add a color legend
 for nodes. Default: TRUE.}
+
+\item{curvature}{Numeric indicating the amount of curvature in edges.
+Negative values produce left-hand curves, positive values produce right-hand
+curves, and zero produces a straight line. Default: 0.}
+
+\item{interactive}{Logical indicating whether the network should be
+interactive or not. Default is FALSE.}
 
 \item{dim_interactive}{Numeric vector with width and height of window
 for interactive plotting. Default: c(600,600).}
@@ -55,10 +60,6 @@ Plot protein-protein interaction network from edge list
 \examples{
 ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
 p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
-}
-\seealso{
-\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{degree}},\code{\link[igraph]{simplify}},\code{\link[igraph]{gorder}}
- \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
 }
 \author{
 Fabricio Almeida-Silva

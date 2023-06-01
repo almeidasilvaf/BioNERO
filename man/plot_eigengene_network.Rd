@@ -4,10 +4,13 @@
 \alias{plot_eigengene_network}
 \title{Plot eigengene network}
 \usage{
-plot_eigengene_network(gcn)
+plot_eigengene_network(gcn, palette = "PRGn")
 }
 \arguments{
 \item{gcn}{List object returned by \code{exp2gcn}.}
+
+\item{palette}{Character indicating the name of the RColorBrewer palette
+to use. Default: "PRGn".}
 }
 \value{
 A base plot with the eigengene network

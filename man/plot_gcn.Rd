@@ -11,6 +11,7 @@ plot_gcn(
   hubs = NULL,
   show_labels = "tophubs",
   top_n_hubs = 5,
+  curvature = 0,
   interactive = FALSE,
   dim_interactive = c(600, 600)
 )
@@ -36,6 +37,10 @@ One of "all", "allhubs", "tophubs", or "none". Default: tophubs.}
 \item{top_n_hubs}{Number of top hubs to be labeled. It is only valid
 if \code{show_labels} equals "tophubs". Default is 5.}
 
+\item{curvature}{Numeric indicating the amount of curvature in edges.
+Negative values produce left-hand curves, positive values produce right-hand
+curves, and zero produces a straight line. Default: 0.1.}
+
 \item{interactive}{Logical indicating whether the network should be
 interactive or not. Default is FALSE.}
 
@@ -55,12 +60,6 @@ gcn_edges <- get_edge_list(gcn, module="brown", filter=TRUE,
                            method="min_cor")
 hubs <- get_hubs_gcn(filt.se, gcn)
 p <- plot_gcn(gcn_edges, gcn, hubs = hubs)
-}
-\seealso{
-\code{\link[igraph]{simplify}},\code{\link[igraph]{as_data_frame}},\code{\link[igraph]{gorder}}
- \code{\link[networkD3]{igraph_to_networkD3}},\code{\link[networkD3]{forceNetwork}}
- \code{\link[ggnetwork]{geom_edges}},\code{\link[ggnetwork]{geom_nodes}},\code{\link[ggnetwork]{geom_nodetext}},\code{\link[ggnetwork]{theme_blank}},\code{\link[ggnetwork]{geom_nodetext_repel}}
- \code{\link[ggplot2]{ggplot}},\code{\link[ggplot2]{aes_}}
 }
 \author{
 Fabricio Almeida-Silva

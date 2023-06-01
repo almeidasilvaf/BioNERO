@@ -8,18 +8,12 @@ plot_heatmap(
   exp,
   col_metadata = NA,
   row_metadata = NA,
-  cor_method = "spearman",
+  coldata_cols = NULL,
+  rowdata_cols = NULL,
   type = "samplecor",
+  cor_method = "spearman",
   palette = NULL,
   log_trans = FALSE,
-  cluster_rows = TRUE,
-  cluster_cols = TRUE,
-  show_rownames = FALSE,
-  show_colnames = TRUE,
-  scale = "none",
-  fontsize = 9,
-  cutree_rows = NA,
-  cutree_cols = NA,
   ...
 )
 }
@@ -29,51 +23,44 @@ and samples in column names or a `SummarizedExperiment` object.}
 
 \item{col_metadata}{A data frame containing sample names in row names and
 sample annotation in the subsequent columns. The maximum number of columns
-is 2 to ensure legends can be visualized. Ignored if `exp` is
+is 3 to ensure legends can be visualized. Ignored if `exp` is
 a `SummarizedExperiment` object, since the function will extract colData.
 Default: NA.}
 
 \item{row_metadata}{A data frame containing gene IDs in row names and
-gene functional classification in the first column. Only one column
-is allowed to ensure legends can be visualized. Default: NA.}
+gene functional classification in the first column. The maximum number
+of columns is 3 to ensure legends can be visualized. Default: NA.}
 
-\item{cor_method}{Correlation method. One of 'spearman' or 'pearson'.
-Default is 'spearman'.}
+\item{coldata_cols}{A vector (either numeric or character) indicating
+which columns should be extracted from column metadata if \strong{exp}
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.}
+
+\item{rowdata_cols}{A vector (either numeric or character) indicating
+which columns should be extracted from row metadata if \strong{exp}
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.}
 
 \item{type}{Type of heatmap to plot. One of 'samplecor' (sample correlations)
 or 'expr'. Default: 'samplecor'.}
 
+\item{cor_method}{Correlation method to use in
+case \strong{type} is "samplecor". One of 'spearman' or 'pearson'.
+Default is 'spearman'.}
+
 \item{palette}{RColorBrewer palette to use. Default is "Blues" for sample
-correlation heatmap and "YlOrRd" for gene expression heatmap.}
+correlation heatmaps and "YlOrRd" for gene expression heatmaps.}
 
 \item{log_trans}{Logical indicating whether to log transform the expression
 data or not. Default: FALSE.}
 
-\item{cluster_rows}{Logical indicating whether to cluster rows or not.
-Default: TRUE.}
-
-\item{cluster_cols}{Logical indicating whether to cluster columns or not.
-Default: TRUE.}
-
-\item{show_rownames}{Logical indicating whether to show row names or not.
-Default: FALSE.}
-
-\item{show_colnames}{Logical indicating whether to show column names or not.
-Default is TRUE.}
-
-\item{scale}{Character indicating if values should be centered and scaled in
-rows, columns, or none. One of 'row', 'column', or 'none'. Default: 'none'.}
-
-\item{fontsize}{Base font size for the plot.}
-
-\item{cutree_rows}{Number of clusters into which rows are divided.
-Default: NA (no division).}
-
-\item{cutree_cols}{Number of clusters into which columns are divided.
-Default: NA (no division).}
-
 \item{...}{Additional arguments to be passed
-to \code{ComplexHeatmap::pheatmap()}.}
+to \code{ComplexHeatmap::pheatmap()}. These arguments can be used to control
+heatmap aesthetics, such as show/hide row and column names,
+change font size, activate/deactivate hierarchical clustering, etc. For a
+complete list of the options, see \code{?ComplexHeatmap::pheatmap()}.}
 }
 \value{
 A heatmap of sample correlations or gene expression.

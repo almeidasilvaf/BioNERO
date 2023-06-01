@@ -120,7 +120,7 @@ cons_sft <- consensus_SFT_fit(zma_list, setLabels = c("Maize 1", "Maize 2"),
 This function returns a list with the optimal \beta powers and a summary plot, 
 exactly as `SFT_fit()` does.
 
-```{r sft_results, fig.width=6}
+```{r sft_results, fig.width=8}
 powers <- cons_sft$power
 powers
 cons_sft$plot
@@ -147,8 +147,12 @@ consensus_trait <- consensus_trait_cor(consensus, cor_method = "pearson")
 head(consensus_trait)
 ```
 
-Users can also transpose the heatmap as in `module_trait_cor()`.
+As with the output of `module_trait_cor()`, users can visualize the output
+of `consensus_trait_cor()` with the function `plot_module_trait_cor()`.
 
+```{r plot-consensus-trait-cor, fig.width = 5, fig.height = 6}
+plot_module_trait_cor(consensus_trait)
+```
 
 # Module preservation
 
