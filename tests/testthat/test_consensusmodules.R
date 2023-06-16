@@ -50,14 +50,14 @@ test_that("consensus_modules() and related functions work", {
     )
 
     expect_equal(class(cm1), "list")
-    expect_equal(length(cm1), 6)
+    expect_equal(length(cm1), 5)
 
     expect_equal(class(cm2), "list")
     expect_equal(class(cm3), "list")
 
     # plot_dendro_and_cons_colors()
-    p <- plot_dendro_and_cons_colors(cm1)
-    expect_equal(class(p), "list")
+    p <- plot_dendro_and_colors(cm1)
+    expect_true("ggplot" %in% class(p))
 
     # consensus_trait_cor()
     ct <- consensus_trait_cor(cm1, cor_method = "pearson")

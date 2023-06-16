@@ -41,7 +41,6 @@ messages or not. Default: FALSE.}
 }
 \value{
 A list containing 4 elements: \describe{
-  \item{consModules}{Consensus module assignments}
   \item{consMEs}{Consensus module eigengenes}
   \item{exprSize}{Description of the multi-set object returned by the function \code{WGCNA::checkSets}}
   \item{sampleInfo}{Metadata for each expression set}

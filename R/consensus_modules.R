@@ -156,7 +156,6 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #' messages or not. Default: FALSE.
 #'
 #' @return A list containing 4 elements: \describe{
-#'   \item{consModules}{Consensus module assignments}
 #'   \item{consMEs}{Consensus module eigengenes}
 #'   \item{exprSize}{Description of the multi-set object returned by the function \code{WGCNA::checkSets}}
 #'   \item{sampleInfo}{Metadata for each expression set}
@@ -166,7 +165,8 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #'
 #' @rdname consensus_modules
 #' @export
-#' @importFrom WGCNA checkSets adjacency TOMsimilarity pquantile labels2colors multiSetMEs consensusMEDissimilarity mergeCloseModules
+#' @importFrom WGCNA checkSets adjacency TOMsimilarity pquantile labels2colors
+#' multiSetMEs consensusMEDissimilarity mergeCloseModules
 #' @importFrom dynamicTreeCut cutreeDynamic
 #' @examples
 #' set.seed(12)
@@ -178,10 +178,11 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #' # SFT power previously identified with consensus_SFT_fit()
 #' cons_mod <- consensus_modules(list.sets, power = c(11, 13),
 #'                               cor_method = "pearson")
-consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman",
-                              net_type = "signed hybrid",
-                              module_merging_threshold = 0.8,
-                              verbose = FALSE) {
+consensus_modules <- function(
+        exp_list, metadata, power,
+        cor_method = "spearman", net_type = "signed hybrid",
+        module_merging_threshold = 0.8, verbose = FALSE
+) {
 
     nSets <- length(exp_list)
 
@@ -307,53 +308,17 @@ consensus_modules <- function(exp_list, metadata, power, cor_method = "spearman"
 
     # Plot dendrogram with merged colors
     result_list <- list(
-        consModules = moduleColors,
         consMEs = consMEs,
         exprSize = expSize,
         sampleInfo = sampleinfo,
         genes_cmodules = genes_cmod,
         dendro_plot_objects = list(
             tree = consTree,
-            unmerged = unmergedColors
+            Unmerged = unmergedColors,
+            Merged = moduleColors
         )
     )
     return(result_list)
-}
-
-
-#' Plot dendrogram of genes and consensus modules
-#'
-#' @param consensus Consensus network returned by \code{consensus_modules}.
-#'
-#' @return A base plot with the gene dendrogram and modules.
-#' @importFrom WGCNA plotDendroAndColors
-#' @importFrom graphics par layout
-#' @export
-#' @rdname plot_dendro_and_cons_colors
-#' @examples
-#' set.seed(12)
-#' data(zma.se)
-#' filt.zma <- filter_by_variance(zma.se, n=500)
-#' zma.set1 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
-#' zma.set2 <- filt.zma[, sample(colnames(filt.zma), size=20, replace=FALSE)]
-#' list.sets <- list(zma.set1, zma.set2)
-#' # SFT power previously identified with consensus_SFT_fit()
-#' cons_mod <- consensus_modules(list.sets, power = c(11, 13),
-#'                               cor_method = "pearson")
-#' plot_dendro_and_cons_colors(cons_mod)
-plot_dendro_and_cons_colors <- function(consensus) {
-    on.exit(graphics::layout(1))
-    opar <- par(no.readonly = TRUE)
-    on.exit(par(opar), add = TRUE, after = FALSE)
-    WGCNA::plotDendroAndColors(
-        consensus$dendro_plot_objects$tree,
-        cbind(
-            consensus$dendro_plot_objects$unmerged,
-            consensus$consModules
-        ),
-        c("Unmerged", "Merged"),
-        dendroLabels = FALSE, hang = 0.03,
-        addGuide = TRUE, guideHang = 0.05)
 }
 
 

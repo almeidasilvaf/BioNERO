@@ -75,8 +75,8 @@ detect_communities <- function(edgelist,
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @importFrom igraph graph_from_data_frame degree simplify vcount
-#' @importFrom networkD3 igraph_to_networkD3 forceNetwork
-#' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
+#' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext
+#' theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes guides
 #' @import intergraph
 #' @examples
@@ -112,6 +112,11 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 
     # Should the network be interactive?
     if(interactive) {
+
+        if(!requireNamespace("networkD3", quietly = TRUE)) {
+            stop("`interactive = TRUE` requires the 'networkD3' package.")
+        }
+
         graph <- igraph::graph_from_data_frame(d = edgelist_int,
                                                vertices = nod_at, directed=FALSE)
         graph <- igraph::simplify(graph)
@@ -230,7 +235,6 @@ plot_ppi <- function(edgelist_int, color_by = "community",
 #' @export
 #' @import intergraph
 #' @importFrom igraph graph_from_data_frame degree vcount
-#' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggplot2 ggplot aes arrow scale_color_manual guides
 #' @importFrom ggnetwork geom_edges unit geom_nodes geom_nodetext theme_blank geom_nodelabel_repel
 #' @examples
@@ -258,6 +262,11 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 
     # Should the network be interactive?
     if(interactive) {
+
+        if(!requireNamespace("networkD3", quietly = TRUE)) {
+            stop("`interactive = TRUE` requires the 'networkD3' package.")
+        }
+
         graph <- igraph::graph_from_data_frame(d = edgelist_grn,
                                                vertices = nod_at, directed=TRUE)
         graph <- igraph::simplify(graph)
@@ -363,7 +372,6 @@ plot_grn <- function(edgelist_grn, show_labels = "tophubs", top_n_hubs = 5,
 #' @author Fabricio Almeida-Silva
 #' @export
 #' @importFrom igraph simplify graph_from_data_frame
-#' @importFrom networkD3 igraph_to_networkD3 forceNetwork
 #' @importFrom ggnetwork ggnetwork geom_edges geom_nodes geom_nodetext theme_blank geom_nodelabel_repel unit
 #' @importFrom ggplot2 ggplot aes guides
 #' @import intergraph
@@ -404,6 +412,11 @@ plot_gcn <- function(edgelist_gcn, net, color_by = "module", hubs = NULL,
 
     # Should the network be interactive?
     if(interactive) {
+
+        if(!requireNamespace("networkD3", quietly = TRUE)) {
+            stop("`interactive = TRUE` requires the 'networkD3' package.")
+        }
+
         graph <- igraph::simplify(igraph::graph_from_data_frame(d = edgelist_gcn, vertices = nod_at, directed=FALSE))
         graph_d3 <- networkD3::igraph_to_networkD3(graph, group = nod_at$Class)
         graph_d3$nodes <- merge(graph_d3$nodes, nod_at, by.x="name", by.y="Gene", sort = FALSE)

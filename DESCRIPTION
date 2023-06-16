@@ -43,6 +43,7 @@ biocViews:
 Imports: 
     WGCNA,
     dynamicTreeCut,
+    ggdendro,
     matrixStats,
     sva,
     RColorBrewer,
@@ -55,11 +56,9 @@ Imports:
     igraph,
     ggnetwork,
     intergraph,
-    networkD3,
     NetRep,
     stats,
     grDevices,
-    graphics,
     utils,
     methods,
     BiocParallel,
@@ -73,6 +72,7 @@ Suggests:
     testthat (>= 3.0.0),
     BiocStyle,
     DESeq2,
+    networkD3,
     covr
 VignetteBuilder: knitr
 Config/testthat/edition: 3

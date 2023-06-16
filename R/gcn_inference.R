@@ -131,10 +131,10 @@ SFT_fit <- function(exp, net_type = "signed", rsquared = 0.8,
 #' data(filt.se)
 #' # The SFT fit was previously calculated and the optimal power was 16
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
-exp2gcn <- function(exp, net_type="signed",
-                    module_merging_threshold = 0.8,
-                    SFTpower = NULL, cor_method = "spearman",
-                    verbose = FALSE) {
+exp2gcn <- function(
+        exp, net_type = "signed", module_merging_threshold = 0.8,
+        SFTpower = NULL, cor_method = "spearman", verbose = FALSE
+) {
 
     params <- list(
         net_type = net_type,
@@ -236,7 +236,9 @@ exp2gcn <- function(exp, net_type="signed",
         correlation_matrix = cor_matrix,
         params = params,
         dendro_plot_objects = list(
-            tree = geneTree, unmerged = old.module_colors
+            tree = geneTree,
+            Unmerged = old.module_colors,
+            Merged = new.module_colors
         )
     )
     return(result.list)
@@ -300,8 +302,11 @@ plot_eigengene_network <- function(gcn, palette = "PRGn") {
 #' @param gcn List object returned by \code{exp2gcn}.
 #'
 #' @return A base plot with the gene dendrogram and modules.
-#' @importFrom WGCNA plotDendroAndColors
-#' @importFrom graphics layout par
+#' @importFrom ggdendro dendro_data
+#' @importFrom ggplot2 geom_segment aes theme_minimal labs scale_x_continuous
+#' labs theme coord_cartesian element_blank geom_tile scale_fill_identity
+#' scale_y_discrete geom_line element_rect
+#' @importFrom patchwork wrap_plots
 #' @export
 #' @rdname plot_dendro_and_colors
 #' @examples
@@ -309,19 +314,75 @@ plot_eigengene_network <- function(gcn, palette = "PRGn") {
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' plot_dendro_and_colors(gcn)
 plot_dendro_and_colors <- function(gcn) {
-    on.exit(graphics::layout(1))
-    opar <- par(no.readonly = TRUE)
-    on.exit(par(opar), add = TRUE, after = FALSE)
-    p <- WGCNA::plotDendroAndColors(
-        gcn$dendro_plot_objects$tree,
-        cbind(
-            gcn$dendro_plot_objects$unmerged,
-            gcn$moduleColors
-        ),
-        c("Unmerged", "Merged"),
-        dendroLabels = FALSE, hang = 0.03, addGuide = TRUE, guideHang = 0.05
+
+    # Create a dendrogram with ggplot2
+    ## Get coordinates as a data frame
+    ddata <- ggdendro::dendro_data(
+        gcn$dendro_plot_objects$tree, type = "rectangle"
+    )$segments
+
+    ## To make sure lines in the y-axis do not extend to 0 and get too long
+    ddata$yend[ddata$yend < 0.05] <- ddata$y[ddata$yend < 0.1] - 0.02
+
+    ## Plot
+    p_dendro <- ggplot(ddata) +
+        geom_segment(aes(
+            x = .data$x, y = .data$y, xend = .data$xend, yend = .data$yend
+        ), linewidth = 0.3) +
+        coord_cartesian(ylim = c(0, 1)) +
+        theme_minimal() +
+        labs(x = "", y = "Height", title = "Dendrogram of genes and modules") +
+        scale_x_continuous(expand = c(0, 0)) +
+        theme(
+            panel.grid = element_blank(),
+            axis.text.x = element_blank()
+        )
+
+    # Create a heatmap
+    ## Heatmap data frame: 3 columns named `col`, `class`, and `value`
+    o <- gcn$dendro_plot_objects$tree$order
+
+    heatmap_df <- lapply(seq_along(gcn$dendro_plot_objects)[-1], function(x) {
+        modules <- gcn$dendro_plot_objects[[x]][o]
+        setname <- names(gcn$dendro_plot_objects)[x]
+        df <- data.frame(
+            col = factor(modules, levels = unique(modules)),
+            class = setname,
+            value = seq_along(modules)
+        )
+        return(df)
+    })
+    heatmap_df <- Reduce(rbind, heatmap_df)
+
+    ## Create a data with coordinates for lines between rows of the heatmap
+    nrows <- length(unique(heatmap_df$class))
+    ngenes <- length(unique(heatmap_df$value))
+    line_df <- data.frame(
+        x = c(0, ngenes) + 0.5,
+        y = rep(2:nrows, each = 2) - 0.5
     )
-    return(NULL)
+
+    ## Plot
+    p_hm <- ggplot(heatmap_df) +
+        geom_tile(aes(x = .data$value, y = .data$class, fill = .data$col)) +
+        scale_fill_identity() +
+        theme_minimal() +
+        labs(x = "", y = "") +
+        theme(
+            panel.background = element_rect(fill = "black"),
+            axis.text.x = element_blank(),
+            panel.grid = element_blank()
+        ) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_discrete(expand = c(0.2, 0.2)) +
+        geom_line(data = line_df, aes(x = .data$x, y = .data$y, group = .data$y))
+
+    ## Combine plots
+    heights <- c(3, 1)
+    if(length(gcn$dendro_plot_objects) > 3) { heights <- c(2, 1) }
+    p_combined <- wrap_plots(p_dendro, p_hm, nrow = 2, heights = heights)
+
+    return(p_combined)
 }
 
 #' Perform module stability analysis
@@ -333,11 +394,10 @@ plot_dendro_and_colors <- function(gcn) {
 #'
 #' @return A base plot with the module stability results.
 #' @seealso
-#'  \code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
+#'  \code{\link[WGCNA]{sampledBlockwiseModules}}
 #' @rdname module_stability
 #' @export
-#' @importFrom WGCNA sampledBlockwiseModules matchLabels plotDendroAndColors
-#' @importFrom graphics par layout
+#' @importFrom WGCNA sampledBlockwiseModules matchLabels
 #' @examples
 #' data(filt.se)
 #' filt <- filt.se[1:100, ] # reducing even further for testing purposes
@@ -349,47 +409,53 @@ module_stability <- function(exp, net, nRuns = 20) {
 
     norm.exp <- handleSE(exp)
     expr <- as.matrix(t(norm.exp))
-    net_type <- net$params$net_type
-    SFTpower <- net$params$SFTpower
     cor_method <- net$params$cor_method
     if(cor_method == "biweight") { cor_method <- "bicor" }
 
-    module_merging_threshold <- 1 - net$params$module_merging_threshold
-    TOMType <- get_TOMtype(net_type)
-
+    # Infer modules for original and resampled data n times (n = nRuns)
     mods0 <- WGCNA::sampledBlockwiseModules(
-        nRuns = nRuns, replace = FALSE, datExpr = expr,
-        maxBlockSize = 5000, checkSoftPower = FALSE, corType = cor_method,
-        networkType = net_type, TOMType = TOMType, TOMDenom = "mean",
-        mergeCutHeight = module_merging_threshold,
-        reassignThreshold = 0, numericLabels = FALSE,
-        checkMissingData = FALSE, quickCor = 0, verbose = 2
-        )
+        nRuns = nRuns,
+        replace = FALSE,
+        datExpr = expr,
+        maxBlockSize = 5000,
+        checkSoftPower = FALSE,
+        corType = cor_method,
+        networkType = net$params$net_type,
+        TOMType = get_TOMtype(net$params$net_type),
+        TOMDenom = "mean",
+        mergeCutHeight = 1 - net$params$module_merging_threshold,
+        reassignThreshold = 0,
+        numericLabels = FALSE,
+        checkMissingData = FALSE,
+        quickCor = 0, verbose = 2
+    )
     nGenes <- ncol(expr)
 
-    # Define a matrix of labels for the original and all resampling runs
+    # Create a matrix of labels for the original and all resampling runs
     labels <- matrix(0, nGenes, nRuns + 1)
     labels[, 1] <- mods0[[1]]$mods$colors
 
-    # Relabel modules in each of the resampling runs
+    ## Relabel modules in each of the resampling runs
     labs <- Reduce(cbind, lapply(2:(nRuns+1), function(x) {
         labels[, x] <- WGCNA::matchLabels(mods0[[x-1]]$mods$colors, labels[, 1])
     }))
     labels <- cbind(labels[,1], labs)
+    colnames(labels) <- c("Original", paste0("Resampling ", seq_len(nRuns)))
 
-    on.exit(graphics::layout(1))
-    opar <- par(no.readonly = TRUE)
-    on.exit(par(opar), add = TRUE, after = FALSE)
-    p <- WGCNA::plotDendroAndColors(
-        mods0[[1]]$mods$dendrograms[[1]], labels,
-        c("Full data set", paste("Resampling", seq_len(nRuns))),
-        main = "Dendrogram and modules: resampled data",
-        autoColorHeight = FALSE, colorHeight = 0.65,
-        dendroLabels = FALSE, hang = 0.03, guideHang = 0.05,
-        addGuide = TRUE, guideAll = FALSE, cex.main = 1, cex.lab = 0.8,
-        cex.colorLabels = 0.7, marAll = c(0, 5, 3, 0)
+    ## Convert matrix to list of vectors
+    label_list <- as.list(as.data.frame(labels))
+
+    # Simulate the output of `exp2gcn()` for plotting
+    sim_gcn <- list(
+        dendro_plot_objects = c(
+            list(tree = mods0[[1]]$mods$dendrograms[[1]]), label_list
+        )
     )
-    return(NULL)
+
+    # Plot dendrogram of genes and modules in each run
+    p <- plot_dendro_and_colors(sim_gcn)
+
+    return(p)
 }
 
 #' Correlate module eigengenes to trait
@@ -708,83 +774,108 @@ get_hubs_gcn <- function(exp, net) {
 }
 
 
-#' Helper function to perform Fisher's Exact Test with parallel computing
+#' Perform overrepresentation analysis for a set of genes
 #'
-#' @param genes Character vector containing genes on which enrichment will
-#' be tested.
-#' @param reference Character vector containing genes to be used as background.
-#' @param genesets List of functional annotation categories.
-#' (e.g., GO, pathway, etc.) with their associated genes.
-#' @param adj Multiple testing correction method.
-#' @param bp_param BiocParallel back-end to be used.
-#' Default: BiocParallel::SerialParam()
+#' @param genes Character vector containing genes for which
+#' overrepresentation will be tested.
+#' @param genesets Named list of character vectors, where list names
+#' represent functional categories (e.g., GO, pathway, etc.), and vectors
+#' represent their associated genes.
+#' @param universe Character vector of genes to be used as universe.
+#' @param adj Character indicating the multiple testing correction method
+#' as in \code{stats::p.adjust()}.
 #'
-#' @return Results of Fisher's Exact Test in a data frame with TermID,
-#' number of associated genes, number of genes in reference set,
-#' P-value and adjusted P-value.
+#' @return A data frame of overrepresentation results with the following
+#' variables:
+#' \describe{
+#'   \item{term}{character, functional term ID/name.}
+#'   \item{genes}{numeric, intersection length between input genes and genes
+#'                in a particular functional term.}
+#'   \item{all}{numeric, number of all genes in a particular functional term.}
+#'   \item{pval}{numeric, P-value for the hypergeometric test.}
+#'   \item{padj}{numeric, P-value adjusted for multiple comparisons using
+#'               the method specified in parameter \strong{adj}.}
+#' }
 #'
-#' @importFrom stats p.adjust fisher.test
-#' @importFrom BiocParallel bplapply SerialParam
+#' @importFrom stats p.adjust phyper
 #' @noRd
-par_enrich <- function(genes, reference, genesets, adj = "BH",
-                       bp_param = BiocParallel::SerialParam()) {
+ora <- function(
+        genes, genesets, universe, adj = "BH"
+) {
 
-    reference <- reference[!reference %in% genes]
+    # Remove genes that are not in `universe`
+    genes <- intersect(genes, universe)
+    gene_sets <- lapply(genesets, function(x) intersect(x, universe))
 
-    tab <- BiocParallel::bplapply(seq_along(genesets), function(i) {
+    # Define universe and input genes
+    n_universe <- length(universe)
+    n_genes <- length(genes)
 
-        RinSet <- sum(reference %in% genesets[[i]])
-        RninSet <- length(reference) - RinSet
-        GinSet <- sum(genes %in% genesets[[i]])
-        GninSet <- length(genes) - GinSet
-        fmat <- matrix(
-            c(GinSet, RinSet, GninSet, RninSet),
-            nrow = 2, ncol = 2, byrow = FALSE
-        )
-        colnames(fmat) <- c("inSet", "ninSet")
-        rownames(fmat) <- c("genes", "reference")
-        fish <- stats::fisher.test(fmat, alternative = "greater")
-        pval <- fish$p.value
-        inSet <- RinSet + GinSet
-        res <- c(GinSet, inSet, pval)
-        return(res)
-    }, BPPARAM = bp_param)
+    # Define variables of the hypergeometric test
+    x <- vapply(gene_sets, function(x) length(intersect(x, genes)), numeric(1))
+    m <- vapply(gene_sets, length, numeric(1))
+    n <- n_universe - m
+    k <- n_genes
 
-    rtab <- do.call(rbind, tab)
-    rtab <- data.frame(as.vector(names(genesets)), rtab)
-    rtab <- rtab[order(rtab[, 4]), ]
-    colnames(rtab) <- c("TermID", "genes", "all", "pval")
-    padj <- stats::p.adjust(rtab$pval, method = adj)
-    tab.out <- data.frame(rtab, padj)
+    # Get P-values from a hypergeometric test
+    pvals <- phyper(x - 1, m, n, k, lower.tail = FALSE)
 
-    return(tab.out)
+    # Store results in a data frame
+    results <- data.frame(
+        term = names(pvals),
+        genes = x,
+        all = m,
+        pval = pvals,
+        row.names = NULL
+    )
+
+    results$padj <- p.adjust(results$pval, method = adj)
+
+    return(results)
 }
 
 
-#' Perform enrichment analysis for a set of genes
+#' Perform overrepresentation analysis for a set of genes
 #'
 #' @param genes Character vector containing genes for overrepresentation
 #' analysis.
 #' @param background_genes Character vector of genes to be used as background
-#' for the Fisher's Exact Test.
+#' for the overrepresentation analysis.
 #' @param annotation Annotation data frame with genes in the first column and
 #' functional annotation in the other columns. This data frame can be exported
 #' from Biomart or similar databases.
-#' @param column Column or columns of \code{annotation} to be used for
+#' @param column Column or columns of \strong{annotation} to be used for
 #' enrichment.
 #' Both character or numeric values with column indices can be used.
 #' If users want to supply more than one column, input a character or
-#' numeric vector. Default: all columns from \code{annotation}.
+#' numeric vector. Default: all columns from \strong{annotation}.
 #' @param correction Multiple testing correction method. One of "holm",
 #' "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr" or "none".
 #' Default is "BH".
 #' @param p P-value threshold. P-values below this threshold will be
-#' considered significant. Default is 0.05.
+#' considered significant. Default: 0.05.
+#' @param min_setsize Numeric indicating the minimum gene set size to be
+#' considered. Gene sets correspond to levels of each variable
+#' in \strong{annotation}). Default: 10.
+#' @param max_setsize Numeric indicating the maximum gene set size to be
+#' considered. Gene sets correspond to levels of each variable
+#' in \strong{annotation}). Default: 500.
 #' @param bp_param BiocParallel back-end to be used.
 #' Default: BiocParallel::SerialParam()
 #'
-#' @return Data frame containing significant terms, p-values and
-#' associated genes.
+#' @return A data frame of overrepresentation results with the following
+#' variables:
+#' \describe{
+#'   \item{term}{character, functional term ID/name.}
+#'   \item{genes}{numeric, intersection length between input genes and genes
+#'                in a particular functional term.}
+#'   \item{all}{numeric, number of all genes in a particular functional term.}
+#'   \item{pval}{numeric, P-value for the hypergeometric test.}
+#'   \item{padj}{numeric, P-value adjusted for multiple comparisons using
+#'               the method specified in parameter \strong{adj}.}
+#'   \item{category}{character, name of the grouping variable (i.e., column
+#'                   name of \strong{annotation}).}
+#' }
 #'
 #' @author Fabricio Almeida-Silva
 #' @rdname enrichment_analysis
@@ -800,113 +891,50 @@ par_enrich <- function(genes, reference, genesets, adj = "BH",
 #' # Using p = 1 to show all results
 #' enrich <- enrichment_analysis(genes, background_genes, annotation, p = 1)
 #' }
-enrichment_analysis <- function(genes, background_genes, annotation,
-                                column = NULL,
-                                correction = "BH", p = 0.05,
-                                bp_param = BiocParallel::SerialParam()) {
+enrichment_analysis <- function(
+        genes, background_genes, annotation, column = NULL,
+        correction = "BH", p = 0.05, min_setsize = 10, max_setsize = 500,
+        bp_param = BiocParallel::SerialParam()
+) {
 
-    ## Get a dataframe of expressed genes and their annotations
-    gene_column <- colnames(annotation)[1]
+    names(annotation)[1] <- "Gene"
 
-    # Handle missing values
-    annotation[is.na(annotation)] <- "Unannotated"
-
-    if(is.null(column)) { #all columns?
-        gene_annotation <- annotation
-    } else {
-        if(is.numeric(column)) { # Input is column indices
-            gene_annotation <- annotation[, c(1, column)]
-        } else { #Input is column names
-            gene_annotation <- annotation[, c(paste(gene_column), column)]
-        }
+    # Filtered `annotation` data frame to keep only specified columns
+    col <- names(annotation)
+    if(!is.null(column)) {
+        col <- if(is.numeric(column)) c(1, column) else c("Gene", column)
     }
+    fannot <- annotation[, col]
 
-    background <- gene_annotation[gene_annotation[,1] %in% background_genes, ]
+    # Get a data frame of enrichment results for each column
+    enrichment <- bplapply(seq_along(fannot)[-1], function(x) {
 
-    if(ncol(background) == 2) { #only one annotation category
-        # Named list of expressed genes and their annotations
-        annotation_list <- split(background[,1], background[,2])
+        ## Remove missing values (unannotated genes for a particular category)
+        fannot[, x][is.na(fannot[, x])] <- "unannotated"
 
-        # Perform the enrichment analysis
-        enrich.table <- par_enrich(
-            genes, background_genes, annotation_list, adj = correction,
-            bp_param = bp_param
-        )
-        signif_enrich <- as.data.frame(enrich.table[enrich.table$padj <= p, ])
+        ## Split variable into a named list
+        gene_sets <- split(fannot[, 1], fannot[, x])
+        gene_sets <- gene_sets[!duplicated(gene_sets)]
+        gene_sets <- gene_sets[names(gene_sets) != "unannotated"]
 
-        if(nrow(signif_enrich) > 0) {
-            signif_terms_genes <- annotation_list[as.character(signif_enrich[,1])]
-            signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
+        ## Keep only element with `min_setsize` <= n <= `max_setsize` elements
+        set_sizes <- as.numeric(lengths(gene_sets))
+        keep <- which(set_sizes >= min_setsize & set_sizes <= max_setsize)
+        gene_sets <- gene_sets[keep]
 
-            # Save final result with a column containing gene IDs of associated genes
-            signif_enrich$GeneID <- unlist(
-                lapply(signif_terms_genes, paste, collapse = ",")
-            )
-            df_signif_enrich <- signif_enrich
-        } else {
-            df_signif_enrich <- NULL
-        }
+        ## Get ORA results and add `category` column
+        ora_df <- ora(genes, gene_sets, background_genes, correction)
+        ora_df$category <- names(fannot)[x]
 
-    } else { # more than 1 annotation category
-        annotation_list <- lapply(seq_along(background)[-1], function(x) {
-            return(split(background[,1], background[,x]))
-        })
+        ## Filter non-significant observations out
+        ora_df <- ora_df[ora_df$padj <= p, ]
 
-        # Remove unannotated genes
-        annotation_list_final <- lapply(annotation_list, function(x) {
-            return(x[names(x) != "Unannotated"])
-        })
+    }, BPPARAM = bp_param)
 
-        # Perform the enrichment analysis
-        signif_enrich <- bplapply(annotation_list_final, function(x) {
-            enrich.table <- par_enrich(
-                genes, background_genes, x, adj = correction,
-                bp_param = bp_param
-            )
-            sig_enrich <- as.data.frame(enrich.table[enrich.table$padj < p, ])
-            return(sig_enrich)
-        }, BPPARAM = bp_param)
+    enrichment <- Reduce(rbind, enrichment)
 
-        # Remove empty data frames from list
-        signif_enrich <- signif_enrich[vapply(signif_enrich, nrow, numeric(1)) > 0]
-
-        if(length(signif_enrich) > 0) {
-
-            # Create a data frame containing annotations and the annotation class
-            annot_correspondence <- Reduce(rbind, lapply(seq_along(background)[-1], function(x) {
-                annot_correspondence <- data.frame(
-                    TermID = background[, x],
-                    Category = names(background)[x]
-                )
-                annot_correspondence <- annot_correspondence[!duplicated(annot_correspondence[,c(1,2)]),]
-                return(annot_correspondence)
-            }))
-
-            # Add column containing the annotation class
-            list_signif_enrich <- lapply(signif_enrich, function(x) {
-                merge(x, annot_correspondence)
-            })
-
-            # Reduce list of data frames to a single data frame
-            df_signif_enrich <- Reduce(rbind, list_signif_enrich)
-
-            # Get genes associated to each term
-            annotation_list_concat <- unlist(annotation_list, recursive = FALSE) # create list from list of lists
-            signif_terms_genes <- annotation_list_concat[as.character(df_signif_enrich[,1])]
-            signif_terms_genes <- lapply(signif_terms_genes, function(x) unique(x[x %in% genes]))
-
-            # Get final table with enriched terms and a column containing the associated genes
-            df_signif_enrich$GeneID <- unlist(
-                lapply(signif_terms_genes, paste, collapse = ",")
-            )
-
-        } else {
-            df_signif_enrich <- NULL
-        }
-    }
-    return(df_signif_enrich)
+    return(enrichment)
 }
-
 
 #' Perform enrichment analysis for coexpression network modules
 #'
@@ -925,11 +953,32 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 #' Default is "BH".
 #' @param p P-value threshold. P-values below this threshold will be considered
 #' significant. Default is 0.05.
+#' @param min_setsize Numeric indicating the minimum gene set size to be
+#' considered. Gene sets correspond to levels of each variable
+#' in \strong{annotation}). Default: 10.
+#' @param max_setsize Numeric indicating the maximum gene set size to be
+#' considered. Gene sets correspond to levels of each variable
+#' in \strong{annotation}). Default: 500.
 #' @param bp_param BiocParallel back-end to be used.
 #' Default: BiocParallel::SerialParam()
-#' @return A data frame containing enriched terms, p-values, gene IDs
-#' and module names.
+#'
+#' @return A data frame of overrepresentation results with the following
+#' variables:
+#' \describe{
+#'   \item{term}{character, functional term ID/name.}
+#'   \item{genes}{numeric, intersection length between input genes and genes
+#'                in a particular functional term.}
+#'   \item{all}{numeric, number of all genes in a particular functional term.}
+#'   \item{pval}{numeric, P-value for the hypergeometric test.}
+#'   \item{padj}{numeric, P-value adjusted for multiple comparisons using
+#'               the method specified in parameter \strong{adj}.}
+#'   \item{category}{character, name of the grouping variable (i.e., column
+#'                   name of \strong{annotation}).}
+#'   \item{module}{character, module name.}
+#' }
+#'
 #' @author Fabricio Almeida-Silva
+#'
 #' @rdname module_enrichment
 #' @importFrom BiocParallel bplapply SerialParam
 #' @export
@@ -941,49 +990,43 @@ enrichment_analysis <- function(genes, background_genes, annotation,
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' mod_enrich <- module_enrichment(gcn, background, zma.interpro, p=1)
 #' }
-module_enrichment <- function(net = NULL, background_genes, annotation,
-                              column = NULL,
-                              correction = "BH", p = 0.05,
-                              bp_param = BiocParallel::SerialParam()) {
+module_enrichment <- function(
+        net = NULL, background_genes, annotation, column = NULL,
+        correction = "BH", p = 0.05, min_setsize = 10, max_setsize = 500,
+        bp_param = BiocParallel::SerialParam()
+) {
 
-    # Divide modules in different data frames of a list
+    # Create a list of data frames with columns `Genes` and `Modules`
     genes.modules <- net$genes_and_modules
     list.gmodules <- split(genes.modules, genes.modules$Modules)
     list.gmodules <- list.gmodules[names(list.gmodules) != "grey"]
 
-    enrichment_allmodules <- BiocParallel::bplapply(seq_along(list.gmodules), function(x) {
-        message("Enrichment analysis for module ",
-                    names(list.gmodules)[x], "...")
+    enrichment_all <- bplapply(seq_along(list.gmodules), function(x) {
+        module <- names(list.gmodules)[x]
+        message("Enrichment analysis for module ", module, "...")
+
+        # Perform enrichment analysis for {module}
         l <- enrichment_analysis(
             genes = as.character(list.gmodules[[x]][, 1]),
             background_genes = background_genes,
             annotation = annotation,
-            column = column, correction = correction, p = p
+            column = column,
+            correction = correction, p = p,
+            min_setsize = min_setsize, max_setsize = max_setsize
         )
+
+        # Either add a column `module` or set `l` to NULL
+        if(nrow(l) > 0) {
+            l$module <- module
+        } else {
+            l <- NULL
+        }
+
         return(l)
     }, BPPARAM = bp_param)
-    names(enrichment_allmodules) <- names(list.gmodules)
+    enrichment_all <- Reduce(rbind, enrichment_all)
 
-    # Remove NULL elements from list
-    enrichment_filtered <- enrichment_allmodules[!vapply(enrichment_allmodules,
-                                                         is.null, logical(1))]
-
-    if(length(enrichment_filtered) == 0) {
-        message("None of the modules had significant enrichment.")
-        enrichment_final <- NULL
-    } else {
-        # Add module name to each data frame
-        enrichment_modnames <- lapply(seq_along(enrichment_filtered), function(x) {
-            return(cbind(
-                enrichment_filtered[[x]], Module=names(enrichment_filtered)[x]
-            ))
-        })
-
-        # Reduce list of data frames to a single data frame
-        enrichment_final <- Reduce(rbind, enrichment_modnames)
-    }
-
-    return(enrichment_final)
+    return(enrichment_all)
 }
 
 
@@ -1077,8 +1120,7 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' The method "min_cor" will remove correlations below the minimum correlation
 #' threshold specified in \code{rcutoff}.
 #' @seealso
-#'  \code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
-#'  \code{\link[igraph]{fit_power_law}}
+#'  \code{\link[WGCNA]{scaleFreeFitIndex}}
 #' @seealso \code{SFT_fit}
 #' @seealso \code{exp2gcn}.
 #' @author Fabricio Almeida-Silva
@@ -1092,13 +1134,12 @@ get_neighbors <- function(genes, net, cor_threshold = 0.7) {
 #' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 #' genes <- rownames(filt.se)[1:50]
 #' edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
-get_edge_list <- function(net, genes = NULL, module = NULL,
-                          filter = FALSE, method = "optimalSFT",
-                          r_optimal_test = seq(0.4, 0.9, by = 0.1),
-                          Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7,
-                          nSamples = NULL,
-                          check_SFT = FALSE,
-                          bp_param = BiocParallel::SerialParam()) {
+get_edge_list <- function(
+        net, genes = NULL, module = NULL, filter = FALSE,
+        method = "optimalSFT", r_optimal_test = seq(0.4, 0.9, by = 0.1),
+        Zcutoff = 1.96, pvalue_cutoff = 0.05, rcutoff = 0.7, nSamples = NULL,
+        check_SFT = FALSE, bp_param = BiocParallel::SerialParam()
+) {
 
     # Define objects containing correlation matrix and data frame of genes and modules
     cor_matrix <- net$correlation_matrix
