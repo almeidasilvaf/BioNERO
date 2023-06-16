@@ -29,5 +29,5 @@ gcn <- exp2gcn(filt, SFTpower = 16, cor_method = "pearson")
 module_stability(exp = filt, net = gcn, nRuns = 2)
 }
 \seealso{
-\code{\link[WGCNA]{sampledBlockwiseModules}},\code{\link[WGCNA]{matchLabels}},\code{\link[WGCNA]{plotDendroAndColors}}
+\code{\link[WGCNA]{sampledBlockwiseModules}}
 }

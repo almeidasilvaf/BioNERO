@@ -86,8 +86,7 @@ genes <- rownames(filt.se)[1:50]
 edges <- get_edge_list(gcn, genes=genes, filter = FALSE)
 }
 \seealso{
-\code{\link[WGCNA]{scaleFreeFitIndex}},\code{\link[WGCNA]{corPvalueStudent}}
- \code{\link[igraph]{fit_power_law}}
+\code{\link[WGCNA]{scaleFreeFitIndex}}
 
 \code{SFT_fit}
 

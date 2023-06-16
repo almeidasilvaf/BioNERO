@@ -113,7 +113,7 @@ test_that("plot_eigengene_network() plots eigengene networks", {
 test_that("plot_dendro_and_colors() plots dendro and colors", {
 
     p <- plot_dendro_and_colors(gcn)
-    expect_equal(class(p), "NULL")
+    expect_true("ggplot" %in% class(p))
 
 })
 
@@ -121,7 +121,7 @@ test_that("module_stability() recomputes network with n resamplings", {
 
     p <- module_stability(exp = filt.se[1:50, ], net = gcn, nRuns = 1)
 
-    expect_equal(class(p), "NULL")
+    expect_true("ggplot" %in% class(p))
 })
 
 test_that("module_trait_cor() and plot_module_trait_cor() work", {
@@ -133,7 +133,6 @@ test_that("module_trait_cor() and plot_module_trait_cor() work", {
     expect_equal(ncol(mod_trait), 5)
     expect_equal(names(mod_trait), c("ME", "trait", "cor", "pvalue", "group"))
 
-    # plot_
 
 })
 
@@ -168,9 +167,9 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
     genes <- annotation$Gene[1:10]
     background_genes <- annotation$Gene
 
-    # par_enrich()
+    # ora()
     genesets <- split(annotation, annotation$Class)
-    pe <- par_enrich(genes, background_genes, genesets)
+    pe <- ora(genes, genesets, background_genes)
 
 
     # enrichment_analysis()
@@ -193,13 +192,12 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
     expect_equal(class(e1), "data.frame")
     expect_equal(ncol(e1), 6)
 
-    expect_true(is.null(e2))
+    expect_true(nrow(e2) < 1)
 
     expect_equal(class(e3), "data.frame")
-    expect_equal(ncol(e3), 7)
+    expect_equal(ncol(e3), 6)
 
-    expect_true(is.null(e4))
-
+    expect_true(nrow(e4) < 1)
 })
 
 
