@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,6 +66,8 @@
 <span>  column <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  correction <span class="op">=</span> <span class="st">"BH"</span>,</span>
 <span>  p <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  min_setsize <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  max_setsize <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  bp_param <span class="op">=</span> <span class="fu">BiocParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SerialParam-class.html" class="external-link">SerialParam</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -105,6 +107,18 @@ Default is "BH".</p></dd>
 significant. Default is 0.05.</p></dd>
 
 
+<dt>min_setsize</dt>
+<dd><p>Numeric indicating the minimum gene set size to be
+considered. Gene sets correspond to levels of each variable
+in <strong>annotation</strong>). Default: 10.</p></dd>
+
+
+<dt>max_setsize</dt>
+<dd><p>Numeric indicating the maximum gene set size to be
+considered. Gene sets correspond to levels of each variable
+in <strong>annotation</strong>). Default: 500.</p></dd>
+
+
 <dt>bp_param</dt>
 <dd><p>BiocParallel back-end to be used.
 Default: BiocParallel::SerialParam()</p></dd>
@@ -114,9 +128,33 @@ Default: BiocParallel::SerialParam()</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A data frame containing enriched terms, p-values, gene IDs
-and module names.</p>
-    </div>
+<p>A data frame of overrepresentation results with the following
+variables:</p><dl><dt>term</dt>
+<dd><p>character, functional term ID/name.</p></dd>
+
+  <dt>genes</dt>
+<dd><p>numeric, intersection length between input genes and genes
+               in a particular functional term.</p></dd>
+
+  <dt>all</dt>
+<dd><p>numeric, number of all genes in a particular functional term.</p></dd>
+
+  <dt>pval</dt>
+<dd><p>numeric, P-value for the hypergeometric test.</p></dd>
+
+  <dt>padj</dt>
+<dd><p>numeric, P-value adjusted for multiple comparisons using
+              the method specified in parameter <strong>adj</strong>.</p></dd>
+
+  <dt>category</dt>
+<dd><p>character, name of the grouping variable (i.e., column
+                  name of <strong>annotation</strong>).</p></dd>
+
+  <dt>module</dt>
+<dd><p>character, module name.</p></dd>
+
+
+</dl></div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Fabricio Almeida-Silva</p>
