@@ -7,13 +7,12 @@
 gene_significance(
   exp,
   metadata,
+  metadata_cols = NULL,
   genes = NULL,
   alpha = 0.05,
+  cor_method = "pearson",
   min_cor = 0.2,
-  use_abs = TRUE,
-  palette = "RdYlBu",
-  show_rownames = FALSE,
-  continuous_trait = FALSE
+  use_abs = TRUE
 )
 }
 \arguments{
@@ -24,30 +23,37 @@ samples in column names or a `SummarizedExperiment` object.}
 sample annotation in the first column. Ignored if `exp` is
 a `SummarizedExperiment` object, since the function will extract colData.}
 
+\item{metadata_cols}{A vector (either numeric or character) indicating
+which columns should be extracted from column metadata if \strong{exp}
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.}
+
 \item{genes}{Character vector of genes to be correlated with traits.
 If not given, all genes in `exp` will be considered.}
 
 \item{alpha}{Significance level. Default is 0.05.}
+
+\item{cor_method}{Method to calculate correlation. One of 'pearson',
+'spearman' or 'kendall'. Default is 'spearman'.}
 
 \item{min_cor}{Minimum correlation coefficient. Default is 0.2.}
 
 \item{use_abs}{Logical indicating whether to filter by correlation using
 absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all
 correlations above 0.2 and below -0.2. Default is TRUE.}
-
-\item{palette}{RColorBrewer's color palette to use. Default is "RdYlBu",
-a palette ranging from blue to red.}
-
-\item{show_rownames}{Logical indicating whether to show row names or not.
-Default is FALSE.}
-
-\item{continuous_trait}{Logical indicating if trait is a continuous variable.
-Default is FALSE.}
 }
 \value{
-A heatmap of gene significance (GS) and a list containing: \itemize{
-  \item{filtered_corandp}{Filtered matrix of correlation and p-values}
-  \item{raw_GS}{Raw matrix of gene significances}
+A data frame with correlation and correlation p-values for each pair
+of gene and trait, with the following variables:
+\describe{
+  \item{gene}{Factor, gene ID.}
+  \item{trait}{Factor, trait name. Each trait corresponds to a variable
+               of the sample metadata (if numeric) or levels of a variable
+               (if categorical).}
+  \item{cor}{Numeric, correlation.}
+  \item{pvalue}{Numeric, correlation P-values.}
+  \item{group}{Character, name of the metadata variable.}
 }
 }
 \description{
@@ -57,7 +63,6 @@ Calculate gene significance for a given group of genes
 data(filt.se)
 gs <- gene_significance(filt.se)
 }
-\seealso{
-\code{\link[WGCNA]{corPvalueStudent}}
- \code{\link[RColorBrewer]{RColorBrewer}}
+\author{
+Fabricio Almeida-Silva
 }

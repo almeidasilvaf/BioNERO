@@ -322,34 +322,6 @@ get_TOMtype <- function(net_type) {
 }
 
 
-#' Wrapper to handle variable type for trait object
-#'
-#' @param metadata A data frame containing sample names in row names and
-#' sample annotation in the first column.
-#' @param continuous_trait Logical indicating if trait is a continuous variable.
-#' Default is FALSE.
-#'
-#' @return Processed trait object.
-#' @noRd
-handle_trait_type <- function(metadata, continuous_trait = FALSE) {
-    if(!continuous_trait) {
-        sampleinfo <- cbind(Samples = rownames(metadata), metadata)
-        tmpdir <- tempdir()
-        tmpfile <- tempfile(tmpdir = tmpdir, fileext = "traitmatrix.txt")
-        tablesamples <- table(sampleinfo)
-        write.table(
-            tablesamples, file = tmpfile, quote = FALSE, sep = "\t",
-            row.names = TRUE
-        )
-        trait <- read.csv(tmpfile, header = TRUE, sep = "\t", row.names = 1)
-        unlink(tmpfile)
-    } else {
-        trait <- metadata
-    }
-    return(trait)
-}
-
-
 #' Transform a correlation matrix to an edge list
 #'
 #' @param matrix Symmetrical correlation matrix.

@@ -136,17 +136,22 @@ test_that("module_trait_cor() and plot_module_trait_cor() work", {
 
 })
 
-test_that("gene_significance() returns a list of GS matrices", {
+
+test_that("gene_significance() returns a data frame of gene-trait cors", {
     gs <- gene_significance(filt.se)
     gs2 <- gene_significance(
         filt.se, genes = rownames(filt.se)[1:5], use_abs = FALSE
     )
 
-    expect_equal(class(gs), "list")
-    expect_equal(length(gs), 2)
+    p <- plot_gene_significance(gs)
 
-    expect_equal(class(gs2), "list")
-    expect_equal(length(gs2), 2)
+    expect_equal(class(gs), "data.frame")
+    expect_equal(ncol(gs), 5)
+
+    expect_equal(class(gs2), "data.frame")
+    expect_equal(ncol(gs2), 5)
+
+    expect_equal(attr(class(p), "package"), "ComplexHeatmap")
 })
 
 

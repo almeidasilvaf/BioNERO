@@ -620,8 +620,6 @@ plot_module_trait_cor <- function(corandp, palette = "RdYlBu",
 }
 
 
-
-
 #' Calculate gene significance for a given group of genes
 #'
 #' @param exp A gene expression data frame with genes in row names and
@@ -629,79 +627,176 @@ plot_module_trait_cor <- function(corandp, palette = "RdYlBu",
 #' @param metadata A data frame containing sample names in row names and
 #' sample annotation in the first column. Ignored if `exp` is
 #' a `SummarizedExperiment` object, since the function will extract colData.
+#' @param metadata_cols A vector (either numeric or character) indicating
+#' which columns should be extracted from column metadata if \strong{exp}
+#' is a `SummarizedExperiment` object. The vector can contain column
+#' indices (numeric) or column names (character). By default, all columns are
+#' used.
 #' @param genes Character vector of genes to be correlated with traits.
 #' If not given, all genes in `exp` will be considered.
 #' @param alpha Significance level. Default is 0.05.
+#' @param cor_method Method to calculate correlation. One of 'pearson',
+#' 'spearman' or 'kendall'. Default is 'spearman'.
 #' @param min_cor Minimum correlation coefficient. Default is 0.2.
 #' @param use_abs Logical indicating whether to filter by correlation using
 #' absolute value or not. If TRUE, a \code{min_cor} of say 0.2 would keep all
 #' correlations above 0.2 and below -0.2. Default is TRUE.
-#' @param palette RColorBrewer's color palette to use. Default is "RdYlBu",
-#' a palette ranging from blue to red.
-#' @param show_rownames Logical indicating whether to show row names or not.
-#' Default is FALSE.
-#' @param continuous_trait Logical indicating if trait is a continuous variable.
-#' Default is FALSE.
 #'
-#' @return A heatmap of gene significance (GS) and a list containing: \itemize{
-#'   \item{filtered_corandp}{Filtered matrix of correlation and p-values}
-#'   \item{raw_GS}{Raw matrix of gene significances}
+#' @return A data frame with correlation and correlation p-values for each pair
+#' of gene and trait, with the following variables:
+#' \describe{
+#'   \item{gene}{Factor, gene ID.}
+#'   \item{trait}{Factor, trait name. Each trait corresponds to a variable
+#'                of the sample metadata (if numeric) or levels of a variable
+#'                (if categorical).}
+#'   \item{cor}{Numeric, correlation.}
+#'   \item{pvalue}{Numeric, correlation P-values.}
+#'   \item{group}{Character, name of the metadata variable.}
 #' }
-#' @seealso
-#'  \code{\link[WGCNA]{corPvalueStudent}}
-#'  \code{\link[RColorBrewer]{RColorBrewer}}
+#'
+#' @author Fabricio Almeida-Silva
 #' @rdname gene_significance
 #' @export
-#' @importFrom reshape2 melt
 #' @importFrom WGCNA corPvalueStudent
-#' @importFrom ComplexHeatmap pheatmap
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom SummarizedExperiment colData
+#' @importFrom reshape2 melt
 #' @examples
 #' data(filt.se)
 #' gs <- gene_significance(filt.se)
-gene_significance <- function(exp, metadata, genes = NULL,
-                              alpha = 0.05, min_cor = 0.2,
-                              use_abs = TRUE,
-                              palette = "RdYlBu", show_rownames = FALSE,
-                              continuous_trait = FALSE) {
+gene_significance <- function(
+        exp, metadata, metadata_cols = NULL, genes = NULL, alpha = 0.05,
+        cor_method = "pearson", min_cor = 0.2, use_abs = TRUE
+) {
+
     if(is(exp, "SummarizedExperiment")) {
-        metadata <- as.data.frame(SummarizedExperiment::colData(exp))
+        metadata <- se2metadata(exp, coldata_cols = metadata_cols)$coldata
     }
+
+    # Make sure samples in expression matrix and sample metadata match
     exp <- handleSE(exp)
+    metadata <- metadata[colnames(exp), , drop = FALSE]
     final_exp <- exp[, rownames(metadata)]
+
+    # Use only a subset of genes?
     if(!is.null(genes)) {
         final_exp <- final_exp[genes, , drop = FALSE]
     }
-    trait <- handle_trait_type(metadata, continuous_trait)
-    GS <- cor(as.matrix(t(final_exp)), trait, use = "p")
 
-    # Filter by correlation coefficient and p-value
-    melt.cor <- reshape2::melt(GS)
+    # Get data frame of gene-trait correlations and P-values for each variable
+    cor_df <- Reduce(rbind, lapply(seq_along(metadata), function(x) {
 
-    nSamples <- ncol(final_exp)
-    GS.pvalue <- WGCNA::corPvalueStudent(GS, nSamples)
-    melt.pvalue <- reshape2::melt(GS.pvalue)
+        ## Get matrices of correlations, P-values, and P-value symbols
+        trait <- get_model_matrix(metadata, column_idx = x)
+        cor_matrix <- cor(
+            as.matrix(t(exp)), trait, use = "p", method = cor_method
+        )
+        pvalues <- WGCNA::corPvalueStudent(cor_matrix, nSamples = ncol(exp))
 
-    corandp <- merge(melt.cor, melt.pvalue, by = c("Var1", "Var2"))
-    corandp$Var1 <- as.character(corandp$Var1)
-    corandp$Var2 <- as.character(corandp$Var2)
+        ## Reshape to long format and merge data frames into one
+        v <- c("gene", "trait")
+        cor_long <- reshape2::melt(cor_matrix, value.name = "cor", varnames = v)
+        p_long <- reshape2::melt(pvalues, value.name = "pvalue", varnames = v)
 
-    colnames(corandp) <- c("gene", "trait", "cor", "pvalue")
+        final_df <- merge(cor_long, p_long)
+        final_df$group <- names(metadata)[x]
 
+        return(final_df)
+    }))
+
+    # Filter by correlation and P-value
     if(use_abs) {
-        corandp <- corandp[corandp$pvalue < alpha & abs(corandp$cor) > min_cor, ]
+        cor_df <- cor_df[cor_df$pvalue < alpha & abs(cor_df$cor) >= min_cor, ]
     } else {
-        corandp <- corandp[corandp$pvalue < alpha & corandp$cor > min_cor, ]
+        cor_df <- cor_df[cor_df$pvalue < alpha & cor_df$cor >= min_cor, ]
     }
-    cols <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
-    p <- ComplexHeatmap::pheatmap(
-        as.matrix(GS), border_color = NA, color = cols,
-        show_rownames = show_rownames, main = "Gene-trait correlations"
+
+    return(cor_df)
+}
+
+
+#' Plot a heatmap of gene significance
+#'
+#' @param corandp A data frame of gene-trait correlations as returned
+#' by \code{gene_significance()}.
+#' @param palette Character indicating which RColorBrewer palette to use.
+#' Default: 'RdYlBu'.
+#' @param transpose Logical indicating whether to transpose the heatmap
+#' or not.
+#' @param ... Additional arguments to \code{ComplexHeatmap::pheatmap()}.
+#'
+#' @details Significance levels:
+#' 1 asterisk: significant at alpha = 0.05.
+#' 2 asterisks: significant at alpha = 0.01.
+#' 3 asterisks: significant at alpha = 0.001.
+#' no asterisk: not significant.
+#'
+#' @return A `Heatmap` object created by \code{ComplexHeatmap::pheatmap()}.
+#'
+#' @export
+#' @rdname plot_gene_significance
+#' @importFrom reshape2 dcast
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom ComplexHeatmap pheatmap
+#' @examples
+#' data(filt.se)
+#' gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
+#' corandp <- gene_significance(filt.se)
+#' plot_gene_significance(corandp, show_rownames = FALSE)
+plot_gene_significance <- function(
+        corandp, palette = "RdYlBu", transpose = FALSE, ...
+) {
+
+    # Get a wide matrix of correlations
+    cormat <- reshape2::dcast(corandp, gene ~ trait, value.var = "cor")
+    rownames(cormat) <- cormat$gene
+    cormat$gene <- NULL
+    cormat <- as.matrix(cormat)
+    cormat[is.na(cormat)] <- 0
+
+    # Create a matrix of correlations and P-value symbols to display
+    ## Get a matrix of P-values and convert values to symbols
+    pmat <- reshape2::dcast(corandp, gene ~ trait, value.var = "pvalue")
+    rownames(pmat) <- pmat$gene
+    pmat$gene <- NULL
+    pmat <- pval2symbol(as.matrix(pmat))
+    pmat[is.na(pmat)] <- ""
+
+    ## Get a matrices of correlations and P-values
+    textmat <- paste(signif(cormat, 2), pmat, sep = "")
+    dim(textmat) <- dim(cormat)
+
+    # Get column annotation to decorate the heatmap
+    coldata <- corandp[!duplicated(corandp$trait), ]
+    coldata <- data.frame(row.names = coldata$trait, Trait = coldata$group)
+    coldata <- coldata[colnames(cormat), , drop = FALSE]
+
+    # Create a list of named vectors with colors to use in the heatmap
+    cols <- list(
+        Trait = setNames(
+            custom_palette(1)[seq_along(unique(corandp$group))],
+            unique(corandp$group)
+        )
     )
 
-    resultlist <- list(filtered_corandp = corandp, raw_GS = GS)
-    return(resultlist)
+    # Plot heatmap
+    pal <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, palette)))(100)
+
+    hm <- ComplexHeatmap::pheatmap(
+        mat = if(transpose) t(cormat) else cormat,
+        name = "Correlation",
+        color = pal,
+        display_numbers = FALSE,
+        main = "Gene-trait correlations",
+        legend_breaks = seq(-1, 1, 0.5),
+        breaks = seq(-1, 1, 0.02),
+        annotation_row = if(transpose) coldata else NA,
+        annotation_col = if(transpose) NA else coldata,
+        annotation_colors = cols,
+        row_split = if(transpose) coldata$Trait else NULL,
+        column_split = if(transpose) NULL else coldata$Trait,
+        ...
+    )
+
+    return(hm)
 }
 
 
@@ -924,10 +1019,13 @@ enrichment_analysis <- function(
 
         ## Get ORA results and add `category` column
         ora_df <- ora(genes, gene_sets, background_genes, correction)
-        ora_df$category <- names(fannot)[x]
 
-        ## Filter non-significant observations out
-        ora_df <- ora_df[ora_df$padj <= p, ]
+        if(nrow(ora_df) > 0) {
+            ora_df$category <- names(fannot)[x]
+
+            ## Filter non-significant observations out
+            ora_df <- ora_df[ora_df$padj <= p, ]
+        }
 
     }, BPPARAM = bp_param)
 
@@ -1002,6 +1100,7 @@ module_enrichment <- function(
     list.gmodules <- list.gmodules[names(list.gmodules) != "grey"]
 
     enrichment_all <- bplapply(seq_along(list.gmodules), function(x) {
+
         module <- names(list.gmodules)[x]
         message("Enrichment analysis for module ", module, "...")
 
@@ -1016,14 +1115,17 @@ module_enrichment <- function(
         )
 
         # Either add a column `module` or set `l` to NULL
-        if(nrow(l) > 0) {
-            l$module <- module
-        } else {
-            l <- NULL
+        if(!is.null(l)) {
+            if(nrow(l) > 0) {
+                l$module <- module
+            } else {
+                l <- NULL
+            }
         }
 
         return(l)
     }, BPPARAM = bp_param)
+
     enrichment_all <- Reduce(rbind, enrichment_all)
 
     return(enrichment_all)
