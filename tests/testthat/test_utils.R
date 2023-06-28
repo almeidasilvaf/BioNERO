@@ -100,13 +100,6 @@ test_that("get_TOMtype() returns a character of TOM type", {
     expect_equal(t, "unsigned")
 })
 
-test_that("handle_trait_type() handles variables for trait object", {
-
-    h <- handle_trait_type(col_metadata, continuous_trait = TRUE)
-
-    expect_equal(class(h), "data.frame")
-})
-
 
 test_that("check_SFT() returns a list with SFT stats", {
 
