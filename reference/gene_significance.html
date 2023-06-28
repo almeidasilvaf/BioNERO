@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,13 +62,12 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gene_significance</span><span class="op">(</span></span>
 <span>  <span class="va">exp</span>,</span>
 <span>  <span class="va">metadata</span>,</span>
+<span>  metadata_cols <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  cor_method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
 <span>  min_cor <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>  use_abs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  palette <span class="op">=</span> <span class="st">"RdYlBu"</span>,</span>
-<span>  show_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  continuous_trait <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  use_abs <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,6 +84,14 @@ sample annotation in the first column. Ignored if `exp` is
 a `SummarizedExperiment` object, since the function will extract colData.</p></dd>
 
 
+<dt>metadata_cols</dt>
+<dd><p>A vector (either numeric or character) indicating
+which columns should be extracted from column metadata if <strong>exp</strong>
+is a `SummarizedExperiment` object. The vector can contain column
+indices (numeric) or column names (character). By default, all columns are
+used.</p></dd>
+
+
 <dt>genes</dt>
 <dd><p>Character vector of genes to be correlated with traits.
 If not given, all genes in `exp` will be considered.</p></dd>
@@ -92,6 +99,11 @@ If not given, all genes in `exp` will be considered.</p></dd>
 
 <dt>alpha</dt>
 <dd><p>Significance level. Default is 0.05.</p></dd>
+
+
+<dt>cor_method</dt>
+<dd><p>Method to calculate correlation. One of 'pearson',
+'spearman' or 'kendall'. Default is 'spearman'.</p></dd>
 
 
 <dt>min_cor</dt>
@@ -103,33 +115,34 @@ If not given, all genes in `exp` will be considered.</p></dd>
 absolute value or not. If TRUE, a <code>min_cor</code> of say 0.2 would keep all
 correlations above 0.2 and below -0.2. Default is TRUE.</p></dd>
 
-
-<dt>palette</dt>
-<dd><p>RColorBrewer's color palette to use. Default is "RdYlBu",
-a palette ranging from blue to red.</p></dd>
-
-
-<dt>show_rownames</dt>
-<dd><p>Logical indicating whether to show row names or not.
-Default is FALSE.</p></dd>
-
-
-<dt>continuous_trait</dt>
-<dd><p>Logical indicating if trait is a continuous variable.
-Default is FALSE.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A heatmap of gene significance (GS) and a list containing:</p><ul><li><p>filtered_corandpFiltered matrix of correlation and p-values</p></li>
-<li><p>raw_GSRaw matrix of gene significances</p></li>
-</ul></div>
+<p>A data frame with correlation and correlation p-values for each pair
+of gene and trait, with the following variables:</p><dl><dt>gene</dt>
+<dd><p>Factor, gene ID.</p></dd>
+
+  <dt>trait</dt>
+<dd><p>Factor, trait name. Each trait corresponds to a variable
+               of the sample metadata (if numeric) or levels of a variable
+               (if categorical).</p></dd>
+
+  <dt>cor</dt>
+<dd><p>Numeric, correlation.</p></dd>
+
+  <dt>pvalue</dt>
+<dd><p>Numeric, correlation P-values.</p></dd>
+
+  <dt>group</dt>
+<dd><p>Character, name of the metadata variable.</p></dd>
+
+
+</dl></div>
     <div class="section level2">
-    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/WGCNA/man/corPvalueStudent.html" class="external-link">corPvalueStudent</a></code>
- <code><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">RColorBrewer</a></code></p></div>
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p>Fabricio Almeida-Silva</p>
     </div>
 
     <div class="section level2">
