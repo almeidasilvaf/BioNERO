@@ -321,7 +321,7 @@ consensus_modules <- function(
         dendro_plot_objects = list(
             tree = consTree,
             Unmerged = unmergedColors,
-            Merged = moduleColors
+            Merged = merge$colors
         )
     )
     return(result_list)
