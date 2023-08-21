@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Network comparison: consensus modules and module preservation">
@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -278,12 +278,12 @@ sets.</p>
 <span><span class="co">## [4] "genes_cmodules"      "dendro_plot_objects"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">consensus</span><span class="op">$</span><span class="va">genes_cmodules</span><span class="op">)</span></span>
 <span><span class="co">##       Genes Cons_modules</span></span>
-<span><span class="co">## 1 ZeamMp030    royalblue</span></span>
-<span><span class="co">## 2 ZeamMp044      darkred</span></span>
-<span><span class="co">## 3 ZeamMp092      darkred</span></span>
-<span><span class="co">## 4 ZeamMp108  saddlebrown</span></span>
-<span><span class="co">## 5 ZeamMp116      darkred</span></span>
-<span><span class="co">## 6 ZeamMp158  saddlebrown</span></span></code></pre></div>
+<span><span class="co">## 1 ZeamMp030    lightcyan</span></span>
+<span><span class="co">## 2 ZeamMp044       grey60</span></span>
+<span><span class="co">## 3 ZeamMp092       grey60</span></span>
+<span><span class="co">## 4 ZeamMp108         blue</span></span>
+<span><span class="co">## 5 ZeamMp116       grey60</span></span>
+<span><span class="co">## 6 ZeamMp158         blue</span></span></code></pre></div>
 <p>Finally, we can correlate consensus module eigengenes to sample
 metadata (here, plant tissues).<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Blank grey cells in the heatmap
 represent correlation values that have opposite sign in the expression
@@ -467,24 +467,24 @@ a single function: <code><a href="../reference/module_preservation.html">module_
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ref_net =</span> gcns[[<span class="dv">1</span>]], </span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">test_net =</span> gcns[[<span class="dv">2</span>]], </span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">algorithm =</span> <span class="st">"netrep"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:15 UTC] Validating user input...</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:15 UTC]   Checking matrices for problems...</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:15 UTC] Input ok!</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:15 UTC] Calculating preservation of network subsets from</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:48 UTC] Validating user input...</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:48 UTC]   Checking matrices for problems...</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:49 UTC] Input ok!</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:49 UTC] Calculating preservation of network subsets from</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##                           dataset "osa" in dataset "zma".</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:15 UTC]   Pre-computing network properties in dataset</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:49 UTC]   Pre-computing network properties in dataset</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                             "osa"...</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:17 UTC]   Calculating observed test statistics...</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:17 UTC]   Generating null distributions from 1000</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:50 UTC]   Calculating observed test statistics...</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:50 UTC]   Generating null distributions from 1000</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                             permutations using 1 thread...</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>% completed.</span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">100</span>% completed.</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:18 UTC]   Calculating P-values...</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:18 UTC]   Collating results...</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-06-28 07:45:21 UTC] Done!</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:51 UTC]   Calculating P-values...</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:51 UTC]   Collating results...</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [2023-08-21 08:04:52 UTC] Done!</span></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 modules in osa were preserved in zma:</span></span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="do">## NA</span></span></code></pre></div>
 <p>None of the modules in rice were preserved in maize. This can be
@@ -552,46 +552,46 @@ vectors indicating if each of the input genes is a singleton or not.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BioNERO_1.9.5    BiocStyle_2.28.0</span></span>
+<span><span class="co">## [1] BioNERO_1.9.7    BiocStyle_2.28.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] RColorBrewer_1.1-3          ggdendro_0.1.23            </span></span>
-<span><span class="co">##   [3] rstudioapi_0.14             jsonlite_1.8.5             </span></span>
+<span><span class="co">##   [3] rstudioapi_0.15.0           jsonlite_1.8.7             </span></span>
 <span><span class="co">##   [5] shape_1.4.6                 NetRep_1.2.6               </span></span>
 <span><span class="co">##   [7] magrittr_2.0.3              farver_2.1.1               </span></span>
-<span><span class="co">##   [9] rmarkdown_2.22              GlobalOptions_0.1.2        </span></span>
-<span><span class="co">##  [11] fs_1.6.2                    zlibbioc_1.46.0            </span></span>
+<span><span class="co">##   [9] rmarkdown_2.24              GlobalOptions_0.1.2        </span></span>
+<span><span class="co">##  [11] fs_1.6.3                    zlibbioc_1.46.0            </span></span>
 <span><span class="co">##  [13] ragg_1.2.5                  vctrs_0.6.3                </span></span>
 <span><span class="co">##  [15] memoise_2.0.1               RCurl_1.98-1.12            </span></span>
-<span><span class="co">##  [17] base64enc_0.1-3             htmltools_0.5.5            </span></span>
-<span><span class="co">##  [19] S4Arrays_1.0.4              dynamicTreeCut_1.63-1      </span></span>
-<span><span class="co">##  [21] Formula_1.2-5               sass_0.4.6                 </span></span>
-<span><span class="co">##  [23] bslib_0.5.0                 htmlwidgets_1.6.2          </span></span>
+<span><span class="co">##  [17] base64enc_0.1-3             htmltools_0.5.6            </span></span>
+<span><span class="co">##  [19] S4Arrays_1.0.5              dynamicTreeCut_1.63-1      </span></span>
+<span><span class="co">##  [21] Formula_1.2-5               sass_0.4.7                 </span></span>
+<span><span class="co">##  [23] bslib_0.5.1                 htmlwidgets_1.6.2          </span></span>
 <span><span class="co">##  [25] desc_1.4.2                  plyr_1.8.8                 </span></span>
 <span><span class="co">##  [27] impute_1.74.1               cachem_1.0.8               </span></span>
-<span><span class="co">##  [29] igraph_1.5.0                lifecycle_1.0.3            </span></span>
+<span><span class="co">##  [29] igraph_1.5.1                lifecycle_1.0.3            </span></span>
 <span><span class="co">##  [31] ggnetwork_0.5.12            iterators_1.0.14           </span></span>
-<span><span class="co">##  [33] pkgconfig_2.0.3             Matrix_1.5-4.1             </span></span>
+<span><span class="co">##  [33] pkgconfig_2.0.3             Matrix_1.6-1               </span></span>
 <span><span class="co">##  [35] R6_2.5.1                    fastmap_1.1.1              </span></span>
-<span><span class="co">##  [37] GenomeInfoDbData_1.2.10     MatrixGenerics_1.12.2      </span></span>
-<span><span class="co">##  [39] clue_0.3-64                 digest_0.6.32              </span></span>
-<span><span class="co">##  [41] colorspace_2.1-0            patchwork_1.1.2            </span></span>
-<span><span class="co">##  [43] AnnotationDbi_1.62.1        S4Vectors_0.38.1           </span></span>
+<span><span class="co">##  [37] GenomeInfoDbData_1.2.10     MatrixGenerics_1.12.3      </span></span>
+<span><span class="co">##  [39] clue_0.3-64                 digest_0.6.33              </span></span>
+<span><span class="co">##  [41] colorspace_2.1-0            patchwork_1.1.3            </span></span>
+<span><span class="co">##  [43] AnnotationDbi_1.62.2        S4Vectors_0.38.1           </span></span>
 <span><span class="co">##  [45] rprojroot_2.0.3             GENIE3_1.22.0              </span></span>
 <span><span class="co">##  [47] textshaping_0.3.6           Hmisc_5.1-0                </span></span>
 <span><span class="co">##  [49] GenomicRanges_1.52.0        RSQLite_2.3.1              </span></span>
 <span><span class="co">##  [51] labeling_0.4.2              fansi_1.0.4                </span></span>
-<span><span class="co">##  [53] mgcv_1.8-42                 httr_1.4.6                 </span></span>
+<span><span class="co">##  [53] mgcv_1.9-0                  httr_1.4.7                 </span></span>
 <span><span class="co">##  [55] abind_1.4-5                 compiler_4.3.0             </span></span>
 <span><span class="co">##  [57] withr_2.5.0                 bit64_4.0.5                </span></span>
 <span><span class="co">##  [59] doParallel_1.0.17           htmlTable_2.4.1            </span></span>
 <span><span class="co">##  [61] backports_1.4.1             BiocParallel_1.34.2        </span></span>
 <span><span class="co">##  [63] DBI_1.1.3                   intergraph_2.0-2           </span></span>
 <span><span class="co">##  [65] highr_0.10                  MASS_7.3-60                </span></span>
-<span><span class="co">##  [67] DelayedArray_0.26.3         rjson_0.2.21               </span></span>
+<span><span class="co">##  [67] DelayedArray_0.26.7         rjson_0.2.21               </span></span>
 <span><span class="co">##  [69] tools_4.3.0                 foreign_0.8-84             </span></span>
 <span><span class="co">##  [71] nnet_7.3-19                 glue_1.6.2                 </span></span>
-<span><span class="co">##  [73] nlme_3.1-162                grid_4.3.0                 </span></span>
+<span><span class="co">##  [73] nlme_3.1-163                grid_4.3.0                 </span></span>
 <span><span class="co">##  [75] checkmate_2.2.0             reshape2_1.4.4             </span></span>
 <span><span class="co">##  [77] cluster_2.1.4               sva_3.48.0                 </span></span>
 <span><span class="co">##  [79] generics_0.1.3              gtable_0.3.3               </span></span>
@@ -603,30 +603,30 @@ vectors indicating if each of the input genes is a singleton or not.</p>
 <span><span class="co">##  [91] limma_3.56.2                genefilter_1.82.1          </span></span>
 <span><span class="co">##  [93] circlize_0.4.15             splines_4.3.0              </span></span>
 <span><span class="co">##  [95] dplyr_1.1.2                 lattice_0.21-8             </span></span>
-<span><span class="co">##  [97] survival_3.5-5              bit_4.0.5                  </span></span>
+<span><span class="co">##  [97] survival_3.5-7              bit_4.0.5                  </span></span>
 <span><span class="co">##  [99] annotate_1.78.0             tidyselect_1.2.0           </span></span>
 <span><span class="co">## [101] locfit_1.5-9.8              GO.db_3.17.0               </span></span>
 <span><span class="co">## [103] ComplexHeatmap_2.16.0       Biostrings_2.68.1          </span></span>
 <span><span class="co">## [105] knitr_1.43                  gridExtra_2.3              </span></span>
-<span><span class="co">## [107] bookdown_0.34               IRanges_2.34.1             </span></span>
+<span><span class="co">## [107] bookdown_0.35               IRanges_2.34.1             </span></span>
 <span><span class="co">## [109] edgeR_3.42.4                SummarizedExperiment_1.30.2</span></span>
 <span><span class="co">## [111] RhpcBLASctl_0.23-42         stats4_4.3.0               </span></span>
-<span><span class="co">## [113] xfun_0.39                   Biobase_2.60.0             </span></span>
+<span><span class="co">## [113] xfun_0.40                   Biobase_2.60.0             </span></span>
 <span><span class="co">## [115] statmod_1.5.0               matrixStats_1.0.0          </span></span>
 <span><span class="co">## [117] stringi_1.7.12              statnet.common_4.9.0       </span></span>
 <span><span class="co">## [119] yaml_2.3.7                  minet_3.58.0               </span></span>
 <span><span class="co">## [121] evaluate_0.21               codetools_0.2-19           </span></span>
-<span><span class="co">## [123] tibble_3.2.1                BiocManager_1.30.21        </span></span>
+<span><span class="co">## [123] tibble_3.2.1                BiocManager_1.30.22        </span></span>
 <span><span class="co">## [125] cli_3.6.1                   rpart_4.1.19               </span></span>
 <span><span class="co">## [127] xtable_1.8-4                systemfonts_1.0.4          </span></span>
 <span><span class="co">## [129] munsell_0.5.0               jquerylib_0.1.4            </span></span>
-<span><span class="co">## [131] network_1.18.1              Rcpp_1.0.10                </span></span>
+<span><span class="co">## [131] network_1.18.1              Rcpp_1.0.11                </span></span>
 <span><span class="co">## [133] GenomeInfoDb_1.36.1         coda_0.19-4                </span></span>
 <span><span class="co">## [135] png_0.1-8                   XML_3.99-0.14              </span></span>
 <span><span class="co">## [137] fastcluster_1.2.3           parallel_4.3.0             </span></span>
-<span><span class="co">## [139] pkgdown_2.0.7               ggplot2_3.4.2              </span></span>
+<span><span class="co">## [139] pkgdown_2.0.7               ggplot2_3.4.3              </span></span>
 <span><span class="co">## [141] blob_1.2.4                  bitops_1.0-7               </span></span>
-<span><span class="co">## [143] scales_1.2.1                purrr_1.0.1                </span></span>
+<span><span class="co">## [143] scales_1.2.1                purrr_1.0.2                </span></span>
 <span><span class="co">## [145] crayon_1.5.2                GetoptLong_1.0.5           </span></span>
 <span><span class="co">## [147] rlang_1.1.1                 KEGGREST_1.40.0</span></span></code></pre>
 </div>
