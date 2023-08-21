@@ -152,6 +152,11 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 #' "signed" or "unsigned".
 #' @param module_merging_threshold Correlation threshold to merge
 #' similar modules into a single one. Default: 0.8.
+#' @param TOM_type Character indicating the type of Topological
+#' Overlap Matrix to (TOM) create. One of
+#' 'unsigned', 'signed', 'signed Nowick', 'unsigned 2', 'signed 2',
+#' and 'signed Nowick 2'. By default, TOM type is automatically
+#' selected based on network type.
 #' @param verbose Logical indicating whether to display progress
 #' messages or not. Default: FALSE.
 #'
@@ -181,7 +186,9 @@ consensus_SFT_fit <- function(exp_list, setLabels = NULL, metadata = NULL,
 consensus_modules <- function(
         exp_list, metadata, power,
         cor_method = "spearman", net_type = "signed hybrid",
-        module_merging_threshold = 0.8, verbose = FALSE
+        module_merging_threshold = 0.8,
+        TOM_type = NULL,
+        verbose = FALSE
 ) {
 
     nSets <- length(exp_list)
@@ -246,6 +253,8 @@ consensus_modules <- function(
         "signed" = "signed Nowick",
         "unsigned"
     )
+    if(!is.null(TOM_type)) { tom_type <- TOM_type }
+
     TOM <- lapply(adj, function(x) return(TOMsimilarity(x, TOMType = tom_type)))
 
     # Scaling TOM to make them comparable
@@ -291,18 +300,15 @@ consensus_modules <- function(
     unmergedMEs <- WGCNA::multiSetMEs(
         multiExp, colors = NULL, universalColors = unmergedColors
     )
-    consMEDiss <- WGCNA::consensusMEDissimilarity(unmergedMEs)
-    consMETree <- hclust(as.dist(consMEDiss), method = "average")
 
     merging_threshold <- 1-module_merging_threshold
     merge <- WGCNA::mergeCloseModules(
         multiExp, unmergedColors, cutHeight = merging_threshold, verbose = 0
     )
 
-    moduleLabels <- merge$colors
-    moduleColors <- WGCNA::labels2colors(moduleLabels, colorSeq = palette)
     genes_cmod <- data.frame(
-        Genes = rownames(adj[[1]]), Cons_modules = moduleColors
+        Genes = rownames(adj[[1]]),
+        Cons_modules = merge$colors
     )
     consMEs <- merge$newMEs
 

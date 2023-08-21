@@ -11,6 +11,7 @@ consensus_modules(
   cor_method = "spearman",
   net_type = "signed hybrid",
   module_merging_threshold = 0.8,
+  TOM_type = NULL,
   verbose = FALSE
 )
 }
@@ -35,6 +36,12 @@ One of "spearman" (default), "biweight", or "pearson".}
 
 \item{module_merging_threshold}{Correlation threshold to merge
 similar modules into a single one. Default: 0.8.}
+
+\item{TOM_type}{Character indicating the type of Topological
+Overlap Matrix to (TOM) create. One of
+'unsigned', 'signed', 'signed Nowick', 'unsigned 2', 'signed 2',
+and 'signed Nowick 2'. By default, TOM type is automatically
+selected based on network type.}
 
 \item{verbose}{Logical indicating whether to display progress
 messages or not. Default: FALSE.}
