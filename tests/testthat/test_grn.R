@@ -101,7 +101,7 @@ test_that("get_hubs_grn() returns a data frame with hub genes and their out degr
 })
 
 test_that("get_hubs_ppi() returns a list or data frame of hubs and degree", {
-    ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+    ppi_edges <- igraph::as_edgelist(igraph::sample_pa(n=500))
     hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
     hubs2 <- get_hubs_ppi(ppi_edges, top_n = 1)
 

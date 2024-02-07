@@ -60,6 +60,7 @@ ranked_grn <- grn_average_rank(grn_list)
 # split in only 2 groups for demonstration purposes
 filtered_edges <- grn_filter(ranked_grn, nsplit=2)
 hubs <- get_hubs_grn(filtered_edges)
-ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+ppi_edges <- igraph::sample_pa(n = 500)
+ppi_edges <- igraph::as_edgelist(ppi_edges)
 hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
 }

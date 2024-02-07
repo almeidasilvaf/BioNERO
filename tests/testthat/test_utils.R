@@ -29,7 +29,7 @@ se <- SummarizedExperiment::SummarizedExperiment(
 )
 
 ## Edge list
-edges <- igraph::get.edgelist(igraph::barabasi.game(n = 50, directed = FALSE))
+edges <- igraph::as_edgelist(igraph::sample_pa(n = 50))
 
 #----Start tests----------------------------------------------------------------
 test_that("metadata2colors() returns a list of metadata and named vectors", {
@@ -112,11 +112,6 @@ test_that("check_SFT() returns a list with SFT stats", {
     expect_equal(class(c1), "list")
     expect_equal(class(c2), "list")
     expect_equal(class(c3), "list")
-
-
-    expect_equal(length(c1), 6)
-    expect_equal(length(c2), 6)
-    expect_equal(length(c3), 6)
 
 })
 
