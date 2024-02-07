@@ -58,7 +58,8 @@ A ggplot object.
 Plot protein-protein interaction network from edge list
 }
 \examples{
-ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
+ppi_edges <- igraph::sample_pa(n = 500)
+ppi_edges <- igraph::as_edgelist(ppi_edges)
 p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
 }
 \author{

@@ -25,7 +25,10 @@
 #' @rdname detect_communities
 #' @author Fabricio Almeida-Silva
 #' @export
-#' @importFrom igraph graph.data.frame simplify cluster_infomap cluster_edge_betweenness cluster_fast_greedy cluster_walktrap cluster_spinglass cluster_leading_eigen cluster_louvain cluster_label_prop
+#' @importFrom igraph graph_from_data_frame simplify cluster_infomap
+#' cluster_edge_betweenness cluster_fast_greedy
+#' cluster_walktrap cluster_spinglass cluster_leading_eigen
+#' cluster_louvain cluster_label_prop
 #' @examples
 #' data(filt.se)
 #' tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
@@ -34,7 +37,7 @@
 detect_communities <- function(edgelist,
                                method = igraph::cluster_infomap,
                                directed = TRUE) {
-    graph <- igraph::graph.data.frame(edgelist, directed = directed)
+    graph <- igraph::graph_from_data_frame(edgelist, directed = directed)
     graph <- igraph::simplify(graph)
     com <- method(graph, modularity = FALSE)
     df_com <- as.data.frame(list(names = com$names, mem = com$membership))
@@ -80,7 +83,8 @@ detect_communities <- function(edgelist,
 #' @importFrom ggplot2 ggplot aes guides
 #' @import intergraph
 #' @examples
-#' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
+#' ppi_edges <- igraph::sample_pa(n = 500)
+#' ppi_edges <- igraph::as_edgelist(ppi_edges)
 #' p <- plot_ppi(ppi_edges, add_color_legend = FALSE)
 plot_ppi <- function(edgelist_int, color_by = "community",
                      clustering_method = igraph::cluster_infomap,

@@ -368,7 +368,8 @@ get_hubs_grn <- function(edgelist, top_percentile = 0.1, top_n = NULL,
 #' @rdname get_hubs_grn
 #' @importFrom igraph graph_from_data_frame degree
 #' @examples
-#' ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=500, directed=FALSE))
+#' ppi_edges <- igraph::sample_pa(n = 500)
+#' ppi_edges <- igraph::as_edgelist(ppi_edges)
 #' hubs <- get_hubs_ppi(ppi_edges, return_degree = TRUE)
 get_hubs_ppi <- function(edgelist, top_percentile = 0.1, top_n = NULL,
                          return_degree = FALSE) {

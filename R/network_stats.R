@@ -33,7 +33,7 @@
 #' @export
 #' @importFrom igraph graph_from_adjacency_matrix cliques diameter
 #' betweenness V closeness degree transitivity edge_density
-#' centralization.degree
+#' centr_degree
 #' @importFrom WGCNA fundamentalNetworkConcepts
 #' @examples
 #' \donttest{
@@ -75,7 +75,7 @@ net_stats <- function(adj_matrix = NULL, net_type = c("gcn", "ppi", "grn"),
         degree <- igraph::degree(graph, mode = "all")
         clustercoef <- igraph::transitivity(graph, type = "global")
         density <- igraph::edge_density(graph)
-        centralization <- igraph::centralization.degree(graph)$centralization
+        centralization <- igraph::centr_degree(graph)$centralization
         stats <- list(
             Connectivity = degree,
             ScaledConnectiviy = degree / max(degree),

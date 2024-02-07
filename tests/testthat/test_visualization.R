@@ -5,7 +5,7 @@ tfs <- sample(rownames(filt.se), size=50, replace=FALSE)
 
 ## Infer networks to be used
 set.seed(123)
-ppi_edges <- igraph::get.edgelist(igraph::barabasi.game(n=50, directed=FALSE))
+ppi_edges <- igraph::as_edgelist(igraph::sample_pa(n=50))
 gcn <- exp2gcn(filt.se, SFTpower = 18, cor_method = "pearson")
 gcn_edges <- get_edge_list(
     gcn, module = "brown", filter = TRUE, method = "min_cor"
