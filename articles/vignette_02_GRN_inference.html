@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Gene regulatory network inference">
@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">BioNERO</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
 
 
 
-<script src="vignette_02_GRN_inference_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><script src="vignette_02_GRN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_02_GRN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
+<script src="vignette_02_GRN_inference_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="vignette_02_GRN_inference_files/d3-4.5.0/d3.min.js"></script><script src="vignette_02_GRN_inference_files/forceNetwork-binding-0.4/forceNetwork.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Gene regulatory network inference</h1>
                         <h4 data-toc-skip class="author">Fabricio
@@ -356,7 +356,7 @@ with <code><a href="../reference/get_hubs_grn.html">get_hubs_grn()</a></code>.</
 purposes.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_grn.html">plot_grn</a></span><span class="op">(</span><span class="va">grn</span>, interactive <span class="op">=</span> <span class="cn">TRUE</span>, dim_interactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>,<span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div id="htmlwidget-9fd877761fc93a272d04" style="width:500px;height:500px;" class="forceNetwork html-widget "></div>
+<div id="htmlwidget-9fd877761fc93a272d04" style="width:500px;height:500px;" class="forceNetwork html-widget"></div>
 <script type="application/json" data-for="htmlwidget-9fd877761fc93a272d04">{"x":{"links":{"source":[18,17,3,26,12,22,3,25,3,24,1,1,16,24,5,20,3,22,18,0,0,16,1,7,14,0,1,25,6,1,4,1,12,8,3,5,2,5,3,29,18,6,26,0,19,5,17,17,18,2,23,6,1,19,1,24,6,27,12,0,28,5,30,26,24,6,6,0,0,10,9,10,10,5,26,17,12,2,11,23,26,5,0,27,3,0,27,14,18,9,4,13,3,3,17,2,9,11,20,14,19,11,15,23,5,15,16,7,23,24,7,3,6,28,16,23,5,19,20,0,13,22,28,20,15,26,24,9,26,2,28,15,8,24,17,4,2,25,2,30,22,21,12,12,18,20,22,16,8,5,20,9,10,21,0,21,17,12,21,18,7,7,16,9,7,18,22,14,29,27,21,22,13,24,13,0,13,25,9,29,26,11,12,6,21,16,15,22,2,18,4,12,24,10,1,25,8,23,8,3,17,22,22,21,4,10,7,3,17,26,8,5,2,30,4,16,7,7,23,9,3,7,8,15,11,16,3,14,30,19,3,6,14,6,23,0,7,5,25,5,2,7,26,24,11,3,6],"target":[252,164,108,250,113,212,152,77,161,75,145,197,192,209,211,200,136,151,61,32,33,55,129,242,175,50,114,96,96,187,58,54,204,41,150,135,153,38,239,254,257,147,183,89,120,112,92,109,185,98,70,244,190,88,207,243,233,233,47,43,130,166,166,165,165,255,248,191,221,139,103,103,95,196,127,202,80,195,46,186,111,216,68,213,177,31,227,251,106,132,102,49,36,259,176,170,105,107,179,51,256,168,53,53,232,234,240,84,181,91,48,48,140,203,73,73,220,188,123,57,90,124,156,66,97,149,149,64,249,229,157,74,52,184,184,122,56,174,169,169,69,208,86,87,180,206,253,238,133,261,160,172,225,141,142,215,76,171,137,167,119,235,173,237,60,121,78,231,258,85,194,138,158,144,128,82,155,198,42,182,116,228,99,214,67,65,65,217,199,230,125,218,146,44,34,223,118,118,201,154,205,126,134,222,37,193,40,93,59,79,236,224,35,241,131,246,260,104,81,189,178,162,226,115,115,115,143,110,245,62,94,83,72,71,100,45,219,247,159,63,148,117,163,163,210,101,39],"colour":["#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666","#666"]},"nodes":{"name":["Zm00001d041474","Zm00001d044315","Zm00001d013777","Zm00001d038832","Zm00001d054038","Zm00001d046937","Zm00001d052229","Zm00001d011139","Zm00001d042267","Zm00001d025339","Zm00001d042263","Zm00001d035440","Zm00001d003822","Zm00001d027957","Zm00001d036148","Zm00001d031655","Zm00001d020020","Zm00001d046568","Zm00001d010227","Zm00001d018208","Zm00001d034751","Zm00001d014377","Zm00001d039989","Zm00001d028974","Zm00001d038227","Zm00001d018081","Zm00001d030617","Zm00001d028432","Zm00001d002654","Zm00001d045323","Zm00001d045044","Zm00001d018986","Zm00001d006602","Zm00001d006942","Zm00001d043497","Zm00001d046996","Zm00001d021147","Zm00001d045041","Zm00001d011080","Zm00001d054093","Zm00001d045069","Zm00001d010618","Zm00001d040735","Zm00001d014773","Zm00001d043382","Zm00001d051676","Zm00001d018192","Zm00001d014519","Zm00001d025784","Zm00001d020926","Zm00001d008691","Zm00001d022237","Zm00001d032442","Zm00001d022569","Zm00001d009774","Zm00001d007097","Zm00001d032668","Zm00001d027374","Zm00001d009418","Zm00001d046492","Zm00001d037877","Zm00001d006474","Zm00001d049826","Zm00001d052122","Zm00001d029968","Zm00001d042245","Zm00001d028998","Zm00001d042216","Zm00001d018668","Zm00001d033301","Zm00001d013319","Zm00001d051272","Zm00001d049965","Zm00001d026490","Zm00001d031349","Zm00001d003817","Zm00001d036738","Zm00001d003277","Zm00001d037962","Zm00001d046593","Zm00001d017169","Zm00001d047913","Zm00001d040477","Zm00001d049867","Zm00001d024274","Zm00001d038161","Zm00001d033840","Zm00001d033846","Zm00001d014073","Zm00001d011541","Zm00001d027652","Zm00001d024518","Zm00001d012339","Zm00001d046317","Zm00001d049835","Zm00001d016572","Zm00001d008962","Zm00001d029151","Zm00001d013300","Zm00001d042025","Zm00001d051420","Zm00001d054017","Zm00001d020381","Zm00001d016568","Zm00001d047498","Zm00001d021709","Zm00001d020108","Zm00001d021773","Zm00001d000432","Zm00001d012597","Zm00001d048634","Zm00001d018366","Zm00001d011855","Zm00001d001881","Zm00001d008826","Zm00001d048431","Zm00001d041794","Zm00001d053625","Zm00001d043693","Zm00001d037489","Zm00001d011816","Zm00001d037937","Zm00001d032547","Zm00001d027342","Zm00001d027731","Zm00001d042481","Zm00001d044575","Zm00001d016926","Zm00001d040323","Zm00001d007422","Zm00001d014785","Zm00001d047448","Zm00001d020236","Zm00001d034644","Zm00001d044747","Zm00001d010814","Zm00001d006008","Zm00001d037257","Zm00001d039043","Zm00001d016567","Zm00001d025892","Zm00001d035562","Zm00001d035664","Zm00001d048609","Zm00001d039131","Zm00001d004125","Zm00001d043217","Zm00001d011401","Zm00001d053197","Zm00001d029965","Zm00001d010733","Zm00001d006160","Zm00001d003127","Zm00001d011004","Zm00001d044035","Zm00001d040508","Zm00001d028201","Zm00001d031168","Zm00001d039081","Zm00001d052093","Zm00001d035054","Zm00001d003539","Zm00001d048163","Zm00001d053663","Zm00001d000417","Zm00001d015004","Zm00001d014968","Zm00001d037346","Zm00001d022546","Zm00001d033128","Zm00001d021508","Zm00001d037052","Zm00001d035115","Zm00001d037684","Zm00001d032830","Zm00001d008610","Zm00001d021301","Zm00001d018896","Zm00001d048157","Zm00001d022134","Zm00001d033910","Zm00001d024379","Zm00001d041593","Zm00001d011500","Zm00001d032517","Zm00001d013141","Zm00001d018359","Zm00001d009339","Zm00001d027288","Zm00001d048085","Zm00001d013757","Zm00001d015279","Zm00001d004936","Zm00001d045042","Zm00001d038547","Zm00001d017719","Zm00001d016720","Zm00001d004821","Zm00001d040561","Zm00001d042367","Zm00001d005791","Zm00001d043905","Zm00001d017072","Zm00001d026056","Zm00001d010455","Zm00001d044525","Zm00001d033979","Zm00001d014124","Zm00001d033559","Zm00001d005347","Zm00001d053671","Zm00001d005675","Zm00001d001913","Zm00001d018744","Zm00001d042030","Zm00001d036293","Zm00001d018639","Zm00001d042309","Zm00001d042613","Zm00001d051929","Zm00001d026632","Zm00001d015811","Zm00001d044939","Zm00001d043613","Zm00001d046952","Zm00001d035308","Zm00001d048165","Zm00001d019002","Zm00001d041809","Zm00001d030149","Zm00001d042476","Zm00001d037984","Zm00001d023376","Zm00001d014349","Zm00001d023694","Zm00001d037507","Zm00001d046661","Zm00001d037695","Zm00001d034558","Zm00001d011086","Zm00001d023987","Zm00001d047020","Zm00001d008257","Zm00001d014294","Zm00001d013320","Zm00001d049619","Zm00001d047470","Zm00001d052079","Zm00001d015138","Zm00001d030048","Zm00001d001857","Zm00001d019670","Zm00001d000123","Zm00001d034505","Zm00001d011087","Zm00001d015084","Zm00001d022301","Zm00001d011162","Zm00001d038057","Zm00001d021196","Zm00001d047481","Zm00001d034668"],"group":["Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Regulator","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target","Target"],"nodesize":[16,13,13,12,11,10,10,10,10,9,9,9,9,9,8,8,7,7,6,6,6,6,6,6,6,5,5,4,4,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"options":{"NodeID":"name","Group":"group","colourScale":"d3.scaleOrdinal() .domain([\"Regulator\", \"Target\"]) .range([\"forestgreen\", \"orange\"])","fontSize":20,"fontFamily":"serif","clickTextSize":50,"linkDistance":50,"linkWidth":"function(d) { return Math.sqrt(d.value); }","charge":-30,"opacity":1,"zoom":true,"legend":true,"arrows":false,"nodesize":true,"radiusCalculation":" Math.sqrt(d.nodesize)+6","bounded":false,"opacityNoHover":0,"clickAction":null}},"evals":[],"jsHooks":[]}</script><p>Finally, <code>BioNERO</code> can also be used for visualization and
 hub identification in protein-protein (PPI) interaction networks. The
 functions <code><a href="../reference/get_hubs_grn.html">get_hubs_ppi()</a></code> and <code><a href="../reference/plot_ppi.html">plot_ppi()</a></code> work
@@ -370,9 +370,9 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 <p>This vignette was created under the following conditions:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## R version 4.3.0 (2023-04-21)</span></span>
+<span><span class="co">## R version 4.3.2 (2023-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">## Running under: Ubuntu 22.04.2 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 22.04.3 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -393,84 +393,84 @@ and <code><a href="../reference/plot_grn.html">plot_grn()</a></code>).</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BioNERO_1.9.7    BiocStyle_2.28.0</span></span>
+<span><span class="co">## [1] BioNERO_1.11.1   BiocStyle_2.30.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] RColorBrewer_1.1-3          ggdendro_0.1.23            </span></span>
-<span><span class="co">##   [3] rstudioapi_0.15.0           jsonlite_1.8.7             </span></span>
-<span><span class="co">##   [5] shape_1.4.6                 NetRep_1.2.6               </span></span>
+<span><span class="co">##   [3] rstudioapi_0.15.0           jsonlite_1.8.8             </span></span>
+<span><span class="co">##   [5] shape_1.4.6                 NetRep_1.2.7               </span></span>
 <span><span class="co">##   [7] magrittr_2.0.3              farver_2.1.1               </span></span>
-<span><span class="co">##   [9] rmarkdown_2.24              GlobalOptions_0.1.2        </span></span>
-<span><span class="co">##  [11] fs_1.6.3                    zlibbioc_1.46.0            </span></span>
-<span><span class="co">##  [13] ragg_1.2.5                  vctrs_0.6.3                </span></span>
-<span><span class="co">##  [15] memoise_2.0.1               RCurl_1.98-1.12            </span></span>
-<span><span class="co">##  [17] base64enc_0.1-3             htmltools_0.5.6            </span></span>
-<span><span class="co">##  [19] S4Arrays_1.0.5              dynamicTreeCut_1.63-1      </span></span>
-<span><span class="co">##  [21] Formula_1.2-5               sass_0.4.7                 </span></span>
-<span><span class="co">##  [23] bslib_0.5.1                 htmlwidgets_1.6.2          </span></span>
-<span><span class="co">##  [25] desc_1.4.2                  plyr_1.8.8                 </span></span>
-<span><span class="co">##  [27] impute_1.74.1               cachem_1.0.8               </span></span>
-<span><span class="co">##  [29] networkD3_0.4               igraph_1.5.1               </span></span>
-<span><span class="co">##  [31] lifecycle_1.0.3             ggnetwork_0.5.12           </span></span>
-<span><span class="co">##  [33] iterators_1.0.14            pkgconfig_2.0.3            </span></span>
-<span><span class="co">##  [35] Matrix_1.6-1                R6_2.5.1                   </span></span>
-<span><span class="co">##  [37] fastmap_1.1.1               GenomeInfoDbData_1.2.10    </span></span>
-<span><span class="co">##  [39] MatrixGenerics_1.12.3       clue_0.3-64                </span></span>
-<span><span class="co">##  [41] digest_0.6.33               colorspace_2.1-0           </span></span>
-<span><span class="co">##  [43] patchwork_1.1.3             AnnotationDbi_1.62.2       </span></span>
-<span><span class="co">##  [45] S4Vectors_0.38.1            rprojroot_2.0.3            </span></span>
-<span><span class="co">##  [47] GENIE3_1.22.0               textshaping_0.3.6          </span></span>
-<span><span class="co">##  [49] Hmisc_5.1-0                 GenomicRanges_1.52.0       </span></span>
-<span><span class="co">##  [51] RSQLite_2.3.1               labeling_0.4.2             </span></span>
-<span><span class="co">##  [53] fansi_1.0.4                 mgcv_1.9-0                 </span></span>
+<span><span class="co">##   [9] rmarkdown_2.25              GlobalOptions_0.1.2        </span></span>
+<span><span class="co">##  [11] fs_1.6.3                    zlibbioc_1.48.0            </span></span>
+<span><span class="co">##  [13] ragg_1.2.7                  vctrs_0.6.5                </span></span>
+<span><span class="co">##  [15] memoise_2.0.1               RCurl_1.98-1.14            </span></span>
+<span><span class="co">##  [17] base64enc_0.1-3             htmltools_0.5.7            </span></span>
+<span><span class="co">##  [19] S4Arrays_1.2.0              dynamicTreeCut_1.63-1      </span></span>
+<span><span class="co">##  [21] SparseArray_1.2.3           Formula_1.2-5              </span></span>
+<span><span class="co">##  [23] sass_0.4.8                  bslib_0.6.1                </span></span>
+<span><span class="co">##  [25] htmlwidgets_1.6.4           desc_1.4.3                 </span></span>
+<span><span class="co">##  [27] plyr_1.8.9                  impute_1.76.0              </span></span>
+<span><span class="co">##  [29] cachem_1.0.8                networkD3_0.4              </span></span>
+<span><span class="co">##  [31] igraph_2.0.1.1              lifecycle_1.0.4            </span></span>
+<span><span class="co">##  [33] ggnetwork_0.5.12            iterators_1.0.14           </span></span>
+<span><span class="co">##  [35] pkgconfig_2.0.3             Matrix_1.6-5               </span></span>
+<span><span class="co">##  [37] R6_2.5.1                    fastmap_1.1.1              </span></span>
+<span><span class="co">##  [39] GenomeInfoDbData_1.2.11     MatrixGenerics_1.14.0      </span></span>
+<span><span class="co">##  [41] clue_0.3-65                 digest_0.6.34              </span></span>
+<span><span class="co">##  [43] colorspace_2.1-0            patchwork_1.2.0            </span></span>
+<span><span class="co">##  [45] AnnotationDbi_1.64.1        S4Vectors_0.40.2           </span></span>
+<span><span class="co">##  [47] GENIE3_1.24.0               textshaping_0.3.7          </span></span>
+<span><span class="co">##  [49] Hmisc_5.1-1                 GenomicRanges_1.54.1       </span></span>
+<span><span class="co">##  [51] RSQLite_2.3.5               labeling_0.4.3             </span></span>
+<span><span class="co">##  [53] fansi_1.0.6                 mgcv_1.9-1                 </span></span>
 <span><span class="co">##  [55] httr_1.4.7                  abind_1.4-5                </span></span>
-<span><span class="co">##  [57] compiler_4.3.0              withr_2.5.0                </span></span>
+<span><span class="co">##  [57] compiler_4.3.2              withr_3.0.0                </span></span>
 <span><span class="co">##  [59] bit64_4.0.5                 doParallel_1.0.17          </span></span>
-<span><span class="co">##  [61] htmlTable_2.4.1             backports_1.4.1            </span></span>
-<span><span class="co">##  [63] BiocParallel_1.34.2         DBI_1.1.3                  </span></span>
-<span><span class="co">##  [65] intergraph_2.0-2            highr_0.10                 </span></span>
-<span><span class="co">##  [67] MASS_7.3-60                 DelayedArray_0.26.7        </span></span>
-<span><span class="co">##  [69] rjson_0.2.21                tools_4.3.0                </span></span>
-<span><span class="co">##  [71] foreign_0.8-84              nnet_7.3-19                </span></span>
-<span><span class="co">##  [73] glue_1.6.2                  nlme_3.1-163               </span></span>
-<span><span class="co">##  [75] grid_4.3.0                  checkmate_2.2.0            </span></span>
-<span><span class="co">##  [77] reshape2_1.4.4              cluster_2.1.4              </span></span>
-<span><span class="co">##  [79] sva_3.48.0                  generics_0.1.3             </span></span>
-<span><span class="co">##  [81] gtable_0.3.3                preprocessCore_1.62.1      </span></span>
-<span><span class="co">##  [83] data.table_1.14.8           WGCNA_1.72-1               </span></span>
-<span><span class="co">##  [85] utf8_1.2.3                  XVector_0.40.0             </span></span>
-<span><span class="co">##  [87] BiocGenerics_0.46.0         ggrepel_0.9.3              </span></span>
+<span><span class="co">##  [61] htmlTable_2.4.2             backports_1.4.1            </span></span>
+<span><span class="co">##  [63] BiocParallel_1.36.0         DBI_1.2.1                  </span></span>
+<span><span class="co">##  [65] intergraph_2.0-4            highr_0.10                 </span></span>
+<span><span class="co">##  [67] MASS_7.3-60.0.1             DelayedArray_0.28.0        </span></span>
+<span><span class="co">##  [69] rjson_0.2.21                tools_4.3.2                </span></span>
+<span><span class="co">##  [71] foreign_0.8-86              nnet_7.3-19                </span></span>
+<span><span class="co">##  [73] glue_1.7.0                  nlme_3.1-164               </span></span>
+<span><span class="co">##  [75] grid_4.3.2                  checkmate_2.3.1            </span></span>
+<span><span class="co">##  [77] reshape2_1.4.4              cluster_2.1.6              </span></span>
+<span><span class="co">##  [79] sva_3.50.0                  generics_0.1.3             </span></span>
+<span><span class="co">##  [81] gtable_0.3.4                preprocessCore_1.64.0      </span></span>
+<span><span class="co">##  [83] data.table_1.15.0           WGCNA_1.72-5               </span></span>
+<span><span class="co">##  [85] utf8_1.2.4                  XVector_0.42.0             </span></span>
+<span><span class="co">##  [87] BiocGenerics_0.48.1         ggrepel_0.9.5              </span></span>
 <span><span class="co">##  [89] foreach_1.5.2               pillar_1.9.0               </span></span>
-<span><span class="co">##  [91] stringr_1.5.0               limma_3.56.2               </span></span>
-<span><span class="co">##  [93] genefilter_1.82.1           circlize_0.4.15            </span></span>
-<span><span class="co">##  [95] splines_4.3.0               dplyr_1.1.2                </span></span>
-<span><span class="co">##  [97] lattice_0.21-8              survival_3.5-7             </span></span>
-<span><span class="co">##  [99] bit_4.0.5                   annotate_1.78.0            </span></span>
+<span><span class="co">##  [91] stringr_1.5.1               limma_3.58.1               </span></span>
+<span><span class="co">##  [93] genefilter_1.84.0           circlize_0.4.15            </span></span>
+<span><span class="co">##  [95] splines_4.3.2               dplyr_1.1.4                </span></span>
+<span><span class="co">##  [97] lattice_0.22-5              survival_3.5-7             </span></span>
+<span><span class="co">##  [99] bit_4.0.5                   annotate_1.80.0            </span></span>
 <span><span class="co">## [101] tidyselect_1.2.0            locfit_1.5-9.8             </span></span>
-<span><span class="co">## [103] GO.db_3.17.0                ComplexHeatmap_2.16.0      </span></span>
-<span><span class="co">## [105] Biostrings_2.68.1           knitr_1.43                 </span></span>
-<span><span class="co">## [107] gridExtra_2.3               bookdown_0.35              </span></span>
-<span><span class="co">## [109] IRanges_2.34.1              edgeR_3.42.4               </span></span>
-<span><span class="co">## [111] SummarizedExperiment_1.30.2 RhpcBLASctl_0.23-42        </span></span>
-<span><span class="co">## [113] stats4_4.3.0                xfun_0.40                  </span></span>
-<span><span class="co">## [115] Biobase_2.60.0              statmod_1.5.0              </span></span>
-<span><span class="co">## [117] matrixStats_1.0.0           stringi_1.7.12             </span></span>
-<span><span class="co">## [119] statnet.common_4.9.0        yaml_2.3.7                 </span></span>
-<span><span class="co">## [121] minet_3.58.0                evaluate_0.21              </span></span>
+<span><span class="co">## [103] GO.db_3.18.0                ComplexHeatmap_2.18.0      </span></span>
+<span><span class="co">## [105] Biostrings_2.70.2           knitr_1.45                 </span></span>
+<span><span class="co">## [107] gridExtra_2.3               bookdown_0.37              </span></span>
+<span><span class="co">## [109] IRanges_2.36.0              edgeR_4.0.14               </span></span>
+<span><span class="co">## [111] SummarizedExperiment_1.32.0 RhpcBLASctl_0.23-42        </span></span>
+<span><span class="co">## [113] stats4_4.3.2                xfun_0.41                  </span></span>
+<span><span class="co">## [115] Biobase_2.62.0              statmod_1.5.0              </span></span>
+<span><span class="co">## [117] matrixStats_1.2.0           stringi_1.8.3              </span></span>
+<span><span class="co">## [119] statnet.common_4.9.0        yaml_2.3.8                 </span></span>
+<span><span class="co">## [121] minet_3.60.0                evaluate_0.23              </span></span>
 <span><span class="co">## [123] codetools_0.2-19            tibble_3.2.1               </span></span>
-<span><span class="co">## [125] BiocManager_1.30.22         cli_3.6.1                  </span></span>
-<span><span class="co">## [127] rpart_4.1.19                xtable_1.8-4               </span></span>
-<span><span class="co">## [129] systemfonts_1.0.4           munsell_0.5.0              </span></span>
-<span><span class="co">## [131] jquerylib_0.1.4             network_1.18.1             </span></span>
-<span><span class="co">## [133] Rcpp_1.0.11                 GenomeInfoDb_1.36.1        </span></span>
-<span><span class="co">## [135] coda_0.19-4                 png_0.1-8                  </span></span>
-<span><span class="co">## [137] XML_3.99-0.14               fastcluster_1.2.3          </span></span>
-<span><span class="co">## [139] parallel_4.3.0              ellipsis_0.3.2             </span></span>
-<span><span class="co">## [141] pkgdown_2.0.7               ggplot2_3.4.3              </span></span>
+<span><span class="co">## [125] BiocManager_1.30.22         cli_3.6.2                  </span></span>
+<span><span class="co">## [127] rpart_4.1.23                xtable_1.8-4               </span></span>
+<span><span class="co">## [129] systemfonts_1.0.5           munsell_0.5.0              </span></span>
+<span><span class="co">## [131] jquerylib_0.1.4             network_1.18.2             </span></span>
+<span><span class="co">## [133] Rcpp_1.0.12                 GenomeInfoDb_1.38.5        </span></span>
+<span><span class="co">## [135] coda_0.19-4.1               png_0.1-8                  </span></span>
+<span><span class="co">## [137] XML_3.99-0.16.1             fastcluster_1.2.6          </span></span>
+<span><span class="co">## [139] parallel_4.3.2              ellipsis_0.3.2             </span></span>
+<span><span class="co">## [141] pkgdown_2.0.7               ggplot2_3.4.4              </span></span>
 <span><span class="co">## [143] blob_1.2.4                  bitops_1.0-7               </span></span>
-<span><span class="co">## [145] scales_1.2.1                purrr_1.0.2                </span></span>
+<span><span class="co">## [145] scales_1.3.0                purrr_1.0.2                </span></span>
 <span><span class="co">## [147] crayon_1.5.2                GetoptLong_1.0.5           </span></span>
-<span><span class="co">## [149] rlang_1.1.1                 KEGGREST_1.40.0</span></span></code></pre></div>
+<span><span class="co">## [149] rlang_1.1.3                 KEGGREST_1.42.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
