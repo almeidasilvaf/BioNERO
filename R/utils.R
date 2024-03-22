@@ -267,58 +267,182 @@ get_model_matrix <- function(metadata, column_idx = 1) {
     return(mat)
 }
 
-
-#' Wrapper to calculate correlation matrix and adjacency matrices
+#' Calculate pairwise correlations between genes in a matrix
 #'
-#' @param cor_method Correlation method.
-#' @param norm.exp Gene expression data frame.
-#' @param SFTpower SFT power calculated with \code{SFT_fit}.
-#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'.
+#' @param exp A numeric matrix containing a gene expression matrix,
+#' with genes in rows and samples in columns.
+#' @param cor_method Character indicating the correlation method to use.
+#' One of "pearson", "spearman", or "biweight". Default: "pearson".
 #'
-#' @return List containing the correlation matrix and the adjacency matrix.
-#' @noRd
-#' @importFrom WGCNA adjacency.fromSimilarity bicor
-calculate_cor_adj <- function(cor_method, norm.exp, SFTpower,
-                              net_type) {
+#' @return A numeric, symmetric matrix with pairwise correlations between
+#' genes.
+#'
+#' @importFrom WGCNA bicor
+#' @importFrom stats cor
+#' @rdname exp2cor
+#' @export
+#' @examples
+#' # Simulate an expression matrix with 100 genes and 50 samples
+#' exp <- matrix(
+#'     rnorm(100 * 50, mean = 10, sd = 2),
+#'     nrow = 100,
+#'     dimnames = list(
+#'         paste0("gene", seq_len(100)),
+#'         paste0("sample", seq_len(50))
+#'     )
+#' )
+#'
+#' # Calculate correlation matrix
+#' cor_mat <- exp2cor(exp)
+exp2cor <- function(exp, cor_method = "pearson") {
 
     if(cor_method == "pearson") {
-        cor_matrix <- cor(t(norm.exp), method = "pearson")
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(
-            cor_matrix, power = SFTpower, type = net_type
-        )
+        cor_matrix <- cor(t(exp), method = "pearson")
+
     } else if(cor_method == "spearman") {
-        cor_matrix <- cor(t(norm.exp), use="p", method = "spearman")
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(
-            cor_matrix, power = SFTpower, type = net_type
-        )
-    } else if (cor_method == "biweight") {
-        cor_matrix <- WGCNA::bicor(t(norm.exp), maxPOutliers = 0.1)
-        adj_matrix <- WGCNA::adjacency.fromSimilarity(
-            cor_matrix, power = SFTpower, type = net_type
-        )
+        cor_matrix <- cor(t(exp), use = "p", method = "spearman")
+
+    } else if(cor_method == "biweight") {
+        cor_matrix <- WGCNA::bicor(t(exp), maxPOutliers = 0.1)
+
     } else {
-        stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
+        stop(
+            "Please, specify a valid correlation method. ",
+            "One of 'spearman', 'pearson' or 'biweight'."
+        )
     }
-    results <- list(cor = cor_matrix, adj = adj_matrix)
-    return(results)
+
+    return(cor_matrix)
 }
 
+#' Calculate an adjacency matrix from a correlation matrix
+#'
+#' @param cor_matrix A numeric, symmetric matrix with pairwise correlations
+#' between genes (i.e., a 'correlation matrix').
+#' @param beta Numeric scalar indicating the value of the \eqn{\beta}
+#' power to which correlation coefficients will be raised to ensure
+#' scale-free topology fit.
+#' @param net_type Character indicating the type of network to infer.
+#' Default: "signed hybrid".
+#'
+#' @return A numeric, symmetric matrix with network adjacency values between
+#' genes.
+#'
+#' @importFrom WGCNA adjacency.fromSimilarity
+#' @rdname cor2adj
+#' @export
+#' @examples
+#' # Simulate an expression matrix with 100 genes and 50 samples
+#' exp <- matrix(
+#'     rnorm(100 * 50, mean = 10, sd = 2),
+#'     nrow = 100,
+#'     dimnames = list(
+#'         paste0("gene", seq_len(100)),
+#'         paste0("sample", seq_len(50))
+#'     )
+#' )
+#'
+#' # Calculate correlation matrix
+#' cor_mat <- exp2cor(exp)
+#'
+#' # Calculate adjacency matrix (random value for beta)
+#' adj <- cor2adj(cor_mat, beta = 9)
+cor2adj <- function(cor_matrix, beta, net_type = "signed hybrid") {
 
-#' Wrapper to assign TOM type
+    if(!net_type %in% c("signed", "signed hybrid", "unsigned")) {
+        stop(
+            "Please, specify a valid argument to parameter `net_type`. ",
+            "Possible network types: 'signed', 'signed hybrid', or 'unsigned'."
+        )
+    }
+
+    # Get adjacency matrix from a correlation matrix
+    adj_matrix <- WGCNA::adjacency.fromSimilarity(
+        cor_matrix,
+        type = net_type,
+        power = beta
+    )
+
+    # Convert to matrix
+    adj_matrix <- matrix(
+        adj_matrix, nrow = nrow(adj_matrix),
+        dimnames = list(rownames(adj_matrix), rownames(adj_matrix))
+    )
+
+    return(adj_matrix)
+}
+
+#' Wrapper to automatically guess TOM type based on network type
 #'
-#' @param net_type Network type. One of 'signed', 'signed hybrid' or 'unsigned'.
+#' @param net_type Character indicating the type of network to infer.
+#' One of 'signed', 'signed hybrid' or 'unsigned'.
 #'
-#' @return Character of TOM type
+#' @return Character scalar with TOM type.
 #' @noRd
-get_TOMtype <- function(net_type) {
+guess_tom <- function(net_type) {
+
     if(net_type == "signed hybrid") {
         TOMType <- "signed"
+
     } else if(net_type == "signed") {
         TOMType <- "signed Nowick"
+
     } else {
         TOMType <- "unsigned"
     }
+
     return(TOMType)
+}
+
+
+#' Wrapper to merge very similar modules
+#'
+#' @param exp A gene expression matrix with genes in rows and samples in
+#' columns.
+#' @param module_colors A character vector with module names for each gene
+#' in the adjacency matrix.
+#' @param ME A data frame of module eigengenes with samples in rows
+#' and module eigengene names in columns.
+#' @param dissimilarity Numeric indicating the dissimilarity threshold to merge
+#' very similar modules. Default: 0.2.
+#' @param cor_method Character indicating the correlation method to use.
+#' Default: "pearson".
+#'
+#' @return A list as returned by \code{WGCNA::mergeCloseModules}
+#' @importFrom WGCNA mergeCloseModules
+#' @noRd
+merge_modules <- function(
+        exp, module_colors, ME, palette, dissimilarity = 0.2,
+        cor_method = "pearson"
+) {
+
+    if(cor_method == "pearson") {
+        merged <- WGCNA::mergeCloseModules(
+            t(exp), module_colors, MEs = ME,
+            cutHeight = dissimilarity,
+            verbose = 0,
+            colorSeq = palette
+        )
+
+    } else if(cor_method == "spearman") {
+        merged <- WGCNA::mergeCloseModules(
+            t(exp), module_colors, MEs = ME,
+            cutHeight = dissimilarity,
+            verbose = 0,
+            corOptions = list(use = "p", method = "spearman"),
+            colorSeq = palette
+        )
+
+    } else if(cor_method == "biweight") {
+        merged <- WGCNA::mergeCloseModules(
+            t(exp), module_colors, MEs = ME,
+            cutHeight = dissimilarity,
+            verbose = 0, corFnc = bicor,
+            colorSeq = palette
+        )
+    }
+
+    return(merged)
 }
 
 

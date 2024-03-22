@@ -76,26 +76,36 @@ test_that("get_model_matrix() returns a model matrix for module-trait cor", {
 })
 
 
-test_that("calculate_cor_adj() returns a list of cor matrix and adj matrix", {
+test_that("exp2cor() and cor2adj() return symmetric matrices", {
 
-    l1 <- calculate_cor_adj(cor_method = "spearman", exp, 8, "unsigned")
-    l2 <- calculate_cor_adj(cor_method = "biweight", exp, 8, "unsigned")
-
-    expect_error(
-        calculate_cor_adj(cor_method = "wrong", exp, 8, "unsigned")
+    exp <- matrix(
+        rnorm(100 * 50, mean = 10, sd = 2),
+        nrow = 100,
+        dimnames = list(
+            paste0("gene", seq_len(100)),
+            paste0("sample", seq_len(50))
+        )
     )
+    cor_mat <- exp2cor(exp)
+    cor_mat2 <- exp2cor(exp, cor_method = "spearman")
+    cor_mat3 <- exp2cor(exp, cor_method = "biweight")
+    adj <- cor2adj(cor_mat, beta = 9)
 
-    expect_equal(length(l1), 2)
-    expect_equal(length(l2), 2)
 
-    expect_equal(class(l1), "list")
-    expect_equal(class(l2), "list")
+    expect_error(cor2adj(cor_mat, beta = 9, net_type = "error"))
+    expect_error(exp2cor(exp, cor_method = "error"))
+
+    expect_true(is(cor_mat, "matrix"))
+    expect_true(is(cor_mat2, "matrix"))
+    expect_true(is(cor_mat3, "matrix"))
+    expect_true(is(adj, "matrix"))
 
 })
 
 
-test_that("get_TOMtype() returns a character of TOM type", {
-    t <- get_TOMtype("unsigned")
+test_that("guess_tom() returns a character with TOM type", {
+
+    t <- guess_tom("unsigned")
 
     expect_equal(t, "unsigned")
 })
