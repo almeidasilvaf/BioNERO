@@ -25,6 +25,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/BioNERO-package.html</loc>
+  </url>
+  <url>
     <loc>/reference/PC_correction.html</loc>
   </url>
   <url>
@@ -46,6 +49,9 @@
     <loc>/reference/consensus_trait_cor.html</loc>
   </url>
   <url>
+    <loc>/reference/cor2adj.html</loc>
+  </url>
+  <url>
     <loc>/reference/cormat_to_edgelist.html</loc>
   </url>
   <url>
@@ -56,6 +62,9 @@
   </url>
   <url>
     <loc>/reference/enrichment_analysis.html</loc>
+  </url>
+  <url>
+    <loc>/reference/exp2cor.html</loc>
   </url>
   <url>
     <loc>/reference/exp2gcn.html</loc>
