@@ -60,13 +60,25 @@ test_that("modPres_WGCNA() calculates module preservation", {
 # })
 
 test_that("module_preservation() calculates module preservation", {
+
     explist <- exp_ortho
+    names(explist) <- NULL
     ref_net <- gcn_osa
     test_net <- gcn_zma
     pres <- suppressWarnings(
         module_preservation(explist, ref_net, test_net, nPerm = 2)
     )
     pres_wgcna <- module_preservation(
+        explist, ref_net, nPerm = 2, algorithm = "WGCNA"
+    )
+
+    ref_net$params$cor_method <- "biweight"
+    pres_wgcna2 <- module_preservation(
+        explist, ref_net, nPerm = 2, algorithm = "WGCNA"
+    )
+
+    ref_net$params$cor_method <- "spearman"
+    pres_wgcna2 <- module_preservation(
         explist, ref_net, nPerm = 2, algorithm = "WGCNA"
     )
 

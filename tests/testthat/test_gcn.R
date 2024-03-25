@@ -68,10 +68,22 @@ test_that("exp2gcn() returns a list and get_hubs_gcn() finds hubs", {
 
     # exp2gcn()
     gcn <- exp2gcn(
-        filt.se[1:100, ], SFTpower = 18, cor_method = "pearson", verbose = TRUE
+        filt.se[1:100, ], SFTpower = 18, cor_method = "pearson", verbose = TRUE,
+        return_cormat = FALSE
     )
     gcn2 <- exp2gcn(filt.se[1:100, ], SFTpower = 3, cor_method = "spearman")
     gcn3 <- exp2gcn(filt.se[1:100, ], SFTpower = 18, cor_method = "biweight")
+
+    b1 <- exp2gcn_blockwise(filt.se, SFTpower = 18, cor_method = "pearson")
+    b2 <- exp2gcn_blockwise(filt.se, SFTpower = 18, cor_method = "biweight")
+
+    expect_error(
+        exp2gcn_blockwise(filt.se, SFTpower = 18, cor_method = "error")
+    )
+
+    expect_error(
+        exp2gcn_blockwise(filt.se, cor_method = "error")
+    )
 
     expect_error(
         exp2gcn(filt.se, cor_method = "pearson")
@@ -85,6 +97,8 @@ test_that("exp2gcn() returns a list and get_hubs_gcn() finds hubs", {
 
     expect_equal(class(gcn2), "list")
     expect_equal(class(gcn3), "list")
+
+    expect_equal(class(b1), "list")
 
     # get_hubs_gcn()
     hubs <- get_hubs_gcn(filt.se[1:100, ], gcn)
@@ -126,14 +140,19 @@ test_that("module_stability() recomputes network with n resamplings", {
 
 test_that("module_trait_cor() and plot_module_trait_cor() work", {
 
-    # module_trait_cor()
+    # module_trait_cor() ----
     mod_trait <- module_trait_cor(filt.se, MEs = gcn$MEs)
+
+    # plot_module_trait_cor() -----
+    p <- plot_module_trait_cor(mod_trait)
+    p2 <- plot_module_trait_cor(mod_trait, transpose = TRUE)
 
     expect_equal(class(mod_trait), "data.frame")
     expect_equal(ncol(mod_trait), 5)
     expect_equal(names(mod_trait), c("ME", "trait", "cor", "pvalue", "group"))
 
-
+    expect_equal(attr(class(p), "package"), "ComplexHeatmap")
+    expect_equal(attr(class(p2), "package"), "ComplexHeatmap")
 })
 
 
