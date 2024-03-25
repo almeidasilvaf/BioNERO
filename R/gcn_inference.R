@@ -116,23 +116,36 @@ SFT_fit <- function(exp, net_type = "signed", rsquared = 0.8,
 #' @param verbose Logical indicating whether to display progress
 #' messages or not. Default: FALSE.
 #'
-#' @return List containing: \itemize{
-#'   \item Adjacency matrix
-#'   \item Data frame of module eigengenes
-#'   \item Data frame of genes and their corresponding modules
-#'   \item Data frame of intramodular connectivity
-#'   \item Correlation matrix
-#'   \item Parameters used for network reconstruction
-#'   \item Objects to plot the dendrogram in \code{plot_dendro_and_colors}.
+#' @return A list containing the following elements: \itemize{
+#'   \item \emph{adjacency_matrix} Numeric matrix with network adjacencies.
+#'   \item \emph{MEs} Data frame of module eigengenes, with samples
+#'   in rows, and module eigengenes in columns.
+#'   \item \emph{genes_and_modules} Data frame with columns 'Genes' (character)
+#'   and 'Modules' (character) indicating the genes and the modules to
+#'   which they belong.
+#'   \item \emph{kIN} Data frame of degree centrality for each gene,
+#'   with columns 'kTotal' (total degree), 'kWithin' (intramodular degree),
+#'   'kOut' (extra-modular degree), and 'kDiff' (difference between
+#'   the intra- and extra-modular degree).
+#'   \item \emph{correlation_matrix} Numeric matrix with pairwise
+#'   correlation coefficients between genes.
+#'   If parameter \strong{return_cormat} is FALSE, this will be NULL.
+#'   \item \emph{params} List with network inference parameters passed
+#'   as input.
+#'   \item \emph{dendro_plot_objects} List with objects to plot the dendrogram
+#'   in \code{plot_dendro_and_colors}. Elements are named 'tree' (an hclust
+#'   object with gene dendrogram), 'Unmerged' (character with per-gene module
+#'   assignments before merging similar modules), and 'Merged' (character
+#'   with per-gene module assignments after merging similar modules).
 #' }
 #' @author Fabricio Almeida-Silva
 #' @rdname exp2gcn
 #' @export
 #' @importFrom WGCNA TOMsimilarity standardColors labels2colors
-#' moduleEigengenes plotEigengeneNetworks mergeCloseModules
-#' intramodularConnectivity
+#' moduleEigengenes mergeCloseModules intramodularConnectivity
 #' @importFrom dynamicTreeCut cutreeDynamicTree
-#' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp qnorm qqplot quantile sd var
+#' @importFrom stats as.dist median cor fisher.test hclust na.omit prcomp
+#' qnorm qqplot quantile sd var
 #' @importFrom grDevices colorRampPalette
 #' @examples
 #' data(filt.se)
@@ -223,6 +236,114 @@ exp2gcn <- function(
 
     return(result_list)
 }
+
+#' Infer gene coexpression network from gene expression in a blockwise manner
+#'
+#' @param exp Either a `SummarizedExperiment` object, or a gene expression
+#' matrix/data frame with genes in row names and samples in column names.
+#' @param net_type Character indicating the type of network to infer.
+#' One of 'signed', 'signed hybrid' or 'unsigned'. Default: 'signed'.
+#' @param module_merging_threshold Numeric indicating the minimum correlation
+#' threshold to merge similar modules into a single one. Default: 0.8.
+#' @param SFTpower Numeric scalar indicating the value of the \eqn{\beta}
+#' power to which correlation coefficients will be raised to ensure
+#' scale-free topology fit. This value can be obtained with
+#' the function \code{SFT_fit()}.
+#' @param cor_method Character with correlation method to use.
+#' One of "pearson" or "biweight". Default: "pearson".
+#' @param TOM_type Character specifying the method to use to calculate a
+#' topological overlap matrix (TOM). If NULL, TOM type will be automatically
+#' inferred from network type specified in \strong{net_type}. Default: NULL.
+#' @param max_block_size Numeric indicating the maximum block size for module
+#' detection.
+#' @param ... Additional arguments to \code{WGCNA::blockwiseModules()}.
+#'
+#' @return A list containing the following elements: \itemize{
+#'   \item \emph{MEs} Data frame of module eigengenes, with samples
+#'   in rows, and module eigengenes in columns.
+#'   \item \emph{genes_and_modules} Data frame with columns 'Genes' (character)
+#'   and 'Modules' (character) indicating the genes and the modules to
+#'   which they belong.
+#'   \item \emph{params} List with network inference parameters passed
+#'   as input.
+#'   \item \emph{dendro_plot_objects} List with objects to plot the dendrogram
+#'   in \code{plot_dendro_and_colors}. Elements are named 'tree' (an hclust
+#'   object with gene dendrogram), 'Unmerged' (character with per-gene module
+#'   assignments before merging similar modules), and 'Merged' (character
+#'   with per-gene module assignments after merging similar modules).
+#' }
+#'
+#' @author Fabricio Almeida-Silva
+#' @rdname exp2gcn_blockwise
+#' @export
+#' @importFrom WGCNA blockwiseModules
+#' @examples
+#' data(filt.se)
+#' # The SFT fit was previously calculated and the optimal power was 16
+#' cor <- WGCNA::cor
+#' gcn <- exp2gcn_blockwise(
+#'     exp = filt.se, SFTpower = 18, cor_method = "pearson"
+#' )
+exp2gcn_blockwise <- function(
+        exp, net_type = "signed", module_merging_threshold = 0.8,
+        SFTpower = NULL, cor_method = "pearson", TOM_type = NULL,
+        max_block_size = 5000, ...
+) {
+
+    params <- list(
+        net_type = net_type,
+        module_merging_threshold = module_merging_threshold,
+        SFTpower = SFTpower,
+        cor_method = cor_method
+    )
+    exp <- handleSE(exp)
+
+    if(is.null(SFTpower)) { stop("Please, specify the SFT power.") }
+
+    cortype <- "pearson"
+    if(cor_method == "biweight") {
+        cortype <- "bicor"
+    } else if(!cor_method %in% c("pearson", "biweight")) {
+        stop("Argument to `cor_method` must be one of 'pearson' or 'biweight'.")
+    }
+
+    if(is.null(TOM_type)) { TOM_type <- guess_tom(net_type) }
+
+    # Detect modules
+    cor <- WGCNA::cor
+    bmod <- WGCNA::blockwiseModules(
+        datExpr = as.matrix(t(exp)),
+        checkMissingData = FALSE,
+        maxBlockSize = max_block_size,
+        corType = cortype,
+        maxPOutliers = 0.1,
+        power = SFTpower,
+        networkType = net_type,
+        TOMType = TOM_type,
+        minModuleSize = 30,
+        mergeCutHeight = 1 - module_merging_threshold,
+        ...
+    )
+
+    # Create result list
+    genes_modules <- data.frame(
+        Genes = names(bmod$colors), Modules = bmod$colors, row.names = NULL
+    )
+
+    result_list <- list(
+        MEs = bmod$MEs,
+        genes_and_modules = genes_modules,
+        params = params,
+        dendro_plot_objects = list(
+            tree = bmod$dendrograms[[1]],
+            Unmerged = bmod$unmergedColors,
+            Merged = bmod$colors
+        )
+    )
+
+    return(result_list)
+}
+
 
 
 #' Plot eigengene network

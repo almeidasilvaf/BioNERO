@@ -3,8 +3,20 @@
 data(zma.se)
 exp <- SummarizedExperiment::assay(zma.se)
 metadata <- SummarizedExperiment::colData(zma.se)
-metadata <- data.frame(Samples=rownames(metadata),
-                       Tissue=metadata$Tissue)
+metadata <- data.frame(
+    Samples = rownames(metadata),
+    Tissue = metadata$Tissue
+)
+
+simexp <- matrix(
+    rnorm(100 * 50, mean = 10, sd = 2),
+    nrow = 100,
+    dimnames = list(
+        paste0("gene", seq_len(100)),
+        paste0("sample", seq_len(50))
+    )
+)
+simexp[c(1, 5, 7), c(10, 20, 30)] <- NA
 
 #----Start tests----
 test_that("dfs2one reads in multiple tables and binds them into a data frame", {
@@ -32,11 +44,12 @@ test_that("dfs2one reads in multiple tables and binds them into a data frame", {
 
 
 test_that("replace_na() removes NAs for both SE and expression data frame", {
-    expinput <- replace_na(exp)
+
+    expinput <- replace_na(simexp, "mean")
     seinput <- replace_na(zma.se)
+
     expect_equal(sum(is.na(expinput)), 0)
     expect_equal(sum(is.na(seinput)), 0)
-    expect_equal(dim(expinput), dim(exp))
     expect_equal(dim(seinput), dim(zma.se))
 })
 
@@ -47,6 +60,8 @@ test_that("remove_nonexp() removes non-expressed genes", {
     filt_exp3 <- remove_nonexp(zma.se, method = "percentage", min_exp=10)
     filt_exp4 <- remove_nonexp(zma.se, method="mean", min_exp=10)
     filt_exp5 <- remove_nonexp(zma.se, method="allsamples", min_exp=10)
+
+    expect_error(remove_nonexp(exp, min_exp = 10, method = "error"))
 
     expect_true(all.equal(dim(filt_exp1), dim(filt_exp2)))
     expect_equal(class(filt_exp1), "data.frame")
@@ -59,14 +74,16 @@ test_that("remove_nonexp() removes non-expressed genes", {
 
 
 test_that("filter_by_variance() filters gene expression data by variance", {
-    filt_exp1 <- filter_by_variance(exp, n=3000)
-    filt_exp2 <- filter_by_variance(zma.se, n=3000)
 
-    expect_true(all.equal(dim(filt_exp1), dim(filt_exp2)))
+    filt_exp1 <- filter_by_variance(exp, n=3000)
+    filt_exp2 <- filter_by_variance(zma.se, percentile = 0.1)
+
+    expect_error(filter_by_variance(exp))
+
     expect_true(class(filt_exp2) == "SummarizedExperiment")
     expect_equal(class(filt_exp1), "data.frame")
     expect_equal(nrow(filt_exp1), 3000)
-    expect_equal(nrow(filt_exp2), 3000)
+    expect_true(nrow(filt_exp2) <= nrow(zma.se) * 0.1)
 })
 
 
@@ -75,6 +92,8 @@ test_that("ZKfiltering() filters outliers", {
     filt_exp2 <- ZKfiltering(zma.se)
     filt_exp3 <- ZKfiltering(zma.se, cor_method = "pearson")
     filt_exp4 <- ZKfiltering(zma.se, cor_method = "biweight", zk = -2.5)
+
+    expect_error(ZKfiltering(exp, cor_method = "error"))
 
     expect_true(class(filt_exp2) == "SummarizedExperiment")
     expect_true(all.equal(dim(filt_exp1), dim(filt_exp2)))
@@ -95,9 +114,9 @@ test_that("q_normalize() performs quantile normalization in an expression data f
 
 
 test_that("PC_correction() removes confounders based on principal components", {
-    filt_exp <- filter_by_variance(exp, n=500)
+    filt_exp <- filter_by_variance(exp, n = 500)
     filt_exp2 <- filter_by_variance(zma.se, n=500)
-    pc_cor1 <- PC_correction(filt_exp)
+    pc_cor1 <- PC_correction(filt_exp, verbose = TRUE)
     pc_cor2 <- PC_correction(filt_exp2)
 
     expect_equal(dim(pc_cor1), dim(pc_cor2))
@@ -105,8 +124,21 @@ test_that("PC_correction() removes confounders based on principal components", {
 
 
 test_that("exp_preprocess() preprocesses the expression data at once", {
+
     filt_exp1 <- exp_preprocess(exp, variance_filter = TRUE, n=500)
     filt_exp2 <- exp_preprocess(zma.se, variance_filter = TRUE, n=500)
+
+    if(requireNamespace("DESeq2", quietly = TRUE)) {
+
+        counts <- matrix(
+            sample.int(100, size = 50 * 100, replace = TRUE), nrow = 50
+        )
+
+        filt_exp3 <- exp_preprocess(
+            counts, variance_filter = TRUE, n = 500, vstransform = TRUE,
+            Zk_filtering = FALSE
+        )
+    }
 
     expect_equal(dim(filt_exp1), dim(filt_exp2))
 })

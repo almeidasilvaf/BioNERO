@@ -135,16 +135,14 @@ modPres_WGCNA <- function(explist, ref_net, nPerm = 200) {
 
     # Calculate module preservation
     if(cor_method == "pearson") {
-      corOptions <- "use = 'p'"
-      corFnc <- "cor"
+        corOptions <- "use = 'p'"
+        corFnc <- "cor"
     } else if(cor_method == "spearman") {
-      corOptions <- list(use = 'p', method="spearman")
-      corFnc <- "cor"
+        corOptions <- "use = 'p', method = 'spearman'"
+        corFnc <- "cor"
     } else if(cor_method == "biweight") {
-      corOptions <- list(use = 'p', maxPOutliers = 0.05)
-      corFnc <- "bicor"
-    } else {
-      stop("Please, specify a valid correlation method.")
+        corOptions <- "use = 'p', maxPOutliers = 0.05"
+        corFnc <- "bicor"
     }
 
     pres <- WGCNA::modulePreservation(
@@ -261,11 +259,12 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
     explist <- lapply(explist, function(x) return(t(x)))
 
     # Set data set names
+    data_names <- names(explist)
     if(is.null(names(explist))) {
         data_names <- c("cohort1", "cohort2")
-    } else {
-        data_names <- names(explist)
+        names(explist) <- data_names
     }
+
 
     # Create correlation list
     correlation_list <- list(
@@ -281,28 +280,26 @@ modPres_netrep <- function(explist, ref_net = NULL, test_net = NULL,
     )
     names(network_list) <- data_names
 
-    # Set background label
-    if("grey" %in% ref_net$moduleColors) {
-        backgroundLabel <- "grey"
-    } else {
-        backgroundLabel <- 0
-    }
-
     # Set module assignments
     modAssignments <- ref_net$genes_and_modules$Modules
     names(modAssignments) <- ref_net$genes_and_modules$Genes
+
+    # Set background label
+    backgroundLabel <- "grey"
+    if(!"grey" %in% modAssignments) { backgroundLabel <- 0 }
 
     # Calculate preservation statistics
     pres <- NetRep::modulePreservation(
         network = network_list, data = explist, correlation = correlation_list,
         moduleAssignments = modAssignments,
         discovery = data_names[1], test = data_names[2],
-        nPerm = nPerm, nThreads = nThreads
+        nPerm = nPerm, nThreads = nThreads, verbose = FALSE
     )
 
     # Get preserved modules (p < 0.05 for all statistics)
-    max_pval <- apply(pres$p.value, 1, max)
+    max_pval <- apply(pres$p.value, 1, max, na.rm = TRUE)
     preservedmodules <- names(max_pval[max_pval < 0.05])
+
     if(length(preservedmodules) > 0) {
         message(length(preservedmodules), " modules in ", data_names[1],
                 " were preserved in ", data_names[2], ":", "\n",
