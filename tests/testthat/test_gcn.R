@@ -214,12 +214,12 @@ test_that("enrichment_analysis() performs overrepresentation analysis", {
     expect_equal(class(pe), "data.frame")
 
     expect_equal(class(e1), "data.frame")
-    expect_equal(ncol(e1), 6)
+    expect_equal(ncol(e1), 7)
 
     expect_true(nrow(e2) < 1)
 
     expect_equal(class(e3), "data.frame")
-    expect_equal(ncol(e3), 6)
+    expect_equal(ncol(e3), 7)
 
     expect_true(nrow(e4) < 1)
 })
