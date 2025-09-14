@@ -997,6 +997,7 @@ get_hubs_gcn <- function(exp, net) {
 #'   \item{pval}{numeric, P-value for the hypergeometric test.}
 #'   \item{padj}{numeric, P-value adjusted for multiple comparisons using
 #'               the method specified in parameter \strong{adj}.}
+#'   \item{gene_id}{character, IDs of the genes associated with terms.}
 #' }
 #'
 #' @importFrom stats p.adjust phyper
@@ -1014,7 +1015,8 @@ ora <- function(
     n_genes <- length(genes)
 
     # Define variables of the hypergeometric test
-    x <- vapply(gene_sets, function(x) length(intersect(x, genes)), numeric(1))
+    int_sets <- lapply(gene_sets, function(x) intersect(x, genes))
+    x <- lengths(int_sets)
     m <- vapply(gene_sets, length, numeric(1))
     n <- n_universe - m
     k <- n_genes
@@ -1032,6 +1034,13 @@ ora <- function(
     )
 
     results$padj <- p.adjust(results$pval, method = adj)
+    gene_id <- lapply(int_sets, function(g) {
+        gids <- paste0(g, collapse = "/")
+        gids <- ifelse(gids == "", NA, gids)
+        return(gids)
+    }) |> unlist() |> as.character()
+
+    results$gene_id <- gene_id
 
     return(results)
 }
@@ -1099,6 +1108,7 @@ enrichment_analysis <- function(
         bp_param = BiocParallel::SerialParam()
 ) {
 
+    annotation <- as.data.frame(annotation)
     names(annotation)[1] <- "Gene"
 
     # Filtered `annotation` data frame to keep only specified columns
@@ -1200,6 +1210,8 @@ module_enrichment <- function(
         correction = "BH", p = 0.05, min_setsize = 10, max_setsize = 500,
         bp_param = BiocParallel::SerialParam()
 ) {
+
+    annotation <- as.data.frame(annotation)
 
     # Create a list of data frames with columns `Genes` and `Modules`
     genes.modules <- net$genes_and_modules
