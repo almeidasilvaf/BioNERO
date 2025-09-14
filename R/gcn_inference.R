@@ -8,9 +8,10 @@
 #' @param cor_method Correlation method. One of "pearson", "biweight"
 #' or "spearman". Default is "spearman".
 #'
-#' @return A list containing: \itemize{
-#'   \item{power}{Optimal power based on scale-free topology fit}
-#'   \item{plot}{A ggplot object displaying main statistics of the SFT fit test}
+#' @return A list containing:
+#' \itemize{
+#'   \item{\strong{power} Numeric, optimal power based on scale-free topology fit}
+#'   \item{\strong{plot} A ggplot object displaying main statistics of the SFT fit test}
 #' }
 #'
 #' @author Fabricio Almeida-Silva

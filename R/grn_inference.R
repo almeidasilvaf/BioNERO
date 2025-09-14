@@ -20,7 +20,7 @@
 #' Default: "spearman".
 #' @param eps Numeric value indicating the threshold used when removing
 #' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
-#' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' is removed if its weight is below \code{min\{(ik),(jk)\}} - eps. Default: 0.1.
 #' @param remove_zero Logical indicating whether to remove edges whose weight
 #' is exactly zero. Default: TRUE
 #' @param ... Additional arguments passed to `GENIE3::GENIE3()`.
@@ -86,7 +86,7 @@ grn_infer <- function(exp, regulators = NULL,
 #' included in `exp`.
 #' @param eps Numeric value indicating the threshold used when removing
 #' an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
-#' is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.
+#' is removed if its weight is below \code{min\{(ik),(jk)\}} - eps. Default: 0.1.
 #' @param estimator_clr Entropy estimator to be used in CLR inference.
 #' One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
 #' or "kendall". Default: "pearson".
@@ -247,7 +247,7 @@ grn_filter <- function(edgelist, nsplit = 10,
 #' included in `exp`.
 #' @param eps Numeric value indicating the threshold used when
 #' removing an edge: for each triplet of nodes (i,j,k), the weakest edge,
-#' say (ij), is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.
+#' say (ij), is removed if its weight is below \code{min\{(ik),(jk)\}} - eps. Default: 0.
 #' @param remove_zero Logical indicating whether to remove edges whose
 #' weight is exactly zero. Zero values indicate edges that were
 #' removed by ARACNE. Default: TRUE.

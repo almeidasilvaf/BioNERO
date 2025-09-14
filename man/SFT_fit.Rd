@@ -19,9 +19,10 @@ samples in column names or a `SummarizedExperiment` object.}
 or "spearman". Default is "spearman".}
 }
 \value{
-A list containing: \itemize{
-  \item{power}{Optimal power based on scale-free topology fit}
-  \item{plot}{A ggplot object displaying main statistics of the SFT fit test}
+A list containing:
+\itemize{
+  \item{\strong{power} Numeric, optimal power based on scale-free topology fit}
+  \item{\strong{plot} A ggplot object displaying main statistics of the SFT fit test}
 }
 }
 \description{
