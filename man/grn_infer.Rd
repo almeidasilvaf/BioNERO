@@ -36,7 +36,7 @@ Default: "spearman".}
 
 \item{eps}{Numeric value indicating the threshold used when removing
 an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
-is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.}
+is removed if its weight is below \code{min\{(ik),(jk)\}} - eps. Default: 0.1.}
 
 \item{remove_zero}{Logical indicating whether to remove edges whose weight
 is exactly zero. Default: TRUE}

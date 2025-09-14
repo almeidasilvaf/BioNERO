@@ -40,11 +40,11 @@ test_that("plot_ppi() plots a PPI network", {
 
     pint <- plot_ppi(ppi_edges, interactive = TRUE)
 
-    expect_equal(class(p), c("gg", "ggplot"))
-    expect_equal(class(p2), c("gg", "ggplot"))
-    expect_equal(class(p3), c("gg", "ggplot"))
-    expect_equal(class(p4), c("gg", "ggplot"))
-    expect_equal(class(p5), c("gg", "ggplot"))
+    expect_true("ggplot" %in% class(p))
+    expect_true("ggplot" %in% class(p2))
+    expect_true("ggplot" %in% class(p3))
+    expect_true("ggplot" %in% class(p4))
+    expect_true("ggplot" %in% class(p5))
 
     expect_true("forceNetwork" %in% class(pint))
 
@@ -64,11 +64,10 @@ test_that("plot_grn() plots a GRN", {
 
     pint <- plot_grn(ppi_edges, interactive = TRUE)
 
-
-    expect_equal(class(p), c("gg", "ggplot"))
-    expect_equal(class(p3), c("gg", "ggplot"))
-    expect_equal(class(p4), c("gg", "ggplot"))
-    expect_equal(class(p5), c("gg", "ggplot"))
+    expect_true("ggplot" %in% class(p))
+    expect_true("ggplot" %in% class(p3))
+    expect_true("ggplot" %in% class(p4))
+    expect_true("ggplot" %in% class(p5))
 
     expect_true("forceNetwork" %in% class(pint))
 
@@ -104,11 +103,11 @@ test_that("plot_gcn() plots a GCN", {
     pint <- plot_gcn(gcn_edges, gcn, hubs = hubs, show_labels = "allhubs",
                      interactive = TRUE)
 
-    expect_equal(class(p), c("gg", "ggplot"))
-    expect_equal(class(p2), c("gg", "ggplot"))
-    expect_equal(class(p3), c("gg", "ggplot"))
-    expect_equal(class(p4), c("gg", "ggplot"))
-    expect_equal(class(p5), c("gg", "ggplot"))
+    expect_true("ggplot" %in% class(p))
+    expect_true("ggplot" %in% class(p2))
+    expect_true("ggplot" %in% class(p3))
+    expect_true("ggplot" %in% class(p4))
+    expect_true("ggplot" %in% class(p5))
 
     expect_true("forceNetwork" %in% class(pint))
 })

@@ -24,7 +24,7 @@ included in `exp`.}
 
 \item{eps}{Numeric value indicating the threshold used when removing
 an edge: for each triplet of nodes (i,j,k), the weakest edge, say (ij),
-is removed if its weight is below min{(ik),(jk)} - eps. Default: 0.1.}
+is removed if its weight is below \code{min\{(ik),(jk)\}} - eps. Default: 0.1.}
 
 \item{estimator_aracne}{Entropy estimator to be used in ARACNE inference.
 One of "mi.empirical", "mi.mm", "mi.shrink", "mi.sg", "pearson", "spearman",
