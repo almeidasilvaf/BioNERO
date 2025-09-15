@@ -70,8 +70,8 @@ test_that("plot_PCA() performs PCA and plots it", {
         plot_PCA(exp, cbind(col_metadata, col_metadata, col_metadata))
     )
 
-    expect_true(all.equal(class(p1), c("gg", "ggplot")))
-    expect_true(all.equal(class(p2), c("gg", "ggplot")))
+    expect_true("ggplot" %in% class(p1))
+    expect_true("ggplot" %in% class(p2))
 })
 
 
@@ -101,7 +101,8 @@ test_that("plot_expression_profile() plots expression in a line plot", {
 
 test_that("plot_ngenes_per_module() returns a barplot of genes per module", {
     p <- plot_ngenes_per_module(gcn)
-    expect_equal(class(p), c("gg", "ggplot"))
+
+    expect_true("ggplot" %in% class(p))
 })
 
 
